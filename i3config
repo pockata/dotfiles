@@ -1,0 +1,394 @@
+# Should you change your keyboard layout some time, delete
+# this file and re-run i3-config-wizard(1).
+#
+
+# i3 config file (v4)
+#
+# Please see http://i3wm.org/docs/userguide.html for a complete reference!
+
+set $mod Mod4
+
+# Gruvbox
+set $background  #1d2021
+set $foreground  #ebdbb2
+set $black       #282828
+set $darkgrey    #928374
+set $darkred     #cc241d
+set $red         #fb4934
+set $darkgreen   #98971a
+set $green       #b8bb26
+set $darkyellow  #d79921
+set $yellow      #fabd2f
+set $darkblue    #458588
+set $blue        #83a598
+set $darkmagenta #b16286
+set $magenta     #d3869b
+set $darkcyan    #689d6a
+set $cyan        #8ec07c
+set $lightgrey   #a89984
+set $white       #ebdbb2
+
+# Font for window titles. Will also be used by the bar unless a different font
+# is used in the bar {} block below.
+#font pango:monospace 8
+
+#font pango:Droid Sans Mono 10
+font pango:Fira Mono Medium 9
+
+# This font is widely installed, provides lots of unicode glyphs, right-to-left
+# text rendering and scalability on retina/hidpi displays (thanks to pango).
+#font pango:DejaVu Sans Mono 8
+
+# Before i3 v4.8, we used to recommend this one as the default:
+# font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
+# The font above is very space-efficient, that is, it looks good, sharp and
+# clear in small sizes. However, its unicode glyph coverage is limited, the old
+# X core fonts rendering does not support right-to-left and this being a bitmap
+# font, it doesn’t scale on retina/hidpi displays.
+
+# Use Mouse+$mod to drag floating windows to their wanted position
+floating_modifier $mod
+
+# https://faq.i3wm.org/question/532/popup_during_fullscreen-why-cant-we-just-show-it/
+popup_during_fullscreen smart
+
+# start a terminal
+#bindsym $mod+Return exec i3-sensible-terminal
+bindsym $mod+Return exec --no-startup-id urxvtc
+
+# kill focused window
+bindsym $mod+Shift+q kill
+
+# start dmenu (a program launcher)
+#bindsym $mod+d exec dmenu_run
+
+# There also is the (new) i3-dmenu-desktop which only displays applications
+# shipping a .desktop file. It is a wrapper around dmenu, so you need that
+# installed.
+# bindsym $mod+d exec --no-startup-id i3-dmenu-desktop
+
+# change focus
+bindsym $mod+h focus left
+bindsym $mod+j focus down
+bindsym $mod+k focus up
+bindsym $mod+l focus right
+
+# alternatively, you can use the cursor keys:
+bindsym $mod+Left focus left
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+bindsym $mod+Right focus right
+
+# move focused window
+bindsym $mod+Shift+h move left
+bindsym $mod+Shift+j move down
+bindsym $mod+Shift+k move up
+bindsym $mod+Shift+l move right
+
+# alternatively, you can use the cursor keys:
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Down move down
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Right move right
+
+# split in horizontal orientation
+bindsym $mod+c split h
+
+# split in vertical orientation
+bindsym $mod+v split v
+
+# enter fullscreen mode for the focused container
+bindsym $mod+f fullscreen toggle
+bindsym $mod+g fullscreen global
+
+# change container layout (stacked, tabbed, toggle split)
+#bindsym $mod+s layout stacking
+bindsym $mod+t layout tabbed
+bindsym $mod+e layout toggle split
+
+# toggle tiling / floating
+bindsym $mod+Shift+space floating toggle
+
+# change focus between tiling / floating windows
+bindsym $mod+space focus mode_toggle
+
+# focus the parent container
+bindsym $mod+a focus parent
+
+# focus the child container
+bindsym $mod+p focus child
+
+# Scratchpad
+bindsym $mod+Shift+minus move scratchpad
+bindsym $mod+minus scratchpad show
+
+# Set workspace names
+set $wsp1 1:terminal
+set $wsp2 2:www
+set $wsp3 3:editor
+set $wsp4 4:ftp
+set $wsp5 5:music
+set $wsp6 6:im
+set $wsp7 7
+set $wsp8 8
+set $wsp9 9:devtools
+set $wsp10 10
+
+# switch to workspace
+bindsym $mod+1 workspace $wsp1
+bindsym $mod+2 workspace $wsp2
+bindsym $mod+3 workspace $wsp3
+bindsym $mod+4 workspace $wsp4
+bindsym $mod+5 workspace $wsp5
+bindsym $mod+6 workspace $wsp6
+bindsym $mod+7 workspace $wsp7
+bindsym $mod+8 workspace $wsp8
+bindsym $mod+9 workspace $wsp9
+bindsym $mod+0 workspace $wsp10
+
+# move focused container to workspace
+bindsym $mod+Shift+1 move container to workspace $wsp1
+bindsym $mod+Shift+2 move container to workspace $wsp2
+bindsym $mod+Shift+3 move container to workspace $wsp3
+bindsym $mod+Shift+4 move container to workspace $wsp4
+bindsym $mod+Shift+5 move container to workspace $wsp5
+bindsym $mod+Shift+6 move container to workspace $wsp6
+bindsym $mod+Shift+7 move container to workspace $wsp7
+bindsym $mod+Shift+8 move container to workspace $wsp8
+bindsym $mod+Shift+9 move container to workspace $wsp9
+bindsym $mod+Shift+0 move container to workspace $wsp10
+
+# move current workspace between monitors
+bindsym $mod+Control+h move workspace to output left
+bindsym $mod+Control+j move workspace to output down
+bindsym $mod+Control+k move workspace to output up
+bindsym $mod+Control+l move workspace to output right
+
+# reload the configuration file
+bindsym $mod+Shift+c reload
+# restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
+bindsym $mod+Shift+r restart
+# exit i3 (logs you out of your X session)
+#bindsym $mod+Shift+e exec --no-startup-id "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
+bindsym $mod+Shift+e exec --no-startup-id ~/bin/logout.sh 
+
+# resize window (you can also use the mouse for that)
+mode "resize" {
+        # These bindings trigger as soon as you enter the resize mode
+
+        # Pressing left will shrink the window’s width.
+        # Pressing right will grow the window’s width.
+        # Pressing up will shrink the window’s height.
+        # Pressing down will grow the window’s height.
+        bindsym h resize shrink width 10 px or 10 ppt
+        bindsym j resize grow height 10 px or 10 ppt
+        bindsym k resize shrink height 10 px or 10 ppt
+        bindsym l resize grow width 10 px or 10 ppt
+
+        # same bindings, but for the arrow keys
+        bindsym Left resize shrink width 10 px or 10 ppt
+        bindsym Down resize grow height 10 px or 10 ppt
+        bindsym Up resize shrink height 10 px or 10 ppt
+        bindsym Right resize grow width 10 px or 10 ppt
+
+        # back to normal: Enter or Escape
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+}
+
+bindsym $mod+r mode "resize"
+
+# Hide window title
+for_window [class="^.*"] border pixel 4
+
+# Move back and forth between workspaces
+bindcode $mod+49 workspace back_and_forth
+
+# Screenshotting
+bindsym --release Shift+Print exec --no-startup-id scrot ~/Pictures/Screenshots/$(date +%Y-%m-%d-%H-%M-%S).png && notify-send -a "Scrot" "Screenshot taken" 
+bindsym --release Print exec --no-startup-id scrot -s ~/Pictures/Screenshots/$(date +%Y-%m-%d-%H-%M-%S).png && notify-send -a "Scrot" "Screenshot taken"
+
+# Start i3bar to display a workspace bar
+bar {
+    # Remove workspace numbers
+    strip_workspace_numbers yes
+    status_command i3blocks
+    position top
+    #separator_symbol "〉"
+    separator_symbol "  "
+
+    colors {
+        background $background
+        statusline $foreground
+        separator $darkgrey
+
+        focused_workspace  $background $background $foreground
+        active_workspace   $background $background $foreground
+        inactive_workspace $background $background $darkgrey
+        urgent_workspace   $background $background $red
+    }
+
+    #colors {
+    #    separator #ffffff
+    #    background #222222
+    #    statusline #666666
+    #    focused_workspace #d70a53 #d70a53 #ffffff
+    #    active_workspace #333333 #333333 #888888
+    #    inactive_workspace #333333 #333333 #ffffff
+    #    urgent_workspace #eb709b #eb709b #ffffff
+    #}
+}
+
+# Switch between workspaces on current output (monitor) via $mod+tab
+bindsym $mod+Tab workspace next_on_output
+bindsym $mod+Shift+Tab workspace prev_on_output
+
+# Refresh i3blocks when switching layout
+bindcode Mod1+50 exec --no-startup-id pkill -SIGRTMIN+1 i3blocks
+bindcode Shift+64 exec --no-startup-id pkill -SIGRTMIN+1 i3blocks
+
+# Multimedia keyboard support
+bindsym --release XF86AudioRaiseVolume exec --no-startup-id amixer -q set Master 5%+ unmute && pkill -SIGRTMIN+10 i3blocks #increase sound volume
+bindsym --release XF86AudioLowerVolume exec --no-startup-id amixer -q set Master 5%- unmute && pkill -SIGRTMIN+10 i3blocks #decrease sound volume
+bindsym --release XF86AudioMute exec amixer --no-startup-id -q set Master toggle && pkill -SIGRTMIN+10 i3blocks # mute sound
+
+bindsym XF86AudioPlay exec --no-startup-id "mpc toggle"
+bindsym XF86AudioStop exec --no-startup-id "mpc stop"
+bindsym XF86AudioNext exec --no-startup-id "mpc next"
+bindsym XF86AudioPrev exec --no-startup-id "mpc prev"
+
+# Sreen brightness controls
+bindsym XF86MonBrightnessUp exec --no-startup-id xbacklight -inc 5 # increase screen brightness
+bindsym XF86MonBrightnessDown exec --no-startup-id xbacklight -dec 5 # decrease screen brightness
+
+# Jump to urgent window
+bindsym $mod+x [urgent=latest] focus
+
+# Select monitor setup
+bindsym $mod+Shift+m exec ~/bin/monitors.sh
+
+#assign [class="URxvt"] $wsp1
+assign [class="google-chrome-beta|Firefox"] $wsp2
+assign [class="Gvim"] $wsp3
+assign [class="Filezilla"] $wsp4
+assign [class="Skype"] $wsp6
+assign [class="Vlc"] $wsp7
+assign [title="Popcorn Time"] $wsp7
+
+#for_window [window_role="pop-up"] floating enable
+for_window [class="google-chrome-beta" window_role="pop-up"] floating enable
+for_window [class="Thunar"] floating enable
+for_window [class="Skype"] floating enable
+for_window [class="Arandr"] floating enable
+for_window [title="Task Manager - Google Chrome"] floating enable
+
+# Hacks, Hacks, Hacks
+for_window [title="Developer Tools.*"] floating enable; resize shrink width 10000px; resize grow width 800px; resize shrink height 10000px; resize grow height 500px;
+#assign [title="Developer Tools.*"] $wsp 
+
+#exec --no-startup-id source ~/.xinitrc
+#exec --no-startup-id source ~/.setkeyboard.sh
+exec_always --no-startup-id ~/bin/wallpaper.sh
+
+# Compton
+# exec --no-startup-id compton -b --config ~/.compton.conf &
+
+# Dunst
+exec --no-startup-id dunst -config ~/.dunstrc &
+
+# Rofi (program runner / window switcher)
+#exec_always --no-startup-id rofi -key-run $mod+d -font "inconsolata 12" -fg "#ebdbb2" -bg "#282828" -hlfg "#ffffff" -hlbg "#d70a53" -o 100 -bw 2 -bc "#d70a53" 5 -fuzzy true -modi "window,run"
+exec_always --no-startup-id rofi -key-window $mod+w -key-run $mod+d -modi "window,run"
+
+# Set keyboard variants
+exec --no-startup-id setxkbmap -model pc101 -layout us,bg -variant ,phonetic -option grp:alt_shift_toggle caps:escape
+
+# Disable Touchpad
+exec --no-startup-id /usr/bin/synclient TouchpadOff=1
+
+# Start URxvtD
+exec --no-startup-id urxvtd -q -f -o
+
+# Run Compton
+exec --no-startup-id compton 
+
+# Start Unclutter
+exec --no-startup-id unclutter &
+
+# Auto Screen lock (the "-corners 0-00" part disables auto lock when mouse pointer is in top right corner)
+exec --no-startup-id xautolock -locker ~/bin/lock.sh -time 7 -corners 0-00
+
+# Enable Trackpoint scroll
+#exec --no-startup-id xinput set-prop "TPPS/2 IBM TrackPoint" "Evdev Wheel Emulation" 1
+#exec --no-startup-id xinput set-prop "TPPS/2 IBM TrackPoint" "Evdev Wheel Emulation Button" 2
+#exec --no-startup-id xinput set-prop "TPPS/2 IBM TrackPoint" "Evdev Wheel Emulation Timeout" 200
+#exec --no-startup-id xinput set-prop "TPPS/2 IBM TrackPoint" "Evdev Wheel Emulation Axes" 6 7 4 5
+#exec --no-startup-id xinput set-prop "TPPS/2 IBM TrackPoint" "Device Accel Constant Deceleration" 0.75
+
+# Disable middle-click paste
+exec --no-startup-id xmodmap -e "pointer = 1 25 3 4 5 6 7 8 9 10 11 12"
+
+# Start redshift
+exec --no-startup-id redshift-gtk &
+
+# i3-style generated styles
+                #border #bg #text   #indicator
+#client.focused $darkred $green $white $darkred
+#client.focused_inactive #333333 #333333 #888888 #333333
+#client.unfocused #333333 #333333 #ffffff #333333
+#client.urgent #eb709b $darkred #ffffff #eb709b
+
+client.focused          $foreground $darkgreen $background $darkgreen
+client.focused_inactive $darkgrey $darkgrey $foreground $darkgrey
+client.focused_inactive #333333 #333333 #888888 #333333
+client.urgent           $darkred $darkred $background $darkred
+
+###
+# i3-gaps specific configuration
+###
+gaps inner 20
+gaps outer 0
+
+# Smart gaps (gaps used if only more than one container on the workspace)
+smart_gaps on
+
+# Press $mod+Shift+g to enter the gap mode. Choose o or i for modifying outer/inner gaps. Press one of + / - (in-/decrement for current workspace) or 0 (remove gaps for current workspace). If you also press Shift with these keys, the change will be global for all workspaces.
+set $mode_gaps Gaps: (o) outer, (i) inner
+set $mode_gaps_outer Outer Gaps: +|-|0 (local), Shift + +|-|0 (global)
+set $mode_gaps_inner Inner Gaps: +|-|0 (local), Shift + +|-|0 (global)
+bindsym $mod+Shift+g mode "$mode_gaps"
+
+mode "$mode_gaps" {
+        bindsym o      mode "$mode_gaps_outer"
+        bindsym i      mode "$mode_gaps_inner"
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+}
+
+mode "$mode_gaps_inner" {
+        bindsym plus  gaps inner current plus 5
+        bindsym minus gaps inner current minus 5
+        bindsym 0     gaps inner current set 0
+
+        bindsym Shift+plus  gaps inner all plus 5
+        bindsym Shift+minus gaps inner all minus 5
+        bindsym Shift+0     gaps inner all set 0
+
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+}
+mode "$mode_gaps_outer" {
+        bindsym plus  gaps outer current plus 5
+        bindsym minus gaps outer current minus 5
+        bindsym 0     gaps outer current set 0
+
+        bindsym Shift+plus  gaps outer all plus 5
+        bindsym Shift+minus gaps outer all minus 5
+        bindsym Shift+0     gaps outer all set 0
+
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+}
+# Move Workspace 2 to second monitor
+# workspace $wsp2 output VGA1
+

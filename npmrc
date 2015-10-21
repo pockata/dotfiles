@@ -1,0 +1,3 @@
+python=/usr/bin/python2.7
+python2.7=
+prefix=${HOME}/.npm-packages

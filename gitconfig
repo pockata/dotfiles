@@ -1,0 +1,67 @@
+[alias]
+    co = checkout
+    cob = checkout -b
+    c = commit
+    cm = commit -m
+    ca = commit --amend
+    st = status -s
+    br = branch
+    diff = diff --word-diff
+    l = log --graph --decorate --pretty=oneline --abbrev-commit
+    la = log --graph --decorate --pretty=oneline --abbrev-commit --all
+    ldf = "!git diff --name-only \"$(git merge-base HEAD ${1:-master})\""
+
+    # Show the diff between the latest commit and the current state
+    d = !"git diff-index --quiet HEAD -- || clear; git diff --patch-with-stat"
+
+    # List all commiters in the current branch
+    commiters = !"_() { git log --pretty=format:%an $@ | sort -u; }; _"
+
+    # Show verbose output about tags, branches or remotes
+    tags = tag -l
+    branches = branch -a
+    remotes = remote -v
+
+    # Find branches containing commit
+    fb = "!f() { git branch -a --contains $1; }; f"
+
+    # Find tags containing commit
+    ft = "!f() { git describe --always --contains $1; }; f"
+
+    # Find commits by source code
+    fc = "!f() { git log --pretty=format:'%C(yellow)%h  %Cblue%ad  %Creset%s%Cgreen  [%cn] %Cred%d' --decorate --date=short -S$1; }; f"
+
+    # Find commits by commit message
+    fm = "!f() { git log --pretty=format:'%C(yellow)%h  %Cblue%ad  %Creset%s%Cgreen  [%cn] %Cred%d' --decorate --date=short --grep=$1; }; f"
+
+    # List all aliases
+    #la = "!git config -l | grep alias | cut -c 7-"
+
+    # Diff staged files with the latest commit (if commit hash is not provided)
+    dc = diff --staged
+    ds = diff --staged
+
+    # http://stackoverflow.com/questions/1139762/ignore-files-that-have-already-been-committed-to-a-git-repository
+    untrack = rm --cached
+
+    # Shows commits not pushed to origin
+    unpushed = "log --branches --not --remotes --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)%Creset' --abbrev-commit"
+[user]
+    name = Rosen Stoyanov
+    email = me@pockata.org
+[credential]
+    helper = cache --timeout=3600
+[color]
+	branch = auto
+	diff = auto
+	status = auto
+	ui = auto
+	interactive = auto
+[apply]
+    # Detect whitespace errors when applying a patch
+    whitespace = fix
+[core]
+	editor = vim
+	pager = less -F -X
+[push]
+	default = current
