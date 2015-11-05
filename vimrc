@@ -144,6 +144,8 @@ nnoremap ; l
   " 5 -> blinking vertical bar
   " 6 -> solid vertical bar
 
+" Ignore files ctrlp https://github.com/kien/ctrlp.vim/issues/58
+let g:ctrlp_custom_ignore = '\v[\/](node_modules|target|dist)|(\.(swp|ico|git|svn))$'
 
 " Specify the behavior when switching between buffers
 try
