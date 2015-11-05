@@ -127,6 +127,12 @@ nmap <M-k> mz:m-2<cr>`z
 vmap <M-j> :m'>+<cr>`<my`>mzgv`yo`z
 vmap <M-k> :m'<-2<cr>`>my`<mzgv`yo`z
 
+" Don't implode
+nnoremap j h
+nnoremap k j
+nnoremap l k
+nnoremap ; l
+
 " Change shape of cursor in different modes
 let &t_SI = "\<Esc>]50;CursorShape=1\x7" " Vertical line in insert mode
 let &t_EI = "\<Esc>]50;CursorShape=0\x7" " Block in normal mode
