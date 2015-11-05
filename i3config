@@ -273,13 +273,15 @@ assign [class="Filezilla"] $wsp4
 assign [class="Skype"] $wsp6
 assign [class="Vlc"] $wsp7
 assign [title="Popcorn Time"] $wsp7
+assign [title="Atom"] $wsp3
 
 #for_window [window_role="pop-up"] floating enable
 for_window [class="google-chrome-beta" window_role="pop-up"] floating enable
 for_window [class="Thunar"] floating enable
 for_window [class="Skype"] floating enable
 for_window [class="Arandr"] floating enable
-for_window [title="Task Manager - Google Chrome"] floating enable
+for_window [class="File-roller"] floating enable
+for_window [title="Task Manager - Google Chrome"] floating enable; resize shrink width 10000px; resize grow width 381px; resize shrink height 10000px; resize grow height 124px;
 
 # Hacks, Hacks, Hacks
 for_window [title="Developer Tools.*"] floating enable; resize shrink width 10000px; resize grow width 800px; resize shrink height 10000px; resize grow height 500px;
