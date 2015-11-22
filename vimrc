@@ -119,23 +119,23 @@ set ai "Auto indent
 vnoremap <silent> * :call VisualSelection('f')<CR>
 vnoremap <silent> # :call VisualSelection('b')<CR>
 
+" Don't implode
+noremap j h
+noremap k j
+noremap l k
+noremap ; l
+
 " Smart way to move between windows
-map <C-j> <C-W>j
-map <C-k> <C-W>k
-map <C-h> <C-W>h
-map <C-l> <C-W>l
+map <C-k> <C-W>j
+map <C-l> <C-W>k
+map <C-j> <C-W>h
+map <C-;> <C-W>l
 
 " Move a line of text using ALT+[jk] or Comamnd+[jk] on mac
-nmap <M-j> mz:m+<cr>`z
-nmap <M-k> mz:m-2<cr>`z
-vmap <M-j> :m'>+<cr>`<my`>mzgv`yo`z
-vmap <M-k> :m'<-2<cr>`>my`<mzgv`yo`z
-
-" Don't implode
-nnoremap j h
-nnoremap k j
-nnoremap l k
-nnoremap ; l
+nmap <M-k> mz:m+<cr>`z
+nmap <M-l> mz:m-2<cr>`z
+vmap <M-k> :m'>+<cr>`<my`>mzgv`yo`z
+vmap <M-l> :m'<-2<cr>`>my`<mzgv`yo`z
 
 " Change shape of cursor in different modes
   " solid underscore
