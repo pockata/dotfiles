@@ -25,6 +25,10 @@ let g:NERDCustomDelimiters = {
 \}
 let NERD_html_alt_style=1
 
+" Show NERDTree with Ctrl+k Ctrl+b or Ctrl+kb
+map <C-k><C-b> :NERDTreeToggle<CR>
+map <C-k>b :NERDTreeToggle<CR>
+
 " Sets 4 spaces as indent
 set tabstop=4
 set shiftwidth=4
