@@ -274,6 +274,7 @@ assign [class="Skype"] $wsp6
 assign [class="Vlc"] $wsp7
 assign [title="Popcorn Time"] $wsp7
 assign [title="Atom"] $wsp3
+assign [title="Brackets"] $wsp8
 
 #for_window [window_role="pop-up"] floating enable
 for_window [class="google-chrome-beta" window_role="pop-up"] floating enable
