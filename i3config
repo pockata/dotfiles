@@ -129,10 +129,10 @@ set $wsp3 3:editor
 set $wsp4 4:ftp
 set $wsp5 5:music
 set $wsp6 6:im
-set $wsp7 7
-set $wsp8 8
+set $wsp7 7:misc
+set $wsp8 8:misc
 set $wsp9 9:devtools
-set $wsp10 10
+set $wsp10 10:misc
 
 # switch to workspace
 bindsym $mod+1 workspace $wsp1
