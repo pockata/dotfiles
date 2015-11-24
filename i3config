@@ -55,6 +55,7 @@ popup_during_fullscreen smart
 # start a terminal
 #bindsym $mod+Return exec i3-sensible-terminal
 bindsym $mod+Return exec --no-startup-id urxvtc
+bindsym $mod+Shift+Return exec --no-startup-id urxvtc -name floating_term -g 55x15
 
 # kill focused window
 bindsym $mod+Shift+q kill
@@ -283,6 +284,7 @@ for_window [class="Thunar"] floating enable
 for_window [class="Skype"] floating enable
 for_window [class="Arandr"] floating enable
 for_window [class="File-roller"] floating enable
+for_window [title="floating_term"] floating enable
 for_window [title="Task Manager - Google Chrome"] floating enable; resize shrink width 10000px; resize grow width 381px; resize shrink height 10000px; resize grow height 124px;
 
 # Hacks, Hacks, Hacks
