@@ -215,6 +215,7 @@ bar {
     position top
     #separator_symbol "〉"
     separator_symbol "  "
+    tray_output HDMI1
 
     colors {
         background $background
