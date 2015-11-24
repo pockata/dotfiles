@@ -319,7 +319,7 @@ exec --no-startup-id compton
 exec --no-startup-id unclutter &
 
 # Auto Screen lock (the "-corners 0-00" part disables auto lock when mouse pointer is in top right corner)
-exec --no-startup-id xautolock -locker ~/bin/lock.sh -time 7 -corners 0-00
+exec --no-startup-id xautolock -locker ~/bin/lock.sh -time 7 -corners -000
 
 # Enable Trackpoint scroll
 #exec --no-startup-id xinput set-prop "TPPS/2 IBM TrackPoint" "Evdev Wheel Emulation" 1
