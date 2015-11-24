@@ -337,15 +337,11 @@ exec --no-startup-id xmodmap -e "pointer = 1 25 3 4 5 6 7 8 9 10 11 12"
 exec --no-startup-id redshift-gtk &
 
 # i3-style generated styles
-                #border #bg #text   #indicator
-#client.focused $darkred $green $white $darkred
-#client.focused_inactive #333333 #333333 #888888 #333333
-#client.unfocused #333333 #333333 #ffffff #333333
-#client.urgent #eb709b $darkred #ffffff #eb709b
+                        #border #bg #text   #indicator
 
+client.unfocused        $black $black $black $black
 client.focused          $foreground $darkgreen $background $darkgreen
-client.focused_inactive $darkgrey $darkgrey $foreground $darkgrey
-client.focused_inactive #333333 #333333 #888888 #333333
+client.focused_inactive $black $black $black $black
 client.urgent           $darkred $darkred $background $darkred
 
 ###
