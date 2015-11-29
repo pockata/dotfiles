@@ -47,8 +47,9 @@ Xft.hintstyle:  hintfull
 URxvt*scrollBar: false
 URxvt*internalBorder: 4
 
-URxvt*scrollTtyOutput:  true
-URxvt*scrollWithBuffer:  false
+URxvt*scrollTtyOutput:  false
+URxvt*scrollWithBuffer:  true
+URxvt*scrollTtyKeypress:  true
 
 ! Enables copy/paste
 URxvt.iso14755: False
