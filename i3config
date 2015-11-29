@@ -303,7 +303,7 @@ exec --no-startup-id dunst -config ~/.dunstrc &
 
 # Rofi (program runner / window switcher)
 #exec_always --no-startup-id rofi -key-run $mod+d -font "inconsolata 12" -fg "#ebdbb2" -bg "#282828" -hlfg "#ffffff" -hlbg "#d70a53" -o 100 -bw 2 -bc "#d70a53" 5 -fuzzy true -modi "window,run"
-exec_always --no-startup-id rofi -key-window $mod+w -key-run $mod+d -modi "window,run"
+exec --no-startup-id rofi -key-window $mod+w -key-run $mod+d -modi "window,run"
 
 # Set keyboard variants
 exec --no-startup-id setxkbmap -model pc101 -layout us,bg -variant ,phonetic -option grp:alt_shift_toggle caps:escape
