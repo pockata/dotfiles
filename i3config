@@ -336,6 +336,9 @@ exec --no-startup-id xmodmap -e "pointer = 1 25 3 4 5 6 7 8 9 10 11 12"
 # Start redshift
 exec --no-startup-id redshift-gtk &
 
+# Reread Xresources
+exec_always --no-startup-id xrdb -load ~/.Xresources
+
 # i3-style generated styles
                         #border #bg #text   #indicator
 
