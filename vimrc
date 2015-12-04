@@ -1,7 +1,33 @@
 " VIM tips from http://amix.dk/vim/vimrc.html
 
-execute pathogen#infect()
+" Load vim-plug
+"if empty(glob("~/.vim/autoload/plug.vim"))
+"    execute '!curl -fLo ~/.vim/autoload/plug.vim https://raw.github.com/junegunn/vim-plug/master/plug.vim'
+"endif
+
 syntax on
+
+call plug#begin('~/.vim/plugged')
+
+Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
+Plug 'moll/vim-bbye'
+Plug 'kien/ctrlp.vim'
+Plug 'Raimondi/delimitMate'
+Plug 'morhetz/gruvbox'
+Plug 'gregsexton/MatchTag'
+Plug 'scrooloose/nerdcommenter'
+Plug 'scrooloose/nerdtree'
+Plug 'bling/vim-airline'
+Plug 'MattesGroeger/vim-bookmarks'
+Plug 'bufkill.vim'
+Plug 'airblade/vim-gitgutter'
+Plug 'tpope/vim-sensible'
+Plug 'terryma/vim-smooth-scroll'
+Plug 'mhinz/vim-startify'
+Plug 'tpope/vim-surround'
+Plug 'Valloric/YouCompleteMe'
+
+call plug#end()
 
 set t_Co=256
 set background=dark
