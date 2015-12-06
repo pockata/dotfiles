@@ -93,5 +93,5 @@ done
 echo -e "${txtylw}Linking dotfiles to home dir...${txtrst}"
 stow $(ls */ -d)
 
-echo "{$txtgrn}DONE!{$txtrst}"
+echo -e "{$txtgrn}DONE!{$txtrst}"
 
