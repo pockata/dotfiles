@@ -1,0 +1,122 @@
+"*":
+  editor:
+    fontFamily: "Source Code Pro"
+    tabLength: 4
+    scrollPastEnd: true
+    invisibles: {}
+    showIndentGuide: true
+    scrollSensitivity: 35
+    lineHeight: 1.35
+    showInvisibles: true
+    undoGroupingInterval: 15
+  core:
+    followSymlinks: true
+    disabledPackages: [
+      "background-tips"
+      "link"
+      "spell-check"
+      "welcome"
+      "open-on-github"
+      "project-colorize"
+      "linter-htmlhint"
+      "synced-sidebar"
+      "auto-replace-in-selection"
+      "autocomplete"
+      "file-type-icons"
+      "autosave"
+      "minimap"
+      "linter"
+      "unbinder"
+      "unbinder"
+      "emmet"
+      "minimap-git-diff"
+      "react"
+      "to-base64"
+      "gistom"
+    ]
+    themes: [
+      "one-dark-ui"
+      "gruvbox-mellow"
+    ]
+    destroyEmptyPanes: false
+    autoHideMenuBar: true
+  "exception-reporting":
+    userId: "2fe76262-827d-37cb-954d-fcbbc97bbb12"
+  welcome:
+    showOnStartup: false
+  autocomplete:
+    includeCompletionsFromAllBuffers: true
+  "fuzzy-finder":
+    traverseIntoSymlinkDirectories: true
+    preserveLastSearch: true
+    ignoredNames: [
+      "node_modules"
+      ".tmp"
+      ".sass-cache"
+      "bower_components"
+    ]
+  "git-diff":
+    showIconsInEditorGutter: true
+  "markdown-preview": {}
+  "spell-check": {}
+  tabs: {}
+  whitespace:
+    ignoreWhitespaceOnCurrentLine: false
+  linter:
+    lintOnChangeInterval: 5000
+    clearOnChange: true
+    statusBar: "Show all errors"
+    showErrorInline: false
+    showInfoMessages: true
+    showErrorPanel: false
+  "isotope-ui":
+    compactLayout: true
+    fontWeight: "Regular"
+    matchEditorFont: true
+    fontFamily: "Source Sans Pro"
+    backgroundColor: "false"
+    backgroundImage: true
+  "linter-jshint": {}
+  "linter-bootlint": {}
+  "filetype-color":
+    enabled: "true"
+  react: {}
+  "atom-pair":
+    pusher_app_key: "667247d0d2d3945c16b4"
+    pusher_app_secret: "91f2b858239932e0754a"
+  fonts:
+    preview: "asdasjdasdasd"
+    fontFamily: "Droid Sans Mono"
+  "autocomplete-plus":
+    strictMatching: true
+    backspaceTriggersAutocomplete: true
+    fileBlacklist: [
+      "*.md"
+    ]
+    defaultProvider: "Fuzzy"
+    suggestionListFollows: "Cursor"
+  "find-and-replace": {}
+  "atom-ternjs":
+    docs: false
+    inlineFnCompletion: false
+  minimap:
+    plugins:
+      "git-diff": true
+  "vim-mode":
+    useSmartcaseForSearch: true
+    useClipboardAsDefaultRegister: true
+    wrapLeftRightMotion: true
+  "tree-view":
+    hideVcsIgnoredFiles: true
+    hideIgnoredNames: true
+  "one-light-ui":
+    layoutMode: "Compact"
+  "one-dark-ui":
+    layoutMode: "Compact"
+  "file-icons":
+    onChanges: true
+  "unbinder:stf": "lol"
+  "gutter-shadow": {}
+  pigments:
+    extendAutocompleteToVariables: true
+    markerType: "square-dot"

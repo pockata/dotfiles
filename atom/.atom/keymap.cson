@@ -1,0 +1,64 @@
+# Your keymap
+#
+# Atom keymaps work similarly to stylesheets. Just as stylesheets use selectors
+# to apply styles to elements, Atom keymaps use selectors to associate
+# keystrokes with events in specific contexts.
+#
+# You can create a new keybinding in this file by typing "key" and then hitting
+# tab.
+#
+# Here's an example taken from Atom's built-in keymap:
+#
+# 'atom-text-editor':
+#   'enter': 'editor:newline'
+#
+# 'atom-workspace':
+#   'ctrl-shift-p': 'core:move-up'
+#   'ctrl-p': 'core:move-down'
+#
+# You can find more information about keymaps in these guides:
+# * https://atom.io/docs/latest/customizing-atom#customizing-key-bindings
+# * https://atom.io/docs/latest/advanced/keymaps
+#
+# This file uses CoffeeScript Object Notation (CSON).
+# If you are unfamiliar with CSON, you can read more about it here:
+# https://github.com/bevry/cson#what-is-cson
+
+'atom-text-editor:not([mini])':
+    'ctrl-shift-m': 'bracket-matcher:select-inside-brackets'
+    'home': 'unset!'
+    'shift-home': 'unset!'
+    'end': 'unset!'
+    'shift-end': 'unset!'
+    'alt-s': 'editor:move-to-end-of-screen-line'
+    'alt-shift-s': 'editor:select-to-end-of-line'
+    'alt-a': 'editor:move-to-first-character-of-line'
+    'alt-shift-a': 'editor:select-to-first-character-of-line'
+
+'atom-text-editor.vim-mode.normal-mode':
+    'ctrl-T': 'unset!'
+
+'.workspace':
+  'ctrl-shift-t': 'unset!'
+  'alt-shift-T': 'todo-show:find-in-project'
+
+'atom-workspace atom-text-editor:not([mini])':
+  'ctrl-shift-down': 'editor:move-line-down'
+  'ctrl-shift-up': 'editor:move-line-up'
+  'ctrl-down': 'unset!'
+  'ctrl-up': 'unset!'
+
+'atom-text-editor.vim-mode:not(.insert-mode)':
+  'j': 'vim-mode:move-left'
+  'k': 'vim-mode:move-down'
+  'l': 'vim-mode:move-up'
+  ';': 'vim-mode:move-right'
+  'ctrl-w ctrl-j': 'window:focus-pane-on-left'
+  'ctrl-w j': 'window:focus-pane-on-left'
+  'ctrl-w ctrl-;': 'window:focus-pane-on-right'
+  'ctrl-w ;': 'window:focus-pane-on-right'
+  'ctrl-w ctrl-l': 'window:focus-pane-above'
+  'ctrl-w l': 'window:focus-pane-above'
+  'ctrl-w ctrl-k': 'window:focus-pane-below'
+  'ctrl-w k': 'window:focus-pane-below'
+  'ctrl-w': 'core:noop'
