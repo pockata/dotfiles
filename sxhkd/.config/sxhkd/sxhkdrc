@@ -1,0 +1,50 @@
+# move windows around
+super + {j,k,l,semicolon}
+	wmv {-20 0, 0 20, 0 -20, 20 0} $(pfw)
+
+# run xterm
+super + Return
+	xterm
+
+# kill window
+super + q
+	xkill -id $(pfw)
+
+# resize windows
+super + alt + {j,k,l,semicolon}
+	wrs {-20 0, 0 20, 0 -20, 20 0} $(pfw)
+
+# cycle throught windows
+alt {, + shift} + tab
+	vroum {next, prev}
+
+# add window to a group
+super + shift + {1,2,3,4,5}
+	groaw -d all; \
+	groaw -a {1,2,3,4,5}
+
+# toggle groups' visibility
+super + {1,2,3,4,5}
+	groaw -t {1,2,3,4,5}
+
+# remove window from all groups
+super + Backspace
+	groaw -d all
+
+# select windows using directions
+alt + {left,down,up,right}
+	focus {west, south, north, east} $(pfw)
+
+# move windows to corners
+super + {u,i,n,m,g}
+	corner {tl, tr, bl, br, md} $(pfw)
+
+# set window fullscreen
+super + x
+	fullscreen $(pfw)
+
+# move windows with the mouse
+super + !button{1,3}
+	{wmv, wrs} -a %i %i $(pfw)
+
+
