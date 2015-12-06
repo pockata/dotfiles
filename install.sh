@@ -79,26 +79,19 @@ fi
 ask "${undylw}Install packages?${txtrst}" Y && echo -e "${undwht}Will${txtrst} ${txtwht}install them sometime in the future${txtrst} ${txtylw}:)${txtrst}";
 
 mkdir -p ~/dotfile_conflicts
-echo "backing up conflicts to ~/dotfile_conflicts"
+echo -e "${undylw}Backing up conflicts to ~/dotfile_conflicts..${txtrst}"
 IFS=$'\n'
 
-for f in */; do
-    if ask "\n${txtylw}Symlink${txtrst} ${undcyn}${f%*/}${txtrst}${txtylw}?${txtrst}" Y; then
-        echo "Installing..."
-	for file in $(stow -n $f 2>&1 | grep -oE ":.+" | cut -c3-); do
-	    if [ -f ~/$file ]; then
-	        mkdir -p ~/dotfile_conflicts/$(dirname $file)
-	        mv ~/$file ~/dotfile_conflicts/$file
-	    fi
-	done
-
-	{
-        stow $f
-	} || {
-	    echo -e "${txtred}ERROR${txtrst} Failed to stow $f"
-	}
+for file in $(stow -n $(ls */ -d) 2>&1 | grep -oE ":.+" | cut -c3-); do
+    if [ -f ~/$file ]; then
+        mkdir -p ~/dotfile_conflicts/$(dirname $file)
+        mv ~/$file ~/dotfile_conflicts/$file
+        echo $file
     fi
 done
+
+echo -e "${txtylw}Linking dotfiles to home dir...${txtrst}"
+stow $(ls */ -d)
 
 echo "{$txtgrn}DONE!{$txtrst}"
 
