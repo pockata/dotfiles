@@ -1,3 +1,8 @@
+libxcb
+xorg-xinit
+xorg-server
+xorg-xkill
+xorg-xset
 zsh
 cowsay
 fortune-mod

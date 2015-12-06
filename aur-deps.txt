@@ -1,3 +1,5 @@
+wmutils-git
+swm-git
 sublime-text-dev
 atom-editor-beta-bin
 xkblayout-state
