@@ -1,0 +1,11 @@
+zsh
+cowsay
+fortune-mod
+filezilla
+mpc
+ncmpcpp
+the_silver_searcher
+gcolor2
+weechat
+dunst
+

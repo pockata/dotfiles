@@ -1,0 +1,6 @@
+sublime-text-dev
+atom-editor-beta-bin
+xkblayout-state
+antigen-git
+rofi-git
+
