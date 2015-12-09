@@ -72,7 +72,7 @@ alias aur="yaourt"
 alias myip="dig +short myip.opendns.com @resolver1.opendns.com"
 alias localip="ipconfig getifaddr en0"
 alias cu="caniuse --long --mobile --percentages"
-alias ls='ls --color -h --group-directories-first'
+alias ls='ls -A --color -h --group-directories-first'
 alias lsym='ls -la | grep -i "\->" | awk "/ / { print \$9, \$11 }"'
 alias lsg='ls -la | grep -ni dot'
 
