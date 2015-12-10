@@ -9,6 +9,7 @@
     lineHeight: 1.35
     showInvisibles: true
     undoGroupingInterval: 15
+    fontSize: 15
   core:
     followSymlinks: true
     disabledPackages: [
