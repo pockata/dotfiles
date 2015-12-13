@@ -1,7 +1,12 @@
 #!/bin/bash
- 
+
+get_abs_filename() {
+  # $1 : relative filename
+  echo "$(cd "$(dirname "$1")" && pwd)/$(basename "$1")"
+}
+
 # Symlink the wallpaper
-ln -sf "$(pwd)/$1" ~/.wallpaper
+ln -snf $(get_abs_filename $1) ~/.wallpaper
 
 # Set the wallpaper
 . ~/bin/wallpaper.sh
