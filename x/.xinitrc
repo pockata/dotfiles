@@ -2,9 +2,12 @@
 
 [[ -f ~/.Xresources ]] && xrdb -load ~/.Xresources
 
-sxhkd -c ~/keybindings.conf > /dev/null 2>&1 &
+sxhkd &
 
-dunst -config ~/.dunstrc &
+dunst &
+
+# make the cursor point in the 'right' direction
+xsetroot -cursor_name left_ptr &
 
 rofi -key-window Mod4+w -key-run Mod4+d -modi "window,run"
 
@@ -18,4 +21,6 @@ xautolock -locker ~/bin/lock.sh -time 7 -corners -000
 
 redshift-gtk &
 
-exec swm
+. ~/bin/wallpaper.sh
+exec xwait
+
