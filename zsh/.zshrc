@@ -1,46 +1,34 @@
-# Load Antigen
-source /usr/share/zsh/scripts/antigen/antigen.zsh
+# Load zplug
+source ~/.zplug/zplug
 
-antigen bundle git
-antigen bundle zsh-users/zsh-completions src
-antigen bundle rupa/z
-antigen bundle command-not-found
-antigen bundle node
-antigen bundle npm
-antigen bundle rsync
-antigen bundle mafredri/zsh-async
-antigen bundle sindresorhus/pure
-antigen bundle zsh-users/zsh-syntax-highlighting
+# Let zplug manage itself
+zplug "b4b4r07/zplug"
+
+zplug "zsh-users/zsh-history-substring-search", as:plugin
+zplug "zsh-users/zsh-completions", as:plugin, of:"src"
+zplug "rupa/z", of:z.sh
+
+# pure prompt
+zplug "mafredri/zsh-async"
+zplug "sindresorhus/pure"
+
+# nice:10 needed to load after compinit
+zplug "zsh-users/zsh-syntax-highlighting", nice:10
 
 # A Zsh plugin to help remembering those aliases you once defined.
-antigen bundle djui/alias-tips
+zplug "djui/alias-tips"
 
-antigen apply
+# Install plugins if there are plugins that have not been installed
+if ! zplug check --verbose; then
+    printf "Install? [y/N]: "
+    if read -q; then
+        echo; zplug install
+    fi
+fi
+
+zplug load
 
 export PATH=$HOME/bin:$PATH
-# export MANPATH="/usr/local/man:$MANPATH"
-
-# You may need to manually set your language environment
-# export LANG=en_US.UTF-8
-
-# Preferred editor for local and remote sessions
-# if [[ -n $SSH_CONNECTION ]]; then
-#   export EDITOR='vim'
-# else
-#   export EDITOR='mvim'
-# fi
-
-# Compilation flags
-# export ARCHFLAGS="-arch x86_64"
-
-# ssh
-# export SSH_KEY_PATH="~/.ssh/dsa_id"
-
-# Set personal aliases, overriding those provided by oh-my-zsh libs, plugins, and themes. Aliases can be placed here, though oh-my-zsh users are encouraged to define aliases within the ZSH_CUSTOM folder.  For a full list of active aliases, run `alias`.
-#
-# Example aliases
-# alias zshconfig="mate ~/.zshrc"
-# alias ohmyzsh="mate ~/.oh-my-zsh"
 
 # Loading NVM
 #export NVM_DIR="/home/pockata/.nvm"
@@ -75,6 +63,7 @@ alias cu="caniuse --long --mobile --percentages"
 alias ls='LC_COLLATE=C ls -A --color -h --group-directories-first'
 alias lsym='ls -la | grep -i "\->" | awk "/ / { print \$9, \$11 }"'
 alias lsg='ls -la | grep -ni dot'
+alias busy="cat /dev/urandom | hexdump -C | grep --color=auto \"ca fe\""
 
 alias pbcopy='xsel --clipboard --input'
 alias pbpaste='xsel --clipboard --output'
@@ -87,6 +76,11 @@ alias path='echo $PATH | tr -s ":" "\n"'
 # Create a new directory and enter it
 function mkd() {
 	mkdir -p "$@" && cd "$_";
+}
+
+# Basic calculator
+= () {
+    bc -l <<< "$@"
 }
 
 # Create a data URL from a file
