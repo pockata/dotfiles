@@ -76,22 +76,41 @@ if ! hash stow 2>/dev/null; then
 fi
 
 # Install packages (pacman, AUR, npm etc)
-ask "${undylw}Install packages?${txtrst}" Y && echo -e "${undwht}Will${txtrst} ${txtwht}install them sometime in the future${txtrst} ${txtylw}:)${txtrst}";
+if ask "${txtylw}Install packages?${txtrst}" Y; then
+    #echo -e "${undwht}Will${txtrst} ${txtwht}install them sometime in the future${txtrst} ${txtylw}:)${txtrst}";
 
-mkdir -p ~/dotfile_conflicts
-echo -e "${undylw}Backing up conflicts to ~/dotfile_conflicts..${txtrst}"
-IFS=$'\n'
+    # Install pacman packages
+    sudo pacman -Syu --noconfirm --needed < pacman-deps.txt
 
-for file in $(stow -n $(ls */ -d) 2>&1 | grep -oE ":.+" | cut -c3-); do
-    if [ -f ~/$file ]; then
-        mkdir -p ~/dotfile_conflicts/$(dirname $file)
-        mv ~/$file ~/dotfile_conflicts/$file
-        echo $file
-    fi
-done
+    # Install AUR packages
+    yaourt -Sya --noconfirm --needed < aur-deps.txt
 
-echo -e "${txtylw}Linking dotfiles to home dir...${txtrst}"
-stow $(ls */ -d)
+    # Install VimPlug
+    curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.github.com/junegunn/vim-plug/master/plug.vim
+    echo "Don't forget to run :PlugInstall within Vim"
 
-echo -e "{$txtgrn}DONE!{$txtrst}"
+    # Install zplug
+    curl -fLo ~/.zplug/zplug https://git.io/zplug
+    echo "Don't forget to run zplug update --self within ZSH"
+fi
+
+if ask "\n${txtylw}Symlink dotfiles?${txtrst}" Y; then
+
+    mkdir -p ~/dotfile_conflicts
+    echo -e "${undylw}Backing up conflicts to ~/dotfile_conflicts..${txtrst}"
+    IFS=$'\n'
+
+    for file in $(stow -n $(ls */ -d) 2>&1 | grep -oE ":.+" | cut -c3-); do
+        if [ -f ~/$file ]; then
+            mkdir -p ~/dotfile_conflicts/$(dirname $file)
+            mv ~/$file ~/dotfile_conflicts/$file
+            echo $file
+        fi
+    done
+
+    echo -e "${txtylw}Linking dotfiles to home dir...${txtrst}"
+    stow $(ls */ -d)
+fi
+
+echo -e "\n\n${txtgrn}BYE!${txtrst}"
 
