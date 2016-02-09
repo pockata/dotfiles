@@ -1,6 +1,9 @@
 wmutils-git
+lemonbar-xft-git
+rofi-git
+fcount
 sublime-text-dev
 atom-editor-beta-bin
-xkblayout-state
-rofi-git
-
+redshift-gtk
+ttf-ms-fonts
+toilet
