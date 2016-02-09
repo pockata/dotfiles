@@ -25,7 +25,10 @@ Plug 'tpope/vim-sensible'
 Plug 'terryma/vim-smooth-scroll'
 Plug 'mhinz/vim-startify'
 Plug 'tpope/vim-surround'
-Plug 'Valloric/YouCompleteMe'
+Plug 'mattn/emmet-vim'
+Plug 'Valloric/MatchTagAlways'
+Plug 'Valloric/YouCompleteMe', { 'do': './install.py' }
+autocmd! User YouCompleteMe if !has('vim_starting') | call youcompleteme#Enable() | endif
 
 call plug#end()
 
@@ -41,6 +44,9 @@ let g:gruvbox_contrast_dark="hard"
 
 set number
 filetype plugin indent on
+
+" Enable mouse mode
+set mouse=a
 
 " Add proper indent when hitting <CR> inside curly braces
 let delimitMate_expand_cr = 1
@@ -135,15 +141,10 @@ set tm=500
 "set nobackup
 "set nowb
 "set noswapfile
-set backupdir=~/.vim/backups,.
-set directory=~/.vim/backups,.
+set backupdir=~/.vim/backups,/tmp
+set directory=~/.vim/backups,/tmp
 
 set ai "Auto indent
-
-" Visual mode pressing * or # searches for the current selection
-" Super useful! From an idea by Michael Naumann
-vnoremap <silent> * :call VisualSelection('f')<CR>
-vnoremap <silent> # :call VisualSelection('b')<CR>
 
 " Don't implode
 noremap j h
@@ -151,11 +152,10 @@ noremap k j
 noremap l k
 noremap ; l
 
-" Smart way to move between windows
-map <C-k> <C-W>j
-map <C-l> <C-W>k
-map <C-j> <C-W>h
-map <C-;> <C-W>l
+noremap <C-w>j <C-w>h
+noremap <C-w>k <C-w>j
+noremap <C-w>l <C-w>k
+noremap <C-w>; <C-w>l
 
 " Move a line of text using ALT+[jk] or Comamnd+[jk] on mac
 nmap <M-k> mz:m+<cr>`z
@@ -183,6 +183,9 @@ try
   set stal=2
 catch
 endtry
+
+"https://www.reddit.com/r/vim/comments/3er2az/how_to_suppress_vims_warning_editing_a_read_only/
+"au BufEnter * set noro
 
 " Returns true if paste mode is enabled
 function! HasPaste()
@@ -224,6 +227,7 @@ autocmd BufWrite *.html :call DeleteTrailingWS()
 autocmd BufWrite *.css :call DeleteTrailingWS()
 autocmd BufWrite *.php :call DeleteTrailingWS()
 autocmd BufWrite *.json :call DeleteTrailingWS()
+autocmd BufWrite *.sh :call DeleteTrailingWS()
 
 noremap <silent> <c-u> :call smooth_scroll#up(&scroll, 0, 2)<CR>
 noremap <silent> <c-d> :call smooth_scroll#down(&scroll, 0, 2)<CR>
