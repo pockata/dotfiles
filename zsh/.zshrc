@@ -53,6 +53,15 @@ setopt notify
 # Automatically list choices on an ambiguous completion.
 setopt auto_list
 
+# Share history between sessions
+HISTFILE=~/.history
+HISTSIZE=1000
+SAVEHIST=1000
+
+setopt share_history
+setopt inc_append_history
+setopt hist_ignore_dups
+setopt extended_history
 
 # Aliases
 alias a="atom-beta"
