@@ -1,0 +1,96 @@
+#!/bin/sh
+
+usage() {
+    echo "usage: $(basename $0) [mwhxyi] <wid|mid>" >&2
+    exit 1
+}
+
+test -z "$1" && usage && exit 1
+
+WID=${2:-$(pfw)}
+MONITORS=$(xrandr -q | grep -oE "^.* connected (primary )?[0-9]+x[0-9]+\+[0-9]+\+[0-9]+")
+MONITOR=""
+intArea=0
+
+
+getGeometry() {
+    echo "$3" | tr 'x+' ' '
+}
+
+getIntersection() {
+    
+    # get window's coordinates
+    local W_LEFT=$(wattr x $WID)
+    local W_TOP=$(wattr y $WID)
+    local W_RIGHT=$(($(wattr w $WID) + W_LEFT))
+    local W_BOTTOM=$(($(wattr h $WID) + W_TOP))
+
+    # get the monitor's coordinates
+    local M_WIDTH=$1
+    local M_HEIGHT=$2
+    local M_LEFT=$3
+    local M_TOP=$4
+    local M_RIGHT=$((M_LEFT + M_WIDTH))
+    local M_BOTTOM=$((M_TOP + M_HEIGHT))
+    
+    # calculate the distance between the two rectangles
+    local top=$((W_TOP>M_TOP?W_TOP:M_TOP)) #max (W_TOP, M_TOP)
+    local left=$((W_LEFT>M_LEFT?W_LEFT:M_LEFT)) #max(W_LEFT, M_LEFT)
+    local bottom=$((W_BOTTOM>M_BOTTOM?M_BOTTOM:W_BOTTOM)) #min(W_BOTTOM, W_BOTTOM)
+    local right=$((W_RIGHT>M_RIGHT?M_RIGHT:W_RIGHT)) #min(W_RIGHT, M_RIGHT)
+    
+    # check for intersection
+    if [ "$top" -le "$bottom" ] && [ "$left" -le "$right" ]; then
+        # Output the intersection area
+        echo $(((bottom - top) * (right - left)))
+    else
+        echo 0
+    fi
+}
+
+getMOW() {
+    local MONITOR=""
+    while IFS=$'\n' read -r mon; do
+        monitorGeometry=$(getGeometry $mon)
+        intersectionArea=$(getIntersection $monitorGeometry)
+        #echo -e "$(echo $mon | cut -f1 -d' ') - $intersectionArea"
+
+        if [ "$intersectionArea" -gt 0 ]; then
+            if [ "$intersectionArea" -gt "$intArea" ]; then
+                MONITOR=$mon
+                intArea="$intersectionArea"
+            fi
+        fi
+
+    done <<< "$MONITORS"
+
+    echo "$MONITOR"
+}
+
+if [[ "$WID" == "0x"* ]]; then
+    MONITOR=$(getMOW)
+
+else
+    MONITOR=$(echo "$MONITORS" | grep $WID)
+fi
+
+test -z "$MONITOR" && usage && exit
+
+geo=$(getGeometry $MONITOR)
+
+retStr=""
+for (( i=0; i < ${#1}; i++ ))
+do
+    case ${1:i:1} in
+        m) retStr+=" $(echo $MONITOR | cut -d' ' -f1)" ;;
+        w) retStr+=" $(echo "$geo" | cut -d' ' -f1)" ;;
+        h) retStr+=" $(echo "$geo" | cut -d' ' -f2)" ;;
+        x) retStr+=" $(echo "$geo" | cut -d' ' -f3)" ;;
+        y) retStr+=" $(echo "$geo" | cut -d' ' -f4)" ;;
+        i) retStr+=" $WID" ;;
+        *) usage && exit 0 ;;
+    esac
+done
+
+echo "${retStr# }"
+
