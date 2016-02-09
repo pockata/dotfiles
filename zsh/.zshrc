@@ -76,6 +76,12 @@ alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo
 # Pretty print the path
 alias path='echo $PATH | tr -s ":" "\n"'
 
+# Docker Compose
+alias dc='docker-compose'
+alias dcu='docker-compose up -d'
+alias dcl='docker-compose logs'
+alias dcr='docker-compose run --rm'
+
 # Create a new directory and enter it
 function mkd() {
 	mkdir -p "$@" && cd "$_";
