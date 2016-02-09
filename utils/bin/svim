@@ -1,3 +1,3 @@
 #!/bin/bash
  
-/usr/bin/urxvtc -e vim "$1"
+/usr/bin/urxvtc -e vim --servername Editor --remote-tab-silent "$1"
