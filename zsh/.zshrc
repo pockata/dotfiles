@@ -63,6 +63,9 @@ setopt inc_append_history
 setopt hist_ignore_dups
 setopt extended_history
 
+export FZF_DEFAULT_COMMAND='ag -l -g ""' # Use ag as the default source for fzf
+export FZF_DEFAULT_OPTS='--multi'
+
 # Aliases
 alias a="atom-beta"
 alias g="git"
