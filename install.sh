@@ -80,17 +80,17 @@ if ask "${txtylw}Install packages?${txtrst}" Y; then
     #echo -e "${undwht}Will${txtrst} ${txtwht}install them sometime in the future${txtrst} ${txtylw}:)${txtrst}";
 
     # Install pacman packages
-    sudo pacman -Syu --noconfirm --needed < pacman-deps.txt
+    sudo pacman -Syu --noconfirm --needed $(< pacman-deps.txt)
 
     # Install AUR packages
-    yaourt -Sya --noconfirm --needed < aur-deps.txt
+    yaourt -Sya --noconfirm --needed $(< aur-deps.txt)
 
     # Install VimPlug
     curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.github.com/junegunn/vim-plug/master/plug.vim
     echo "Don't forget to run :PlugInstall within Vim"
 
     # Install zplug
-    curl -fLo ~/.zplug/zplug https://git.io/zplug
+    curl -fLo ~/.zplug/zplug --create-dirs https://git.io/zplug
     echo "Don't forget to run zplug update --self within ZSH"
 fi
 
