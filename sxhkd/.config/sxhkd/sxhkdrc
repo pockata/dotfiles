@@ -1,49 +1,114 @@
 # move windows around
-super + {j,k,l,semicolon}
+mod4 + shift + {j,k,l,semicolon}
 	wmv {-40 0, 0 40, 0 -40, 40 0} $(pfw)
 
-# run xterm
-super + Return
-	urxvtc
-
-# kill window
-super + q
-	xkill -id $(pfw)
-
-# resize windows
-super + alt + {j,k,l,semicolon}
-	wrs {-40 0, 0 40, 0 -40, 40 0} $(pfw)
-
-# cycle throught windows
-super {, + shift} + tab
-	vroum {next, prev}
-
-# add window to a group
-super + shift + {1,2,3,4,5}
-	groaw -d all; \
-	groaw -a {1,2,3,4,5}
-
-# toggle groups' visibility
-super + {1,2,3,4,5}
-	groaw -t {1,2,3,4,5}
-
-# remove window from all groups
-super + Backspace
-	groaw -d all
-
 # select windows using directions
-alt + {left,down,up,right}
-	focus {west, south, north, east} $(pfw)
+mod4 + {j,k,l,semicolon}
+    focus.sh {east, south, north, west} $(pfw)
 
 # move windows to corners
-super + {u,i,n,m,g}
-	corner {tl, tr, bl, br, md} $(pfw)
+mod4 + shift + {u,p,i,o,h}
+    corner_mh.sh {tl, tr, bl, br, md} $(pfw)
+
+# cycle throught windows
+mod4 + {Tab, shift + Tab}
+    vroum.sh {next, prev}
+
+# cycle throught windows with same class
+mod4 + {grave, shift + grave}
+    next_in_class.sh {next, prev}
 
 # set window fullscreen
-super + x
-	fullscreen $(pfw)
+mod4 + f
+    fullscreen_mh.sh $(pfw)
+
+mod4 + shift + f
+    fullscreen_mh.sh $(pfw) max
+
+# resize window
+mod4 + r : {j,k,l,semicolon}
+    wrs {-40 0, 0 40, 0 -40, 40 0} $(pfw)
+
+# reload keybindings
+mod4 + shift + r
+	pkill -USR1 -f sxhkd
+
+mod4 + shift + e
+    ~/bin/logout.sh
+
+# select monitor setup
+mod4 + w
+    ~/bin/rofi-window-switcher.sh
+
+# select monitor setup
+mod4 + shift + m
+    ~/bin/monitors.sh
+
+# run urxvt
+mod4 + Return
+	urxvtc -g 50x15
+
+# kill window
+mod4 + shift + q
+    killwa $(pfw)
+
+# tile windows
+mod4 + {t,v}
+    tile.sh {-h,-v}
+
+# add window to a group
+mod4 + shift + {1,2,3,4,5}
+    groups.sh -s $(pfw) {1,2,3,4,5}
+
+# toggle groups' visibility
+mod4 + {1,2,3,4,5}
+    groups.sh -t {1,2,3,4,5}
+
+# remove window from all groups
+mod4 + BackSpace
+    groups.sh -c $(pfw)
 
 # move windows with the mouse
-super + !button{1,3}
-	{wmv, wrs} -a %i %i $(pfw)
+mod4 + !{button1,button3}
+    {wmv,wrs} -a %i %i $(pfw)
+
+Print
+    ~/bin/screenshot.sh
+
+# volume management
+XF86AudioRaiseVolume
+    amixer -q set Master 5%+ unmute #increase sound volume
+
+XF86AudioLowerVolume
+    amixer -q set Master 5%- unmute #decrease sound volume
+
+XF86AudioMute 
+    amixer -q set Master toggle # mute sound
+
+# media keys
+XF86AudioPlay
+    mpc toggle
+
+XF86AudioStop
+    mpc stop
+
+XF86AudioNext
+    mpc next
+
+XF86AudioPrev
+    mpc prev
+
+# Power Button
+XF86PowerOff
+    ~/bin/logout.sh
+
+XF86Sleep
+    ~/bin/logout.sh
+
+# sreen brightness controls
+XF86MonBrightnessUp
+    xbacklight -inc 5 # increase screen brightness
+
+XF86MonBrightnessDown
+    xbacklight -dec 5 # decrease screen brightness
 
