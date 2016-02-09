@@ -1,0 +1,8 @@
+atom/.atom/.apm/
+atom/.atom/.node-gyp/
+atom/.atom/blob-store/
+atom/.atom/compile-cache/
+atom/.atom/nohup.out
+atom/.atom/packages/
+atom/.atom/storage/
+
