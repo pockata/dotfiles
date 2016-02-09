@@ -1,7 +1,7 @@
 [global]
-    font = "Fira Mono Medium 9"
+    font = "Meslo LG M DZ for Powerline 9"
     allow_markup = yes
-    format = "%s\n%b"
+    format = "<b>%a</b>\n%s\n%b"
     sort = yes
     indicate_hidden = yes
     alignment = center
@@ -9,7 +9,7 @@
     show_age_threshold = 60
     word_wrap = yes
     ignore_newline = no
-    geometry = "200x5-30+45"
+    geometry = "200x5-15+60"
     transparency = 0
     idle_threshold = 120
     monitor = 0
@@ -17,14 +17,14 @@
     sticky_history = yes
     line_height = 0
     separator_height = 2
-    padding = 8
+    padding = 10
     horizontal_padding = 8
     separator_color = frame
     startup_notification = false
 
 [frame]
-    width = 1
-    color = "#464B50"
+    width = 3
+    color = "#ebdbb2"
 
 [shortcuts]
     close = ctrl+space
@@ -33,16 +33,18 @@
     context = ctrl+shift+period
 
 [urgency_low]
-    background = "#1d2021"
-    foreground = "#8F9D6A"
+    background = "#d79921"
+    foreground = "#a89984"
     timeout = 30
 
 [urgency_normal]
-    background = "#1d2021"
+    #background = "#f9f5d7"
+    #foreground = "#7c6f64"
+    background = "#282828"
     foreground = "#ebdbb2"
     timeout = 45
 
 [urgency_critical]
-    background = "#1d2021"
-    foreground = "#CF6A4C"
+    background = "#9d0006"
+    foreground = "#ebdbb2"
     timeout = 0
