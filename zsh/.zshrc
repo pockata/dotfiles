@@ -8,6 +8,9 @@ zplug "zsh-users/zsh-history-substring-search", as:plugin
 zplug "zsh-users/zsh-completions", as:plugin, of:"src"
 zplug "rupa/z", of:z.sh
 
+# Directory listings for zsh with git features
+zplug "supercrabtree/k", of:k.sh
+
 # pure prompt
 zplug "mafredri/zsh-async"
 zplug "sindresorhus/pure"
