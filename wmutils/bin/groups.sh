@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # Copyright (c) 2015 Greduan <me@greduan.com>, licensed under the WTFPL
 # Adds group-like capabilities, sorta like those you find in CWM and such WMs
@@ -55,10 +55,11 @@ map_group() {
     # add to active
     echo $1 >> $FSDIR/active
 
+    grp=$(cat $FSDIR/group.$1)
     # loop through group and map windows
     while read line; do
         mapw -m $line
-    done < $FSDIR/group.$1
+    done < <(lsw -u | grep "$grp")
 }
 
 # hides all the windows in group ($1)
