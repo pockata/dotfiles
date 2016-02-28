@@ -10,23 +10,22 @@ syntax on
 call plug#begin('~/.vim/plugged')
 
 Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
-Plug 'moll/vim-bbye'
-Plug 'kien/ctrlp.vim'
+Plug 'ctrlpvim/ctrlp.vim'
 Plug 'Raimondi/delimitMate'
 Plug 'morhetz/gruvbox'
-Plug 'gregsexton/MatchTag'
 Plug 'scrooloose/nerdcommenter'
-Plug 'scrooloose/nerdtree'
 Plug 'bling/vim-airline'
 Plug 'MattesGroeger/vim-bookmarks'
-Plug 'bufkill.vim'
 Plug 'airblade/vim-gitgutter'
-Plug 'tpope/vim-sensible'
 Plug 'terryma/vim-smooth-scroll'
 Plug 'mhinz/vim-startify'
 Plug 'tpope/vim-surround'
 Plug 'mattn/emmet-vim'
 Plug 'Valloric/MatchTagAlways'
+Plug 'tpope/vim-sleuth'
+Plug 'rking/ag.vim'
+Plug 'tpope/vim-fugitive'
+Plug 'junegunn/gv.vim'
 Plug 'Valloric/YouCompleteMe', { 'do': './install.py' }
 autocmd! User YouCompleteMe if !has('vim_starting') | call youcompleteme#Enable() | endif
 
@@ -42,8 +41,20 @@ endif
 colorscheme gruvbox
 let g:gruvbox_contrast_dark="hard"
 
+let mapleader=","
 set number
 filetype plugin indent on
+
+" set cursor in split window
+set splitright
+set splitbelow
+
+" remove esc key timeout
+set timeoutlen=1000
+set ttimeoutlen=0
+
+set autoindent
+set complete-=i
 
 " Enable mouse mode
 set mouse=a
@@ -66,6 +77,12 @@ set tabstop=4
 set shiftwidth=4
 set softtabstop=4
 set expandtab
+set smarttab
+set lazyredraw
+
+" Show whitespace characters
+set list
+set listchars=tab:>·,trail:·
 
 " Sets how many lines of history VIM has to remember
 set history=700
@@ -119,6 +136,15 @@ set hlsearch
 
 " Makes search act like search in modern browsers
 set incsearch
+" Use <C-L> to clear the highlighting of :set hlsearch.
+if maparg('<C-L>', 'n') ==# ''
+    nnoremap <silent> <C-L> :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-L>
+endif
+
+" Load matchit.vim, but only if the user hasn't installed a newer version.
+if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &rtp) ==# ''
+  runtime! macros/matchit.vim
+endif
 
 " For expressions turn magic on
 set magic
@@ -176,6 +202,9 @@ vmap <M-l> :m'<-2<cr>`>my`<mzgv`yo`z
 
 " Ignore files ctrlp https://github.com/kien/ctrlp.vim/issues/58
 let g:ctrlp_custom_ignore = '\v[\/](node_modules|target|dist)|(\.(swp|ico|git|svn))$'
+" Use mixed buffer. Vim currently doesn't support different
+" bindings for Ctrl+P and Ctrl+Shift+P. Should check nvim
+noremap <silent> <c-P> :CtrlPMixed<CR>
 
 " Specify the behavior when switching between buffers
 try
