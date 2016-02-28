@@ -5,7 +5,10 @@
 xset +fp ~/.fonts
 xset fp rehash
 xset dpms off
-#xset r rate 280 30
+
+if ! xinput list --name-only | grep -qi "CM Storm Quickfire Rapid i"; then
+    xset r rate 280 45
+fi
 
 monitors=$(xrandr -q | grep -oE "^.* connected (primary )?[0-9]+")
 
