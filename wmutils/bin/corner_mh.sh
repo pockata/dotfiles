@@ -1,20 +1,29 @@
 #!/bin/sh
 
-CUR=${2:-$(pfw)}
-MON=$(mattr m ${3:-$(pfw)})
 GAP=15
 BAR=$((30 + GAP))
 
-# exit if we can't find another window to focus
-if ! wattr $CUR || test -z $MON; then
+CUR=${2:-$(pfw)}
+ANCHOR=${3:-$CUR}
+
+# exit if we can't find another window to move
+if ! wattr $CUR; then
     echo "$(basename $0): no window to move $CUR" >&2;
     exit 1;
 fi
 
-SW=$(mattr w $MON)
-SH=$(mattr h $MON)
-SX=$(mattr x $MON)
-SY=$(mattr y $MON)
+# if there's no anchor to use, use the root window
+# this way we use the monitor with most pixels
+if ! wattr $ANCHOR; then
+    ANCHOR=$(lsw -r)
+fi
+
+MON=($(mattr whxy $ANCHOR))
+
+SW=${MON[0]}
+SH=${MON[1]}
+SX=${MON[2]}
+SY=${MON[3]}
 
 BW=$(wattr b $CUR)
 W=$(wattr w $CUR)
