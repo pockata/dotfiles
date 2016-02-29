@@ -56,9 +56,17 @@ map_group() {
     echo $1 >> $FSDIR/active
 
     grp=$(cat $FSDIR/group.$1)
+    files=$(echo "$grp" | wc -l)
+
+    file=1
     # loop through group and map windows
     while read line; do
+        if [ "$file" -ne "$files" ]; then
+            ignw -s $line
+        fi
         mapw -m $line
+        ignw -r $line
+        file=$(( file + 1 ))
     done < <(lsw -u | grep "$grp")
 }
 
