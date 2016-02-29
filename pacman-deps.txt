@@ -8,7 +8,12 @@ xorg-xrdb
 xorg-xinput
 xorg-xprop
 xorg-xbacklight
+xorg-xsetroot
+acpi
+ntp
+mpv
 lxappearance
+gtk-theme-arc
 tmux
 gvim
 arandr
