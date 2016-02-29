@@ -108,6 +108,10 @@ if ask "\n${txtylw}Symlink dotfiles?${txtrst}" Y; then
         fi
     done
 
+    # stops systemd from using the power key
+    # so we can bind it with sxhkd
+    sudo sed -i 's/#HandlePowerKey=poweroff/HandlePowerKey=ignore/g' /etc/systemd/logind.conf
+
     echo -e "${txtylw}Linking dotfiles to home dir...${txtrst}"
     stow $(ls */ -d)
 fi
