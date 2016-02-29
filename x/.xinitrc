@@ -3,6 +3,7 @@
 [[ -f ~/.Xresources ]] && xrdb -load ~/.Xresources
 
 xset +fp ~/.fonts
+xset -b
 xset fp rehash
 xset dpms off
 
