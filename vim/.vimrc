@@ -14,6 +14,12 @@ Plug 'ctrlpvim/ctrlp.vim'
 Plug 'Raimondi/delimitMate'
 Plug 'morhetz/gruvbox'
 Plug 'scrooloose/nerdcommenter'
+Plug 'sheerun/vim-polyglot'
+Plug '1995eaton/vim-better-javascript-completion', { 'for': 'javascript' }
+Plug 'EinfachToll/DidYouMean'
+Plug 'unblevable/quick-scope'
+Plug 'justinmk/vim-sneak'
+Plug 'vim-scripts/wipeout', { 'on':  'Wipeout' }
 Plug 'bling/vim-airline'
 Plug 'MattesGroeger/vim-bookmarks'
 Plug 'airblade/vim-gitgutter'
@@ -58,6 +64,9 @@ set complete-=i
 
 " Enable mouse mode
 set mouse=a
+
+" Trigger a highlight (quick-scope) in the appropriate direction when pressing these keys:
+let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
 
 " Add proper indent when hitting <CR> inside curly braces
 let delimitMate_expand_cr = 1
@@ -104,6 +113,9 @@ set ruler
 
 " Highlight current line
 set cursorline
+" ... only on focused pane
+autocmd! WinEnter * set cursorline
+autocmd! WinLeave * set nocursorline
 
 " Configure backspace so it acts as it should act
 set backspace=eol,start,indent
@@ -202,6 +214,19 @@ vmap <M-l> :m'<-2<cr>`>my`<mzgv`yo`z
 
 " Ignore files ctrlp https://github.com/kien/ctrlp.vim/issues/58
 let g:ctrlp_custom_ignore = '\v[\/](node_modules|target|dist)|(\.(swp|ico|git|svn))$'
+
+" The Silver Searcher
+if executable('ag')
+  " Use ag over grep
+  set grepprg=ag\ --nogroup\ --nocolor
+
+  " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
+  let g:ctrlp_user_command='ag -l --nocolor -g "" %s'
+
+  " ag is fast enough that CtrlP doesn't need to cache
+  let g:ctrlp_use_caching=0
+endif
+
 " Use mixed buffer. Vim currently doesn't support different
 " bindings for Ctrl+P and Ctrl+Shift+P. Should check nvim
 noremap <silent> <c-P> :CtrlPMixed<CR>
