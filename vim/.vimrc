@@ -45,6 +45,13 @@ autocmd! User YouCompleteMe if !has('vim_starting') | call youcompleteme#Enable(
 
 call plug#end()
 
+set ttyfast " faster reflow
+set shortmess+=I " No intro when starting Vim
+set smartindent " Smart... indent
+set gdefault " The substitute flag g is on
+set hidden " Hide the buffer instead of closing when switching
+set synmaxcol=300 " Don't try to highlight long lines
+
 set t_Co=256
 set background=dark
 
