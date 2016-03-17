@@ -10,7 +10,6 @@ syntax on
 call plug#begin('~/.vim/plugged')
 
 Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
-Plug 'ctrlpvim/ctrlp.vim'
 Plug 'Raimondi/delimitMate'
 Plug 'morhetz/gruvbox'
 Plug 'scrooloose/nerdcommenter'
@@ -18,9 +17,10 @@ Plug 'sheerun/vim-polyglot'
 Plug '1995eaton/vim-better-javascript-completion', { 'for': 'javascript' }
 Plug 'EinfachToll/DidYouMean'
 Plug 'unblevable/quick-scope'
-Plug 'justinmk/vim-sneak'
+"Plug 'justinmk/vim-sneak'
 Plug 'vim-scripts/wipeout', { 'on':  'Wipeout' }
 Plug 'bling/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
 Plug 'MattesGroeger/vim-bookmarks'
 Plug 'airblade/vim-gitgutter'
 Plug 'terryma/vim-smooth-scroll'
@@ -29,20 +29,23 @@ Plug 'tpope/vim-surround'
 Plug 'mattn/emmet-vim'
 Plug 'Valloric/MatchTagAlways'
 Plug 'tpope/vim-sleuth'
+Plug 'mbbill/undotree', { 'on': 'UndotreeToggle' }
+Plug 'junegunn/vim-pseudocl'
+Plug 'junegunn/goyo.vim'
+Plug 'junegunn/vim-oblique'
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
+Plug 'AndrewRadev/splitjoin.vim'
 Plug 'rking/ag.vim'
 Plug 'tpope/vim-fugitive'
 Plug 'junegunn/gv.vim'
-Plug 'Valloric/YouCompleteMe', { 'do': './install.py' }
+Plug 'Valloric/YouCompleteMe', { 'do': './install.py --tern-completer' }
 autocmd! User YouCompleteMe if !has('vim_starting') | call youcompleteme#Enable() | endif
 
 call plug#end()
 
 set t_Co=256
 set background=dark
-if !has('gui_running')
-  let g:solarized_termcolors=&t_Co
-  let g:solarized_termtrans=1
-endif
 
 colorscheme gruvbox
 let g:gruvbox_contrast_dark="hard"
@@ -54,6 +57,8 @@ filetype plugin indent on
 " set cursor in split window
 set splitright
 set splitbelow
+
+let g:airline_powerline_fonts = 1
 
 " remove esc key timeout
 set timeoutlen=1000
@@ -76,6 +81,16 @@ let g:NERDCustomDelimiters = {
     \ 'xhtml': {  'left': '<!-- ', 'right': '-->', 'leftAlt': '/*','rightAlt': '*/'},
 \}
 let NERD_html_alt_style=1
+
+" FZF
+let g:fzf_action = {
+      \ 'ctrl-s': 'split',
+      \ 'ctrl-v': 'vsplit'
+      \ }
+nnoremap <c-p> :FZF<cr>
+
+" Gitgutter
+let g:gitgutter_map_keys = 0
 
 " Show NERDTree with Ctrl+k Ctrl+b or Ctrl+kb
 map <C-k><C-b> :NERDTreeToggle<CR>
@@ -135,7 +150,10 @@ vnoremap d "_d
 set go-=T
 
 " Close buffer without closing split
-command Bd bp\|bd \#
+command! Bd bp\|bd \#
+
+" hide mode (shown in airline)
+set noshowmode
 
 " Ignore case when searching
 set ignorecase
@@ -195,6 +213,11 @@ noremap <C-w>k <C-w>j
 noremap <C-w>l <C-w>k
 noremap <C-w>; <C-w>l
 
+nnoremap <left> :vertical resize +5<cr>
+nnoremap <right> :vertical resize -5<cr>
+nnoremap <up> :resize +5<cr>
+nnoremap <down> :resize -5<cr>
+
 " Move a line of text using ALT+[jk] or Comamnd+[jk] on mac
 nmap <M-k> mz:m+<cr>`z
 nmap <M-l> mz:m-2<cr>`z
@@ -211,25 +234,6 @@ vmap <M-l> :m'<-2<cr>`>my`<mzgv`yo`z
   " Recent versions of xterm (282 or above) also support
   " 5 -> blinking vertical bar
   " 6 -> solid vertical bar
-
-" Ignore files ctrlp https://github.com/kien/ctrlp.vim/issues/58
-let g:ctrlp_custom_ignore = '\v[\/](node_modules|target|dist)|(\.(swp|ico|git|svn))$'
-
-" The Silver Searcher
-if executable('ag')
-  " Use ag over grep
-  set grepprg=ag\ --nogroup\ --nocolor
-
-  " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
-  let g:ctrlp_user_command='ag -l --nocolor -g "" %s'
-
-  " ag is fast enough that CtrlP doesn't need to cache
-  let g:ctrlp_use_caching=0
-endif
-
-" Use mixed buffer. Vim currently doesn't support different
-" bindings for Ctrl+P and Ctrl+Shift+P. Should check nvim
-noremap <silent> <c-P> :CtrlPMixed<CR>
 
 " Specify the behavior when switching between buffers
 try
