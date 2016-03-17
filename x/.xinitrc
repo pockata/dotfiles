@@ -41,8 +41,6 @@ dunst &
 # make the cursor point in the 'right' direction
 xsetroot -cursor_name left_ptr &
 
-rofi -key-run SuperL+d -modi "run" &
-
 setxkbmap -model pc101 -layout us,bg -variant ,phonetic -option grp:alt_shift_toggle caps:escape &
 
 urxvtd -q -f -o &
