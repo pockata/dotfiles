@@ -9,6 +9,7 @@ xorg-xinput
 xorg-xprop
 xorg-xbacklight
 xorg-xsetroot
+xclip
 acpi
 ntp
 mpv
