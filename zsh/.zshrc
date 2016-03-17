@@ -159,3 +159,5 @@ export ATOM_DEV_RESOURCE_PATH="{$HOME}/Projects/atom/"
 PATH="$NPM_PACKAGES/bin:$PATH"
 export PATH;
 
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

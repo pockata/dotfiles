@@ -11,7 +11,7 @@ call plug#begin('~/.vim/plugged')
 
 Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
 Plug 'Raimondi/delimitMate'
-Plug 'morhetz/gruvbox'
+Plug 'chriskempson/base16-vim'
 Plug 'scrooloose/nerdcommenter'
 Plug 'sheerun/vim-polyglot'
 Plug '1995eaton/vim-better-javascript-completion', { 'for': 'javascript' }
@@ -47,8 +47,7 @@ call plug#end()
 set t_Co=256
 set background=dark
 
-colorscheme gruvbox
-let g:gruvbox_contrast_dark="hard"
+colorscheme base16-ocean
 
 let mapleader=","
 set number

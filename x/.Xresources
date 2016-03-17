@@ -1,40 +1,45 @@
+! Base16 Ocean
+! Scheme: Chris Kempson (http://chriskempson.com)
 
-! -----------------------------------------------------------------------------
-! File: gruvbox-dark.xresources
-! Description: Retro groove colorscheme generalized
-! Author: morhetz <morhetz@gmail.com>
-! Source: https://github.com/morhetz/gruvbox-generalized
-! Last Modified: 6 Sep 2014
-! -----------------------------------------------------------------------------
+#define base00 #2b303b
+#define base01 #343d46
+#define base02 #4f5b66
+#define base03 #65737e
+#define base04 #a7adba
+#define base05 #c0c5ce
+#define base06 #dfe1e8
+#define base07 #eff1f5
+#define base08 #bf616a
+#define base09 #d08770
+#define base0A #ebcb8b
+#define base0B #a3be8c
+#define base0C #96b5b4
+#define base0D #8fa1b3
+#define base0E #b48ead
+#define base0F #ab7967
 
-! hard contrast: *background: #1d2021
-*background: #282828
-! soft contrast: *background: #32302f
-*foreground: #ebdbb2
-! Black + DarkGrey
-*color0:  #282828
-*color8:  #928374
-! DarkRed + Red
-*color1:  #cc241d
-*color9:  #fb4934
-! DarkGreen + Green
-*color2:  #98971a
-*color10: #b8bb26
-! DarkYellow + Yellow
-*color3:  #d79921
-*color11: #fabd2f
-! DarkBlue + Blue
-*color4:  #458588
-*color12: #83a598
-! DarkMagenta + Magenta
-*color5:  #b16286
-*color13: #d3869b
-! DarkCyan + Cyan
-*color6:  #689d6a
-*color14: #8ec07c
-! LightGrey + White
-*color7:  #a89984
-*color15: #ebdbb2
+*.foreground:   base05
+*.background:   base00
+*.cursorColor:  base05
+
+*.color0:       base00
+*.color1:       base08
+*.color2:       base0B
+*.color3:       base0A
+*.color4:       base0D
+*.color5:       base0E
+*.color6:       base0C
+*.color7:       base05
+
+*.color8:       base03
+*.color9:       base09
+*.color10:      base01
+*.color11:      base02
+*.color12:      base04
+*.color13:      base06
+*.color14:      base0F
+*.color15:      base07
+
 !-- Xft settings -- !
 Xft.dpi:        96
 Xft.antialias:  true
@@ -59,62 +64,16 @@ URxvt*font:xft:Meslo LG M DZ for Powerline:style=regular:pixelsize=17
 !URxvt*shading: 30
 !URxvt*inheritPixmap: true
 
-!URxvt.boldFont:xft:Source Code Pro:style=regular:pixelsize=12
-!
-! -----------------------------------------------------------------------------
-! File: gruvbox-urxvt256.xresources
-! Description: Retro groove colorscheme generalized
-! Author: morhetz <morhetz@gmail.com>
-! Source: https://github.com/morhetz/gruvbox-generalized
-! Last Modified: 13 Dec 2013
-! -----------------------------------------------------------------------------
-
-URxvt*color24:  #076678
-URxvt*color66:  #427b58
-URxvt*color88:  #9d0006
-URxvt*color96:  #8f3f71
-URxvt*color100: #79740e
-URxvt*color108: #8ec07c
-URxvt*color109: #83a598
-URxvt*color130: #af3a03
-URxvt*color136: #b57614
-URxvt*color142: #b8bb26
-URxvt*color167: #fb4934
-URxvt*color175: #d3869b
-URxvt*color208: #fe8019
-URxvt*color214: #fabd2f
-URxvt*color223: #ebdbb2
-URxvt*color228: #f4e8ba
-URxvt*color229: #fdf4c1
-URxvt*color230: #ffffc8
-URxvt*color234: #1d2021
-URxvt*color235: #282828
-URxvt*color236: #32302f
-URxvt*color237: #3c3836
-URxvt*color239: #504945
-URxvt*color241: #665c54
-URxvt*color243: #7c6f64
-URxvt*color244: #928374
-URxvt*color245: #928374
-URxvt*color246: #a89984
-URxvt*color248: #bdae93
-URxvt*color250: #d5c4a1
-
 ! Rofi
+rofi.color-enabled: true
+rofi.color-window: #2b303b, #c0c5ce, #c0c5ce
+rofi.color-normal: #2b303b, #c0c5ce, #2b303b, #4f5b66, #eee8d5
+rofi.color-active: #2b303b, #96b5b4, #2b303b, #4f5b66, #96b5b4
+rofi.color-urgent: #2b303b, #bf616a, #2b303b, #4f5b66, #bf616a
 rofi.fixed-num-lines: true
 rofi.width: 500
 rofi.lines: 10
 rofi.fuzzy: true
 rofi.font: Meslo LG M DZ for Powerline 12
-!rofi.fg: #ebdbb2
-!rofi.bg: #282828
-!rofi.hlfg: #ffffff
-!rofi.hlbg: #d70a53
-!rofi.bc: #d70a53 
-rofi.fg: #928374
-rofi.bg: #282828
-rofi.hlfg: #ebdbb2
-rofi.hlbg: #282828
-rofi.bc: #282828 
 rofi.o: 100
 rofi.bw: 2
