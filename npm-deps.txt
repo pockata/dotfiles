@@ -1,7 +1,5 @@
-bower
 gulp
-grunt-cli
 yo
-generator-gulp-webapp
 caniuse-cmd
+npm-check-updates
 
