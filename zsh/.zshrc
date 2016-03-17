@@ -33,6 +33,8 @@ zplug load
 
 export PATH=$HOME/bin:$PATH
 
+#http://zsh.sourceforge.net/Doc/Release/Options.html
+
 # Loading NVM
 #export NVM_DIR="/home/pockata/.nvm"
 #[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
@@ -60,7 +62,7 @@ SAVEHIST=1000
 
 setopt share_history
 setopt inc_append_history
-setopt hist_ignore_dups
+setopt hist_ignore_all_dups
 setopt extended_history
 
 export FZF_DEFAULT_COMMAND='ag -l -g ""' # Use ag as the default source for fzf
@@ -134,14 +136,14 @@ bindkey '^r' history-incremental-search-backward
 # Add bindings to the vicmd keymap
 bindkey -a j backward-char
 bindkey -a ';' forward-char
-bindkey -a k down-history
-bindkey -a l up-history
+#bindkey -a k down-history
+#bindkey -a l up-history
 
 # for Brackets
 export EXTRACT="/opt/brackets/samples/root/Getting Started/images"
 
 # for lolcommits
-export LOLCOMMITS_DIR="/home/pockata/Pictures/lolcommits/"
+export LOLCOMMITS_DIR="${HOME}/Pictures/lolcommits/"
 export LOLCOMMITS_FORK=true
 export LOLCOMMITS_STEALTH=true
 
@@ -152,9 +154,8 @@ export NPM_PACKAGES="${HOME}/.npm-packages"
 export NODE_PATH="$NPM_PACKAGES/lib/node_modules:$NODE_PATH"
 
 # for ATOM
-export ATOM_DEV_RESOURCE_PATH="/home/pockata/Projects/atom/"
+export ATOM_DEV_RESOURCE_PATH="{$HOME}/Projects/atom/"
 
 PATH="$NPM_PACKAGES/bin:$PATH"
-PATH="/home/pockata/.gem/ruby/2.2.0/bin:${PATH+:}${PATH}"; 
 export PATH;
 
