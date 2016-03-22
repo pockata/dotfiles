@@ -1,6 +1,6 @@
 # move windows around
 mod4 + shift + {j,k,l,semicolon}
-	wmv {-40 0, 0 40, 0 -40, 40 0} $(pfw)
+    wmv {-40 0, 0 40, 0 -40, 40 0} $(pfw)
 
 # select windows using directions
 mod4 + {j,k,l,semicolon}
@@ -31,7 +31,7 @@ mod4 + r : {j,k,l,semicolon}
 
 # reload keybindings
 mod4 + shift + r
-	pkill -USR1 -f sxhkd
+    pkill -USR1 -f sxhkd
 
 mod4 + shift + e
     ~/bin/logout.sh
@@ -49,7 +49,7 @@ mod4 + shift + m
 
 # run urxvt
 mod4 + Return
-	urxvtc -g 50x15
+    urxvtc -g 50x15
 
 # kill window
 mod4 + shift + q
@@ -72,8 +72,11 @@ mod4 + BackSpace
     groups.sh -c $(pfw)
 
 # move windows with the mouse
-mod4 + !{button1,button3}
-    {wmv,wrs} -a %i %i $(pfw)
+mod4 + button1
+    xmmv $(pfw)
+
+mod4 + @button1
+    killall xmmv
 
 Print
     ~/bin/screenshot.sh
@@ -85,7 +88,7 @@ XF86AudioRaiseVolume
 XF86AudioLowerVolume
     amixer -q set Master 5%- unmute #decrease sound volume
 
-XF86AudioMute 
+XF86AudioMute
     amixer -q set Master toggle # mute sound
 
 # media keys
