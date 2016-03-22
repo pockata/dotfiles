@@ -105,6 +105,10 @@ endfunction
 map <silent> <C-k><C-b> :call SmartNERDTree()<cr>
 map <silent> <C-k>b :call SmartNERDTree()<cr>
 
+" Quickly edit/reload the vimrc file
+nmap <silent> <leader>ev :e ~/.vimrc<CR>
+nmap <silent> <leader>sv :so ~/.vimrc<CR>
+
 " Sets 4 spaces as indent
 set tabstop=4
 set shiftwidth=4
@@ -203,18 +207,16 @@ set tm=500
 " => Files, backups and undo
 " """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Turn backup off, since most stuff is in SVN, git et.c anyway...
-"set nobackup
-"set nowb
-"set noswapfile
-set backupdir=~/.vim/backups,/tmp
-set directory=~/.vim/backups,/tmp
+set nobackup
+set nowb
+set noswapfile
 
 set ai "Auto indent
 
 " Don't implode
 noremap j h
-noremap k j
-noremap l k
+noremap k gj
+noremap l gk
 noremap ; l
 
 noremap <C-w>j <C-w>h
