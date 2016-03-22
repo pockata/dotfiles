@@ -46,6 +46,8 @@ bindkey -v
 # Remove the 0.4s delay switching vi modes
 export KEYTIMEOUT=1 # reduces to 0.1
 
+zstyle ':completion:*' menu select
+
 # Try to correct the spelling of commands.
 setopt correct
 
