@@ -9,7 +9,7 @@ syntax on
 
 call plug#begin('~/.vim/plugged')
 
-Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
+Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeFind' }
 Plug 'Raimondi/delimitMate'
 Plug 'chriskempson/base16-vim'
 Plug 'scrooloose/nerdcommenter'
@@ -35,6 +35,7 @@ Plug 'junegunn/goyo.vim'
 Plug 'junegunn/vim-oblique'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
+Plug 'dbakker/vim-projectroot'
 Plug 'AndrewRadev/splitjoin.vim'
 Plug 'rking/ag.vim'
 Plug 'tpope/vim-fugitive'
@@ -86,14 +87,23 @@ let g:fzf_action = {
       \ 'ctrl-s': 'split',
       \ 'ctrl-v': 'vsplit'
       \ }
-nnoremap <c-p> :FZF<cr>
+nnoremap <silent> <c-p> :ProjectRootExe FZF<cr>
 
 " Gitgutter
 let g:gitgutter_map_keys = 0
 
 " Show NERDTree with Ctrl+k Ctrl+b or Ctrl+kb
-map <C-k><C-b> :NERDTreeToggle<CR>
-map <C-k>b :NERDTreeToggle<CR>
+function! SmartNERDTree()
+    if exists("b:NERDTree") && b:NERDTree.isTabTree()
+        :NERDTreeClose
+    else
+        :ProjectRootExe
+        :NERDTreeFind
+    endif
+endfunction
+
+map <silent> <C-k><C-b> :call SmartNERDTree()<cr>
+map <silent> <C-k>b :call SmartNERDTree()<cr>
 
 " Sets 4 spaces as indent
 set tabstop=4
