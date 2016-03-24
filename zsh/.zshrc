@@ -138,8 +138,8 @@ bindkey '^r' history-incremental-search-backward
 # Add bindings to the vicmd keymap
 bindkey -a j backward-char
 bindkey -a ';' forward-char
-#bindkey -a k down-history
-#bindkey -a l up-history
+bindkey -a k down-history
+bindkey -a l up-history
 
 # for Brackets
 export EXTRACT="/opt/brackets/samples/root/Getting Started/images"
