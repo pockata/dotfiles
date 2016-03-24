@@ -1,60 +1,72 @@
 #!/bin/bash
 #
 # bar - lemonbar output
-# (c) arcetera 2015 - wtfpl
 #
 
 GROOT=/tmp/groups.sh
 GNUMBER=5
+GAP=${GAP:-15}
 
 groups.sh >/dev/null
 
-colors=("#cc241d", "#98971a", "#d79921", "#458588", "#b16286")
+xrdb=$(xrdb -query)
+color=($(echo "$xrdb" | grep -P "color[0-9]*:" | sort -m | cut -f 2-))
+sp=($(echo "$xrdb" | grep -P "(foreground|background):" | cut -f 2-))
+
+#       inactive    groups 1-5
+colors=("${sp[0]}", "${color[1]}", "${color[2]}", "${color[3]}", "${color[4]}", "${color[5]}")
 
 has_vga=$(mattr "VGA")
 has_hdmi=$(mattr "HDMI")
-#if [ ! -z "$has_vga" ]; then
-    vga_w=$(mattr w "VGA1")
-    vga_x=$(mattr x "VGA1")
-    vga_y=$(mattr y "VGA1")
-#fi
+has_lvds=$(mattr "LVDS")
 
-#if [ ! -z "$has_hdmi" ]; then
-    hdmi_w=$(mattr w "HDMI")
-    hdmi_x=$(mattr x "HDMI")
-    hdmi_y=$(mattr y "HDMI")
-#fi
+if [ -z "$has_lvds" ]; then
+    lvdsc=($(mattr wxy "LVDS"))
+    mon1_w="${lvdsc[0]}"
+    mon1_x="${lvdsc[1]}"
+    mon1_y="${lvdsc[2]}"
+fi
 
-#if [ -z "$has_vga" ] || [ -z "$has_hdmi" ]; then
-    lvds_w=$(mattr w "LVDS")
-    lvds_x=$(mattr x "LVDS")
-    lvds_y=$(mattr y "LVDS")
-#fi
+if [ -z "$has_vga" ]; then
+    vgac=($(mattr wxy "VGA1"))
+    mon2_w="${vgac[0]}"
+    mon2_x="${vgac[1]}"
+    mon2_y="${vgac[2]}"
+fi
 
-lm_w=240
-lm_h=30
+if [ -z "$has_hdmi" ]; then
+    hdmic=($(mattr wxy "HDMI"))
+    mon1_w="${hdmic[0]}"
+    mon1_x="${hdmic[1]}"
+    mon1_y="${hdmic[2]}"
+fi
 
-geometry="${lm_w}x${lm_h}+$((vga_x + vga_w - lm_w - 15))+15"
-geometry2="${lm_w}x${lm_h}+$((hdmi_x + hdmi_w - lm_w - 15))+15"
+# bar dimensions
+b_w=240
+b_h=30
 
-echo "$geometry"
-echo "$geometry2"
+# bar fonts
+b_f="Meslo LG M DZ for Powerline:style=regular:size=9"
+b_fi="Font Awesome:style=regular:size=11"
+
+# bar geometries
+b_geo="${b_w}x${b_h}+$((mon1_x + mon1_w - b_w - GAP))+${GAP}"
+b_geo2="${b_w}x${b_h}+$((mon2_x + mon2_w - b_w - GAP))+${GAP}"
 
 desktop() {
     for gid in $(seq 1 $GNUMBER); do
 
-        c=${colors[$((gid - 1))]}
+        c=${colors[gid]}
 
-        if ! grep --quiet $gid "$GROOT/all"; then
+        if ! grep --quiet "$gid" "$GROOT/all"; then
             echo -n "%{F#504945}□%{F-} "
         else
-            if grep --quiet $gid "$GROOT/active"; then
+            if grep --quiet "$gid" "$GROOT/active"; then
                 echo -n "%{F$c}■%{F-} "
             else
                 echo -n "%{F$c}□%{F-} "
             fi
         fi
-
     done
 }
 
@@ -63,17 +75,23 @@ clock() {
   printf '%s\n' " $date"
 }
 
-#lemonize() {
-#    echo "$@" | lemonbar -B '#282828' -F '#ebdbb2' -d -f 'Meslo LG M DZ for Powerline:style=regular:size=9' -f 'Font Awesome:style=regular:size=11' -g "$geometry" &
-#    echo "$@" | lemonbar -B '#282828' -F '#ebdbb2' -d -f 'Meslo LG M DZ for Powerline:style=regular:size=9' -f 'Font Awesome:style=regular:size=11' -g "$geometry2" &
-#}
-
-while :; do
+lemonize(){
   buf=""
   buf="${buf}$(desktop) $(clock)"
   printf '%s\n' "%{c}$buf"
   sleep 1
-done |
-#    tee >(lemonbar -B '#282828' -F '#ebdbb2' -d -f 'Meslo LG M DZ for Powerline:style=regular:size=9' -f 'Font Awesome:style=regular:size=11' -g "$geometry2") |
-    lemonbar -B '#282828' -F '#ebdbb2' -d -f 'Meslo LG M DZ for Powerline:style=regular:size=9' -f 'Font Awesome:style=regular:size=11' -g "$geometry"
+}
+
+if [ -z "$has_vga" ] && [ -z "$has_hdmi" ]; then
+    while :; do
+        lemonize
+    done |
+        tee >(lemonbar -B "${sp[1]}" -F "${sp[0]}" -d -f "$b_f" -f "$b_fi" -g "$b_geo") |
+        lemonbar -B "${sp[1]}" -F "${sp[0]}" -d -f "$b_f" -f "$b_fi" -g "$b_geo2"
+else
+    while :; do
+        lemonize
+    done |
+        lemonbar -B "${sp[1]}" -F "${sp[0]}" -d -f "$b_f" -f "$b_fi" -g "$b_geo"
+fi
 
