@@ -12,6 +12,9 @@ usage() {
     exit 1
 }
 
+#echo "$foo" | awk -v cx="$center_x" -v cy="$center_y" '{
+#    printf "%d %d %s\n", $1/2+$3, $2/2+$4, $5
+#}'
 next_east() {
     lsw | xargs wattr xi | sort -nr | sed "0,/$CUR/d" | sed "1s/^[0-9]* //p;d"
 }
