@@ -172,7 +172,7 @@ set go-=T
 " Close buffer without closing split
 command! Bd bp\|bd \#
 
-" hide mode (shown in airline)
+" Hide current mode (shown in airline)
 set noshowmode
 
 " Ignore case when searching
@@ -201,6 +201,7 @@ set magic
 
 " Show matching brackets when text indicator is over them
 set showmatch
+
 " How many tenths of a second to blink when matching brackets
 set mat=2
 
@@ -261,15 +262,7 @@ catch
 endtry
 
 "https://www.reddit.com/r/vim/comments/3er2az/how_to_suppress_vims_warning_editing_a_read_only/
-"au BufEnter * set noro
-
-" Returns true if paste mode is enabled
-function! HasPaste()
-    if &paste
-        return 'PASTE MODE  '
-    en
-    return ''
-endfunction
+au BufEnter * set noro
 
 " Return to last edit position when opening files (You want this!)
 autocmd BufReadPost *
@@ -283,7 +276,7 @@ set viminfo^=%
 set laststatus=2
 
 " Format the status line
-set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ \ CWD:\ %r%{getcwd()}%h\ \ \ Line:\ %l
+set statusline=\ %F%m%r%h\ %w\ \ CWD:\ %r%{getcwd()}%h\ \ \ Line:\ %l
 
 " Relative line numbers
 set relativenumber
@@ -304,6 +297,8 @@ autocmd BufWrite *.css :call DeleteTrailingWS()
 autocmd BufWrite *.php :call DeleteTrailingWS()
 autocmd BufWrite *.json :call DeleteTrailingWS()
 autocmd BufWrite *.sh :call DeleteTrailingWS()
+autocmd BufWrite *.c :call DeleteTrailingWS()
+autocmd BufWrite *.cpp :call DeleteTrailingWS()
 
 noremap <silent> <c-u> :call smooth_scroll#up(&scroll, 0, 2)<CR>
 noremap <silent> <c-d> :call smooth_scroll#down(&scroll, 0, 2)<CR>
