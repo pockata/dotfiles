@@ -114,10 +114,7 @@ XF86Sleep
 super + shift + {Up, Down}
     compton-trans -w $(pfw) -o {+10,-- -10}
 
-# sreen brightness controls
-XF86MonBrightnessUp
-    xbacklight -inc 5 # increase screen brightness
-
-XF86MonBrightnessDown
-    xbacklight -dec 5 # decrease screen brightness
+# fn+{f11,f12} to change crightness
+XF86MonBrightness{Down,Up}
+    xbacklight {-,+}10% -time 0 -steps 1
 
