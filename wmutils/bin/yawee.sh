@@ -12,24 +12,24 @@ while IFS=: read ev wid; do
     case $ev in
 
         # window creation
-        16) (! wattr "$wid" || wattr o "$wid") || {
+        16) ! wattr "$wid" || {
                 corner_mh.sh md "$wid" "$(pfw)"
             }
             ;;
 
         # mapping requests (show window)
         19) ! wattr "$wid" ||  {
-                vroum.sh "$wid"
+                vroum.sh "$wid" &
             }
             ;;
 
         # focus prev window when hiding(unmapping)/deleting focused window
         18)
             #(wattr "$(pfw)" && ! wattr m "$(pfw)") || {
-            wattr m "$(pfw)" || {
+            wattr $(pfw) || {
                 vroum.sh prev 2>/dev/null
             }
-
+            groups.sh > /dev/null
             ;;
 
         4)
