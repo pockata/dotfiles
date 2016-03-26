@@ -47,9 +47,13 @@ bindkey -v
 export KEYTIMEOUT=1 # reduces to 0.1
 
 zstyle ':completion:*' menu select
+zstyle ':completion:*' matcher-list	'' 'm:{[:lower:][:upper:]}={[:upper:][:lower:]}' '+l:|=* r:|=*'
 
 # Try to correct the spelling of commands.
-setopt correct
+setopt correctall
+setopt autocd
+setopt extendedglob
+setopt autopushd
 
 # Report the status of background jobs immediately, rather than waiting until just before printing a prompt.
 setopt notify
@@ -66,6 +70,7 @@ setopt share_history
 setopt inc_append_history
 setopt hist_ignore_all_dups
 setopt extended_history
+setopt hist_ignore_space
 
 export FZF_DEFAULT_COMMAND='ag -l -g ""' # Use ag as the default source for fzf
 export FZF_DEFAULT_OPTS='--multi'
