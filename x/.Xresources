@@ -77,3 +77,5 @@ rofi.fuzzy: true
 rofi.font: Meslo LG M DZ for Powerline 12
 rofi.o: 100
 rofi.bw: 2
+rofi.hide-scrollbar: true
+rofi.separator-style: none
