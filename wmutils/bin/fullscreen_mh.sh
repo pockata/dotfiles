@@ -27,9 +27,7 @@ FSFILE="/tmp/.fwin-$(printf '%q' "$1")"
 # will loose their previous geometry info
 #test -f $FSFILE && wtp $(cat $FSFILE)
 
-setFull() {
-    # put the current window in fullscreen mode,
-    # after saving it's geometry and id to $FSFILE
+getFullCoords() {
     BW=$(wattr b $1)
 
     # the height of the bar
@@ -40,18 +38,19 @@ setFull() {
         GAP=0
     fi
 
-    if [ "$2" = "save" ]; then
-        echo "$(wattr xywhi $1) $FSSIZE" > $FSFILE
-    fi
-
-    #test "$2" = "save" && echo "$(wattr xywhi $1) $FSSIZE" > $FSFILE
     mon=($(mattr whxy $1))
 
     ww=$((mon[0] - BW*2 - GAP*2))
     wh=$((mon[1] - BW*2 - BH - GAP*2))
     wx=$((mon[2] + GAP))
     wy=$((mon[3] + BH + GAP))
-    wtp $wx $wy $ww $wh $1
+
+    echo $wx $wy $ww $wh
+}
+
+setFull() {
+    # put the current window in fullscreen mode,
+    wtp $(getFullCoords $1) $1
 }
 
 setOrig() {
@@ -62,27 +61,34 @@ setOrig() {
 # if file exist and contain our window id, it means that out window is in
 # fullscreen mode
 if test -f $FSFILE; then
-    # if the window we removed was our window, delete the file, so we can
-    # fullscreen it again later
-    if grep -q "max" $FSFILE; then
-        if [ $FSSIZE = 'max' ]; then
-            setOrig
-        else
-            setFull $1
-            sed -i "s/max/min/g" $FSFILE
-        fi
-    else
-        echo "2:$FSSIZE"
-        if [ $FSSIZE = 'max' ]; then
-            setFull $1
+
+    if [ "$(getFullCoords $1)" != "$(wattr xywh $1)" ]; then
+
+        if [ "$FSSIZE" == "max" ]; then
             sed -i "s/min/max/g" $FSFILE
         else
-            setOrig
+            sed -i "s/max/min/g" $FSFILE
         fi
+
+        setFull $1
+        exit
     fi
 
+    hasMax=$(grep -c "max" $FSFILE)
+
+    if [ "$hasMax" -ne 0 ] && [ "$FSSIZE" != "max" ]; then
+        setFull $1
+        sed -i "s/max/min/g" $FSFILE
+    elif [ "$hasMax" -eq 0 ] && [ "$FSSIZE" = "max" ]; then
+        setFull $1
+        sed -i "s/min/max/g" $FSFILE
+    else
+        setOrig
+    fi
 else
-    setFull $1 save
+    # save window's geometry and id to $FSFILE
+    echo "$(wattr xywhi $1) $FSSIZE" > $FSFILE
+    setFull $1
 fi
 
 # now focus the window, and put it in front, no matter which state we're in, and
