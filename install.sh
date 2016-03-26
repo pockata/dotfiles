@@ -116,5 +116,22 @@ if ask "\n${txtylw}Symlink dotfiles?${txtrst}" Y; then
     stow $(ls */ -d)
 fi
 
+if ask "${txtylw}Replace sh with dash?${txtrst}" N; then
+
+    if [[ -f /usr/bin/dash ]]; then
+        echo "Replacing /usr/bin/sh by dash. Reinstall core/bash to revert."
+        ln -sf --backup /usr/bin/dash /usr/bin/sh && rm "/usr/bin/sh~"
+    else
+        echo "Dash not installed. Skipping."
+    fi
+fi
+
+if ask "${txtylw}Set time/date options?${txtrst}" N; then
+    timedatectl set-timezone UTC
+    timedatectl set-ntp true
+    hwclock --systohc --utc
+    echo "NTP has been enabled and hardware clock will be in UTC. More information: https://wiki.archlinux.org/index.php/Time"
+fi
+
 echo -e "\n\n${txtgrn}BYE!${txtrst}"
 
