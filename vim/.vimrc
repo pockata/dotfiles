@@ -88,9 +88,11 @@ let g:NERDCustomDelimiters = {
     \ 'xhtml': {  'left': '<!-- ', 'right': '-->', 'leftAlt': '/*','rightAlt': '*/'},
 \}
 let NERD_html_alt_style=1
+let NERDTreeShowHidden=1
 
 " FZF
 let g:fzf_action = {
+      \ 'ctrl-t': 'tab split',
       \ 'ctrl-s': 'split',
       \ 'ctrl-v': 'vsplit'
       \ }
