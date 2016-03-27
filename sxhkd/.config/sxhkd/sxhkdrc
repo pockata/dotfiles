@@ -27,7 +27,7 @@ mod4 + shift + f
 
 # resize window
 mod4 + r : {j,k,l,semicolon}
-    wrs {-40 0, 0 40, 0 -40, 40 0} $(pfw)
+    wrs {-40 0, 0 40, 0 -40, 40 0} $(pfw); pop "resizing"
 
 # reload keybindings
 mod4 + shift + r
@@ -61,11 +61,11 @@ mod4 + {t,v}
 
 # add window to a group
 mod4 + shift + {1,2,3,4,5}
-    groups.sh -s $(pfw) {1,2,3,4,5}
+    groups.sh -s $(pfw) {1,2,3,4,5}; pop "Group #{1,2,3,4,5}"
 
 # toggle groups' visibility
 mod4 + {1,2,3,4,5}
-    groups.sh -t {1,2,3,4,5}
+    groups.sh -t {1,2,3,4,5};
 
 # remove window from all groups
 mod4 + BackSpace
@@ -83,13 +83,13 @@ Print
 
 # volume management
 XF86AudioRaiseVolume
-    amixer -q set Master 5%+ unmute #increase sound volume
+    amixer -q set Master 5%+ unmute; notifier volume #increase sound volume
 
 XF86AudioLowerVolume
-    amixer -q set Master 5%- unmute #decrease sound volume
+    amixer -q set Master 5%- unmute; notifier volume #decrease sound volume
 
 XF86AudioMute
-    amixer -q set Master toggle # mute sound
+    amixer -q set Master toggle; notifier volmute # mute sound
 
 # media keys
 XF86AudioPlay
@@ -116,5 +116,12 @@ super + shift + {Up, Down}
 
 # fn+{f11,f12} to change crightness
 XF86MonBrightness{Down,Up}
-    xbacklight {-,+}10% -time 0 -steps 1
+    xbacklight {-,+}10% -time 0 -steps 1; notifier backlight
+
+## on alt+shift language change
+#mod1 + @50
+#    pop "bruh"
+
+#shift + @64
+#    pop "bruh"
 

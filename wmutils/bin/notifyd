@@ -1,0 +1,66 @@
+#!/bin/sh
+#
+# notifyd - notification daemon thing
+#
+
+font="Meslo LG M DZ for Powerline:style=regular:size=9"
+icofont="Font Awesome:style=regular:size=11"
+
+echo=$@
+
+screenwidth=500
+
+barname="lemonpop"
+sleep=5
+
+width=200
+#xoffset=$((screenwidth - 515))
+#oxoffset=$((oscreenwidth - 415))
+xoffset=20
+height=30
+yoffset=20
+
+xrdb=$(xrdb -query)
+color=($(echo "$xrdb" | grep -P "color[0-9]*:" | sort -m | cut -f 2-))
+sp=($(echo "$xrdb" | grep -P "(foreground|background):" | cut -f 2-))
+border="${color[8]}"
+bwidth=2
+
+bg="${sp[1]}"
+fg="${sp[0]}"
+
+fifo=/tmp/notify.fifo
+buf=""
+
+ps -ef | awk -v name="$barname" '$0 ~ name {print $2}' | xargs kill 2>/dev/null
+case "$(basename $0)" in
+  notifyd)
+    test -p $fifo || mkfifo $fifo
+
+    tail -f $fifo | while read line; do
+      # by god, what clean syntax
+      #if [ false ]; then
+      #  (echo "%{c} "$line" %{c}" && sleep $sleep) \
+      #  | lemonbar -n "$barname" \
+      #  -g "$width"x"$height+$xoffset+$yoffset" \
+      #  -f "$font" -f "$icofont" \
+      #  -B "$bg" -F "$fg" \
+      #  -r "$bwidth" -R "$border" -d &
+      #  (echo "%{c} $line %{c}" && sleep $sleep) \
+      #  | lemonbar -n "$barname" \
+      #  -g "$width"x"$height+$oxoffset+$yoffset" \
+      #  -f "$font" -f "$icofont" \
+      #  -B "$bg" -F "$fg" \
+      #  -r "$bwidth" -R "$border" -d &
+      #else
+        (echo "%{c} $line %{c}" && sleep $sleep) \
+        | lemonbar -n "$barname" \
+        -g "$width"x"$height+$xoffset+$yoffset" \
+        -f "$font" -f "$icofont" \
+        -B "$bg" -F "$fg" -d &
+      #fi
+    done
+    ;;
+  pop) [ -z "$@" ] || echo "$@" > "$fifo" ;;
+esac
+

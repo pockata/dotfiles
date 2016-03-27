@@ -38,6 +38,8 @@ compton --config ~/.compton.conf &
 
 dunst &
 
+notifyd &
+
 # make the cursor point in the 'right' direction
 xsetroot -cursor_name left_ptr &
 

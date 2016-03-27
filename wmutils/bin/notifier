@@ -1,0 +1,46 @@
+#!/bin/sh
+#
+# notifier - on-demand system info
+# (c) arcetera 2015
+#
+
+volcheck() {
+    pop " $(amixer get Master | awk -F "[][]" '/%/ { print $2 }' | head -1) volume"
+}
+volmute() {
+    pop " volume $(amixer get Master | awk -F "[][]" '/%/ { print $6 }' | sed 's/off/muted/g;s/on/unmuted/g')"
+}
+
+battery() {
+    bat=$(cat /sys/class/power_supply/BAT1/capacity)
+    pop " ${bat}% battery"
+}
+
+batterywarn() {
+    lvl=15
+    batp=$(sed 's/%//' /sys/class/power_supply/BAT1/capacity)
+    bats=$(cat /sys/class/power_supply/BAT1/status)
+    while :; do
+        if [ "$bats" = "Discharging" ]; then
+            [ "${batp}" -le "${lvl}" ] && pop " low battery!"
+        fi
+        sleep 120
+    done
+}
+
+backlight() {
+    pop " $(xbacklight | sed 's/\..*//')% backlight"
+}
+
+opt=$1
+shift
+
+case $opt in
+    volume) volcheck ;;
+    volmute) volmute ;;
+    battery) battery ;;
+    batterywarn) batterywarn ;;
+    backlight) backlight ;;
+    *) echo "invalid option" ;;
+esac
+
