@@ -78,6 +78,7 @@ export FZF_DEFAULT_OPTS='--multi'
 # Aliases
 alias a="atom-beta"
 alias g="git"
+alias t="tmux"
 alias v="gvim"
 alias view="eog"
 alias aur="yaourt"
