@@ -97,6 +97,7 @@ let g:fzf_action = {
       \ 'ctrl-v': 'vsplit'
       \ }
 nnoremap <silent> <c-p> :ProjectRootExe FZF<cr>
+"nnoremap <silent> <C-S-P> :ProjectRootExe Buffers<cr>
 
 " Gitgutter
 let g:gitgutter_map_keys = 0
@@ -246,15 +247,20 @@ vmap <M-k> :m'>+<cr>`<my`>mzgv`yo`z
 vmap <M-l> :m'<-2<cr>`>my`<mzgv`yo`z
 
 " Change shape of cursor in different modes
-  " solid underscore
-  let &t_SI .= "\<Esc>[5 q"
-  " solid block
-  let &t_EI .= "\<Esc>[2 q"
-  " 1 or 0 -> blinking block
-  " 3 -> blinking underscore
-  " Recent versions of xterm (282 or above) also support
-  " 5 -> blinking vertical bar
-  " 6 -> solid vertical bar
+if exists('$TMUX')
+    let &t_SI = "\<Esc>Ptmux;\<Esc>\e[5 q\<Esc>\\"
+    let &t_EI = "\<Esc>Ptmux;\<Esc>\e[2 q\<Esc>\\"
+else
+    " solid underscore
+    let &t_SI = "\e[5 q"
+    " solid block
+    let &t_EI = "\e[2 q"
+    " 1 or 0 -> blinking block
+    " 3 -> blinking underscore
+    " Recent versions of xterm (282 or above) also support
+    " 5 -> blinking vertical bar
+    " 6 -> solid vertical bar
+endif
 
 " Specify the behavior when switching between buffers
 try
