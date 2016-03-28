@@ -127,7 +127,7 @@ if ask "${txtylw}Replace sh with dash?${txtrst}" N; then
 fi
 
 if ask "${txtylw}Set time/date options?${txtrst}" N; then
-    timedatectl set-timezone UTC
+    timedatectl set-timezone "Europe/Sofia"
     timedatectl set-ntp true
     hwclock --systohc --utc
     echo "NTP has been enabled and hardware clock will be in UTC. More information: https://wiki.archlinux.org/index.php/Time"
