@@ -16,9 +16,9 @@ sleep=5
 width=200
 #xoffset=$((screenwidth - 515))
 #oxoffset=$((oscreenwidth - 415))
-xoffset=20
+xoffset=${GAP:-15}
 height=30
-yoffset=20
+yoffset=${GAP:-15}
 
 xrdb=$(xrdb -query)
 color=($(echo "$xrdb" | grep -P "color[0-9]*:" | sort -m | cut -f 2-))
