@@ -37,6 +37,7 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'dbakker/vim-projectroot'
 Plug 'AndrewRadev/splitjoin.vim'
+Plug 't9md/vim-choosewin'
 Plug 'rking/ag.vim'
 Plug 'tpope/vim-fugitive'
 Plug 'junegunn/gv.vim'
@@ -239,6 +240,10 @@ nnoremap <left> :vertical resize +5<cr>
 nnoremap <right> :vertical resize -5<cr>
 nnoremap <up> :resize +5<cr>
 nnoremap <down> :resize -5<cr>
+
+" invoke with '-'
+nmap  -  <Plug>(choosewin)
+let g:choosewin_overlay_enable = 1
 
 " Move a line of text using ALT+[jk] or Comamnd+[jk] on mac
 nmap <M-k> mz:m+<cr>`z
