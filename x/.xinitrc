@@ -60,7 +60,11 @@ export INFINALITY_FT_FILTER_PARAMS="0.00 0.35 0.35 0.35 0.00"
 
 redshift-gtk &
 
-wew | yawee.sh &
+if [ -f ~/bin/wew ]; then
+    ~/bin/wew | yawee.sh &
+else
+    wew | yawee.sh &
+fi
 
 exec xwait
 
