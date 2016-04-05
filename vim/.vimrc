@@ -42,6 +42,11 @@ Plug 'rking/ag.vim'
 Plug 'tpope/vim-fugitive'
 Plug 'junegunn/gv.vim'
 Plug 'Valloric/YouCompleteMe', { 'do': './install.py --tern-completer' }
+Plug 'kana/vim-textobj-user'
+Plug 'kana/vim-textobj-indent'
+Plug 'beloglazov/vim-textobj-quotes'
+Plug 'Julian/vim-textobj-brace'
+Plug 'bkad/CamelCaseMotion'
 autocmd! User YouCompleteMe if !has('vim_starting') | call youcompleteme#Enable() | endif
 
 call plug#end()
@@ -67,6 +72,20 @@ set splitright
 set splitbelow
 
 let g:airline_powerline_fonts = 1
+let g:airline_mode_map = {
+        \ '__' : '------',
+        \ 'n'  : 'N',
+        \ 'i'  : 'I',
+        \ 'R'  : 'R',
+        \ 'v'  : 'V',
+        \ 'V'  : 'V-L',
+        \ 'c'  : 'C',
+        \ '' : 'V-B',
+        \ 's'  : 'S',
+        \ 'S'  : 'S-L',
+        \ '' : 'S-B',
+        \ 't'  : 'T',
+        \ }
 
 " remove esc key timeout
 set timeoutlen=1000
@@ -91,14 +110,41 @@ let g:NERDCustomDelimiters = {
 let NERD_html_alt_style=1
 let NERDTreeShowHidden=1
 
+" camelcasemotion
+call camelcasemotion#CreateMotionMappings('')
+
 " FZF
 let g:fzf_action = {
       \ 'ctrl-t': 'tab split',
       \ 'ctrl-s': 'split',
       \ 'ctrl-v': 'vsplit'
       \ }
+" [Buffers] Jump to the existing window if possible
+let g:fzf_buffers_jump = 1
+
+" Insert mode completion
+imap <c-x><c-j> <plug>(fzf-complete-file-ag)
+nmap <Leader>h :History<CR>
+nmap <Leader>r :BLines<CR>
+nmap <Leader>w :Buffers<CR>
+nmap <Leader>c :Commands<CR>
+
 nnoremap <silent> <c-p> :ProjectRootExe FZF<cr>
 "nnoremap <silent> <C-S-P> :ProjectRootExe Buffers<cr>
+
+" https://technotales.wordpress.com/2010/04/29/vim-splits-a-guide-to-doing-exactly-what-you-want/
+" Smarter? splits
+" window
+nmap <Leader>swj :topleft  vnew<CR>
+nmap <Leader>sw; :botright vnew<CR>
+nmap <Leader>swl :topleft  new<CR>
+nmap <Leader>swk :botright new<CR>
+
+" buffer
+nmap <Leader>sj :leftabove  vnew<CR>
+nmap <Leader>s; :rightbelow vnew<CR>
+nmap <Leader>sl :leftabove  new<CR>
+nmap <Leader>sk :rightbelow new<CR>
 
 " Gitgutter
 let g:gitgutter_map_keys = 0
@@ -115,6 +161,24 @@ endfunction
 
 map <silent> <C-k><C-b> :call SmartNERDTree()<cr>
 map <silent> <C-k>b :call SmartNERDTree()<cr>
+
+" Convenient command to see the difference between the
+" current buffer and the file it was loaded from,
+" thus the changes you made.
+" http://vimrcfu.com/snippet/214
+if !exists(":DiffOrig")
+  command DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis
+        \ | wincmd p | diffthis
+endif
+
+" let terminal resize scale the internal windows
+" http://vimrcfu.com/snippet/186
+"autocmd VimResized * :wincmd =
+
+" Re-select visual block after indenting
+" http://vimrcfu.com/snippet/14
+vnoremap < <gv
+vnoremap > >gv
 
 " Quickly edit/reload the vimrc file
 nmap <silent> <leader>ev :e ~/.vimrc<CR>
@@ -153,8 +217,8 @@ set ruler
 " Highlight current line
 set cursorline
 " ... only on focused pane
-autocmd! WinEnter * set cursorline
-autocmd! WinLeave * set nocursorline
+"autocmd! WinEnter * set cursorline
+"autocmd! WinLeave * set nocursorline
 
 " Configure backspace so it acts as it should act
 set backspace=eol,start,indent
@@ -245,11 +309,10 @@ nnoremap <down> :resize -5<cr>
 nmap  -  <Plug>(choosewin)
 let g:choosewin_overlay_enable = 1
 
-" Move a line of text using ALT+[jk] or Comamnd+[jk] on mac
-nmap <M-k> mz:m+<cr>`z
-nmap <M-l> mz:m-2<cr>`z
-vmap <M-k> :m'>+<cr>`<my`>mzgv`yo`z
-vmap <M-l> :m'<-2<cr>`>my`<mzgv`yo`z
+" Move visual block
+" http://vimrcfu.com/snippet/77
+vnoremap K :m '>+1<CR>gv=gv
+vnoremap L :m '<-2<CR>gv=gv
 
 " Change shape of cursor in different modes
 if exists('$TMUX')
@@ -322,3 +385,18 @@ noremap <silent> <c-d> :call smooth_scroll#down(&scroll, 0, 2)<CR>
 noremap <silent> <c-b> :call smooth_scroll#up(&scroll*2, 0, 4)<CR>
 noremap <silent> <c-f> :call smooth_scroll#down(&scroll*2, 0, 4)<CR>
 
+function! s:ZoomToggle() abort
+    if exists('t:zoomed') && t:zoomed
+        exec t:zoom_winrestcmd
+        let t:zoomed = 0
+    else
+        let t:zoom_winrestcmd = winrestcmd()
+        resize
+        vertical resize
+        let t:zoomed = 1
+    endif
+endfunction
+
+command! ZoomToggle call s:ZoomToggle()
+nnoremap <silent> <C-w>o :ZoomToggle<CR>
+nnoremap <silent> <C-w>o :ZoomToggle<CR>
