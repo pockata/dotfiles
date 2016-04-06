@@ -9,45 +9,65 @@ syntax on
 
 call plug#begin('~/.vim/plugged')
 
-Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeFind' }
-Plug 'Raimondi/delimitMate'
+" colorschemes / start screen
 Plug 'chriskempson/base16-vim'
-Plug 'scrooloose/nerdcommenter'
-Plug 'sheerun/vim-polyglot'
-Plug '1995eaton/vim-better-javascript-completion', { 'for': 'javascript' }
 Plug 'EinfachToll/DidYouMean'
-Plug 'unblevable/quick-scope'
-"Plug 'justinmk/vim-sneak'
-Plug 'vim-scripts/wipeout', { 'on':  'Wipeout' }
-Plug 'bling/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
-Plug 'MattesGroeger/vim-bookmarks'
-Plug 'airblade/vim-gitgutter'
-Plug 'terryma/vim-smooth-scroll'
 Plug 'mhinz/vim-startify'
-Plug 'tpope/vim-surround'
-Plug 'mattn/emmet-vim'
-Plug 'Valloric/MatchTagAlways'
-Plug 'tpope/vim-sleuth'
-Plug 'mbbill/undotree', { 'on': 'UndotreeToggle' }
-Plug 'junegunn/vim-pseudocl'
-Plug 'junegunn/goyo.vim'
-Plug 'junegunn/vim-oblique'
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-Plug 'junegunn/fzf.vim'
-Plug 'dbakker/vim-projectroot'
-Plug 'AndrewRadev/splitjoin.vim'
-Plug 't9md/vim-choosewin'
-Plug 'rking/ag.vim'
-Plug 'tpope/vim-fugitive'
-Plug 'junegunn/gv.vim'
-Plug 'Valloric/YouCompleteMe', { 'do': './install.py --tern-completer' }
+
+" additional key mappings
+Plug 'scrooloose/nerdcommenter'
+Plug 'unblevable/quick-scope'
 Plug 'kana/vim-textobj-user'
 Plug 'kana/vim-textobj-indent'
 Plug 'beloglazov/vim-textobj-quotes'
-Plug 'Julian/vim-textobj-brace'
 Plug 'bkad/CamelCaseMotion'
+
+" text manipulation / display
+Plug 'Raimondi/delimitMate'
+Plug 'tpope/vim-surround'
+Plug 'AndrewRadev/splitjoin.vim'
+Plug 'Valloric/MatchTagAlways'
+
+" code/project management
+Plug 'airblade/vim-gitgutter'
+Plug 'dbakker/vim-projectroot', { 'on':  'ProjectRootExe' }
+Plug 'tpope/vim-fugitive'
+Plug 'junegunn/gv.vim', { 'on': 'GV' }
+Plug 'tpope/vim-sleuth'
+
+" code searching
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
+Plug 'rking/ag.vim'
+Plug 'junegunn/vim-pseudocl'
+Plug 'junegunn/vim-oblique'
+
+" navigation
+Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeFind' }
+Plug 'MattesGroeger/vim-bookmarks'
+Plug 't9md/vim-choosewin'
+Plug 'terryma/vim-smooth-scroll'
+
+" completion
+Plug '1995eaton/vim-better-javascript-completion', { 'for': 'javascript' }
+Plug 'Valloric/YouCompleteMe', { 'do': './install.py --tern-completer' }
 autocmd! User YouCompleteMe if !has('vim_starting') | call youcompleteme#Enable() | endif
+
+" extra language support
+Plug 'sheerun/vim-polyglot'
+
+" statusline
+Plug 'bling/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+
+" distraction free
+Plug 'junegunn/goyo.vim', { 'on': 'Goyo' }
+
+" misc
+Plug 'vim-scripts/wipeout', { 'on':  'Wipeout' }
+Plug 'mbbill/undotree', { 'on': 'UndotreeToggle' }
+
+"Plug 'vim-scripts/SyntaxRange'
 
 call plug#end()
 
@@ -64,6 +84,8 @@ set background=dark
 colorscheme base16-ocean
 
 let mapleader=","
+let g:mapleader=","
+
 set number
 filetype plugin indent on
 
