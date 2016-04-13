@@ -41,6 +41,9 @@ export PATH=$HOME/bin:$PATH
 
 export EDITOR='vim'
 
+# Map Ctrl-S to sth usefull other than XOFF (interrupt data flow).
+stty -ixon
+
 # Vi mode
 bindkey -v
 # Remove the 0.4s delay switching vi modes

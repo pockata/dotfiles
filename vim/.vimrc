@@ -131,6 +131,9 @@ let g:NERDCustomDelimiters = {
 \}
 let NERD_html_alt_style=1
 let NERDTreeShowHidden=1
+let g:NERDTreeMapOpenInTab="<C-t>"
+let g:NERDTreeMapOpenSplit="<C-s>"
+let g:NERDTreeMapOpenVSplit="<C-v>"
 
 " camelcasemotion
 call camelcasemotion#CreateMotionMappings('')
