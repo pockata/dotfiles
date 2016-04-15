@@ -93,16 +93,16 @@ XF86AudioMute
 
 # media keys
 XF86AudioPlay
-    mpc toggle
+    mpc toggle; notifier musictoggle
 
 XF86AudioStop
-    mpc stop
+    mpc stop; notifier musicstop
 
 XF86AudioNext
-    mpc next
+    mpc next; notifier nextsong
 
 XF86AudioPrev
-    mpc prev
+    mpc prev; notifier prevsong
 
 # Power Button
 XF86PowerOff

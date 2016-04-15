@@ -32,6 +32,28 @@ backlight() {
     pop " $(xbacklight | sed 's/\..*//')% backlight"
 }
 
+musicToggle() {
+    state=$(mpc status | sed -n 2p)
+
+    if echo "$state" | grep -lq "\[playing\]"; then
+        pop " Play Music"
+    else
+        pop " Pause Music"
+    fi
+}
+
+musicStop(){
+    pop " Stop Music"
+}
+
+prevSong(){
+    pop " Previous Song"
+}
+
+nextSong(){
+    pop " Next Song"
+}
+
 opt=$1
 shift
 
@@ -41,6 +63,11 @@ case $opt in
     battery) battery ;;
     batterywarn) batterywarn ;;
     backlight) backlight ;;
+    musictoggle) musicToggle ;;
+    musicstop) musicStop ;;
+    nextsong) nextSong ;;
+    previoussong) prevSong ;;
+    prevsong) prevSong ;;
     *) echo "invalid option" ;;
 esac
 
