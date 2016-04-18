@@ -27,6 +27,7 @@ Plug 'Raimondi/delimitMate'
 Plug 'tpope/vim-surround'
 Plug 'AndrewRadev/splitjoin.vim'
 Plug 'Valloric/MatchTagAlways'
+Plug 'terryma/vim-expand-region'
 
 " code/project management
 Plug 'airblade/vim-gitgutter'
@@ -38,7 +39,7 @@ Plug 'tpope/vim-sleuth'
 " code searching
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
-Plug 'rking/ag.vim'
+"Plug 'rking/ag.vim'
 Plug 'junegunn/vim-pseudocl'
 Plug 'junegunn/vim-oblique'
 
@@ -58,6 +59,9 @@ Plug 'sheerun/vim-polyglot'
 " statusline
 Plug 'bling/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
+
+" tabline
+Plug 'gcmt/taboo.vim'
 
 " distraction free
 Plug 'junegunn/goyo.vim', { 'on': 'Goyo' }
@@ -122,7 +126,10 @@ set mouse=a
 let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
 
 " Add proper indent when hitting <CR> inside curly braces
-let delimitMate_expand_cr = 1
+let g:delimitMate_expand_cr = 1
+let g:delimitMate_expand_space = 1
+let g:delimitMate_jump_expansion = 1
+let g:delimitMate_balance_matchpairs = 1
 
 let g:NERDCustomDelimiters = {
     \ 'html': {  'left': '<!-- ', 'right': '-->', 'leftAlt': '/*','rightAlt': '*/' },
@@ -209,11 +216,14 @@ let g:fzf_buffers_jump = 1
 imap <c-x><c-j> <plug>(fzf-complete-file-ag)
 nmap <Leader>h :History<CR>
 nmap <Leader>r :BLines<CR>
-nmap <Leader>w :Buffers<CR>
+nmap <Leader>w :Windows<CR>
+nmap <Leader>b :Buffers<CR>
 nmap <Leader>c :Commands<CR>
 
 nnoremap <silent> <c-p> :ProjectRootExe FZF<cr>
 "nnoremap <silent> <C-S-P> :ProjectRootExe Buffers<cr>
+
+nnoremap <leader>p p`[v`]=
 
 " https://technotales.wordpress.com/2010/04/29/vim-splits-a-guide-to-doing-exactly-what-you-want/
 " Smarter? splits
@@ -234,7 +244,7 @@ let g:gitgutter_map_keys = 0
 
 " Show NERDTree with Ctrl+k Ctrl+b or Ctrl+kb
 function! SmartNERDTree()
-    if exists("b:NERDTree") && b:NERDTree.isTabTree()
+    if exists("t:NERDTreeBufName") && bufwinnr(t:NERDTreeBufName) != -1
         :NERDTreeClose
     else
         :ProjectRootExe
@@ -263,8 +273,11 @@ endif
 vnoremap < <gv
 vnoremap > >gv
 
+" select pasted text
+nmap vp `[v`]
+
 " Quickly edit/reload the vimrc file
-nmap <silent> <leader>ev :e ~/.vimrc<CR>
+nmap <silent> <leader>ev :tabnew ~/.vimrc<CR>
 nmap <silent> <leader>sv :so ~/.vimrc<CR>
 
 " Sets 4 spaces as indent
