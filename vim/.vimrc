@@ -307,6 +307,10 @@ set autoread
 " " Set 7 lines to the cursor - when moving vertically using j/k
 set so=7
 
+" set 15 columns to the cursor - when moving horizontally
+set sidescroll=1
+set sidescrolloff=15
+
 " Turn on the WiLd menu
 set wildmenu
 
