@@ -20,6 +20,9 @@ Plug 'unblevable/quick-scope'
 Plug 'kana/vim-textobj-user'
 Plug 'kana/vim-textobj-indent'
 Plug 'beloglazov/vim-textobj-quotes'
+Plug 'jasonlong/vim-textobj-css'
+Plug 'akiyan/vim-textobj-php'
+Plug 'whatyouhide/vim-textobj-xmlattr'
 Plug 'bkad/CamelCaseMotion'
 
 " text manipulation / display
