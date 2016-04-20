@@ -23,14 +23,17 @@ Plug 'beloglazov/vim-textobj-quotes'
 Plug 'jasonlong/vim-textobj-css'
 Plug 'akiyan/vim-textobj-php'
 Plug 'whatyouhide/vim-textobj-xmlattr'
+Plug 'Julian/vim-textobj-brace'
 Plug 'bkad/CamelCaseMotion'
 
 " text manipulation / display
 Plug 'Raimondi/delimitMate'
 Plug 'tpope/vim-surround'
+Plug 'tpope/vim-repeat'
 Plug 'AndrewRadev/splitjoin.vim'
 Plug 'Valloric/MatchTagAlways'
 Plug 'terryma/vim-expand-region'
+Plug 'junegunn/limelight.vim', { 'on': 'Limelight' }
 
 " code/project management
 Plug 'airblade/vim-gitgutter'
@@ -42,19 +45,20 @@ Plug 'tpope/vim-sleuth'
 " code searching
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
-"Plug 'rking/ag.vim'
 Plug 'junegunn/vim-pseudocl'
 Plug 'junegunn/vim-oblique'
 
 " navigation
 Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeFind' }
 Plug 'MattesGroeger/vim-bookmarks'
-Plug 't9md/vim-choosewin'
+Plug 't9md/vim-choosewin', { 'on': 'ChooseWin' }
 Plug 'terryma/vim-smooth-scroll'
 
 " completion
 Plug '1995eaton/vim-better-javascript-completion', { 'for': 'javascript' }
 Plug 'shougo/neocomplete.vim'
+Plug 'Shougo/neosnippet'
+Plug 'Shougo/neosnippet-snippets'
 
 " extra language support
 Plug 'sheerun/vim-polyglot'
@@ -72,6 +76,7 @@ Plug 'junegunn/goyo.vim', { 'on': 'Goyo' }
 " misc
 Plug 'vim-scripts/wipeout', { 'on':  'Wipeout' }
 Plug 'mbbill/undotree', { 'on': 'UndotreeToggle' }
+Plug 'justinmk/vim-gtfo'
 
 "Plug 'vim-scripts/SyntaxRange'
 
@@ -83,6 +88,7 @@ set smartindent " Smart... indent
 set gdefault " The substitute flag g is on
 set hidden " Hide the buffer instead of closing when switching
 set synmaxcol=300 " Don't try to highlight long lines
+set virtualedit=onemore " Allow for cursor beyond last character
 
 set t_Co=256
 set background=dark
@@ -153,6 +159,8 @@ let g:acp_enableAtStartup = 0
 let g:neocomplete#enable_at_startup = 1
 " Use smartcase.
 let g:neocomplete#enable_smart_case = 1
+let g:neocomplete#max_list = 15
+let g:neocomplete#force_overwrite_completefunc = 1
 " Set minimum syntax keyword length.
 let g:neocomplete#sources#syntax#min_keyword_length = 3
 let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
@@ -160,7 +168,7 @@ let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
 " Define dictionary.
 let g:neocomplete#sources#dictionary#dictionaries = {
     \ 'default' : '',
-        \ }
+    \ }
 
 " Define keyword.
 if !exists('g:neocomplete#keyword_patterns')
@@ -174,12 +182,30 @@ inoremap <expr><C-l>     neocomplete#complete_common_string()
 
 " Recommended key-mappings.
 " <CR>: close popup and save indent.
-inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-function! s:my_cr_function()
-  return (pumvisible() ? "\<C-y>" : "" ) . "\<C-R>=delimitMate#ExpandReturn()\<CR>"
-  " For no inserting <CR> key.
-  "return pumvisible() ? "\<C-y>" : "\<CR>"
+
+"inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+"function! s:my_cr_function()
+"  return (pumvisible() ? "\<C-y>" : "" ) . "\<C-R>=delimitMate#ExpandReturn()\<CR>"
+"  " For no inserting <CR> key.
+"  "return pumvisible() ? "\<C-y>" : "\<CR>"
+"endfunction
+
+function! CleverCr()
+    if pumvisible()
+        if neosnippet#expandable()
+            let exp = "\<Plug>(neosnippet_expand)"
+            return exp . neocomplete#smart_close_popup()
+        else
+            return neocomplete#smart_close_popup()
+        endif
+    else
+        return "\<C-R>=delimitMate#ExpandReturn()\<CR>"
+    endif
 endfunction
+
+" <CR> close popup and save indent or expand snippet
+imap <expr> <CR> CleverCr()
+
 " <TAB>: completion.
 inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
 inoremap <expr><S-TAB>   pumvisible() ? "\<C-p>" : "\<C-h>"
@@ -206,6 +232,8 @@ if !exists('g:neocomplete#sources#omni#input_patterns')
   let g:neocomplete#sources#omni#input_patterns = {}
 endif
 
+let g:gtfo#terminals = { 'unix' : 'urxvtc -g 50x15 -cd' }
+
 " FZF
 let g:fzf_action = {
       \ 'ctrl-t': 'tab split',
@@ -227,6 +255,10 @@ nnoremap <silent> <c-p> :ProjectRootExe FZF<cr>
 "nnoremap <silent> <C-S-P> :ProjectRootExe Buffers<cr>
 
 nnoremap <leader>p p`[v`]=
+
+nnoremap <Leader>u :UndotreeToggle<CR>
+" If undotree is opened, it is likely one wants to interact with it.
+let g:undotree_SetFocusWhenToggle=1
 
 " https://technotales.wordpress.com/2010/04/29/vim-splits-a-guide-to-doing-exactly-what-you-want/
 " Smarter? splits
@@ -481,8 +513,7 @@ autocmd BufWrite *.sh :call DeleteTrailingWS()
 autocmd BufWrite *.c :call DeleteTrailingWS()
 autocmd BufWrite *.cpp :call DeleteTrailingWS()
 
-" Better css/sass completion
-autocmd FileType css set omnifunc=csscomplete#CompleteCSS
+" identify sass files as such
 autocmd BufNewFile,BufRead *.scss set ft=scss.css
 
 noremap <silent> <c-u> :call smooth_scroll#up(&scroll, 0, 2)<CR>
