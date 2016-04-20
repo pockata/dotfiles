@@ -421,9 +421,11 @@ vnoremap L :m '<-2<CR>gv=gv
 if exists('$TMUX')
     let &t_SI = "\<Esc>Ptmux;\<Esc>\e[5 q\<Esc>\\"
     let &t_EI = "\<Esc>Ptmux;\<Esc>\e[2 q\<Esc>\\"
+    let &t_SR = "\<Esc>Ptmux;\<Esc>\e[3 q\<Esc>\\"
 else
     " solid underscore
     let &t_SI = "\e[5 q"
+    let &t_SR = "\e[3 q"
     " solid block
     let &t_EI = "\e[2 q"
     " 1 or 0 -> blinking block
