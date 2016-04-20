@@ -19,11 +19,13 @@ Plug 'scrooloose/nerdcommenter'
 Plug 'unblevable/quick-scope'
 Plug 'kana/vim-textobj-user'
 Plug 'kana/vim-textobj-indent'
+Plug 'kana/vim-textobj-line'
 Plug 'beloglazov/vim-textobj-quotes'
 Plug 'jasonlong/vim-textobj-css'
 Plug 'akiyan/vim-textobj-php'
 Plug 'whatyouhide/vim-textobj-xmlattr'
 Plug 'Julian/vim-textobj-brace'
+Plug 'vim-scripts/argtextobj.vim'
 Plug 'bkad/CamelCaseMotion'
 
 " text manipulation / display
@@ -41,6 +43,7 @@ Plug 'dbakker/vim-projectroot', { 'on':  'ProjectRootExe' }
 Plug 'tpope/vim-fugitive'
 Plug 'junegunn/gv.vim', { 'on': 'GV' }
 Plug 'tpope/vim-sleuth'
+Plug 'jmcantrell/vim-diffchanges', { 'on': 'DiffChangesDiffToggle' }
 
 " code searching
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
@@ -62,6 +65,7 @@ Plug 'Shougo/neosnippet-snippets'
 
 " extra language support
 Plug 'sheerun/vim-polyglot'
+Plug 'rhysd/devdocs.vim'
 
 " statusline
 Plug 'bling/vim-airline'
@@ -243,6 +247,8 @@ let g:fzf_action = {
 " [Buffers] Jump to the existing window if possible
 let g:fzf_buffers_jump = 1
 
+nmap K <Plug>(devdocs-under-cursor)
+
 " Insert mode completion
 imap <c-x><c-j> <plug>(fzf-complete-file-ag)
 nmap <Leader>h :History<CR>
@@ -290,23 +296,7 @@ endfunction
 map <silent> <C-k><C-b> :call SmartNERDTree()<cr>
 map <silent> <C-k>b :call SmartNERDTree()<cr>
 
-" Convenient command to see the difference between the
-" current buffer and the file it was loaded from,
-" thus the changes you made.
-" http://vimrcfu.com/snippet/214
-if !exists(":DiffOrig")
-  command DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis
-        \ | wincmd p | diffthis
-endif
 
-" let terminal resize scale the internal windows
-" http://vimrcfu.com/snippet/186
-"autocmd VimResized * :wincmd =
-
-" Re-select visual block after indenting
-" http://vimrcfu.com/snippet/14
-vnoremap < <gv
-vnoremap > >gv
 
 " select pasted text
 nmap vp `[v`]
