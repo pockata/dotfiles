@@ -75,7 +75,7 @@ setopt hist_ignore_all_dups
 setopt extended_history
 setopt hist_ignore_space
 
-export FZF_DEFAULT_COMMAND='ag -a -l -g ""' # Use ag as the default source for fzf
+export FZF_DEFAULT_COMMAND='ag -g ""' # Use ag as the default source for fzf
 export FZF_DEFAULT_OPTS='--multi'
 
 # Aliases
