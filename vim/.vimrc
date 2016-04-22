@@ -11,10 +11,9 @@ call plug#begin('~/.vim/plugged')
 
 " colorschemes / start screen
 Plug 'chriskempson/base16-vim'
-Plug 'EinfachToll/DidYouMean'
 Plug 'mhinz/vim-startify'
 
-" additional key mappings
+" additional text objects
 Plug 'scrooloose/nerdcommenter'
 Plug 'unblevable/quick-scope'
 Plug 'kana/vim-textobj-user'
@@ -26,20 +25,23 @@ Plug 'akiyan/vim-textobj-php'
 Plug 'whatyouhide/vim-textobj-xmlattr'
 Plug 'Julian/vim-textobj-brace'
 Plug 'vim-scripts/argtextobj.vim'
+
+" additional key mappings
+Plug 'rhysd/clever-f.vim' " GOLDEN
 Plug 'bkad/CamelCaseMotion'
 
 " text manipulation / display
 Plug 'Raimondi/delimitMate'
+Plug 'FooSoft/vim-argwrap', { 'on': 'ArgWrap' }
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
-Plug 'AndrewRadev/splitjoin.vim'
+Plug 'AndrewRadev/splitjoin.vim', { 'on': ['SplitjoinSplit', 'SplitjoinJoin']}
 Plug 'Valloric/MatchTagAlways'
 Plug 'terryma/vim-expand-region'
-Plug 'junegunn/limelight.vim', { 'on': 'Limelight' }
 
 " code/project management
 Plug 'airblade/vim-gitgutter'
-Plug 'dbakker/vim-projectroot', { 'on':  'ProjectRootExe' }
+Plug 'dbakker/vim-projectroot', { 'on': 'ProjectRootExe' }
 Plug 'tpope/vim-fugitive'
 Plug 'junegunn/gv.vim', { 'on': 'GV' }
 Plug 'tpope/vim-sleuth'
@@ -50,37 +52,39 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'junegunn/vim-pseudocl'
 Plug 'junegunn/vim-oblique'
+"Plug 'mhinz/vim-grepper'
 
 " navigation
 Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeFind' }
 Plug 'MattesGroeger/vim-bookmarks'
 Plug 't9md/vim-choosewin', { 'on': 'ChooseWin' }
 Plug 'terryma/vim-smooth-scroll'
+Plug 'kovetskiy/next-indentation'
 
 " completion
 Plug '1995eaton/vim-better-javascript-completion', { 'for': 'javascript' }
 Plug 'shougo/neocomplete.vim'
 Plug 'Shougo/neosnippet'
 Plug 'Shougo/neosnippet-snippets'
+Plug 'ternjs/tern_for_vim', { 'do': 'npm install', 'for': 'javascript' }
 
 " extra language support
 Plug 'sheerun/vim-polyglot'
-Plug 'rhysd/devdocs.vim'
+Plug 'rhysd/devdocs.vim', { 'on': 'DevDocs' }
 
 " statusline
 Plug 'bling/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 
-" tabline
-Plug 'gcmt/taboo.vim'
-
 " distraction free
 Plug 'junegunn/goyo.vim', { 'on': 'Goyo' }
+Plug 'junegunn/limelight.vim', { 'on': 'Limelight' }
 
 " misc
 Plug 'vim-scripts/wipeout', { 'on':  'Wipeout' }
 Plug 'mbbill/undotree', { 'on': 'UndotreeToggle' }
 Plug 'justinmk/vim-gtfo'
+Plug 'tmux-plugins/vim-tmux-focus-events'
 
 "Plug 'vim-scripts/SyntaxRange'
 
@@ -99,8 +103,8 @@ set background=dark
 
 colorscheme base16-ocean
 
-let mapleader=","
-let g:mapleader=","
+let mapleader="\<Space>"
+let g:mapleader="\<Space>"
 
 set number
 filetype plugin indent on
@@ -110,6 +114,9 @@ set splitright
 set splitbelow
 
 let g:airline_powerline_fonts = 1
+let g:airline_theme = 'base16_ocean'
+let g:airline_left_sep=''
+let g:airline_right_sep=''
 let g:airline_mode_map = {
         \ '__' : '------',
         \ 'n'  : 'N',
@@ -154,8 +161,10 @@ let g:NERDTreeMapOpenInTab="<C-t>"
 let g:NERDTreeMapOpenSplit="<C-s>"
 let g:NERDTreeMapOpenVSplit="<C-v>"
 
+let g:clever_f_smart_case = 1
+
 " camelcasemotion
-call camelcasemotion#CreateMotionMappings('')
+call camelcasemotion#CreateMotionMappings(',')
 
 " Disable AutoComplPop.
 let g:acp_enableAtStartup = 0
@@ -227,7 +236,7 @@ inoremap <expr><Space> pumvisible() ? "\<C-y>\<Space>" : "\<Space>"
 " Enable omni completion.
 autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
 autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+autocmd FileType javascript setlocal omnifunc=tern#Complete
 autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
 autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 
@@ -252,11 +261,16 @@ nmap K <Plug>(devdocs-under-cursor)
 " Insert mode completion
 imap <c-x><c-j> <plug>(fzf-complete-file-ag)
 nmap <Leader>h :History<CR>
+nmap <Leader>j :Lines<CR>
 nmap <Leader>r :BLines<CR>
 nmap <Leader>w :Windows<CR>
 nmap <Leader>b :Buffers<CR>
 nmap <Leader>c :Commands<CR>
 
+nnoremap <S-Tab> :IndentationGoUp<CR>
+nnoremap <Tab> :IndentationGoDown<CR>
+
+nnoremap <silent> <leader>a :ArgWrap<CR>
 nnoremap <silent> <c-p> :ProjectRootExe FZF<cr>
 "nnoremap <silent> <C-S-P> :ProjectRootExe Buffers<cr>
 
@@ -299,11 +313,11 @@ map <silent> <C-k>b :call SmartNERDTree()<cr>
 
 
 " select pasted text
-nmap vp `[v`]
+nmap gV `[v`]
 
 " Quickly edit/reload the vimrc file
-nmap <silent> <leader>ev :tabnew ~/.vimrc<CR>
-nmap <silent> <leader>sv :so ~/.vimrc<CR>
+nmap <silent> <leader>ev :execute 'tabnew ' . resolve(expand($MYVIMRC))<CR>
+nmap <silent> <leader>sv :so ~/.vimrc<CR>:AirlineRefresh<CR>
 
 " Sets 4 spaces as indent
 set tabstop=4
@@ -315,7 +329,7 @@ set lazyredraw
 
 " Show whitespace characters
 set list
-set listchars=tab:>·,trail:·
+set listchars=tab:▸\ ,trail:·
 
 " Sets how many lines of history VIM has to remember
 set history=700
@@ -335,6 +349,9 @@ set sidescrolloff=15
 
 " Turn on the WiLd menu
 set wildmenu
+
+" Vsplit when diffing (Gdiff)
+set diffopt+=vertical
 
 "Always show current position
 set ruler
@@ -359,11 +376,19 @@ set clipboard=unnamedplus
 nnoremap d "_d
 vnoremap d "_d
 
+" This turns off Vim’s crazy default regex characters
+" and makes searches use normal regexes.
+nnoremap / /\v
+vnoremap / /\v
+
 " Remove toolbar in gVim
 set go-=T
 
 " Close buffer without closing split
 command! Bd bp\|bd \#
+
+" :W sudo saves the file
+command! W w !sudo tee % > /dev/null
 
 " Hide current mode (shown in airline)
 set noshowmode
@@ -416,8 +441,8 @@ set ai "Auto indent
 
 " Don't implode
 noremap j h
-noremap k gj
-noremap l gk
+noremap <silent> <expr> k (v:count == 0 ? 'gj' : 'j')
+noremap <silent> <expr> l (v:count == 0 ? 'gk' : 'k')
 noremap ; l
 
 noremap <C-w>j <C-w>h
