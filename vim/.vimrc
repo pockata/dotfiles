@@ -62,10 +62,11 @@ Plug 'terryma/vim-smooth-scroll'
 Plug 'kovetskiy/next-indentation'
 
 " completion
-Plug '1995eaton/vim-better-javascript-completion', { 'for': 'javascript' }
 Plug 'shougo/neocomplete.vim'
 Plug 'Shougo/neosnippet'
 Plug 'Shougo/neosnippet-snippets'
+Plug 'pangloss/vim-javascript'
+Plug 'mxw/vim-jsx'
 Plug 'ternjs/tern_for_vim', { 'do': 'npm install', 'for': 'javascript' }
 
 " extra language support
@@ -131,6 +132,8 @@ let g:airline_mode_map = {
         \ '' : 'S-B',
         \ 't'  : 'T',
         \ }
+
+match Error /\%81v.\+/
 
 " remove esc key timeout
 set timeoutlen=1000
@@ -519,6 +522,7 @@ endfunc
 autocmd BufWrite *.py :call DeleteTrailingWS()
 autocmd BufWrite *.coffee :call DeleteTrailingWS()
 autocmd BufWrite *.js :call DeleteTrailingWS()
+autocmd BufWrite *.jsx :call DeleteTrailingWS()
 autocmd BufWrite *.scss :call DeleteTrailingWS()
 autocmd BufWrite *.html :call DeleteTrailingWS()
 autocmd BufWrite *.css :call DeleteTrailingWS()
@@ -549,5 +553,6 @@ function! s:ZoomToggle() abort
 endfunction
 
 command! ZoomToggle call s:ZoomToggle()
-nnoremap <silent> <C-w>o :ZoomToggle<CR>
-nnoremap <silent> <C-w>o :ZoomToggle<CR>
+nnoremap <silent> <C-w>o :ZoomToggle<CR>:AirlineRefresh<CR>
+nnoremap <silent> <C-w>o :ZoomToggle<CR>:AirlineRefresh<CR>
+
