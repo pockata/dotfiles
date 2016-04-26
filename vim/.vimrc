@@ -320,7 +320,7 @@ map <silent> <C-k>b :call SmartNERDTree()<cr>
 
 
 " select pasted text
-nmap gV `[v`]
+nmap gp `[v`]
 
 " Quickly edit/reload the vimrc file
 nmap <silent> <leader>ev :execute 'tabnew ' . resolve(expand($MYVIMRC))<CR>
