@@ -86,7 +86,6 @@ Plug 'vim-scripts/wipeout', { 'on':  'Wipeout' }
 Plug 'mbbill/undotree', { 'on': 'UndotreeToggle' }
 Plug 'justinmk/vim-gtfo'
 Plug 'tmux-plugins/vim-tmux-focus-events'
-
 "Plug 'vim-scripts/SyntaxRange'
 
 call plug#end()
@@ -232,6 +231,11 @@ inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
 
 " Close popup by <Space>.
 inoremap <expr><Space> pumvisible() ? "\<C-y>\<Space>" : "\<Space>"
+
+" yank without jank
+" http://ddrscott.github.io/blog/2016/yank-without-jank/
+vnoremap y myy`y
+vnoremap Y myY`y
 
 " AutoComplPop like behavior.
 "let g:neocomplete#enable_auto_select = 1
