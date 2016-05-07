@@ -59,7 +59,7 @@ Plug 'henrik/vim-indexed-search'
 " navigation
 Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeFind' }
 Plug 'MattesGroeger/vim-bookmarks'
-Plug 't9md/vim-choosewin', { 'on': 'Choosewin' }
+Plug 't9md/vim-choosewin', { 'on': ['<Plug>(choosewin)', 'ChooseWin'] }
 Plug 'terryma/vim-smooth-scroll'
 Plug 'kovetskiy/next-indentation'
 Plug 'takac/vim-hardtime'
@@ -154,8 +154,8 @@ let g:hardtime_ignore_buffer_patterns = [ "NERD.*" ]
 let g:hardtime_ignore_quickfix = 1
 let g:hardtime_allow_different_key = 1
 let g:hardtime_maxcount = 2 " for when I hit the wrong line number
-let g:list_of_normal_keys = ["h", "j", "k", "l", "-", "+"]
-let g:list_of_visual_keys = ["h", "j", "k", "l", "-", "+"]
+let g:list_of_normal_keys = ["h", "j", "k", "l"]
+let g:list_of_visual_keys = ["h", "j", "k", "l"]
 let g:list_of_insert_keys = []
 
 let g:airline_powerline_fonts = 1
@@ -427,6 +427,7 @@ nmap <Leader>r :BLines<CR>
 nmap <Leader>w :Windows<CR>
 nmap <Leader>b :Buffers<CR>
 nmap <Leader>c :Commands<CR>
+nmap <Leader>g :GitFiles?<CR>
 
 " Go to first character of line on first press
 " Go to start of line on second press
@@ -661,7 +662,7 @@ nnoremap <up> :resize +5<cr>
 nnoremap <down> :resize -5<cr>
 
 " invoke with '-'
-nnoremap <silent> - :ChooseWin
+nmap - <Plug>(choosewin)
 let g:choosewin_overlay_enable = 1
 let g:choosewin_blink_on_land = 0
 let g:choosewin_overlay_clear_multibyte = 1
