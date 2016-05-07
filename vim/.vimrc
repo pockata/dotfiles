@@ -26,7 +26,6 @@ Plug 'whatyouhide/vim-textobj-xmlattr'
 "Plug 'Julian/vim-textobj-brace'
 Plug 'PeterRincker/vim-argumentative'
 Plug 'coderifous/textobj-word-column.vim'
-
 " additional key mappings
 Plug 'rhysd/clever-f.vim' " GOLDEN
 Plug 'bkad/CamelCaseMotion'
@@ -284,6 +283,18 @@ if !exists('g:neocomplete#keyword_patterns')
 endif
 let g:neocomplete#keyword_patterns['default'] = '\h\w*'
 
+let g:argumentative_no_mappings = 1
+nmap [a <Plug>Argumentative_Prev
+nmap ]a <Plug>Argumentative_Next
+xmap [a <Plug>Argumentative_XPrev
+xmap ]a <Plug>Argumentative_XNext
+nmap <a <Plug>Argumentative_MoveLeft
+nmap >a <Plug>Argumentative_MoveRight
+xmap ia <Plug>Argumentative_InnerTextObject
+xmap aa <Plug>Argumentative_OuterTextObject
+omap ia <Plug>Argumentative_OpPendingInnerTextObject
+omap aa <Plug>Argumentative_OpPendingOuterTextObject
+
 " Plugin key-mappings.
 inoremap <expr><C-g>     neocomplete#undo_completion()
 inoremap <expr><C-l>     neocomplete#complete_common_string()
@@ -388,17 +399,6 @@ let g:fzf_action = {
       \ }
 " [Buffers] Jump to the existing window if possible
 let g:fzf_buffers_jump = 1
-
-nmap [a <Plug>Argumentative_Prev
-nmap ]a <Plug>Argumentative_Next
-xmap [a <Plug>Argumentative_XPrev
-xmap ]a <Plug>Argumentative_XNext
-nmap <a <Plug>Argumentative_MoveLeft
-nmap >a <Plug>Argumentative_MoveRight
-xmap ia <Plug>Argumentative_InnerTextObject
-xmap aa <Plug>Argumentative_OuterTextObject
-omap ia <Plug>Argumentative_OpPendingInnerTextObject
-omap aa <Plug>Argumentative_OpPendingOuterTextObject
 
 function! SearchVisualSelectionWithAg() range
     let old_reg = getreg('"')
@@ -637,8 +637,26 @@ noremap <C-w>k <C-w>j
 noremap <C-w>l <C-w>k
 noremap <C-w>; <C-w>l
 
-nnoremap <left> :vertical resize +5<cr>
-nnoremap <right> :vertical resize -5<cr>
+" Be aware of whether you are right or left vertical split
+" so you can use arrows more naturally.
+" Inspired by https://github.com/ethagnawl.
+function! IntelligentVerticalResize(direction) abort
+  let l:window_resize_count = 5
+  let l:current_window_is_last_window = (winnr() == winnr('$'))
+
+  if (a:direction ==# 'left')
+    let [l:modifier_1, l:modifier_2] = ['+', '-']
+  else
+    let [l:modifier_1, l:modifier_2] = ['-', '+']
+  endif
+
+  let l:modifier = l:current_window_is_last_window ? l:modifier_1 : l:modifier_2
+  let l:command = 'vertical resize ' . l:modifier . l:window_resize_count . '<CR>'
+  execute l:command
+endfunction
+nnoremap <silent> <Right> :call IntelligentVerticalResize('right')<CR>
+nnoremap <silent> <Left> :call IntelligentVerticalResize('left')<CR>
+
 nnoremap <up> :resize +5<cr>
 nnoremap <down> :resize -5<cr>
 
