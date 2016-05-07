@@ -12,6 +12,9 @@ xorg-xsetroot
 xclip
 acpi
 ntp
+xautolock
+scrot
+i3lock
 mpv
 lxappearance
 gtk-theme-arc

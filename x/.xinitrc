@@ -49,7 +49,7 @@ urxvtd -q -f -o &
 
 unclutter &
 
-#xautolock -locker ~/bin/lock.sh -time 7 -corners -000 &
+xautolock -notify 10 -notifier "pop \"locking screen...\"" -locker ~/bin/lock.sh -time 15 -killtime 15 -killer "systemctl suspend" -corners -000 &
 
 # set shell that sxhkd uses to execute commands:
 export SXHKD_SHELL=sh
