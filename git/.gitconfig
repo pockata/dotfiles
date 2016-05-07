@@ -43,6 +43,8 @@
 
     # http://stackoverflow.com/questions/1139762/ignore-files-that-have-already-been-committed-to-a-git-repository
     untrack = rm --cached
+    
+    unstage = reset HEAD
 
     # Shows commits not pushed to origin
     unpushed = "log --branches --not --remotes --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)%Creset' --abbrev-commit"
