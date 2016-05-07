@@ -14,21 +14,24 @@ Plug 'chriskempson/base16-vim'
 Plug 'mhinz/vim-startify'
 
 " additional text objects
-Plug 'scrooloose/nerdcommenter'
-Plug 'unblevable/quick-scope'
 Plug 'kana/vim-textobj-user'
 Plug 'kana/vim-textobj-indent'
 Plug 'kana/vim-textobj-line'
 Plug 'beloglazov/vim-textobj-quotes'
-Plug 'jasonlong/vim-textobj-css'
 Plug 'akiyan/vim-textobj-php'
+Plug 'kana/vim-textobj-function'
+Plug 'thinca/vim-textobj-function-javascript'
+Plug 'kana/vim-textobj-entire'
 Plug 'whatyouhide/vim-textobj-xmlattr'
-Plug 'Julian/vim-textobj-brace'
-Plug 'vim-scripts/argtextobj.vim'
+"Plug 'Julian/vim-textobj-brace'
+Plug 'PeterRincker/vim-argumentative'
+Plug 'coderifous/textobj-word-column.vim'
 
 " additional key mappings
 Plug 'rhysd/clever-f.vim' " GOLDEN
 Plug 'bkad/CamelCaseMotion'
+Plug 'scrooloose/nerdcommenter'
+Plug 'vim-scripts/marvim'
 
 " text manipulation / display
 Plug 'Raimondi/delimitMate'
@@ -37,7 +40,7 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 Plug 'AndrewRadev/splitjoin.vim', { 'on': ['SplitjoinSplit', 'SplitjoinJoin']}
 Plug 'Valloric/MatchTagAlways'
-Plug 'terryma/vim-expand-region'
+Plug 'chrisbra/NrrwRgn'
 
 " code/project management
 Plug 'airblade/vim-gitgutter'
@@ -50,16 +53,17 @@ Plug 'jmcantrell/vim-diffchanges', { 'on': 'DiffChangesDiffToggle' }
 " code searching
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
-Plug 'junegunn/vim-pseudocl'
-Plug 'junegunn/vim-oblique'
-"Plug 'mhinz/vim-grepper'
+"Plug 'junegunn/vim-pseudocl'
+"Plug 'junegunn/vim-oblique'
+Plug 'henrik/vim-indexed-search'
 
 " navigation
 Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeFind' }
 Plug 'MattesGroeger/vim-bookmarks'
-Plug 't9md/vim-choosewin', { 'on': 'ChooseWin' }
+Plug 't9md/vim-choosewin', { 'on': 'Choosewin' }
 Plug 'terryma/vim-smooth-scroll'
 Plug 'kovetskiy/next-indentation'
+Plug 'takac/vim-hardtime'
 
 " completion
 Plug 'shougo/neocomplete.vim'
@@ -70,8 +74,8 @@ Plug 'mxw/vim-jsx'
 Plug 'ternjs/tern_for_vim', { 'do': 'npm install', 'for': 'javascript' }
 
 " extra language support
+Plug 'scrooloose/syntastic'
 Plug 'sheerun/vim-polyglot'
-Plug 'rhysd/devdocs.vim', { 'on': 'DevDocs' }
 
 " statusline
 Plug 'bling/vim-airline'
@@ -84,9 +88,28 @@ Plug 'junegunn/limelight.vim', { 'on': 'Limelight' }
 " misc
 Plug 'vim-scripts/wipeout', { 'on':  'Wipeout' }
 Plug 'mbbill/undotree', { 'on': 'UndotreeToggle' }
-Plug 'justinmk/vim-gtfo'
+Plug 'benmills/vimux'
 Plug 'tmux-plugins/vim-tmux-focus-events'
-"Plug 'vim-scripts/SyntaxRange'
+Plug 'mtth/scratch.vim'
+
+" FOR CONSIDERATION
+"Plug 'Konfekt/FastFold'
+"Plug 'mhinz/vim-grepper'
+" https://github.com/kana/vim-smartword/blob/master/doc/smartword.txt
+
+"Plug 'janko-m/vim-test'
+"function! TerminalSplitStrategy(cmd) abort
+"tabnew | call termopen(a:cmd) | startinsert
+"endfunction
+"let g:test#custom_strategies = get(g:, 'test#custom_strategies', {})
+"let g:test#custom_strategies.terminal_split = function('TerminalSplitStrategy')
+"let test#strategy = 'terminal_split'
+
+"nnoremap <silent> <leader>rr :TestFile<CR>
+"nnoremap <silent> <leader>rf :TestNearest<CR>
+"nnoremap <silent> <leader>rs :TestSuite<CR>
+"nnoremap <silent> <leader>ra :TestLast<CR>
+"nnoremap <silent> <leader>ro :TestVisit<CR>
 
 call plug#end()
 
@@ -97,6 +120,8 @@ set gdefault " The substitute flag g is on
 set hidden " Hide the buffer instead of closing when switching
 set synmaxcol=300 " Don't try to highlight long lines
 set virtualedit=onemore " Allow for cursor beyond last character
+set foldmethod=manual
+set foldlevel=1
 
 set t_Co=256
 set background=dark
@@ -113,10 +138,48 @@ filetype plugin indent on
 set splitright
 set splitbelow
 
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+let g:syntastic_enable_signs = 1
+let g:syntastic_php_checkers=['php', 'phpcs', 'phpmd']
+"let g:syntastic_aggregate_errors = 1
+
+" Scratch
+let g:scratch_insert_autohide = 0
+
+" GAME ON
+let g:hardtime_default_on = 1
+let g:hardtime_ignore_buffer_patterns = [ "NERD.*" ]
+let g:hardtime_ignore_quickfix = 1
+let g:hardtime_allow_different_key = 1
+let g:hardtime_maxcount = 2 " for when I hit the wrong line number
+let g:list_of_normal_keys = ["h", "j", "k", "l", "-", "+"]
+let g:list_of_visual_keys = ["h", "j", "k", "l", "-", "+"]
+let g:list_of_insert_keys = []
+
 let g:airline_powerline_fonts = 1
 let g:airline_theme = 'base16_ocean'
+let g:airline#extensions#tabline#tabs_label = 'party hard'
 let g:airline_left_sep=''
 let g:airline_right_sep=''
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#show_splits = 0
+let g:airline#extensions#tabline#show_buffers = 0
+let g:airline#extensions#tabline#tab_nr_type = 1
+let g:airline#extensions#tabline#show_close_button = 0
+let g:airline#extensions#tabline#left_sep = ''
+let g:airline#extensions#tabline#left_alt_sep = ''
+let g:airline#extensions#tabline#right_sep = ''
+let g:airline#extensions#tabline#right_alt_sep = ''
+
+" enable/disable showing only non-zero hunks
+let g:airline#extensions#hunks#enabled = 1
+let g:airline#extensions#hunks#non_zero_only = 0
+
+" configure which whitespace checks to enable
+let g:airline#extensions#whitespace#checks = [ 'indent', 'trailing' ]
 let g:airline_mode_map = {
         \ '__' : '------',
         \ 'n'  : 'N',
@@ -132,10 +195,12 @@ let g:airline_mode_map = {
         \ 't'  : 'T',
         \ }
 
-match Error /\%81v.\+/
+" highlight long lines (but only one column)
+highlight ColorColumn ctermbg=red ctermfg=white
+call matchadd('ColorColumn', '\%81v', 100)
 
 " remove esc key timeout
-set timeoutlen=1000
+set timeoutlen=500
 set ttimeoutlen=0
 
 set autoindent
@@ -144,8 +209,8 @@ set complete-=i
 " Enable mouse mode
 set mouse=a
 
-" Trigger a highlight (quick-scope) in the appropriate direction when pressing these keys:
-let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
+" reformat html -> each tag on own row
+" nmap <leader><F3> :%s/<[^>]*>/\r&\r/g<cr>gg=G:g/^$/d<cr><leader>/
 
 " Add proper indent when hitting <CR> inside curly braces
 let g:delimitMate_expand_cr = 1
@@ -167,6 +232,34 @@ let g:clever_f_smart_case = 1
 
 " camelcasemotion
 call camelcasemotion#CreateMotionMappings(',')
+
+map <C-s> <esc>:w<CR>
+imap <C-s> <esc>:w<CR>
+map <C-t> <esc>:tabnew<CR>
+
+" Execute macro in q
+map Q @q
+
+" Disable K looking stuff up
+map K <Nop>
+
+" Merge a tab into a split in the previous window
+function! MergeTabs()
+    if tabpagenr() == 1
+        return
+    endif
+    let bufferName = bufname("%")
+    if tabpagenr("$") == tabpagenr()
+        close!
+    else
+        close!
+        tabprev
+    endif
+    split
+    execute "buffer " . bufferName
+endfunction
+
+nmap <C-W>u :call MergeTabs()<CR>
 
 " Disable AutoComplPop.
 let g:acp_enableAtStartup = 0
@@ -252,7 +345,40 @@ if !exists('g:neocomplete#sources#omni#input_patterns')
   let g:neocomplete#sources#omni#input_patterns = {}
 endif
 
-let g:gtfo#terminals = { 'unix' : 'urxvtc -g 50x15 -cd' }
+" Switch between tabs
+execute "set <M-1>=\e1"
+execute "set <M-2>=\e2"
+execute "set <M-3>=\e3"
+execute "set <M-4>=\e4"
+execute "set <M-5>=\e5"
+execute "set <M-6>=\e6"
+execute "set <M-7>=\e7"
+execute "set <M-8>=\e8"
+execute "set <M-9>=\e9"
+nnoremap <M-1> 1gt
+nnoremap <M-2> 2gt
+nnoremap <M-3> 3gt
+nnoremap <M-4> 4gt
+nnoremap <M-5> 5gt
+nnoremap <M-6> 6gt
+nnoremap <M-7> 7gt
+nnoremap <M-8> 8gt
+nnoremap <M-9> 9gt
+
+" p: go to the previously open file.
+nnoremap <Leader>o <C-^>
+
+" Delete all hidden buffers
+nnoremap <silent> <Leader><BS>b :call DeleteHiddenBuffers()<CR>
+function! DeleteHiddenBuffers() " {{{
+  let tpbl=[]
+  call map(range(1, tabpagenr('$')), 'extend(tpbl, tabpagebuflist(v:val))')
+  for buf in filter(range(1, bufnr('$')), 'bufexists(v:val) && index(tpbl, v:val)==-1')
+    silent execute 'bwipeout' buf
+  endfor
+endfunction " }}}
+
+nmap got :VimuxRunCommand("")<CR>
 
 " FZF
 let g:fzf_action = {
@@ -263,7 +389,35 @@ let g:fzf_action = {
 " [Buffers] Jump to the existing window if possible
 let g:fzf_buffers_jump = 1
 
-nmap K <Plug>(devdocs-under-cursor)
+nmap [a <Plug>Argumentative_Prev
+nmap ]a <Plug>Argumentative_Next
+xmap [a <Plug>Argumentative_XPrev
+xmap ]a <Plug>Argumentative_XNext
+nmap <a <Plug>Argumentative_MoveLeft
+nmap >a <Plug>Argumentative_MoveRight
+xmap ia <Plug>Argumentative_InnerTextObject
+xmap aa <Plug>Argumentative_OuterTextObject
+omap ia <Plug>Argumentative_OpPendingInnerTextObject
+omap aa <Plug>Argumentative_OpPendingOuterTextObject
+
+function! SearchVisualSelectionWithAg() range
+    let old_reg = getreg('"')
+    let old_regtype = getregtype('"')
+    let old_clipboard = &clipboard
+    set clipboard&
+    normal! ""gvy
+    let selection = getreg('"')
+    call setreg('"', old_reg, old_regtype)
+    let &clipboard = old_clipboard
+    execute 'Ag' selection
+endfunction
+
+function! SearchWordWithAg()
+  execute 'Ag' expand('<cword>')
+endfunction
+
+nnoremap <silent> H :call SearchWordWithAg()<CR>
+vnoremap <silent> H :call SearchVisualSelectionWithAg()<CR>
 
 " Insert mode completion
 imap <c-x><c-j> <plug>(fzf-complete-file-ag)
@@ -274,12 +428,28 @@ nmap <Leader>w :Windows<CR>
 nmap <Leader>b :Buffers<CR>
 nmap <Leader>c :Commands<CR>
 
-nnoremap <S-Tab> :IndentationGoUp<CR>
-nnoremap <Tab> :IndentationGoDown<CR>
+" Go to first character of line on first press
+" Go to start of line on second press
+" http://ddrscott.github.io/blog/2016/vim-toggle-movement/
+function! ToggleHomeZero()
+    let pos = getpos('.')
+    execute "normal! ^"
+    if pos == getpos('.')
+        execute "normal! 0"
+    endif
+endfunction
+
+nnoremap <silent> 0 :call ToggleHomeZero()<CR>
+
+nnoremap <silent> <S-Tab> :IndentationGoUp<CR>
+nnoremap <silent> <Tab> :IndentationGoDown<CR>
 
 nnoremap <silent> <leader>a :ArgWrap<CR>
 nnoremap <silent> <c-p> :ProjectRootExe FZF<cr>
-"nnoremap <silent> <C-S-P> :ProjectRootExe Buffers<cr>
+
+" move horizontally
+nnoremap z; 10zl
+nnoremap zj 10zh
 
 nnoremap <leader>p p`[v`]=
 
@@ -303,6 +473,11 @@ nmap <Leader>sk :rightbelow new<CR>
 
 " Gitgutter
 let g:gitgutter_map_keys = 0
+let g:gitgutter_max_signs = 200
+let g:gitgutter_realtime = 0
+let g:gitgutter_eager = 1
+nmap <silent> ]h :GitGutterNextHunk<CR>
+nmap <silent> [h :GitGutterPrevHunk<CR>
 
 " Show NERDTree with Ctrl+k Ctrl+b or Ctrl+kb
 function! SmartNERDTree()
@@ -335,8 +510,9 @@ set smarttab
 set lazyredraw
 
 " Show whitespace characters
+set showbreak=↪\ 
 set list
-set listchars=tab:▸\ ,trail:·
+set listchars=tab:→\ ,trail:·,extends:›,precedes:‹
 
 " Sets how many lines of history VIM has to remember
 set history=700
@@ -364,10 +540,12 @@ set diffopt+=vertical
 set ruler
 
 " Highlight current line
-set cursorline
-" ... only on focused pane
-"autocmd! WinEnter * set cursorline
-"autocmd! WinLeave * set nocursorline
+
+augroup CursorLineOnlyInActiveWindow
+  autocmd!
+  autocmd VimEnter,WinEnter,BufWinEnter * setlocal cursorline
+  autocmd WinLeave * setlocal nocursorline
+augroup END
 
 " Configure backspace so it acts as it should act
 set backspace=eol,start,indent
@@ -448,8 +626,10 @@ set ai "Auto indent
 
 " Don't implode
 noremap j h
-noremap <silent> <expr> k (v:count == 0 ? 'gj' : 'j')
-noremap <silent> <expr> l (v:count == 0 ? 'gk' : 'k')
+"noremap <silent> <expr> k (v:count == 0 ? 'gj' : 'j')
+"noremap <silent> <expr> l (v:count == 0 ? 'gk' : 'k')
+noremap k j
+noremap l k
 noremap ; l
 
 noremap <C-w>j <C-w>h
@@ -463,8 +643,10 @@ nnoremap <up> :resize +5<cr>
 nnoremap <down> :resize -5<cr>
 
 " invoke with '-'
-nmap  -  <Plug>(choosewin)
+nnoremap <silent> - :ChooseWin
 let g:choosewin_overlay_enable = 1
+let g:choosewin_blink_on_land = 0
+let g:choosewin_overlay_clear_multibyte = 1
 
 " Move visual block
 " http://vimrcfu.com/snippet/77
@@ -558,5 +740,5 @@ endfunction
 
 command! ZoomToggle call s:ZoomToggle()
 nnoremap <silent> <C-w>o :ZoomToggle<CR>:AirlineRefresh<CR>
-nnoremap <silent> <C-w>o :ZoomToggle<CR>:AirlineRefresh<CR>
+nnoremap <silent> <C-w><C-o> :ZoomToggle<CR>:AirlineRefresh<CR>
 
