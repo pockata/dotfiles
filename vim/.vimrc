@@ -23,9 +23,10 @@ Plug 'kana/vim-textobj-function'
 Plug 'thinca/vim-textobj-function-javascript'
 Plug 'kana/vim-textobj-entire'
 Plug 'whatyouhide/vim-textobj-xmlattr'
-"Plug 'Julian/vim-textobj-brace'
 Plug 'PeterRincker/vim-argumentative'
 Plug 'coderifous/textobj-word-column.vim'
+Plug 'junegunn/vim-after-object'
+
 " additional key mappings
 Plug 'rhysd/clever-f.vim' " GOLDEN
 Plug 'bkad/CamelCaseMotion'
@@ -457,6 +458,9 @@ nnoremap <leader>p p`[v`]=
 nnoremap <Leader>u :UndotreeToggle<CR>
 " If undotree is opened, it is likely one wants to interact with it.
 let g:undotree_SetFocusWhenToggle=1
+let g:undotree_WindowLayout = 2
+
+autocmd VimEnter * silent! call after_object#enable('=', ':', '#', ' ', '|')
 
 " https://technotales.wordpress.com/2010/04/29/vim-splits-a-guide-to-doing-exactly-what-you-want/
 " Smarter? splits
