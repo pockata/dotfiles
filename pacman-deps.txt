@@ -43,6 +43,7 @@ chromium
 compton
 docker
 docker-compose
+reptyr
 mariadb
 nginx
 feh
@@ -64,3 +65,4 @@ figlet
 doge
 cowsay
 fortune-mod
+synclient
