@@ -41,6 +41,7 @@ Plug 'tpope/vim-repeat'
 Plug 'AndrewRadev/splitjoin.vim', { 'on': ['SplitjoinSplit', 'SplitjoinJoin']}
 Plug 'Valloric/MatchTagAlways'
 Plug 'chrisbra/NrrwRgn'
+Plug 'itchyny/vim-parenmatch'
 
 " code/project management
 Plug 'airblade/vim-gitgutter'
@@ -58,7 +59,8 @@ Plug 'junegunn/fzf.vim'
 Plug 'henrik/vim-indexed-search'
 
 " navigation
-Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeFind' }
+Plug 'scrooloose/nerdtree', { 'on': ['NERDTreeFind', 'NERDTreeOpen'] }
+Plug 'Xuyuanp/nerdtree-git-plugin', { 'on': ['NERDTreeFind', 'NERDTreeOpen'] }
 Plug 'MattesGroeger/vim-bookmarks'
 Plug 't9md/vim-choosewin', { 'on': ['<Plug>(choosewin)', 'ChooseWin'] }
 Plug 'terryma/vim-smooth-scroll'
@@ -90,7 +92,6 @@ Plug 'vim-scripts/wipeout', { 'on':  'Wipeout' }
 Plug 'mbbill/undotree', { 'on': 'UndotreeToggle' }
 Plug 'benmills/vimux'
 Plug 'tmux-plugins/vim-tmux-focus-events'
-Plug 'mtth/scratch.vim'
 
 " FOR CONSIDERATION
 "Plug 'Konfekt/FastFold'
@@ -146,8 +147,8 @@ let g:syntastic_enable_signs = 1
 let g:syntastic_php_checkers=['php', 'phpcs', 'phpmd']
 "let g:syntastic_aggregate_errors = 1
 
-" Scratch
-let g:scratch_insert_autohide = 0
+" Disable default matchparen plugin
+let g:loaded_matchparen = 1
 
 " GAME ON
 let g:hardtime_default_on = 1
@@ -176,7 +177,7 @@ let g:airline#extensions#tabline#right_alt_sep = ''
 
 " enable/disable showing only non-zero hunks
 let g:airline#extensions#hunks#enabled = 1
-let g:airline#extensions#hunks#non_zero_only = 0
+let g:airline#extensions#hunks#non_zero_only = 1
 
 " configure which whitespace checks to enable
 let g:airline#extensions#whitespace#checks = [ 'indent', 'trailing' ]
@@ -209,6 +210,9 @@ set complete-=i
 " Enable mouse mode
 set mouse=a
 
+" dont continue comments when pushing o/O
+set formatoptions-=o
+
 " reformat html -> each tag on own row
 " nmap <leader><F3> :%s/<[^>]*>/\r&\r/g<cr>gg=G:g/^$/d<cr><leader>/
 
@@ -224,11 +228,25 @@ let g:NERDCustomDelimiters = {
 \}
 let NERD_html_alt_style=1
 let NERDTreeShowHidden=1
+let NERDTreeMinimalUI = 1
 let g:NERDTreeMapOpenInTab="<C-t>"
 let g:NERDTreeMapOpenSplit="<C-s>"
 let g:NERDTreeMapOpenVSplit="<C-v>"
-
+let g:NERDTreeIndicatorMapCustom = {
+    \ "Modified"  : "✹",
+    \ "Staged"    : "✚",
+    \ "Untracked" : "✭",
+    \ "Renamed"   : "➜",
+    \ "Unmerged"  : "═",
+    \ "Deleted"   : "✖",
+    \ "Dirty"     : "✗",
+    \ "Clean"     : "✔︎",
+    \ "Unknown"   : "?"
+    \ }
 let g:clever_f_smart_case = 1
+let g:clever_f_across_no_line = 1
+let g:clever_f_fix_key_direction = 1
+let g:clever_f_chars_match_any_signs = '`'
 
 " camelcasemotion
 call camelcasemotion#CreateMotionMappings(',')
@@ -326,6 +344,12 @@ endfunction
 " <CR> close popup and save indent or expand snippet
 imap <expr> <CR> CleverCr()
 
+"imap <expr><tab> neosnippet#expandable_or_jumpable() ?
+"      \ "\<Plug>(neosnippet_expand_or_jump)"
+"      \ : pumvisible() ? "\<C-N>" : "\<tab>"
+"smap <expr><tab> neosnippet#expandable_or_jumpable() ?
+"      \ "\<Plug>(neosnippet_expand_or_jump)" : "\<tab>"
+
 " <TAB>: completion.
 inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
 inoremap <expr><S-TAB>   pumvisible() ? "\<C-p>" : "\<C-h>"
@@ -422,6 +446,8 @@ vnoremap <silent> H :call SearchVisualSelectionWithAg()<CR>
 
 " Insert mode completion
 imap <c-x><c-j> <plug>(fzf-complete-file-ag)
+imap <c-x><c-k> <plug>(fzf-complete-word)
+imap <c-x><c-f> <plug>(fzf-complete-path)
 nmap <Leader>h :History<CR>
 nmap <Leader>j :Lines<CR>
 nmap <Leader>r :BLines<CR>
@@ -443,15 +469,17 @@ endfunction
 
 nnoremap <silent> 0 :call ToggleHomeZero()<CR>
 
-nnoremap <silent> <S-Tab> :IndentationGoUp<CR>
-nnoremap <silent> <Tab> :IndentationGoDown<CR>
+vnoremap <silent> <S-Tab> [{
+vnoremap <silent> <Tab> ]}
+nnoremap <silent> <S-Tab> [{
+nnoremap <silent> <Tab> ]}
 
 nnoremap <silent> <leader>a :ArgWrap<CR>
 nnoremap <silent> <c-p> :ProjectRootExe FZF<cr>
 
 " move horizontally
-nnoremap z; 10zl
-nnoremap zj 10zh
+nnoremap z; 20zl
+nnoremap zj 20zh
 
 nnoremap <leader>p p`[v`]=
 
