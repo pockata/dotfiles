@@ -93,6 +93,8 @@ alias lsym='ls -la | grep -i "\->" | awk "/ / { print \$9, \$11 }"'
 alias lsg='ls -la | grep -ni dot'
 alias busy="cat /dev/urandom | hexdump -C | grep --color=auto \"ca fe\""
 
+alias addr="ip -o a | cut -d ' ' -f2,7"
+
 alias pbcopy='xsel --clipboard --input'
 alias pbpaste='xsel --clipboard --output'
 
