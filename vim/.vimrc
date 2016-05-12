@@ -520,14 +520,14 @@ map <silent> <C-k>b :call SmartNERDTree()<cr>
 
 
 function! s:startup()
-  if argc() == 1 && isdirectory(argv(0))
-    NERDTree
-  else if (argc() == 0)
+  let cnt = argc()
+  if (cnt == 0)
     Startify
+  elseif cnt == 1 && isdirectory(argv(0))
+    NERDTree
   endif
 endfunction
 
-"autocmd VimEnter * if argc() == 1 && isdirectory(argv(0)) | NERDTree | else | Startify | endif
 autocmd VimEnter * call s:startup()
 
 " Disable netrw
