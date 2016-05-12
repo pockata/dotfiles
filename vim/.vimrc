@@ -200,6 +200,9 @@ let g:airline_mode_map = {
 highlight ColorColumn ctermbg=red ctermfg=white
 call matchadd('ColorColumn', '\%81v', 100)
 
+" make the ~ characters on empty lines 'invisible'
+highlight NonText ctermfg=bg
+
 " remove esc key timeout
 set timeoutlen=500
 set ttimeoutlen=0
