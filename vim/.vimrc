@@ -41,7 +41,6 @@ Plug 'tpope/vim-repeat'
 Plug 'AndrewRadev/splitjoin.vim', { 'on': ['SplitjoinSplit', 'SplitjoinJoin']}
 Plug 'Valloric/MatchTagAlways'
 Plug 'chrisbra/NrrwRgn'
-Plug 'itchyny/vim-parenmatch'
 
 " code/project management
 Plug 'airblade/vim-gitgutter'
@@ -71,8 +70,9 @@ Plug 'shougo/neocomplete.vim'
 Plug 'Shougo/neosnippet'
 Plug 'Shougo/neosnippet-snippets'
 Plug 'pangloss/vim-javascript'
-Plug 'mxw/vim-jsx'
+Plug 'mxw/vim-jsx', { 'for': 'jsx' }
 Plug 'ternjs/tern_for_vim', { 'do': 'npm install', 'for': 'javascript' }
+Plug 'junegunn/vim-peekaboo'
 
 " extra language support
 Plug 'scrooloose/syntastic'
@@ -145,9 +145,6 @@ let g:syntastic_check_on_wq = 0
 let g:syntastic_enable_signs = 1
 let g:syntastic_php_checkers=['php', 'phpcs', 'phpmd']
 "let g:syntastic_aggregate_errors = 1
-
-" Disable default matchparen plugin
-let g:loaded_matchparen = 1
 
 " GAME ON
 let g:hardtime_default_on = 1
@@ -243,10 +240,14 @@ let g:NERDTreeIndicatorMapCustom = {
     \ "Clean"     : "✔︎",
     \ "Unknown"   : "?"
     \ }
+
 let g:clever_f_smart_case = 1
 let g:clever_f_across_no_line = 1
 let g:clever_f_fix_key_direction = 1
 let g:clever_f_chars_match_any_signs = '`'
+
+" Delay opening of peekaboo window (in ms. default: 0)
+let g:peekaboo_delay = 750
 
 " camelcasemotion
 call camelcasemotion#CreateMotionMappings(',')
@@ -337,7 +338,7 @@ function! CleverCr()
             return neocomplete#smart_close_popup()
         endif
     else
-        return "\<C-R>=delimitMate#ExpandReturn()\<CR>"
+        return "\<Plug>delimitMateCR"
     endif
 endfunction
 
@@ -840,3 +841,9 @@ endfunction
 
 nnoremap <silent> <leader>/ :call <SID>goog(expand("<cWORD>"), 0)<cr>
 vnoremap <silent> <leader>/ :call <SID>goog(<SID>getVisualSelection(), 0)<cr>
+
+command! Plugs call fzf#run({
+  \ 'source':  map(sort(keys(g:plugs)), 'g:plug_home."/".v:val'),
+  \ 'options': '--delimiter / --nth -1',
+  \ 'down':    '~40%'})
+
