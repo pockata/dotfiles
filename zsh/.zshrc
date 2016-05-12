@@ -43,6 +43,7 @@ export EDITOR='vim'
 
 # Map Ctrl-S to sth usefull other than XOFF (interrupt data flow).
 stty -ixon
+setopt noflowcontrol
 
 # Vi mode
 bindkey -v
