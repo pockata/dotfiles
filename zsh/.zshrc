@@ -94,6 +94,7 @@ alias lsg='ls -la | grep -ni dot'
 alias busy="cat /dev/urandom | hexdump -C | grep --color=auto \"ca fe\""
 
 alias addr="ip -o a | cut -d ' ' -f2,7"
+alias open="xdg-open"
 
 alias pbcopy='xsel --clipboard --input'
 alias pbpaste='xsel --clipboard --output'
