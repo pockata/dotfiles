@@ -522,7 +522,7 @@ map <silent> <C-k>b :call SmartNERDTree()<cr>
 function! s:startup()
   if argc() == 1 && isdirectory(argv(0))
     NERDTree
-  else
+  else if (argc() == 0)
     Startify
   endif
 endfunction
