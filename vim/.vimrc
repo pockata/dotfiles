@@ -509,8 +509,19 @@ let g:gitgutter_map_keys = 0
 let g:gitgutter_max_signs = 200
 let g:gitgutter_realtime = 0
 let g:gitgutter_eager = 1
+" jump between changed areas (hunks)
 nmap <silent> ]h :GitGutterNextHunk<CR>
 nmap <silent> [h :GitGutterPrevHunk<CR>
+" text objects for hunks
+omap ih <Plug>GitGutterTextObjectInnerPending
+omap ah <Plug>GitGutterTextObjectOuterPending
+xmap ih <Plug>GitGutterTextObjectInnerVisual
+xmap ah <Plug>GitGutterTextObjectOuterVisual
+" stage/unstage hunk
+nmap <Leader>hs <Plug>GitGutterStageHunk
+nmap <Leader>hu <Plug>GitGutterUndoHunk
+" detailed preview of changes in hunk
+nmap <Leader>hp <Plug>GitGutterPreviewHunk
 
 " Show NERDTree with Ctrl+k Ctrl+b or Ctrl+kb
 function! SmartNERDTree()
