@@ -425,16 +425,8 @@ let g:fzf_action = {
 " [Buffers] Jump to the existing window if possible
 let g:fzf_buffers_jump = 1
 
-function! SearchVisualSelectionWithAg() range
-    let old_reg = getreg('"')
-    let old_regtype = getregtype('"')
-    let old_clipboard = &clipboard
-    set clipboard&
-    normal! ""gvy
-    let selection = getreg('"')
-    call setreg('"', old_reg, old_regtype)
-    let &clipboard = old_clipboard
-    execute 'Ag' selection
+function! SearchVisualSelectionWithAg()
+    execute 'Ag' s:getVisualSelection()
 endfunction
 
 function! SearchWordWithAg()
@@ -793,3 +785,14 @@ command! ZoomToggle call s:ZoomToggle()
 nnoremap <silent> <C-w>o :ZoomToggle<CR>:AirlineRefresh<CR>
 nnoremap <silent> <C-w><C-o> :ZoomToggle<CR>:AirlineRefresh<CR>
 
+function! s:getVisualSelection() range
+    let old_reg = getreg('"')
+    let old_regtype = getregtype('"')
+    let old_clipboard = &clipboard
+    set clipboard&
+    normal! ""gvy
+    let selection = getreg('"')
+    call setreg('"', old_reg, old_regtype)
+    let &clipboard = old_clipboard
+    return selection
+endfunction
