@@ -523,7 +523,7 @@ nmap <Leader>hu <Plug>GitGutterUndoHunk
 " detailed preview of changes in hunk
 nmap <Leader>hp <Plug>GitGutterPreviewHunk
 
-" Show NERDTree with Ctrl+k Ctrl+b or Ctrl+kb
+" Show NERDTree
 function! SmartNERDTree()
     if exists("t:NERDTreeBufName") && bufwinnr(t:NERDTreeBufName) != -1
         :NERDTreeClose
@@ -533,9 +533,7 @@ function! SmartNERDTree()
     endif
 endfunction
 
-map <silent> <C-k><C-b> :call SmartNERDTree()<cr>
-map <silent> <C-k>b :call SmartNERDTree()<cr>
-
+map <silent> <Leader>kb :call SmartNERDTree()<cr>
 
 function! s:startup()
   let cnt = argc()
