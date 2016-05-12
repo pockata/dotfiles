@@ -60,6 +60,9 @@ URxvt*scrollTtyKeypress:  true
 URxvt.iso14755: False
 URxvt*allow_bold: true
 URxvt*font:xft:Meslo LG M DZ for Powerline:style=regular:pixelsize=15
+
+! Enables ctrl+; binding in Vim
+URxvt.keysym.C-semicolon: \033[;
 !URxvt*transparent: true
 !URxvt*shading: 30
 !URxvt*inheritPixmap: true

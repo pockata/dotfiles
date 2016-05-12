@@ -113,6 +113,11 @@ Plug 'tmux-plugins/vim-tmux-focus-events'
 
 call plug#end()
 
+" Use ctrl + semicolon mapping
+" http://stackoverflow.com/a/28276482/334432
+map  [; <C-Semicolon>
+map! [; <C-Semicolon>
+
 set ttyfast " faster reflow
 set shortmess+=I " No intro when starting Vim
 set smartindent " Smart... indent
@@ -675,6 +680,11 @@ noremap <C-w>j <C-w>h
 noremap <C-w>k <C-w>j
 noremap <C-w>l <C-w>k
 noremap <C-w>; <C-w>l
+
+noremap <C-j> <C-w>h
+noremap <C-k> <C-w>j
+noremap <C-l> <C-w>k
+noremap <C-Semicolon> <C-w>l
 
 " Be aware of whether you are right or left vertical split
 " so you can use arrows more naturally.
