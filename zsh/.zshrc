@@ -75,7 +75,7 @@ setopt hist_ignore_all_dups
 setopt extended_history
 setopt hist_ignore_space
 
-export FZF_DEFAULT_COMMAND='ag -g ""' # Use ag as the default source for fzf
+export FZF_DEFAULT_COMMAND='ag --hidden -g ""' # Use ag as the default source for fzf
 export FZF_DEFAULT_OPTS='--multi --bind=ctrl-k:down,ctrl-l:up'
 
 # Aliases
