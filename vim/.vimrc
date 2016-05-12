@@ -59,12 +59,11 @@ Plug 'junegunn/fzf.vim'
 Plug 'henrik/vim-indexed-search'
 
 " navigation
-Plug 'scrooloose/nerdtree', { 'on': ['NERDTreeFind', 'NERDTreeOpen'] }
+Plug 'scrooloose/nerdtree', { 'on': ['NERDTree', 'NERDTreeFind', 'NERDTreeOpen'] }
 Plug 'Xuyuanp/nerdtree-git-plugin', { 'on': ['NERDTreeFind', 'NERDTreeOpen'] }
 Plug 'MattesGroeger/vim-bookmarks'
 Plug 't9md/vim-choosewin', { 'on': ['<Plug>(choosewin)', 'ChooseWin'] }
 Plug 'terryma/vim-smooth-scroll'
-Plug 'kovetskiy/next-indentation'
 Plug 'takac/vim-hardtime'
 
 " completion
@@ -228,6 +227,7 @@ let g:NERDCustomDelimiters = {
 \}
 let NERD_html_alt_style=1
 let NERDTreeShowHidden=1
+let NERDTreeHijackNetrw = 0
 let NERDTreeMinimalUI = 1
 let g:NERDTreeMapOpenInTab="<C-t>"
 let g:NERDTreeMapOpenSplit="<C-s>"
@@ -518,6 +518,19 @@ map <silent> <C-k><C-b> :call SmartNERDTree()<cr>
 map <silent> <C-k>b :call SmartNERDTree()<cr>
 
 
+function! s:startup()
+  if argc() == 1 && isdirectory(argv(0))
+    NERDTree
+  else
+    Startify
+  endif
+endfunction
+
+"autocmd VimEnter * if argc() == 1 && isdirectory(argv(0)) | NERDTree | else | Startify | endif
+autocmd VimEnter * call s:startup()
+
+" Disable netrw
+let loaded_netrwPlugin = 1
 
 " select pasted text
 nmap gp `[v`]
