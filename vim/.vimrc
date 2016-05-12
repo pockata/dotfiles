@@ -136,7 +136,6 @@ colorscheme base16-ocean
 let mapleader="\<Space>"
 let g:mapleader="\<Space>"
 
-set number
 filetype plugin indent on
 
 " set cursor in split window
@@ -587,8 +586,8 @@ set ruler
 
 augroup CursorLineOnlyInActiveWindow
   autocmd!
-  autocmd VimEnter,WinEnter,BufWinEnter * setlocal cursorline
-  autocmd WinLeave * setlocal nocursorline
+  autocmd VimEnter,WinEnter,BufWinEnter * setlocal cursorline relativenumber number
+  autocmd WinLeave * setlocal nocursorline norelativenumber nonumber
 augroup END
 
 " Configure backspace so it acts as it should act
@@ -761,9 +760,6 @@ set laststatus=2
 
 " Format the status line
 set statusline=\ %F%m%r%h\ %w\ \ CWD:\ %r%{getcwd()}%h\ \ \ Line:\ %l
-
-" Relative line numbers
-set relativenumber
 
 " Delete tra iling white space on save, useful for Python and CoffeeScript ;)
 func! DeleteTrailingWS()
