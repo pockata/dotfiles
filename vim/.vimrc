@@ -785,6 +785,23 @@ command! ZoomToggle call s:ZoomToggle()
 nnoremap <silent> <C-w>o :ZoomToggle<CR>:AirlineRefresh<CR>
 nnoremap <silent> <C-w><C-o> :ZoomToggle<CR>:AirlineRefresh<CR>
 
+" ----------------------------------------------------------------------------
+" :Shuffle | Shuffle selected lines
+" ----------------------------------------------------------------------------
+function! s:shuffle() range
+ruby << RB
+  first, last = %w[a:firstline a:lastline].map { |e| VIM::evaluate(e).to_i }
+  (first..last).map { |l| $curbuf[l] }.shuffle.each_with_index do |line, i|
+    $curbuf[first + i] = line
+  end
+RB
+endfunction
+command! -range Shuffle <line1>,<line2>call s:shuffle()
+
+
+" ----------------------------------------------------------------------------
+" Get Visual Selection helper function
+" ----------------------------------------------------------------------------
 function! s:getVisualSelection() range
     let old_reg = getreg('"')
     let old_regtype = getregtype('"')
@@ -796,3 +813,17 @@ function! s:getVisualSelection() range
     let &clipboard = old_clipboard
     return selection
 endfunction
+
+" ----------------------------------------------------------------------------
+" <Leader>?/! | Google it / Feeling lucky
+" ----------------------------------------------------------------------------
+function! s:goog(pat, lucky)
+  let q = '"'.substitute(a:pat, '["\n]', ' ', 'g').'"'
+  let q = substitute(q, '[[:punct:] ]',
+       \ '\=printf("%%%02X", char2nr(submatch(0)))', 'g')
+  call system(printf('xdg-open "https://www.google.com/search?%sq=%s"',
+                   \ a:lucky ? 'btnI&' : '', q))
+endfunction
+
+nnoremap <silent> <leader>/ :call <SID>goog(expand("<cWORD>"), 0)<cr>
+vnoremap <silent> <leader>/ :call <SID>goog(<SID>getVisualSelection(), 0)<cr>
