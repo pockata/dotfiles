@@ -59,7 +59,7 @@ URxvt*scrollTtyKeypress:  true
 ! Enables copy/paste
 URxvt.iso14755: False
 URxvt*allow_bold: true
-URxvt*font:xft:Meslo LG M DZ for Powerline:style=regular:pixelsize=17
+URxvt*font:xft:Meslo LG M DZ for Powerline:style=regular:pixelsize=15
 !URxvt*transparent: true
 !URxvt*shading: 30
 !URxvt*inheritPixmap: true
