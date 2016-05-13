@@ -196,12 +196,16 @@ let g:airline_mode_map = {
         \ 't'  : 'T',
         \ }
 
-" highlight long lines (but only one column)
-highlight ColorColumn ctermbg=red ctermfg=white
-call matchadd('ColorColumn', '\%81v', 100)
+function! ChangeHighlights()
+  " highlight long lines (but only one column)
+  highlight ColorColumn ctermbg=red ctermfg=white
+  call matchadd('ColorColumn', '\%81v', 100)
 
-" make the ~ characters on empty lines 'invisible'
-highlight NonText ctermfg=bg
+  " make the ~ characters on empty lines 'invisible'
+  highlight NonText ctermfg=bg
+endfunction
+
+autocmd VimEnter,ColorScheme * call ChangeHighlights()
 
 " remove esc key timeout
 set timeoutlen=500
