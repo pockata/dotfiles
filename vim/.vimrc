@@ -53,9 +53,8 @@ Plug 'jmcantrell/vim-diffchanges', { 'on': 'DiffChangesDiffToggle' }
 " code searching
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
-"Plug 'junegunn/vim-pseudocl'
-"Plug 'junegunn/vim-oblique'
-Plug 'henrik/vim-indexed-search'
+Plug 'junegunn/vim-pseudocl'
+Plug 'junegunn/vim-oblique'
 
 " navigation
 Plug 'scrooloose/nerdtree', { 'on': ['NERDTree', 'NERDTreeFind', 'NERDTreeOpen'] }
@@ -64,6 +63,8 @@ Plug 'MattesGroeger/vim-bookmarks'
 Plug 't9md/vim-choosewin', { 'on': ['<Plug>(choosewin)', 'ChooseWin'] }
 Plug 'terryma/vim-smooth-scroll'
 Plug 'takac/vim-hardtime'
+Plug 'itchyny/vim-cursorword'
+Plug 'kana/vim-smartword'
 
 " completion
 Plug 'shougo/neocomplete.vim'
@@ -91,6 +92,7 @@ Plug 'vim-scripts/wipeout', { 'on':  'Wipeout' }
 Plug 'mbbill/undotree', { 'on': 'UndotreeToggle' }
 Plug 'benmills/vimux'
 Plug 'tmux-plugins/vim-tmux-focus-events'
+Plug 'wesQ3/vim-windowswap'
 
 " FOR CONSIDERATION
 "Plug 'Konfekt/FastFold'
@@ -115,8 +117,8 @@ call plug#end()
 
 " Use ctrl + semicolon mapping
 " http://stackoverflow.com/a/28276482/334432
-map  [; <C-Semicolon>
-map! [; <C-Semicolon>
+nmap  [; <C-Semicolon>
+"nmap! [; <C-Semicolon>
 
 set ttyfast " faster reflow
 set shortmess+=I " No intro when starting Vim
@@ -152,12 +154,12 @@ let g:syntastic_php_checkers=['php', 'phpcs', 'phpmd']
 
 " GAME ON
 let g:hardtime_default_on = 1
-let g:hardtime_ignore_buffer_patterns = [ "NERD.*" ]
+let g:hardtime_ignore_buffer_patterns = [ "NERD.*", "undotree.*", "help.*" ]
 let g:hardtime_ignore_quickfix = 1
 let g:hardtime_allow_different_key = 1
 let g:hardtime_maxcount = 2 " for when I hit the wrong line number
-let g:list_of_normal_keys = ["h", "j", "k", "l"]
-let g:list_of_visual_keys = ["h", "j", "k", "l"]
+let g:list_of_normal_keys = ["j", "k", "l", ";"]
+let g:list_of_visual_keys = ["j", "k", "l", ";"]
 let g:list_of_insert_keys = []
 
 let g:airline_powerline_fonts = 1
@@ -240,6 +242,9 @@ let NERDTreeMinimalUI = 1
 let g:NERDTreeMapOpenInTab="<C-t>"
 let g:NERDTreeMapOpenSplit="<C-s>"
 let g:NERDTreeMapOpenVSplit="<C-v>"
+let g:NERDTreeAutoCenter = 1
+let g:NERDTreeWinSize = 25
+let g:NERDTreeSortHiddenFirst = 1
 let g:NERDTreeIndicatorMapCustom = {
     \ "Modified"  : "✹",
     \ "Staged"    : "✚",
@@ -600,10 +605,11 @@ set ruler
 
 " Highlight current line
 
+set cursorline relativenumber number
 augroup CursorLineOnlyInActiveWindow
   autocmd!
-  autocmd VimEnter,WinEnter,BufWinEnter * setlocal cursorline relativenumber number
-  autocmd WinLeave * setlocal nocursorline norelativenumber nonumber
+  autocmd VimEnter,WinEnter,BufWinEnter * setlocal cursorline
+  autocmd WinLeave * setlocal nocursorline
 augroup END
 
 " Configure backspace so it acts as it should act
@@ -721,8 +727,8 @@ endfunction
 nnoremap <silent> <Right> :call IntelligentVerticalResize('right')<CR>
 nnoremap <silent> <Left> :call IntelligentVerticalResize('left')<CR>
 
-nnoremap <up> :resize +5<cr>
-nnoremap <down> :resize -5<cr>
+nnoremap <silent> <up> :resize +5<cr>
+nnoremap <silent> <down> :resize -5<cr>
 
 " invoke with '-'
 nmap - <Plug>(choosewin)
