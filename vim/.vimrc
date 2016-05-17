@@ -266,7 +266,7 @@ let g:clever_f_chars_match_any_signs = '`'
 let g:peekaboo_delay = 750
 
 " camelcasemotion
-call camelcasemotion#CreateMotionMappings(',')
+autocmd VimEnter * call camelcasemotion#CreateMotionMappings(',')
 
 map <C-s> <esc>:w<CR>
 imap <C-s> <esc>:w<CR>
@@ -290,7 +290,7 @@ function! MergeTabs()
         close!
         tabprev
     endif
-    split
+    vsplit
     execute "buffer " . bufferName
 endfunction
 
@@ -655,9 +655,7 @@ set hlsearch
 " Makes search act like search in modern browsers
 set incsearch
 " Use <C-L> to clear the highlighting of :set hlsearch.
-if maparg('<C-L>', 'n') ==# ''
-    nnoremap <silent> <C-L> :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-L>
-endif
+nnoremap <silent> <Leader>l :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-L>
 
 " Load matchit.vim, but only if the user hasn't installed a newer version.
 if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &rtp) ==# ''
@@ -869,9 +867,4 @@ endfunction
 
 nnoremap <silent> <leader>/ :call <SID>goog(expand("<cWORD>"), 0)<cr>
 vnoremap <silent> <leader>/ :call <SID>goog(<SID>getVisualSelection(), 0)<cr>
-
-command! Plugs call fzf#run({
-  \ 'source':  map(sort(keys(g:plugs)), 'g:plug_home."/".v:val'),
-  \ 'options': '--delimiter / --nth -1',
-  \ 'down':    '~40%'})
 
