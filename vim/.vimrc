@@ -537,8 +537,7 @@ function! SmartNERDTree()
     if exists("t:NERDTreeBufName") && bufwinnr(t:NERDTreeBufName) != -1
         :NERDTreeClose
     else
-        :ProjectRootExe
-        :NERDTreeFind
+        :ProjectRootExe NERDTreeFind
     endif
 endfunction
 
