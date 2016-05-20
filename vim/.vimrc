@@ -32,6 +32,7 @@ Plug 'rhysd/clever-f.vim' " GOLDEN
 Plug 'bkad/CamelCaseMotion'
 Plug 'scrooloose/nerdcommenter'
 Plug 'vim-scripts/marvim'
+Plug 'christoomey/vim-tmux-navigator'
 
 " text manipulation / display
 Plug 'Raimondi/delimitMate'
@@ -706,10 +707,11 @@ noremap <C-w>k <C-w>j
 noremap <C-w>l <C-w>k
 noremap <C-w>; <C-w>l
 
-noremap <C-j> <C-w>h
-noremap <C-k> <C-w>j
-noremap <C-l> <C-w>k
-noremap <C-Semicolon> <C-w>l
+let g:tmux_navigator_no_mappings = 1
+noremap <C-j> :TmuxNavigateLeft<CR>
+noremap <C-k> :TmuxNavigateDown<CR>
+noremap <C-l> :TmuxNavigateUp<CR>
+noremap <C-Semicolon> :TmuxNavigateRight<CR>
 
 " Be aware of whether you are right or left vertical split
 " so you can use arrows more naturally.
