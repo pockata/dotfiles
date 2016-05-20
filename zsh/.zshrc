@@ -78,6 +78,25 @@ setopt hist_ignore_space
 
 export FZF_DEFAULT_COMMAND='ag --hidden -g ""' # Use ag as the default source for fzf
 export FZF_DEFAULT_OPTS='--multi --bind=ctrl-k:down,ctrl-l:up'
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+
+# gshow - git commit browser
+gshow() {
+  git l "$@" |
+  fzf --ansi --no-sort --reverse --tiebreak=index --bind=ctrl-s:toggle-sort \
+      --bind "ctrl-m:execute:
+                (grep -o '[a-f0-9]\{7\}' | head -1 |
+                xargs -I % sh -c 'git show --color=always % | less -R') << 'FZF-EOF'
+                {}
+FZF-EOF"
+}
+
+# like normal z when used with arguments but displays an fzf prompt when used without.
+unalias z 2> /dev/null
+z() {
+  [ $# -gt 0 ] && _z "$*" && return
+  cd "$(_z -l 2>&1 | fzf-tmux +s --tac --query "$*" | sed 's/^[0-9,.]* *//')"
+}
 
 # Aliases
 alias a="atom-beta"
