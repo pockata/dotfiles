@@ -7,8 +7,8 @@
     st = status -s
     br = branch
     diff = diff --word-diff
-    l = log --graph --decorate --pretty=oneline --abbrev-commit
-    la = log --graph --decorate --pretty=oneline --abbrev-commit --all
+    l = log --graph --decorate --pretty=oneline --abbrev-commit --pretty=format:'%C(yellow)%h %Cred%d %Cblue%ad %Creset%s %C(green)(%cr) %C(blue)<%cn>' --date=format:'%d-%m-%Y'
+    la = log --graph --decorate --pretty=oneline --abbrev-commit --all --pretty=format:'%C(yellow)%h %Cred%d %Cblue%ad %Creset%s%Cgreen [%cn]' --date=short
     ldf = "!git diff --name-only \"$(git merge-base HEAD ${1:-master})\""
 
     # Show the diff between the latest commit and the current state
