@@ -442,6 +442,13 @@ let g:fzf_action = {
 " [Buffers] Jump to the existing window if possible
 let g:fzf_buffers_jump = 1
 
+" Make * and # work with visual selection.
+" For anything more sophisticated, try:
+" - https://github.com/nelstrom/vim-visual-star-search
+" - https://github.com/thinca/vim-visualstar
+vnoremap <silent> * yq/p<CR>
+vnoremap <silent> # yq?p<CR>
+
 function! SearchVisualSelectionWithAg()
     execute 'Ag' s:getVisualSelection()
 endfunction
@@ -802,6 +809,8 @@ autocmd BufWrite *.cpp :call DeleteTrailingWS()
 
 " identify sass files as such
 autocmd BufNewFile,BufRead *.scss set ft=scss.css
+
+autocmd Filetype css setlocal iskeyword+=-
 
 noremap <silent> <c-u> :call smooth_scroll#up(&scroll, 0, 2)<CR>
 noremap <silent> <c-d> :call smooth_scroll#down(&scroll, 0, 2)<CR>
