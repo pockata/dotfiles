@@ -44,8 +44,10 @@
     # http://stackoverflow.com/questions/1139762/ignore-files-that-have-already-been-committed-to-a-git-repository
     untrack = update-index --assume-unchanged
     ignored = !git ls-files -v | grep "^[[:lower:]]"
-    
+
     unstage = reset HEAD
+    # Undo your last commit, but don't throw away your changes
+    undo = reset --soft HEAD^
 
     # Shows commits not pushed to origin
     unpushed = "log --branches --not --remotes --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)%Creset' --abbrev-commit"
@@ -62,7 +64,7 @@
 	interactive = auto
 [apply]
     # Detect whitespace errors when applying a patch
-    whitespace = fix
+    whitespace = nowarn
 [core]
 	editor = vim
 	pager = less -F -X
