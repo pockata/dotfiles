@@ -134,6 +134,7 @@ set t_Co=256
 set background=dark
 
 colorscheme base16-ocean
+highlight BookmarkSignDefault ctermbg=10
 
 let mapleader="\<Space>"
 let g:mapleader="\<Space>"
@@ -612,6 +613,8 @@ set ruler
 " Highlight current line
 
 set cursorline relativenumber number
+highlight CursorLineNr ctermfg=3
+
 augroup CursorLineOnlyInActiveWindow
   autocmd!
   autocmd VimEnter,WinEnter,BufWinEnter * setlocal cursorline
