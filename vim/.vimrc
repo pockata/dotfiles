@@ -812,6 +812,13 @@ autocmd BufNewFile,BufRead *.scss set ft=scss.css
 
 autocmd Filetype css setlocal iskeyword+=-
 
+" http://vim.wikia.com/wiki/Always_start_on_first_line_of_git_commit_message
+au FileType gitcommit au! BufEnter COMMIT_EDITMSG call setpos('.', [0, 1, 1, 0])
+
+" Enhance `gf`, use these file extensions
+" https://www.reddit.com/r/vim/comments/4kjgmz/weekly_vim_tips_and_tricks_thread_11/d3g6l8y
+autocmd FileType javascript setl suffixesadd=.js,.jsx,.json,.html
+
 noremap <silent> <c-u> :call smooth_scroll#up(&scroll, 0, 2)<CR>
 noremap <silent> <c-d> :call smooth_scroll#down(&scroll, 0, 2)<CR>
 noremap <silent> <c-b> :call smooth_scroll#up(&scroll*2, 0, 4)<CR>
