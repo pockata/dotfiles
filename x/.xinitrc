@@ -19,6 +19,8 @@ if xinput list --name-only | grep -qi "TPPS/2 IBM TrackPoint"; then
     xinput set-prop "TPPS/2 IBM TrackPoint" "Evdev Wheel Emulation Timeout" 200
     # horizontal scroll
     xinput set-prop "TPPS/2 IBM TrackPoint" "Evdev Wheel Emulation Axes" 6 7 4 5
+    # disable touchpad
+    synclient TouchpadOff=1
 fi
 
 monitors=$(xrandr -q | grep -oE "^.* connected (primary )?[0-9]+")
