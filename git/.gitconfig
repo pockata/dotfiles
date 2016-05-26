@@ -17,6 +17,9 @@
     # List all commiters in the current branch
     commiters = !"_() { git log --pretty=format:%an $@ | sort -u; }; _"
 
+    # List deleted files 
+    deleted = !"_() { git log --diff-filter=D --summary | grep delete; }; _"
+
     # Show verbose output about tags, branches or remotes
     tags = tag -l
     branches = branch -a
