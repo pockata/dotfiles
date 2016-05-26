@@ -273,6 +273,10 @@ let g:qfenter_topen_map = ['<C-t>']
 " Delay opening of peekaboo window (in ms. default: 0)
 let g:peekaboo_delay = 750
 
+" Windowswap
+let g:windowswap_map_keys = 0 "prevent default bindings
+nnoremap <silent> <C-W><C-W> :call WindowSwap#EasyWindowSwap()<CR>
+
 " camelcasemotion
 autocmd VimEnter * call camelcasemotion#CreateMotionMappings(',')
 
