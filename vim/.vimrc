@@ -49,6 +49,7 @@ Plug 'tpope/vim-fugitive'
 Plug 'junegunn/gv.vim', { 'on': 'GV' }
 Plug 'tpope/vim-sleuth'
 Plug 'jmcantrell/vim-diffchanges', { 'on': 'DiffChangesDiffToggle' }
+Plug 'yssl/QFEnter'
 
 " code searching
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
@@ -262,6 +263,12 @@ let g:clever_f_smart_case = 1
 let g:clever_f_across_no_line = 1
 let g:clever_f_fix_key_direction = 1
 let g:clever_f_chars_match_any_signs = '`'
+
+" QFEnter
+let g:qfenter_open_map = ['<CR>', '<2-LeftMouse>']
+let g:qfenter_vopen_map = ['<C-v>']
+let g:qfenter_hopen_map = ['<C-s>']
+let g:qfenter_topen_map = ['<C-t>']
 
 " Delay opening of peekaboo window (in ms. default: 0)
 let g:peekaboo_delay = 750
@@ -765,13 +772,6 @@ else
     " 5 -> blinking vertical bar
     " 6 -> solid vertical bar
 endif
-
-" Specify the behavior when switching between buffers
-try
-  set switchbuf=useopen,usetab,newtab
-  set stal=2
-catch
-endtry
 
 "https://www.reddit.com/r/vim/comments/3er2az/how_to_suppress_vims_warning_editing_a_read_only/
 au BufEnter * set noro
