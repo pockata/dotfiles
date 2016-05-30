@@ -88,6 +88,11 @@ gshow() {
                 (grep -o '[a-f0-9]\{7\}' | head -1 |
                 xargs -I % sh -c 'git show --color=always % | less -R') << 'FZF-EOF'
                 {}
+FZF-EOF" \
+      --bind "ctrl-s:execute:
+                (grep -o '[a-f0-9]\{7\}' | head -1 |
+                xargs -I % sh -c 'git show --name-status --color=always % | less -R') << 'FZF-EOF'
+                {}
 FZF-EOF"
 }
 
@@ -193,5 +198,8 @@ export ATOM_DEV_RESOURCE_PATH="{$HOME}/Projects/atom/"
 PATH="$NPM_PACKAGES/bin:$PATH"
 export PATH;
 
+# Base16 Shell
+BASE16_SHELL="$HOME/.config/base16-ocean.dark.sh"
+[[ -s $BASE16_SHELL ]] && source $BASE16_SHELL
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

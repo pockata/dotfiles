@@ -56,6 +56,7 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'junegunn/vim-pseudocl'
 Plug 'junegunn/vim-oblique'
+Plug 'ddrscott/vim-side-search'
 
 " navigation
 Plug 'scrooloose/nerdtree', { 'on': ['NERDTree', 'NERDTreeFind', 'NERDTreeOpen'] }
@@ -79,6 +80,7 @@ Plug 'junegunn/vim-peekaboo'
 " extra language support
 Plug 'scrooloose/syntastic'
 Plug 'sheerun/vim-polyglot'
+Plug 'sunaku/vim-dasht'
 
 " statusline
 Plug 'bling/vim-airline'
@@ -131,11 +133,11 @@ set virtualedit=onemore " Allow for cursor beyond last character
 set foldmethod=manual
 set foldlevel=1
 
+let base16colorspace=256
 set t_Co=256
 set background=dark
 
 colorscheme base16-ocean
-highlight BookmarkSignDefault ctermbg=10
 
 let mapleader="\<Space>"
 let g:mapleader="\<Space>"
@@ -185,6 +187,13 @@ let g:airline#extensions#hunks#non_zero_only = 1
 
 " configure which whitespace checks to enable
 let g:airline#extensions#whitespace#checks = [ 'indent', 'trailing' ]
+
+if !exists('g:airline_symbols')
+  let g:airline_symbols = {}
+endif
+let g:airline_symbols.maxlinenr = ''
+let g:airline_symbols.linenr = ''
+
 let g:airline_mode_map = {
         \ '__' : '------',
         \ 'n'  : 'N',
@@ -207,6 +216,12 @@ function! ChangeHighlights()
 
   " make the ~ characters on empty lines 'invisible'
   highlight NonText ctermfg=bg
+
+  " make current line number stand out (yellow)
+  "highlight CursorLineNr ctermfg=3
+
+  " give bookmarks the right background color
+  "highlight BookmarkSignDefault ctermbg=10
 endfunction
 
 autocmd VimEnter,ColorScheme * call ChangeHighlights()
@@ -263,6 +278,7 @@ let g:clever_f_smart_case = 1
 let g:clever_f_across_no_line = 1
 let g:clever_f_fix_key_direction = 1
 let g:clever_f_chars_match_any_signs = '`'
+let g:clever_f_timeout_ms = 1000
 
 " QFEnter
 let g:qfenter_open_map = ['<CR>', '<2-LeftMouse>']
@@ -307,6 +323,7 @@ function! MergeTabs()
 endfunction
 
 nmap <C-W>u :call MergeTabs()<CR>
+nnoremap <C-W>t <C-W>T
 
 " Disable AutoComplPop.
 let g:acp_enableAtStartup = 0
@@ -390,11 +407,6 @@ inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
 " Close popup by <Space>.
 inoremap <expr><Space> pumvisible() ? "\<C-y>\<Space>" : "\<Space>"
 
-" yank without jank
-" http://ddrscott.github.io/blog/2016/yank-without-jank/
-vnoremap y myy`y
-vnoremap Y myY`y
-
 " AutoComplPop like behavior.
 "let g:neocomplete#enable_auto_select = 1
 
@@ -445,6 +457,15 @@ endfunction " }}}
 
 nmap got :VimuxRunCommand("")<CR>
 
+" Search API docs for query you type in:
+nnoremap <Leader>k :Dasht!<Space>
+
+" Search API docs for word under cursor:
+nnoremap <silent> <Leader>K :call Dasht([expand('<cWORD>'), expand('<cword>')], '!')<Return>
+
+" Search API docs for the selected text:
+vnoremap <silent> <Leader>K y:<C-U>call Dasht(getreg(0), '!')<Return>
+
 " FZF
 let g:fzf_action = {
       \ 'ctrl-t': 'tab split',
@@ -483,6 +504,9 @@ nmap <Leader>w :Windows<CR>
 nmap <Leader>b :Buffers<CR>
 nmap <Leader>c :Commands<CR>
 nmap <Leader>g :GitFiles?<CR>
+
+" SideSearch current word and return to original window
+nnoremap <Leader>ss :SideSearch <C-r><C-w><CR> | wincmd p
 
 " Go to first character of line on first press
 " Go to start of line on second press
@@ -624,7 +648,6 @@ set ruler
 " Highlight current line
 
 set cursorline relativenumber number
-highlight CursorLineNr ctermfg=3
 
 augroup CursorLineOnlyInActiveWindow
   autocmd!
