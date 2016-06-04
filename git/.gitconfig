@@ -71,5 +71,6 @@
 [core]
 	editor = vim
 	pager = less -F -X
+	autocrlf = input
 [push]
 	default = current

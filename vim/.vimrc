@@ -670,11 +670,6 @@ set clipboard=unnamedplus
 nnoremap d "_d
 vnoremap d "_d
 
-" This turns off Vim’s crazy default regex characters
-" and makes searches use normal regexes.
-nnoremap / /\v
-vnoremap / /\v
-
 " Remove toolbar in gVim
 set go-=T
 
@@ -918,4 +913,15 @@ endfunction
 
 nnoremap <silent> <leader>/ :call <SID>goog(expand("<cWORD>"), 0)<cr>
 vnoremap <silent> <leader>/ :call <SID>goog(<SID>getVisualSelection(), 0)<cr>
+
+" ----------------------------------------------------------------------------
+" Help in new tabs
+" ----------------------------------------------------------------------------
+function! s:helptab()
+  if &buftype == 'help'
+    wincmd T
+    nnoremap <buffer> q :q<cr>
+  endif
+endfunction
+autocmd BufEnter *.txt call s:helptab()
 
