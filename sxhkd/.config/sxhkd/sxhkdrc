@@ -60,12 +60,12 @@ mod4 + {t,v}
     tile.sh {-h,-v}
 
 # add window to a group
-mod4 + shift + {1,2,3,4,5}
-    groups.sh -s $(pfw) {1,2,3,4,5}; pop "Group #{1,2,3,4,5}"
+mod4 + shift + {1,2,3,4,5,0}
+    groups.sh -s $(pfw) {1,2,3,4,5,0}; pop "Group #{1,2,3,4,5}"
 
 # toggle groups' visibility
-mod4 + {1,2,3,4,5}
-    groups.sh -t {1,2,3,4,5};
+mod4 + {1,2,3,4,5,0}
+    groups.sh -t {1,2,3,4,5,0};
 
 # remove window from all groups
 mod4 + BackSpace
