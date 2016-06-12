@@ -5,11 +5,11 @@ source ~/.zplug/zplug
 zplug "b4b4r07/zplug"
 
 zplug "zsh-users/zsh-history-substring-search", as:plugin
-zplug "zsh-users/zsh-completions", as:plugin, of:"src"
-zplug "rupa/z", of:z.sh
+zplug "zsh-users/zsh-completions", as:plugin, use:"src"
+zplug "rupa/z", use:z.sh
 
 # Directory listings for zsh with git features
-zplug "supercrabtree/k", of:k.sh
+zplug "supercrabtree/k", use:k.sh
 
 # pure prompt
 zplug "mafredri/zsh-async"
