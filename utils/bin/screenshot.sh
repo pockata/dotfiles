@@ -16,9 +16,7 @@ case $CMD in
         sleep 0.3 && maim --hidecursor -d 1.0 -s -b 3 -c 250,250,250 $FILE 2>&1 ;;
 esac
 
-notify-send -a "Scrot" "Screenshot taken"
+~/bin/pop "Screenshot taken"
 
 ~/bin/imgur-screenshot.sh $FILE
-
-notify-send -a "Scrot" "Screenshot uploaded"
 
