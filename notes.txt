@@ -1,0 +1,2 @@
+Manual stuff:
+- Setup imgur-screenshot.sh (run it and follow instructions)
