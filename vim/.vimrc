@@ -782,6 +782,10 @@ let g:choosewin_overlay_clear_multibyte = 1
 vnoremap K :m '>+1<CR>gv=gv
 vnoremap L :m '<-2<CR>gv=gv
 
+" let terminal resize scale the internal windows
+" http://vimrcfu.com/snippet/186
+autocmd VimResized * :wincmd =
+
 " Change shape of cursor in different modes
 if exists('$TMUX')
     let &t_SI = "\<Esc>Ptmux;\<Esc>\e[5 q\<Esc>\\"
