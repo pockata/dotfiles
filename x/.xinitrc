@@ -26,13 +26,13 @@ fi
 monitors=$(xrandr -q | grep -oE "^.* connected (primary )?[0-9]+")
 
 if [[ $monitors == *"HDMI"* && $monitors == *"VGA"* ]]; then
-    . ~/bin/monitors.sh Home &
+    ~/bin/monitors.sh Home &
 elif [[ $monitors == *"LVDS"* && $monitors == *"VGA"* ]]; then
-    . ~/bin/monitors.sh Work &
+    ~/bin/monitors.sh Work &
+else
+    ~/bin/wallpaper.sh &
+    ~/bin/bar.sh &
 fi
-
-#. ~/bin/wallpaper.sh &
-#. ~/bin/bar.sh &
 
 sxhkd -m 1 &
 
@@ -51,7 +51,7 @@ urxvtd -q -f -o &
 
 unclutter &
 
-xautolock -notify 10 -notifier "pop \"locking screen...\"" -locker ~/bin/lock.sh -time 15 -killtime 15 -killer "systemctl suspend" -corners -000 &
+xautolock -notify 7 -notifier "pop \"locking screen...\"" -locker ~/bin/lock.sh -time 8 -killtime 15 -killer "systemctl suspend" -detectsleep -corners -000 &
 
 # set shell that sxhkd uses to execute commands:
 export SXHKD_SHELL=sh
