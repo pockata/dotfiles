@@ -52,6 +52,7 @@ export KEYTIMEOUT=1 # reduces to 0.1
 
 zstyle ':completion:*' menu select
 zstyle ':completion:*' matcher-list	'' 'm:{[:lower:][:upper:]}={[:upper:][:lower:]}' '+l:|=* r:|=*'
+bindkey '^[[Z' reverse-menu-complete
 
 # Try to correct the spelling of commands.
 setopt correctall
