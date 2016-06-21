@@ -17,6 +17,10 @@ while IFS=: read ev wid; do
             }
             ;;
 
+        #17)
+        #    ~/bin/windows-fyrefree.sh -q -c "$(pfw)"
+        #    ;;
+
         # mapping requests (show window)
         19) ! wattr "$wid" ||  {
                 vroum.sh "$wid" &
@@ -29,7 +33,6 @@ while IFS=: read ev wid; do
             wattr $(pfw) || {
                 vroum.sh prev 2>/dev/null
             }
-            groups.sh > /dev/null
             ;;
 
         4)

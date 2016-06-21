@@ -15,8 +15,8 @@ mod4 + {Tab, shift + Tab}
     vroum.sh {next, prev}
 
 # cycle throught windows with same class
-mod4 + {grave, shift + grave}
-    next_in_class.sh {next, prev}
+mod4 + grave
+    windows-fyrefree.sh --cycle
 
 # set window fullscreen
 mod4 + f
@@ -61,15 +61,15 @@ mod4 + {t,v}
 
 # add window to a group
 mod4 + shift + {1,2,3,4,5,0}
-    groups.sh -s $(pfw) {1,2,3,4,5,0}; pop "Group #{1,2,3,4,5}"
+    windows-fyrefree.sh --add $(pfw) {1,2,3,4,5,0}; pop "Added to group"
 
 # toggle groups' visibility
 mod4 + {1,2,3,4,5,0}
-    groups.sh -t {1,2,3,4,5,0};
+    windows-fyrefree.sh --smart {1,2,3,4,5,0};
 
 # remove window from all groups
 mod4 + BackSpace
-    groups.sh -c $(pfw)
+    windows-fyrefree.sh --clean $(pfw)
 
 # move windows with the mouse
 mod4 + button1

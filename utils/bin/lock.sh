@@ -1,8 +1,8 @@
 #!/bin/bash
- 
+
 scrot /tmp/screen.png
 convert /tmp/screen.png -scale 10% -scale 1000% /tmp/screen.png
- 
+
 if [[ -f $HOME/Pictures/lock-icon.png ]]
 then
     # placement x/y
@@ -12,7 +12,7 @@ then
     R=$(file ~/Pictures/lock-icon.png | grep -o '[0-9]* x [0-9]*')
     RX=$(echo $R | cut -d' ' -f 1)
     RY=$(echo $R | cut -d' ' -f 3)
- 
+
     SR=$(xrandr --query | grep ' connected\s[0-9]' | cut -f3 -d' ')
     for RES in $SR
     do
@@ -23,7 +23,7 @@ then
         SROY=$(echo $RES | cut -d'x' -f 2 | cut -d'+' -f 3) # y offset
         PX=$(($SROX + $SRX/2 - $RX/2))
         PY=$(($SROY + $SRY/2 - $RY/2))
- 
+
         convert /tmp/screen.png $HOME/Pictures/lock-icon.png -geometry +$PX+$PY -composite -matte  /tmp/screen.png
     done
 fi
@@ -32,8 +32,8 @@ fi
 
 if [[ $1 == "now" ]]
 then
-    i3lock -u -b -d -I 10 -e -n -i /tmp/screen.png
+    i3lock -b -d -I 10 -e -i /tmp/screen.png
 else
-    i3lock -u -b -I 10 -e -n -i /tmp/screen.png
+    i3lock -b -I 10 -e -i /tmp/screen.png
 fi
 
