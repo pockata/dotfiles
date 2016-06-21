@@ -4,12 +4,8 @@ source ~/.zplug/zplug
 # Let zplug manage itself
 zplug "b4b4r07/zplug"
 
-zplug "zsh-users/zsh-history-substring-search", as:plugin
 zplug "zsh-users/zsh-completions", as:plugin, use:"src"
 zplug "rupa/z", use:z.sh
-
-# Directory listings for zsh with git features
-zplug "supercrabtree/k", use:k.sh
 
 # pure prompt
 zplug "mafredri/zsh-async"
@@ -17,9 +13,6 @@ zplug "sindresorhus/pure"
 
 # nice:10 needed to load after compinit
 zplug "zsh-users/zsh-syntax-highlighting", nice:10
-
-# A Zsh plugin to help remembering those aliases you once defined.
-zplug "djui/alias-tips"
 
 # Install plugins if there are plugins that have not been installed
 if ! zplug check --verbose; then
