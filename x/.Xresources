@@ -57,7 +57,9 @@ URxvt*scrollWithBuffer:  true
 URxvt*scrollTtyKeypress:  true
 
 ! Enables copy/paste
-URxvt.iso14755: False
+URxvt.iso14755: false
+URxvt.iso14755_52: false
+
 URxvt*allow_bold: true
 URxvt*font:xft:Meslo LG M DZ for Powerline:style=regular:pixelsize=15
 
