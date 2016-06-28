@@ -11,7 +11,7 @@ call plug#begin('~/.vim/plugged')
 
 " colorschemes / start screen
 Plug 'chriskempson/base16-vim'
-Plug 'mhinz/vim-startify'
+Plug 'mhinz/vim-startify', { 'on': 'Startify'}
 
 " additional text objects
 Plug 'kana/vim-textobj-user'
@@ -592,6 +592,8 @@ function! s:startup()
 endfunction
 
 autocmd VimEnter * call s:startup()
+autocmd User Startified nnoremap <buffer> k j
+autocmd User Startified nnoremap <buffer> l k
 
 " Disable netrw
 let loaded_netrwPlugin = 1
