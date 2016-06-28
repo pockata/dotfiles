@@ -18,20 +18,16 @@ Plug 'kana/vim-textobj-user'
 Plug 'kana/vim-textobj-indent'
 Plug 'kana/vim-textobj-line'
 Plug 'beloglazov/vim-textobj-quotes'
-Plug 'akiyan/vim-textobj-php'
 Plug 'kana/vim-textobj-function'
 Plug 'thinca/vim-textobj-function-javascript'
 Plug 'kana/vim-textobj-entire'
 Plug 'whatyouhide/vim-textobj-xmlattr'
 Plug 'PeterRincker/vim-argumentative'
-Plug 'coderifous/textobj-word-column.vim'
-Plug 'junegunn/vim-after-object'
 
 " additional key mappings
 Plug 'rhysd/clever-f.vim' " GOLDEN
 Plug 'bkad/CamelCaseMotion'
 Plug 'scrooloose/nerdcommenter'
-Plug 'vim-scripts/marvim'
 Plug 'christoomey/vim-tmux-navigator'
 
 " text manipulation / display
@@ -39,25 +35,24 @@ Plug 'Raimondi/delimitMate'
 Plug 'FooSoft/vim-argwrap', { 'on': 'ArgWrap' }
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
-Plug 'AndrewRadev/splitjoin.vim', { 'on': ['SplitjoinSplit', 'SplitjoinJoin']}
 Plug 'Valloric/MatchTagAlways'
-Plug 'chrisbra/NrrwRgn'
 
 " code/project management
 Plug 'airblade/vim-gitgutter'
 Plug 'dbakker/vim-projectroot', { 'on': 'ProjectRootExe' }
+"Plug '/airblade/vim-rooter'
 Plug 'tpope/vim-fugitive'
-Plug 'junegunn/gv.vim', { 'on': 'GV' }
 Plug 'tpope/vim-sleuth'
-Plug 'jmcantrell/vim-diffchanges', { 'on': 'DiffChangesDiffToggle' }
+"Plug 'jmcantrell/vim-diffchanges', { 'on': 'DiffChangesDiffToggle' }
 Plug 'yssl/QFEnter'
+Plug 'junegunn/gv.vim'
 
 " code searching
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'junegunn/vim-pseudocl'
 Plug 'junegunn/vim-oblique'
-Plug 'ddrscott/vim-side-search'
+"Plug 'ddrscott/vim-side-search'
 
 " navigation
 Plug 'scrooloose/nerdtree', { 'on': ['NERDTree', 'NERDTreeFind', 'NERDTreeOpen'] }
@@ -81,20 +76,14 @@ Plug 'junegunn/vim-peekaboo'
 " extra language support
 Plug 'scrooloose/syntastic'
 Plug 'sheerun/vim-polyglot'
-Plug 'sunaku/vim-dasht'
 
 " statusline
 Plug 'bling/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 
-" distraction free
-Plug 'junegunn/goyo.vim', { 'on': 'Goyo' }
-Plug 'junegunn/limelight.vim', { 'on': 'Limelight' }
-
 " misc
-Plug 'vim-scripts/wipeout', { 'on':  'Wipeout' }
 Plug 'mbbill/undotree', { 'on': 'UndotreeToggle' }
-Plug 'benmills/vimux'
+"Plug 'benmills/vimux'
 Plug 'tmux-plugins/vim-tmux-focus-events'
 Plug 'wesQ3/vim-windowswap'
 
@@ -219,13 +208,13 @@ function! ChangeHighlights()
   highlight NonText ctermfg=bg
 
   " make current line number stand out (yellow)
-  "highlight CursorLineNr ctermfg=3
+  highlight CursorLineNr ctermfg=3
 
   " give bookmarks the right background color
-  "highlight BookmarkSignDefault ctermbg=10
+  "highlight BookmarkSignDefault ctermbg=237
 endfunction
 
-autocmd VimEnter,ColorScheme * call ChangeHighlights()
+autocmd VimEnter,WinEnter,ColorScheme * call ChangeHighlights()
 
 " remove esc key timeout
 set timeoutlen=500
@@ -286,6 +275,12 @@ let g:qfenter_open_map = ['<CR>', '<2-LeftMouse>']
 let g:qfenter_vopen_map = ['<C-v>']
 let g:qfenter_hopen_map = ['<C-s>']
 let g:qfenter_topen_map = ['<C-t>']
+
+" from unimpaired
+nmap <silent> [l :<C-U>lprevious<CR>
+nmap <silent> ]l :<C-U>lnext<CR>
+nmap <silent> [q :<C-U>cprevious<CR>
+nmap <silent> ]q :<C-U>cnext<CR>
 
 " Delay opening of peekaboo window (in ms. default: 0)
 let g:peekaboo_delay = 750
@@ -350,12 +345,12 @@ endif
 let g:neocomplete#keyword_patterns['default'] = '\h\w*'
 
 let g:argumentative_no_mappings = 1
-nmap [a <Plug>Argumentative_Prev
-nmap ]a <Plug>Argumentative_Next
-xmap [a <Plug>Argumentative_XPrev
-xmap ]a <Plug>Argumentative_XNext
-nmap <a <Plug>Argumentative_MoveLeft
-nmap >a <Plug>Argumentative_MoveRight
+nmap <Leader>aj <Plug>Argumentative_Prev
+nmap <Leader>a; <Plug>Argumentative_Next
+xmap <Leader>aj <Plug>Argumentative_XPrev
+xmap <Leader>a; <Plug>Argumentative_XNext
+nmap <Leader>a< <Plug>Argumentative_MoveLeft
+nmap <Leader>a> <Plug>Argumentative_MoveRight
 xmap ia <Plug>Argumentative_InnerTextObject
 xmap aa <Plug>Argumentative_OuterTextObject
 omap ia <Plug>Argumentative_OpPendingInnerTextObject
@@ -412,11 +407,12 @@ inoremap <expr><Space> pumvisible() ? "\<C-y>\<Space>" : "\<Space>"
 "let g:neocomplete#enable_auto_select = 1
 
 " Enable omni completion.
-autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-autocmd FileType javascript setlocal omnifunc=tern#Complete
-autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+"autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+"autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+"autocmd FileType javascript setlocal omnifunc=tern#Complete
+"autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+"autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+autocmd CompleteDone * pclose
 
 " Enable heavy omni completion.
 if !exists('g:neocomplete#sources#omni#input_patterns')
@@ -456,8 +452,6 @@ function! DeleteHiddenBuffers() " {{{
   endfor
 endfunction " }}}
 
-nmap got :VimuxRunCommand("")<CR>
-
 " Search API docs for query you type in:
 nnoremap <Leader>k :Dasht!<Space>
 
@@ -466,6 +460,8 @@ nnoremap <silent> <Leader>K :call Dasht([expand('<cWORD>'), expand('<cword>')], 
 
 " Search API docs for the selected text:
 vnoremap <silent> <Leader>K y:<C-U>call Dasht(getreg(0), '!')<Return>
+
+nnoremap <Leader>cd :lcd %:p:h<CR>
 
 " FZF
 let g:fzf_action = {
@@ -504,7 +500,8 @@ nmap <Leader>r :BLines<CR>
 nmap <Leader>w :Windows<CR>
 nmap <Leader>b :Buffers<CR>
 nmap <Leader>c :Commands<CR>
-nmap <Leader>g :GitFiles?<CR>
+nmap <Leader>gf :GitFiles?<CR>
+nnoremap <leader>gs :Gstatus<CR><C-W><S-T>
 
 " SideSearch current word and return to original window
 nnoremap <Leader>ss :SideSearch <C-r><C-w><CR> | wincmd p
@@ -540,8 +537,6 @@ nnoremap <Leader>u :UndotreeToggle<CR>
 " If undotree is opened, it is likely one wants to interact with it.
 let g:undotree_SetFocusWhenToggle=1
 let g:undotree_WindowLayout = 2
-
-autocmd VimEnter * silent! call after_object#enable('=', ':', '#', ' ', '|')
 
 " https://technotales.wordpress.com/2010/04/29/vim-splits-a-guide-to-doing-exactly-what-you-want/
 " Smarter? splits
@@ -589,10 +584,10 @@ map <silent> <Leader>kb :call SmartNERDTree()<cr>
 
 function! s:startup()
   let cnt = argc()
-  if (cnt == 0)
+  if (cnt == 0 || cnt == 1 && isdirectory(argv(0)))
     Startify
-  elseif cnt == 1 && isdirectory(argv(0))
     NERDTree
+    wincmd w
   endif
 endfunction
 
@@ -740,10 +735,10 @@ noremap <C-w>l <C-w>k
 noremap <C-w>; <C-w>l
 
 let g:tmux_navigator_no_mappings = 1
-noremap <C-j> :TmuxNavigateLeft<CR>
-noremap <C-k> :TmuxNavigateDown<CR>
-noremap <C-l> :TmuxNavigateUp<CR>
-noremap <C-Semicolon> :TmuxNavigateRight<CR>
+noremap <silent> <C-j> :TmuxNavigateLeft<CR>
+noremap <silent> <C-k> :TmuxNavigateDown<CR>
+noremap <silent> <C-l> :TmuxNavigateUp<CR>
+noremap <silent> <C-Semicolon> :TmuxNavigateRight<CR>
 
 " Be aware of whether you are right or left vertical split
 " so you can use arrows more naturally.
@@ -872,20 +867,6 @@ nnoremap <silent> <C-w>o :ZoomToggle<CR>:AirlineRefresh<CR>
 nnoremap <silent> <C-w><C-o> :ZoomToggle<CR>:AirlineRefresh<CR>
 
 " ----------------------------------------------------------------------------
-" :Shuffle | Shuffle selected lines
-" ----------------------------------------------------------------------------
-function! s:shuffle() range
-ruby << RB
-  first, last = %w[a:firstline a:lastline].map { |e| VIM::evaluate(e).to_i }
-  (first..last).map { |l| $curbuf[l] }.shuffle.each_with_index do |line, i|
-    $curbuf[first + i] = line
-  end
-RB
-endfunction
-command! -range Shuffle <line1>,<line2>call s:shuffle()
-
-
-" ----------------------------------------------------------------------------
 " Get Visual Selection helper function
 " ----------------------------------------------------------------------------
 function! s:getVisualSelection() range
@@ -924,4 +905,17 @@ function! s:helptab()
   endif
 endfunction
 autocmd BufEnter *.txt call s:helptab()
+
+" ----------------------------------------------------------------------------
+" Clean empty buffers
+" http://stackoverflow.com/a/10102604
+" ----------------------------------------------------------------------------
+function! s:CleanEmptyBuffers()
+  let buffers = filter(range(0, bufnr('$')), 'buflisted(v:val) && empty(bufname(v:val)) && bufwinnr(v:val)<0')
+  if !empty(buffers)
+    exe 'bw '.join(buffers, ' ')
+  endif
+endfunction
+
+autocmd BufHidden * call s:CleanEmptyBuffers()
 
