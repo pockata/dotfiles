@@ -372,11 +372,10 @@ inoremap <expr><C-l>     neocomplete#complete_common_string()
 
 function! CleverCr()
     if pumvisible()
-        if neosnippet#expandable()
-            let exp = "\<Plug>(neosnippet_expand)"
-            return exp . neocomplete#smart_close_popup()
-        else
-            return neocomplete#smart_close_popup()
+        if neosnippet#expandable_or_jumpable()
+            return "\<Plug>(neosnippet_expand_or_jump)"
+          else
+            return "\<C-y>"
         endif
     else
         return "\<Plug>delimitMateCR"
@@ -385,20 +384,21 @@ endfunction
 
 " <CR> close popup and save indent or expand snippet
 imap <expr> <CR> CleverCr()
+imap <expr> <tab> neosnippet#jumpable() ?
+      \ "\<Plug>(neosnippet_jump)"
+      \ : pumvisible() ? "\<C-n>" : "\<tab>"
 
-"imap <expr><tab> neosnippet#expandable_or_jumpable() ?
-"      \ "\<Plug>(neosnippet_expand_or_jump)"
-"      \ : pumvisible() ? "\<C-N>" : "\<tab>"
+
 "smap <expr><tab> neosnippet#expandable_or_jumpable() ?
 "      \ "\<Plug>(neosnippet_expand_or_jump)" : "\<tab>"
 
 " <TAB>: completion.
-inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+
 inoremap <expr><S-TAB>   pumvisible() ? "\<C-p>" : "\<C-h>"
 
 " <C-h>, <BS>: close popup and delete backword char.
-inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
-inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
+"inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
+"inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
 
 " Close popup by <Space>.
 inoremap <expr><Space> pumvisible() ? "\<C-y>\<Space>" : "\<Space>"
@@ -412,7 +412,6 @@ inoremap <expr><Space> pumvisible() ? "\<C-y>\<Space>" : "\<Space>"
 "autocmd FileType javascript setlocal omnifunc=tern#Complete
 "autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
 "autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-autocmd CompleteDone * pclose
 
 " Enable heavy omni completion.
 if !exists('g:neocomplete#sources#omni#input_patterns')
@@ -518,11 +517,6 @@ function! ToggleHomeZero()
 endfunction
 
 nnoremap <silent> 0 :call ToggleHomeZero()<CR>
-
-vnoremap <silent> <S-Tab> [{
-vnoremap <silent> <Tab> ]}
-nnoremap <silent> <S-Tab> [{
-nnoremap <silent> <Tab> ]}
 
 nnoremap <silent> <leader>a :ArgWrap<CR>
 nnoremap <silent> <c-p> :ProjectRootExe FZF<cr>
