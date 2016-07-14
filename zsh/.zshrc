@@ -73,6 +73,11 @@ setopt hist_ignore_space
 export FZF_DEFAULT_COMMAND='ag --hidden -g ""' # Use ag as the default source for fzf
 export FZF_DEFAULT_OPTS='--multi --bind=ctrl-k:down,ctrl-l:up'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+export FZF_CTRL_T_OPTS="$FZF_DEFAULT_OPTS"
+export FZF_CTRL_R_COMMAND="$FZF_DEFAULT_COMMAND"
+export FZF_CTRL_R_OPTS="$FZF_DEFAULT_OPTS"
+export FZF_CTRL_C_COMMAND="$FZF_DEFAULT_COMMAND"
+export FZF_CTRL_C_OPTS="$FZF_DEFAULT_OPTS"
 
 # Use ag instead of the default find command for listing candidates.
 # - The first argument to the function is the base path to start traversal
