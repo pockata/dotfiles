@@ -37,6 +37,7 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-repeat'
 Plug 'Valloric/MatchTagAlways'
+Plug 'svermeulen/vim-easyclip'
 
 " code/project management
 Plug 'airblade/vim-gitgutter'
@@ -200,22 +201,18 @@ let g:airline_mode_map = {
         \ 't'  : 'T',
         \ }
 
-function! ChangeHighlights()
-  " highlight long lines (but only one column)
-  highlight ColorColumn ctermbg=red ctermfg=white
-  call matchadd('ColorColumn', '\%81v', 100)
+" update the matched search background to not obscure the cursor
+highlight Search ctermbg=139
 
-  " make the ~ characters on empty lines 'invisible'
-  highlight NonText ctermfg=bg
+" highlight long lines (but only one column)
+highlight ColorColumn ctermbg=red ctermfg=white
+call matchadd('ColorColumn', '\%81v', 100)
 
-  " make current line number stand out (yellow)
-  highlight CursorLineNr ctermfg=3
+" make the ~ characters on empty lines 'invisible'
+highlight NonText ctermfg=bg
 
-  " give bookmarks the right background color
-  "highlight BookmarkSignDefault ctermbg=237
-endfunction
-
-autocmd VimEnter,WinEnter,ColorScheme * call ChangeHighlights()
+" make current line number stand out (yellow)
+highlight CursorLineNr ctermfg=3
 
 " remove esc key timeout
 set timeoutlen=500
@@ -671,16 +668,6 @@ set nowrap
 
 " Use system clipboard
 set clipboard=unnamedplus
-
-" Remap Delete command to not cut
-nnoremap d "_d
-vnoremap d "_d
-
-" Remove toolbar in gVim
-set go-=T
-
-" Close buffer without closing split
-command! Bd bp\|bd \#
 
 " :W sudo saves the file
 command! W w !sudo tee % > /dev/null
