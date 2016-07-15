@@ -17,12 +17,12 @@ Plug 'mhinz/vim-startify', { 'on': 'Startify'}
 Plug 'kana/vim-textobj-user'
 Plug 'kana/vim-textobj-indent'
 Plug 'kana/vim-textobj-line'
-Plug 'beloglazov/vim-textobj-quotes'
-Plug 'kana/vim-textobj-function'
-Plug 'thinca/vim-textobj-function-javascript'
+Plug 'rhysd/vim-textobj-anyblock'
 Plug 'kana/vim-textobj-entire'
 Plug 'whatyouhide/vim-textobj-xmlattr'
+Plug 'glts/vim-textobj-comment'
 Plug 'PeterRincker/vim-argumentative'
+Plug 'terryma/vim-expand-region'
 
 " additional key mappings
 Plug 'rhysd/clever-f.vim' " GOLDEN
@@ -34,6 +34,7 @@ Plug 'christoomey/vim-tmux-navigator'
 Plug 'Raimondi/delimitMate'
 Plug 'FooSoft/vim-argwrap', { 'on': 'ArgWrap' }
 Plug 'tpope/vim-surround'
+Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-repeat'
 Plug 'Valloric/MatchTagAlways'
 
@@ -45,7 +46,7 @@ Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-sleuth'
 "Plug 'jmcantrell/vim-diffchanges', { 'on': 'DiffChangesDiffToggle' }
 Plug 'yssl/QFEnter'
-Plug 'junegunn/gv.vim'
+Plug 'junegunn/gv.vim', { 'on': 'GV' }
 
 " code searching
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
@@ -55,8 +56,8 @@ Plug 'junegunn/vim-oblique'
 "Plug 'ddrscott/vim-side-search'
 
 " navigation
-Plug 'scrooloose/nerdtree', { 'on': ['NERDTree', 'NERDTreeFind', 'NERDTreeOpen'] }
-Plug 'Xuyuanp/nerdtree-git-plugin', { 'on': ['NERDTreeFind', 'NERDTreeOpen'] }
+Plug 'scrooloose/nerdtree', { 'on': ['NERDTree', 'NERDTreeToggle', 'NERDTreeFind', 'NERDTreeOpen'] }
+Plug 'Xuyuanp/nerdtree-git-plugin', { 'on': ['NERDTree', 'NERDTreeToggle', 'NERDTreeFind', 'NERDTreeOpen'] }
 Plug 'MattesGroeger/vim-bookmarks'
 Plug 't9md/vim-choosewin', { 'on': ['<Plug>(choosewin)', 'ChooseWin'] }
 Plug 'terryma/vim-smooth-scroll'
@@ -119,9 +120,9 @@ set smartindent " Smart... indent
 set gdefault " The substitute flag g is on
 set hidden " Hide the buffer instead of closing when switching
 set synmaxcol=300 " Don't try to highlight long lines
-set virtualedit=onemore " Allow for cursor beyond last character
-set foldmethod=manual
-set foldlevel=1
+set virtualedit=onemore,block " Allow for cursor beyond last character
+set foldmethod=indent
+set foldlevel=99
 
 let base16colorspace=256
 set t_Co=256
@@ -223,6 +224,9 @@ set ttimeoutlen=0
 set autoindent
 set complete-=i
 
+" Show incomplete commands
+set showcmd
+
 " Enable mouse mode
 set mouse=a
 
@@ -281,6 +285,9 @@ nmap <silent> [l :<C-U>lprevious<CR>
 nmap <silent> ]l :<C-U>lnext<CR>
 nmap <silent> [q :<C-U>cprevious<CR>
 nmap <silent> ]q :<C-U>cnext<CR>
+
+" easier to jump into position with marks
+nnoremap ' `
 
 " Delay opening of peekaboo window (in ms. default: 0)
 let g:peekaboo_delay = 750
@@ -527,7 +534,7 @@ nnoremap zj 20zh
 
 nnoremap <leader>p p`[v`]=
 
-nnoremap <Leader>u :UndotreeToggle<CR>
+nnoremap <silent> <Leader>u :UndotreeToggle<CR>
 " If undotree is opened, it is likely one wants to interact with it.
 let g:undotree_SetFocusWhenToggle=1
 let g:undotree_WindowLayout = 2
@@ -606,6 +613,7 @@ set softtabstop=4
 set expandtab
 set smarttab
 set lazyredraw
+set shiftround
 
 " Show whitespace characters
 set showbreak=↪\ 
@@ -627,6 +635,13 @@ set so=7
 " set 15 columns to the cursor - when moving horizontally
 set sidescroll=1
 set sidescrolloff=15
+
+" How many lines to scroll at a time, make scrolling appears faster
+set scrolljump=5
+
+"Allows splits to be squashed to one line
+set winminheight=0
+set winminwidth=0
 
 " Turn on the WiLd menu
 set wildmenu
@@ -711,11 +726,30 @@ set tm=500
 " => Files, backups and undo
 " """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Turn backup off, since most stuff is in SVN, git et.c anyway...
-set nobackup
-set nowb
 set noswapfile
 
+" Let's save undo info!
+if !isdirectory($HOME."/.vim/undo")
+    call mkdir($HOME."/.vim/undo", "", 0700)
+endif
+
+set undofile                " Save undo's after file closes
+set undodir=~/.vim/undo     " where to save undo histories
+set undolevels=500
+set undoreload=500
+
 set ai "Auto indent
+
+" Default settings. (NOTE: Remove comments in dictionary before sourcing)
+let g:expand_region_text_objects = {
+      \ 'iw'  :0,
+      \ 'iW'  :0,
+      \ 'i"'  :0,
+      \ 'i''' :0,
+      \ 'ib'  :1,
+      \ 'il'  :0,
+      \ 'ip'  :0,
+      \ }
 
 " Don't implode
 noremap j h

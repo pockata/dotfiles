@@ -74,6 +74,14 @@ export FZF_DEFAULT_COMMAND='ag --hidden -g ""' # Use ag as the default source fo
 export FZF_DEFAULT_OPTS='--multi --bind=ctrl-k:down,ctrl-l:up'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 
+# Use ag instead of the default find command for listing candidates.
+# - The first argument to the function is the base path to start traversal
+# - Note that ag only lists files not directories
+# - See the source code (completion.{bash,zsh}) for the details.
+_fzf_compgen_path() {
+  ag -g "" "$1"
+}
+
 # gshow - git commit browser
 gshow() {
   git l "$@" |
@@ -102,6 +110,7 @@ alias a="atom-beta"
 alias g="git"
 alias t="tmux"
 alias v="gvim"
+alias e="vim"
 alias view="eog"
 alias aur="yaourt"
 alias myip="dig +short myip.opendns.com @resolver1.opendns.com"
@@ -146,15 +155,6 @@ function groot() {
     bc -l <<< "$@"
 }
 
-# Create a data URL from a file
-function dataurl() {
-	local mimeType=$(file -b --mime-type "$1");
-	if [[ $mimeType == text/* ]]; then
-		mimeType="${mimeType};charset=utf-8";
-	fi
-	echo "data:${mimeType};base64,$(openssl base64 -in "$1" | tr -d '\n')";
-}
-
 # `tre` is a shorthand for `tree` with hidden files and color enabled, ignoring
 # the `.git` directory, listing directories first. The output gets piped into
 # `less` with options to preserve color and line numbers, unless the output is
@@ -186,9 +186,6 @@ export NPM_PACKAGES="${HOME}/.npm-packages"
 # for NODE
 export NODE_PATH="$NPM_PACKAGES/lib/node_modules:$NODE_PATH"
 
-# for ATOM
-export ATOM_DEV_RESOURCE_PATH="{$HOME}/Projects/atom/"
-
 PATH="$NPM_PACKAGES/bin:$PATH"
 export PATH;
 
@@ -197,3 +194,4 @@ BASE16_SHELL="$HOME/.config/base16-ocean.dark.sh"
 [[ -s $BASE16_SHELL ]] && source $BASE16_SHELL
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
