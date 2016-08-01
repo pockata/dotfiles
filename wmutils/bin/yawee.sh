@@ -1,8 +1,14 @@
 #!/bin/sh
 
+PFW="$(pfw)"
+[ -z "$CUR_WINDOW" ] && CUR_WINDOW="$(pfw)"
+
 while IFS=: read ev wid; do
+
+    PFW="$(pfw)"
+
     case $1 in
-        -d|--debug) printf '%s\n' "$ev $wid $(pfw)" ;;
+        -d|--debug) printf '%s\n' "$ev $wid $PFW" ;;
     esac
 
     if wattr o "$wid"; then
@@ -13,7 +19,8 @@ while IFS=: read ev wid; do
 
         # window creation
         16) ! wattr "$wid" || {
-                corner_mh.sh md "$wid" "$(pfw)"
+                CUR_WINDOW="$wid"
+                corner_mh.sh md "$wid" ""
             }
             ;;
 
@@ -23,6 +30,7 @@ while IFS=: read ev wid; do
 
         # mapping requests (show window)
         19) ! wattr "$wid" ||  {
+                CUR_WINDOW="$wid"
                 vroum.sh "$wid" &
             }
             ;;
@@ -30,13 +38,14 @@ while IFS=: read ev wid; do
         # focus prev window when hiding(unmapping)/deleting focused window
         18)
             #(wattr "$(pfw)" && ! wattr m "$(pfw)") || {
-            wattr $(pfw) || {
+            wattr "$PFW" || {
                 vroum.sh prev 2>/dev/null
             }
             ;;
 
         4)
-            if [ "$wid" != "$(pfw)" ] && wattr "$wid"; then
+            if [ "$wid" != "$CUR_WINDOW" ] && wattr "$wid"; then
+                CUR_WINDOW="$wid"
                 vroum.sh "$wid" &
             fi
             ;;
