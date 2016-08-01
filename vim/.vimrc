@@ -37,17 +37,20 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-repeat'
 Plug 'Valloric/MatchTagAlways'
-Plug 'svermeulen/vim-easyclip'
+Plug 'maxbrunsfeld/vim-yankstack'
 
 " code/project management
 Plug 'airblade/vim-gitgutter'
-Plug 'dbakker/vim-projectroot', { 'on': 'ProjectRootExe' }
+Plug 'dbakker/vim-projectroot'
 "Plug '/airblade/vim-rooter'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-sleuth'
 "Plug 'jmcantrell/vim-diffchanges', { 'on': 'DiffChangesDiffToggle' }
 Plug 'yssl/QFEnter'
 Plug 'junegunn/gv.vim', { 'on': 'GV' }
+Plug 'rhysd/committia.vim'
+Plug 'rhysd/conflict-marker.vim'
+Plug 'rhysd/npm-debug-log.vim', { 'for': 'npmdebug'} " TODO: make this work
 
 " code searching
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
@@ -110,6 +113,9 @@ Plug 'wesQ3/vim-windowswap'
 
 call plug#end()
 
+let g:yankstack_map_keys = 0
+call yankstack#setup()
+
 " Use ctrl + semicolon mapping
 " http://stackoverflow.com/a/28276482/334432
 nmap  [; <C-Semicolon>
@@ -125,6 +131,8 @@ set virtualedit=onemore,block " Allow for cursor beyond last character
 set foldmethod=indent
 set foldlevel=99
 
+set switchbuf=usetab,newtab
+
 let base16colorspace=256
 set t_Co=256
 set background=dark
@@ -139,6 +147,10 @@ filetype plugin indent on
 " set cursor in split window
 set splitright
 set splitbelow
+
+" YankStack
+nmap <Leader>p <Plug>yankstack_substitute_older_paste
+nmap <Leader>P <Plug>yankstack_substitute_newer_paste
 
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
@@ -206,7 +218,7 @@ highlight Search ctermbg=139
 
 " highlight long lines (but only one column)
 highlight ColorColumn ctermbg=red ctermfg=white
-call matchadd('ColorColumn', '\%81v', 100)
+autocmd BufWinEnter * call matchadd('ColorColumn', '\%81v', -1)
 
 " make the ~ characters on empty lines 'invisible'
 highlight NonText ctermfg=bg
@@ -289,6 +301,9 @@ nnoremap ' `
 " Delay opening of peekaboo window (in ms. default: 0)
 let g:peekaboo_delay = 750
 
+" vim-textobj-anyblock remap
+"map iq ib
+
 " Windowswap
 let g:windowswap_map_keys = 0 "prevent default bindings
 nnoremap <silent> <C-W><C-W> :call WindowSwap#EasyWindowSwap()<CR>
@@ -299,6 +314,20 @@ autocmd VimEnter * call camelcasemotion#CreateMotionMappings(',')
 map <C-s> <esc>:w<CR>
 imap <C-s> <esc>:w<CR>
 map <C-t> <esc>:tabnew<CR>
+
+" paste register content and escape it
+cnoremap <c-x> <c-r>=<SID>PasteEscaped()<cr>
+function! s:PasteEscaped()
+  echo "\\".getcmdline()."\""
+  let char = getchar()
+  if char == "\<esc>"
+    return ''
+  else
+    let register_content = getreg(nr2char(char))
+    let escaped_register = escape(register_content, '\'.getcmdtype())
+    return substitute(escaped_register, '\n', '\\n', 'g')
+  endif
+endfunction
 
 " Execute macro in q
 map Q @q
@@ -329,6 +358,8 @@ nnoremap <C-W>t <C-W>T
 let g:acp_enableAtStartup = 0
 " Use neocomplete.
 let g:neocomplete#enable_at_startup = 1
+let g:neocomplete#enable_fuzzy_completion = 1
+let g:neocomplete#enable_auto_delimiter = 1
 " Use smartcase.
 let g:neocomplete#enable_smart_case = 1
 let g:neocomplete#max_list = 15
@@ -407,20 +438,18 @@ inoremap <expr><S-TAB>   pumvisible() ? "\<C-p>" : "\<C-h>"
 " Close popup by <Space>.
 inoremap <expr><Space> pumvisible() ? "\<C-y>\<Space>" : "\<Space>"
 
-" AutoComplPop like behavior.
-"let g:neocomplete#enable_auto_select = 1
-
-" Enable omni completion.
-"autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-"autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-"autocmd FileType javascript setlocal omnifunc=tern#Complete
-"autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-"autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-
 " Enable heavy omni completion.
 if !exists('g:neocomplete#sources#omni#input_patterns')
   let g:neocomplete#sources#omni#input_patterns = {}
 endif
+let g:neocomplete#sources#omni#input_patterns.javascript = '\%(\h\w*\|[^. \t]\.\w*\)'
+let g:neocomplete#sources#omni#input_patterns.markdown = ''
+let g:neocomplete#sources#omni#input_patterns.gitcommit = ''
+let g:neocomplete#sources#omni#functions = get(g:, 'neocomplete#sources#omni#functions', {})
+
+let g:neocomplete#sources#omni#functions.javascript = 'tern#Complete'
+
+autocmd Filetype javascript setlocal omnifunc=tern#Complete
 
 " Switch between tabs
 execute "set <M-1>=\e1"
@@ -454,15 +483,6 @@ function! DeleteHiddenBuffers() " {{{
     silent execute 'bwipeout' buf
   endfor
 endfunction " }}}
-
-" Search API docs for query you type in:
-nnoremap <Leader>k :Dasht!<Space>
-
-" Search API docs for word under cursor:
-nnoremap <silent> <Leader>K :call Dasht([expand('<cWORD>'), expand('<cword>')], '!')<Return>
-
-" Search API docs for the selected text:
-vnoremap <silent> <Leader>K y:<C-U>call Dasht(getreg(0), '!')<Return>
 
 nnoremap <Leader>cd :lcd %:p:h<CR>
 
@@ -506,9 +526,6 @@ nmap <Leader>c :Commands<CR>
 nmap <Leader>gf :GitFiles?<CR>
 nnoremap <leader>gs :Gstatus<CR><C-W><S-T>
 
-" SideSearch current word and return to original window
-nnoremap <Leader>ss :SideSearch <C-r><C-w><CR> | wincmd p
-
 " Go to first character of line on first press
 " Go to start of line on second press
 " http://ddrscott.github.io/blog/2016/vim-toggle-movement/
@@ -523,13 +540,13 @@ endfunction
 nnoremap <silent> 0 :call ToggleHomeZero()<CR>
 
 nnoremap <silent> <leader>a :ArgWrap<CR>
-nnoremap <silent> <c-p> :ProjectRootExe FZF<cr>
+nnoremap <silent> <c-p> :FZF<cr>
 
 " move horizontally
-nnoremap z; 20zl
-nnoremap zj 20zh
+nnoremap z; 40zl
+nnoremap zj 40zh
 
-nnoremap <leader>p p`[v`]=
+"nnoremap <leader>p p`[v`]=
 
 nnoremap <silent> <Leader>u :UndotreeToggle<CR>
 " If undotree is opened, it is likely one wants to interact with it.
@@ -615,7 +632,7 @@ set shiftround
 " Show whitespace characters
 set showbreak=↪\ 
 set list
-set listchars=tab:→\ ,trail:·,extends:›,precedes:‹
+set listchars=tab:→\ ,trail:·,extends:›,precedes:‹,nbsp:.
 
 " Sets how many lines of history VIM has to remember
 set history=700
@@ -880,7 +897,8 @@ function! s:ZoomToggle() abort
 endfunction
 
 command! ZoomToggle call s:ZoomToggle()
-nnoremap <silent> <C-w>o :ZoomToggle<CR>:AirlineRefresh<CR>
+" TODO: auto open/close NERDTree
+nnoremap <silent> <C-w>o :ZoomToggle<CR>:NERDTreeClose<CR>:AirlineRefresh<CR>
 nnoremap <silent> <C-w><C-o> :ZoomToggle<CR>:AirlineRefresh<CR>
 
 " ----------------------------------------------------------------------------
@@ -935,4 +953,21 @@ function! s:CleanEmptyBuffers()
 endfunction
 
 autocmd BufHidden * call s:CleanEmptyBuffers()
+
+" follow symlinked file
+function! FollowSymlink()
+  let current_file = expand('%:p')
+  " check if file type is a symlink
+  if getftype(current_file) == 'link'
+    " if it is a symlink resolve to the actual file path
+    "   and open the actual file
+    let actual_file = resolve(current_file)
+    silent! execute 'file ' . actual_file
+  end
+endfunction
+
+" follow symlink and set working directory
+autocmd BufRead *
+  \ call FollowSymlink() |
+  \ execute ":ProjectRootLCD"
 
