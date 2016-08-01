@@ -132,6 +132,7 @@ alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo
 # Pretty print the path
 alias path='echo $PATH | tr -s ":" "\n"'
 
+alias da='docker run -i -t --entrypoint /bin/bash'
 # Docker Compose
 alias dc='docker-compose'
 alias dcu='docker-compose up -d'
