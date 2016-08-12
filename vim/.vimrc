@@ -12,6 +12,7 @@ call plug#begin('~/.vim/plugged')
 " colorschemes / start screen
 Plug 'chriskempson/base16-vim'
 Plug 'mhinz/vim-startify', { 'on': 'Startify'}
+Plug 'alessandroyorba/alduin'
 
 " additional text objects
 Plug 'kana/vim-textobj-user'
@@ -23,7 +24,9 @@ Plug 'whatyouhide/vim-textobj-xmlattr'
 Plug 'glts/vim-textobj-comment'
 Plug 'PeterRincker/vim-argumentative'
 
-Plug 'terryma/vim-expand-region', { 'on': ['<Plug>(expand_region_expand)', '<Plug>(expand_region_shrink)'] }
+Plug 'terryma/vim-expand-region', {
+    \'on': ['<Plug>(expand_region_expand)', '<Plug>(expand_region_shrink)']
+\}
 
 " additional key mappings
 Plug 'rhysd/clever-f.vim' " GOLDEN
@@ -38,7 +41,7 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-repeat'
 Plug 'Valloric/MatchTagAlways'
-Plug 'maxbrunsfeld/vim-yankstack'
+Plug 'junegunn/limelight.vim', { 'on': 'Limelight' }
 
 " code/project management
 Plug 'airblade/vim-gitgutter'
@@ -59,6 +62,7 @@ Plug 'junegunn/fzf.vim'
 Plug 'junegunn/vim-pseudocl'
 Plug 'junegunn/vim-oblique'
 "Plug 'ddrscott/vim-side-search'
+Plug 'nhooyr/neoman.vim'
 
 " navigation
 Plug 'scrooloose/nerdtree', { 'on': ['NERDTree', 'NERDTreeToggle', 'NERDTreeFind', 'NERDTreeOpen'] }
@@ -114,9 +118,6 @@ Plug 'wesQ3/vim-windowswap'
 
 call plug#end()
 
-let g:yankstack_map_keys = 0
-call yankstack#setup()
-
 " Use ctrl + semicolon mapping
 " http://stackoverflow.com/a/28276482/334432
 nmap  [; <C-Semicolon>
@@ -130,14 +131,14 @@ set hidden " Hide the buffer instead of closing when switching
 set synmaxcol=300 " Don't try to highlight long lines
 set virtualedit=onemore,block " Allow for cursor beyond last character
 set foldmethod=indent
-set foldlevel=2
+set foldlevel=8
 set foldminlines=3
 
 set switchbuf=usetab,newtab
 
 let base16colorspace=256
 set t_Co=256
-set background=dark
+set background=light
 
 colorscheme base16-ocean
 
@@ -149,10 +150,6 @@ filetype plugin indent on
 " set cursor in split window
 set splitright
 set splitbelow
-
-" YankStack
-nmap <Leader>p <Plug>yankstack_substitute_older_paste
-nmap <Leader>P <Plug>yankstack_substitute_newer_paste
 
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
@@ -244,6 +241,9 @@ set mouse=a
 " dont continue comments when pushing o/O
 set formatoptions-=o
 
+" No scratch (little box that shows a definition)
+set completeopt-=preview
+
 " reformat html -> each tag on own row
 " nmap <leader><F3> :%s/<[^>]*>/\r&\r/g<cr>gg=G:g/^$/d<cr><leader>/
 
@@ -251,7 +251,7 @@ set formatoptions-=o
 let g:delimitMate_expand_cr = 1
 let g:delimitMate_expand_space = 1
 let g:delimitMate_jump_expansion = 1
-let g:delimitMate_balance_matchpairs = 1
+let g:delimitMate_balance_matchpairs = 0
 
 let g:NERDCustomDelimiters = {
     \ 'html': {  'left': '<!-- ', 'right': '-->', 'leftAlt': '/*','rightAlt': '*/' },
@@ -282,8 +282,9 @@ let g:NERDTreeIndicatorMapCustom = {
 let g:clever_f_smart_case = 1
 let g:clever_f_across_no_line = 1
 let g:clever_f_fix_key_direction = 1
-let g:clever_f_chars_match_any_signs = '`'
-let g:clever_f_timeout_ms = 1000
+
+nnoremap ' <Plug>(clever-f-repeat-forward)<cr>
+nnoremap , <Plug>(clever-f-repeat-back)<cr>
 
 " QFEnter
 " http://vi.stackexchange.com/questions/8534/make-cnext-and-cprevious-loop-back-to-the-begining
@@ -298,12 +299,8 @@ nmap <silent> ]l :<C-U>lnext<CR>
 nmap <silent> [q :<C-U>cprevious<CR>
 nmap <silent> ]q :<C-U>cnext<CR>
 
-" easier to jump into position with marks
-nnoremap ' `
-
 " Delay opening of peekaboo window (in ms. default: 0)
 let g:peekaboo_delay = 750
-
 " vim-textobj-anyblock remap
 "map iq ib
 
@@ -317,6 +314,13 @@ autocmd VimEnter * call camelcasemotion#CreateMotionMappings(',')
 map <C-s> <esc>:w<CR>
 imap <C-s> <esc>:w<CR>
 map <C-t> <esc>:tabnew<CR>
+
+" easier to reach
+nnoremap [j [m
+nnoremap ]j ]m
+
+"nnoremap <C-Tab> gt
+"nnoremap <C-S-Tab> gT
 
 " paste register content and escape it
 cnoremap <c-x> <c-r>=<SID>PasteEscaped()<cr>
@@ -464,6 +468,16 @@ execute "set <M-6>=\e6"
 execute "set <M-7>=\e7"
 execute "set <M-8>=\e8"
 execute "set <M-9>=\e9"
+inoremap <M-1> <ESC>1gt
+inoremap <M-2> <ESC>2gt
+inoremap <M-3> <ESC>3gt
+inoremap <M-4> <ESC>4gt
+inoremap <M-5> <ESC>5gt
+inoremap <M-6> <ESC>6gt
+inoremap <M-7> <ESC>7gt
+inoremap <M-8> <ESC>8gt
+inoremap <M-9> <ESC>9gt
+
 nnoremap <M-1> 1gt
 nnoremap <M-2> 2gt
 nnoremap <M-3> 3gt
@@ -539,8 +553,8 @@ nnoremap <silent> <leader>a :ArgWrap<CR>
 nnoremap <silent> <c-p> :FZF<cr>
 
 " move horizontally
-nnoremap z; 40zl
-nnoremap zj 40zh
+nnoremap z; 30zl
+nnoremap zj 30zh
 
 "nnoremap <leader>p p`[v`]=
 
@@ -568,6 +582,13 @@ let g:gitgutter_map_keys = 0
 let g:gitgutter_max_signs = 200
 let g:gitgutter_realtime = 0
 let g:gitgutter_eager = 1
+
+let g:gitgutter_sign_added = '▌'
+let g:gitgutter_sign_modified = '▐'
+let g:gitgutter_sign_removed = '▖'
+let g:gitgutter_sign_removed_first_line = '▘'
+let g:gitgutter_sign_modified_removed = '▞'
+
 " jump between changed areas (hunks)
 nmap <silent> ]h :GitGutterNextHunk<CR>
 nmap <silent> [h :GitGutterPrevHunk<CR>
@@ -605,6 +626,15 @@ endfunction
 autocmd VimEnter * call s:startup()
 autocmd User Startified nnoremap <buffer> k j
 autocmd User Startified nnoremap <buffer> l k
+
+let g:startify_list_order = [
+    \ ['   MRU '. getcwd()], 'dir',
+    \ ['   MRU'],            'files',
+    \ ['   Sessions'],       'sessions',
+    \ ['   Bookmarks'],      'bookmarks',
+    \ ['   Commands'],       'commands',
+    \ ]
+
 
 " Disable netrw
 let loaded_netrwPlugin = 1
@@ -743,11 +773,12 @@ set undoreload=500
 set ai "Auto indent
 
 " Default settings. (NOTE: Remove comments in dictionary before sourcing)
+nmap + <Plug>(expand_region_expand)
+vmap + <Plug>(expand_region_expand)
+vmap _ <Plug>(expand_region_shrink)
 let g:expand_region_text_objects = {
       \ 'iw'  :0,
       \ 'iW'  :0,
-      \ 'i"'  :0,
-      \ 'i''' :0,
       \ 'ib'  :1,
       \ 'il'  :0,
       \ 'ip'  :0,
@@ -808,7 +839,7 @@ vnoremap L :m '<-2<CR>gv=gv
 
 " let terminal resize scale the internal windows
 " http://vimrcfu.com/snippet/186
-autocmd VimResized * :wincmd =
+autocmd VimResized * silent! :wincmd =
 
 " Change shape of cursor in different modes
 if exists('$TMUX')
@@ -866,7 +897,7 @@ autocmd BufWrite *.c :call DeleteTrailingWS()
 autocmd BufWrite *.cpp :call DeleteTrailingWS()
 
 " identify sass files as such
-autocmd BufNewFile,BufRead *.scss set ft=scss.css
+autocmd BufNewFile,BufRead *.scss set ft=scss.css sw=4
 
 autocmd Filetype css setlocal iskeyword+=-
 
@@ -952,22 +983,8 @@ endfunction
 
 autocmd BufHidden * call s:CleanEmptyBuffers()
 
-" follow symlinked file
-function! FollowSymlink()
-  let current_file = expand('%:p')
-  " check if file type is a symlink
-  if getftype(current_file) == 'link'
-    " if it is a symlink resolve to the actual file path
-    "   and open the actual file
-    let actual_file = resolve(current_file)
-    silent! execute 'file ' . actual_file
-  end
-endfunction
-
 " follow symlink and set working directory
-autocmd BufRead *
-  \ call FollowSymlink() |
-  \ execute ":ProjectRootLCD"
+autocmd BufWinEnter * ProjectRootLCD
 
 " ----------------------------------------------------------------------------
 " Todo
@@ -986,7 +1003,7 @@ function! s:todo() abort
       let [fname, lno, text] = lst[1:3]
 
       " grab text after todo/fixme/xxx tag
-      let mt = matchlist(text, '\(TODO\|FIXME\|XXX\|NOTE\|OPTIMIZE\|HACK\|BUG\):\(.*\)')[1:3]
+      let mt = matchlist(text, '\(TODO\|FIXME\|XXX\|NOTE\|OPTIMIZE\|HACK\|BUG\):\(.*\)')[1:2]
 
       call add(entries, { 'filename': fname, 'lnum': lno, 'text': join(mt, ':') })
     endfor
