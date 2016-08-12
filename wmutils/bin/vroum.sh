@@ -53,7 +53,7 @@ test -z "$wid" && { echo "$(basename $0): no window to focus $1" >&2; exit 1; }
 # sometimes something fucks up,
 # and there are two windows with active borders
 # this "fixes" it
-lsw | xargs chwb -s $BW -c $INACTIVE
+lsw | grep -v "$wid" | xargs chwb -s $BW -c $INACTIVE
 #setborder inactive $CUR
 setborder active $wid   # activate the new window
 chwso -r $wid           # raise windows
