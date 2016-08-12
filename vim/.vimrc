@@ -22,7 +22,8 @@ Plug 'kana/vim-textobj-entire'
 Plug 'whatyouhide/vim-textobj-xmlattr'
 Plug 'glts/vim-textobj-comment'
 Plug 'PeterRincker/vim-argumentative'
-Plug 'terryma/vim-expand-region'
+
+Plug 'terryma/vim-expand-region', { 'on': ['<Plug>(expand_region_expand)', '<Plug>(expand_region_shrink)'] }
 
 " additional key mappings
 Plug 'rhysd/clever-f.vim' " GOLDEN
@@ -50,7 +51,7 @@ Plug 'yssl/QFEnter'
 Plug 'junegunn/gv.vim', { 'on': 'GV' }
 Plug 'rhysd/committia.vim'
 Plug 'rhysd/conflict-marker.vim'
-Plug 'rhysd/npm-debug-log.vim', { 'for': 'npmdebug'} " TODO: make this work
+Plug 'rhysd/npm-debug-log.vim', { 'for': 'npmdebug' } " TODO: make this work
 
 " code searching
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
@@ -73,7 +74,7 @@ Plug 'kana/vim-smartword'
 Plug 'shougo/neocomplete.vim'
 Plug 'Shougo/neosnippet'
 Plug 'Shougo/neosnippet-snippets'
-Plug 'pangloss/vim-javascript'
+Plug 'pangloss/vim-javascript', { 'for': 'javascript' }
 Plug 'mxw/vim-jsx', { 'for': 'jsx' }
 Plug 'ternjs/tern_for_vim', { 'do': 'npm install', 'for': 'javascript' }
 Plug 'junegunn/vim-peekaboo'
@@ -129,7 +130,8 @@ set hidden " Hide the buffer instead of closing when switching
 set synmaxcol=300 " Don't try to highlight long lines
 set virtualedit=onemore,block " Allow for cursor beyond last character
 set foldmethod=indent
-set foldlevel=99
+set foldlevel=2
+set foldminlines=3
 
 set switchbuf=usetab,newtab
 
@@ -284,6 +286,7 @@ let g:clever_f_chars_match_any_signs = '`'
 let g:clever_f_timeout_ms = 1000
 
 " QFEnter
+" http://vi.stackexchange.com/questions/8534/make-cnext-and-cprevious-loop-back-to-the-begining
 let g:qfenter_open_map = ['<CR>', '<2-LeftMouse>']
 let g:qfenter_vopen_map = ['<C-v>']
 let g:qfenter_hopen_map = ['<C-s>']
@@ -495,13 +498,6 @@ let g:fzf_action = {
 " [Buffers] Jump to the existing window if possible
 let g:fzf_buffers_jump = 1
 
-" Make * and # work with visual selection.
-" For anything more sophisticated, try:
-" - https://github.com/nelstrom/vim-visual-star-search
-" - https://github.com/thinca/vim-visualstar
-vnoremap <silent> * yq/p<CR>
-vnoremap <silent> # yq?p<CR>
-
 function! SearchVisualSelectionWithAg()
     execute 'Ag' s:getVisualSelection()
 endfunction
@@ -619,6 +615,8 @@ nmap gp `[v`]
 " Quickly edit/reload the vimrc file
 nmap <silent> <leader>ev :execute 'tabnew ' . resolve(expand($MYVIMRC))<CR>
 nmap <silent> <leader>sv :so ~/.vimrc<CR>:AirlineRefresh<CR>
+
+nmap <silent> <leader>eh :tabnew /etc/hosts<CR>
 
 " Sets 4 spaces as indent
 set tabstop=4
@@ -970,4 +968,35 @@ endfunction
 autocmd BufRead *
   \ call FollowSymlink() |
   \ execute ":ProjectRootLCD"
+
+" ----------------------------------------------------------------------------
+" Todo
+" ----------------------------------------------------------------------------
+function! s:todo() abort
+  let entries = []
+  for cmd in ['ag --vimgrep --hidden "(TODO|FIXME|XXX|NOTE|OPTIMIZE|HACK|BUG):" 2> /dev/null']
+
+    let lines = split(system(cmd), '\n')
+    if v:shell_error != 0 | continue | endif
+
+    for line in lines
+      let lst = matchlist(line, '^\([^:]*\):\([^:]*\):\(.*\)')
+      if len(lst) < 1 | continue | endif
+
+      let [fname, lno, text] = lst[1:3]
+
+      " grab text after todo/fixme/xxx tag
+      let mt = matchlist(text, '\(TODO\|FIXME\|XXX\|NOTE\|OPTIMIZE\|HACK\|BUG\):\(.*\)')[1:3]
+
+      call add(entries, { 'filename': fname, 'lnum': lno, 'text': join(mt, ':') })
+    endfor
+    break
+  endfor
+
+  if !empty(entries)
+    call setqflist(entries)
+    copen
+  endif
+endfunction
+command! Todo call s:todo()
 
