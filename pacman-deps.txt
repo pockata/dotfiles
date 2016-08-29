@@ -66,3 +66,4 @@ doge
 cowsay
 fortune-mod
 synclient
+nitrogen

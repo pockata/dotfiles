@@ -82,22 +82,30 @@ _fzf_compgen_path() {
   ag -g "" "$1"
 }
 
-# gshow - git commit browser
+# fshow - git commit browser
 gshow() {
-  git l "$@" |
+  git log --graph --color=always \
+      --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" "$@" |
   fzf --ansi --no-sort --reverse --tiebreak=index --bind=ctrl-s:toggle-sort \
-      --bind "ctrl-m:execute:
-                (grep -o '[a-f0-9]\{7\}' | head -1 |
-                xargs -I % sh -c 'git show --color=always % | less -R') << 'FZF-EOF'
-                {}
-FZF-EOF" \
-      --bind "ctrl-s:execute:
-                (grep -o '[a-f0-9]\{7\}' | head -1 |
-                xargs -I % sh -c 'git show --name-status --color=always % | less -R') << 'FZF-EOF'
-                {}
-FZF-EOF"
+      --header "Press CTRL-S to toggle sort" \
+      --preview "echo {} | grep -o '[a-f0-9]\{7\}' | head -1 |
+                 xargs -I % sh -c 'git show --color=always % | head -$LINES '" \
+      --bind "enter:execute:echo {} | grep -o '[a-f0-9]\{7\}' | head -1 |
+              xargs -I % sh -c 'vim fugitive://\$(git rev-parse --show-toplevel)/.git//% < /dev/tty'"
 }
 
+is_in_git_repo() {
+  git rev-parse HEAD > /dev/null 2>&1
+}
+
+gb() {
+  is_in_git_repo || return
+  git branch -a --color=always | grep -v '/HEAD\s' | sort |
+  fzf-tmux --ansi --multi --tac --preview-window right:70% \
+    --preview 'git log --oneline --graph --date=short --pretty="format:%C(auto)%cd %h%d %s" $(sed s/^..// <<< {} | cut -d" " -f1) | head -'$LINES |
+  sed 's/^..//' | cut -d' ' -f1 |
+  sed 's#^remotes/##'
+}
 # like normal z when used with arguments but displays an fzf prompt when used without.
 unalias z 2> /dev/null
 z() {
@@ -151,6 +159,8 @@ function groot() {
     fi
 }
 
+alias gr='groot'
+
 # Basic calculator
 = () {
     bc -l <<< "$@"
@@ -196,3 +206,39 @@ BASE16_SHELL="$HOME/.config/base16-ocean.dark.sh"
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
+c() {
+  local cols sep
+  export cols=$(( COLUMNS / 3 ))
+  export sep='{::}'
+
+  cp -f ~/.config/chromium/Default/History /tmp/h
+  sqlite3 -separator $sep /tmp/h \
+    "select title, url from urls order by last_visit_time desc" |
+  ruby -ne '
+    cols = ENV["cols"].to_i
+    title, url = $_.split(ENV["sep"])
+    len = 0
+    puts "\x1b[36m" + title.each_char.take_while { |e|
+      if len < cols
+        len += e =~ /\p{Han}|\p{Katakana}|\p{Hiragana}|\p{Hangul}/ ? 2 : 1
+      end
+    }.join + " " * (2 + cols - len) + "\x1b[m" + url' |
+  fzf --ansi --multi --no-hscroll --tiebreak=index |
+  sed 's#.*\(https*://\)#\1#' | xargs xdg-open
+
+}
+
+# fco - checkout git branch/tag
+fco() {
+  local tags branches target
+  tags=$(
+    git tag | awk '{print "\x1b[31;1mtag\x1b[m\t" $1}') || return
+  branches=$(
+    git branch --all | grep -v HEAD             |
+    sed "s/.* //"    | sed "s#remotes/[^/]*/##" |
+    sort -u          | awk '{print "\x1b[34;1mbranch\x1b[m\t" $1}') || return
+  target=$(
+    (echo "$tags"; echo "$branches") |
+    fzf-tmux -l40 -- --no-hscroll --ansi +m -d "\t" -n 2 -1 -q "$*") || return
+  git checkout $(echo "$target" | awk '{print $2}')
+}

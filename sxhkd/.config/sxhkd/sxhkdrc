@@ -118,6 +118,13 @@ super + shift + {Up, Down}
 XF86MonBrightness{Down,Up}
     xbacklight {-,+}10% -time 0 -steps 1; notifier backlight
 
+super + @button3
+    wrs -a $(wmp) $(pfw)
+
+# exit X session
+super + alt + Escape
+    pkill xwait
+
 ## on alt+shift language change
 #mod1 + @50
 #    pop "bruh"

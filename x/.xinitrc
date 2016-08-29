@@ -30,7 +30,7 @@ if [[ $monitors == *"HDMI"* && $monitors == *"VGA"* ]]; then
 elif [[ $monitors == *"LVDS"* && $monitors == *"VGA"* ]]; then
     ~/bin/monitors.sh Work &
 else
-    ~/bin/wallpaper.sh &
+    nitrogen --restore &
     ~/bin/bar.sh &
 fi
 

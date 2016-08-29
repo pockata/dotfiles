@@ -5,6 +5,21 @@
 "    execute '!curl -fLo ~/.vim/autoload/plug.vim https://raw.github.com/junegunn/vim-plug/master/plug.vim'
 "endif
 
+" required for alt/meta mappings  https://github.com/tpope/vim-sensible/issues/69
+set encoding=utf-8
+
+let g:did_install_default_menus = 1  " avoid stupid menu.vim (saves ~100ms)
+
+let s:plugins = filereadable(expand("~/.vim/autoload/plug.vim", 1))
+if !s:plugins "{{{
+  fun! InstallPlug() "bootstrap plug.vim on new systems
+    silent call mkdir(expand("~/.vim/autoload", 1), 'p')
+    exe '!curl -fLo '.expand("~/.vim/autoload/plug.vim", 1).' https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+  endfun
+endif
+
+let g:plug_window = 'enew'
+
 syntax on
 
 call plug#begin('~/.vim/plugged')

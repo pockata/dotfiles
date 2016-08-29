@@ -25,7 +25,7 @@ case $CMD in
 esac
 
 # Always set the wallpaper after xrandr changes
-. ~/bin/wallpaper.sh
+nitrogen --restore &
 
 # Restart the bar
 # TODO: Find a way to improve it
