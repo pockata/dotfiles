@@ -67,3 +67,4 @@ cowsay
 fortune-mod
 synclient
 nitrogen
+jq

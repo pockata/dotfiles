@@ -1,27 +1,16 @@
 #!/bin/sh
 
+if [ -d /etc/X11/xinit/xinitrc.d ] ; then
+    for f in /etc/X11/xinit/xinitrc.d/?*.sh ; do
+        [ -x "$f" ] && . "$f"
+    done
+    unset f
+fi
+
 [[ -f ~/.Xresources ]] && xrdb -load ~/.Xresources
 
 xset +fp ~/.fonts
-xset -b
 xset fp rehash
-xset dpms off
-
-if ! xinput list --name-only | grep -qi "CM Storm Quickfire Rapid i"; then
-    xset r rate 280 45
-fi
-
-if xinput list --name-only | grep -qi "TPPS/2 IBM TrackPoint"; then
-    # http://www.thinkwiki.org/wiki/How_to_configure_the_TrackPoint
-    # enable trackpoint vertical scroll
-    xinput set-prop "TPPS/2 IBM TrackPoint" "Evdev Wheel Emulation" 1
-    xinput set-prop "TPPS/2 IBM TrackPoint" "Evdev Wheel Emulation Button" 2
-    xinput set-prop "TPPS/2 IBM TrackPoint" "Evdev Wheel Emulation Timeout" 200
-    # horizontal scroll
-    xinput set-prop "TPPS/2 IBM TrackPoint" "Evdev Wheel Emulation Axes" 6 7 4 5
-    # disable touchpad
-    synclient TouchpadOff=1
-fi
 
 monitors=$(xrandr -q | grep -oE "^.* connected (primary )?[0-9]+")
 
@@ -34,6 +23,8 @@ else
     ~/bin/bar.sh &
 fi
 
+~/bin/setkeyboard.sh
+
 sxhkd -m 1 &
 
 compton --config ~/.compton.conf &
@@ -45,13 +36,11 @@ notifyd &
 # make the cursor point in the 'right' direction
 xsetroot -cursor_name left_ptr &
 
-setxkbmap -model pc101 -layout us,bg -variant ,phonetic -option grp:alt_shift_toggle caps:escape &
-
 urxvtd -q -f -o &
 
 unclutter &
 
-xautolock -notify 7 -notifier "pop \"locking screen...\"" -locker ~/bin/lock.sh -time 8 -killtime 15 -killer "systemctl suspend" -detectsleep -corners -000 &
+xautolock -detectsleep -notify 7 -notifier "pop \"locking screen...\"" -locker ~/bin/lock.sh -time 8 -killtime 15 -killer "systemctl suspend" -corners -000 &
 
 # set shell that sxhkd uses to execute commands:
 export SXHKD_SHELL=sh

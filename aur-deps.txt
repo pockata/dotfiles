@@ -7,3 +7,4 @@ atom-editor-beta-bin
 redshift-gtk-git
 ttf-ms-fonts
 toilet
+pup-git

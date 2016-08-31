@@ -78,6 +78,9 @@ mod4 + button1
 mod4 + @button1
     killall xmmv
 
+F2
+    urxvt -geometry 80x3 -name 'bashrun' -e sh -c "/bin/zsh -i -t"
+
 Print
     ~/bin/screenshot.sh
 
@@ -110,6 +113,7 @@ XF86PowerOff
 
 XF86Sleep
     ~/bin/logout.sh
+
 # inc/dec opacity of current window
 super + shift + {Up, Down}
     compton-trans -w $(pfw) -o {+10,-- -10}

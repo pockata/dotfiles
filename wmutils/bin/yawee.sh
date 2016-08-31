@@ -1,11 +1,9 @@
 #!/bin/sh
 
 PFW="$(pfw)"
-[ -z "$CUR_WINDOW" ] && CUR_WINDOW="$(pfw)"
+[ -z "$CUR_WINDOW" ] && CUR_WINDOW="$PFW"
 
 while IFS=: read ev wid; do
-
-    PFW="$(pfw)"
 
     case $1 in
         -d|--debug) printf '%s\n' "$ev $wid $PFW" ;;
@@ -14,6 +12,8 @@ while IFS=: read ev wid; do
     if wattr o "$wid"; then
         continue;
     fi
+
+    PFW="$(pfw)"
 
     case $ev in
 

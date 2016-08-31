@@ -25,9 +25,9 @@ syntax on
 call plug#begin('~/.vim/plugged')
 
 " colorschemes / start screen
-Plug 'chriskempson/base16-vim'
+Plug 'morhetz/gruvbox'
 Plug 'mhinz/vim-startify', { 'on': 'Startify'}
-Plug 'alessandroyorba/alduin'
+Plug 'junegunn/seoul256.vim'
 
 " additional text objects
 Plug 'kana/vim-textobj-user'
@@ -74,8 +74,8 @@ Plug 'rhysd/npm-debug-log.vim', { 'for': 'npmdebug' } " TODO: make this work
 " code searching
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
-Plug 'junegunn/vim-pseudocl'
-Plug 'junegunn/vim-oblique'
+"Plug 'junegunn/vim-pseudocl'
+"Plug 'junegunn/vim-oblique'
 "Plug 'ddrscott/vim-side-search'
 Plug 'nhooyr/neoman.vim'
 
@@ -149,13 +149,13 @@ set foldmethod=indent
 set foldlevel=8
 set foldminlines=3
 
-set switchbuf=usetab,newtab
+set switchbuf=useopen,usetab
+
+set t_Co=256
+set background=dark
 
 let base16colorspace=256
-set t_Co=256
-set background=light
-
-colorscheme base16-ocean
+colorscheme gruvbox
 
 let mapleader="\<Space>"
 let g:mapleader="\<Space>"
@@ -166,12 +166,17 @@ filetype plugin indent on
 set splitright
 set splitbelow
 
+let g:committia_min_window_width=119
+let g:gruvbox_contrast_light="hard"
+
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0
+let g:syntastic_check_on_wq = 1
 let g:syntastic_enable_signs = 1
 let g:syntastic_php_checkers=['php', 'phpcs', 'phpmd']
+let g:syntastic_javascript_checkers = ['eslint']
+let g:syntastic_javascript_eslint_exec = 'eslint_d'
 "let g:syntastic_aggregate_errors = 1
 
 " GAME ON
@@ -185,7 +190,7 @@ let g:list_of_visual_keys = ["j", "k", "l", ";"]
 let g:list_of_insert_keys = []
 
 let g:airline_powerline_fonts = 1
-let g:airline_theme = 'base16_ocean'
+let g:airline_theme = 'gruvbox'
 let g:airline#extensions#tabline#tabs_label = 'party hard'
 let g:airline_left_sep=''
 let g:airline_right_sep=''
@@ -228,7 +233,7 @@ let g:airline_mode_map = {
         \ }
 
 " update the matched search background to not obscure the cursor
-highlight Search ctermbg=139
+"highlight Search ctermbg=139
 
 " highlight long lines (but only one column)
 highlight ColorColumn ctermbg=red ctermfg=white
@@ -258,6 +263,12 @@ set formatoptions-=o
 
 " No scratch (little box that shows a definition)
 set completeopt-=preview
+
+" gvim: remove menu, toolbar and scrollbars
+set guioptions-=m
+set guioptions-=T
+set guioptions-=r
+set guioptions-=L
 
 " reformat html -> each tag on own row
 " nmap <leader><F3> :%s/<[^>]*>/\r&\r/g<cr>gg=G:g/^$/d<cr><leader>/
@@ -472,6 +483,10 @@ let g:neocomplete#sources#omni#functions = get(g:, 'neocomplete#sources#omni#fun
 let g:neocomplete#sources#omni#functions.javascript = 'tern#Complete'
 
 autocmd Filetype javascript setlocal omnifunc=tern#Complete
+
+map <F10> :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans<'
+      \ . synIDattr(synID(line("."),col("."),0),"name") . "> lo<"
+      \ . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"<CR>
 
 " Switch between tabs
 execute "set <M-1>=\e1"
@@ -913,6 +928,7 @@ autocmd BufWrite *.cpp :call DeleteTrailingWS()
 
 " identify sass files as such
 autocmd BufNewFile,BufRead *.scss set ft=scss.css sw=4
+autocmd BufNewFile,BufRead *.jsx set ft=javascript.jsx sw=4
 
 autocmd Filetype css setlocal iskeyword+=-
 
@@ -992,14 +1008,39 @@ autocmd BufEnter *.txt call s:helptab()
 function! s:CleanEmptyBuffers()
   let buffers = filter(range(0, bufnr('$')), 'buflisted(v:val) && empty(bufname(v:val)) && bufwinnr(v:val)<0')
   if !empty(buffers)
-    exe 'bw '.join(buffers, ' ')
+    silent! exe 'bw '.join(buffers, ' ')
   endif
 endfunction
 
-autocmd BufHidden * call s:CleanEmptyBuffers()
+autocmd BufHidden * silent! call s:CleanEmptyBuffers()
+
+" follow symlinked file
+function! FollowSymlink()
+  let current_file = expand('%:p')
+  " check if file type is a symlink
+  if getftype(current_file) == 'link'
+    " if it is a symlink resolve to the actual file path
+    "   and open the actual file
+    let actual_file = resolve(current_file)
+    execute 'file ' . actual_file
+    "execute 'bdelete #'
+  end
+endfunction
 
 " follow symlink and set working directory
 autocmd BufWinEnter * ProjectRootLCD
+    "\ call FollowSymlink() |
+    "\ ProjectRootLCD
+
+" a little more informative version of the above
+nmap <Leader>sI :call <SID>SynStack()<CR>
+
+function! <SID>SynStack()
+    if !exists("*synstack")
+        return
+    endif
+    echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
+endfunc
 
 " ----------------------------------------------------------------------------
 " Todo

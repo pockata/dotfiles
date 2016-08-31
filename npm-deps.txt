@@ -2,4 +2,6 @@ gulp
 yo
 caniuse-cmd
 npm-check-updates
+eslint
+eslint_d
 

@@ -86,12 +86,12 @@ if [ -z "$has_vga" ] && [ -z "$has_hdmi" ]; then
     while :; do
         lemonize
     done |
-        tee >(lemonbar -B "${sp[1]}" -F "${sp[0]}" -d -f "$b_f" -f "$b_fi" -g "$b_geo") |
-        lemonbar -B "${sp[1]}" -F "${sp[0]}" -d -f "$b_f" -f "$b_fi" -g "$b_geo2"
+        tee >(lemonbar -B "${sp[0]}" -F "${sp[1]}" -d -f "$b_f" -f "$b_fi" -g "$b_geo") |
+        lemonbar -B "${sp[0]}" -F "${sp[1]}" -d -f "$b_f" -f "$b_fi" -g "$b_geo2"
 else
     while :; do
         lemonize
     done |
-        lemonbar -B "${sp[1]}" -F "${sp[0]}" -d -f "$b_f" -f "$b_fi" -g "$b_geo"
+        lemonbar -B "${sp[0]}" -F "${sp[1]}" -d -f "$b_f" -f "$b_fi" -g "$b_geo"
 fi
 
