@@ -1,12 +1,12 @@
 #!/bin/sh
 
 PFW="$(pfw)"
-[ -z "$CUR_WINDOW" ] && CUR_WINDOW="$PFW"
+[ -z "$CUR_WINDOW" ] && CUR_WINDOW="$(pfw)"
 
 while IFS=: read ev wid; do
 
     case $1 in
-        -d|--debug) printf '%s\n' "$ev $wid $PFW" ;;
+        -d|--debug) printf '%s\n' "$ev $wid $(pfw)" ;;
     esac
 
     #if wattr o "$wid"; then
@@ -28,7 +28,7 @@ while IFS=: read ev wid; do
             ;;
 
         #17)
-        #    ~/bin/windows-fyrefree.sh -q -c "$(pfw)"
+        #    ~/bin/windows-fyrefree.sh -c "$wid"
         #    ;;
 
         # mapping requests (show window)
