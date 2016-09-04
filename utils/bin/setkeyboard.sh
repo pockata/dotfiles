@@ -5,9 +5,7 @@ setxkbmap -model pc101 -layout us,bg -variant ,phonetic -option grp:alt_shift_to
 
 if ! xinput list --name-only | grep -qi "CM Storm Quickfire Rapid i"; then
     xset r rate 280 45
-fi
-
-if xinput list --name-only | grep -qi "TPPS/2 IBM TrackPoint"; then
+else
     # http://www.thinkwiki.org/wiki/How_to_configure_the_TrackPoint
     # enable trackpoint vertical scroll
     xinput set-prop "TPPS/2 IBM TrackPoint" "Evdev Wheel Emulation" 1

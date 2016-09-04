@@ -12,6 +12,8 @@ fi
 xset +fp ~/.fonts
 xset fp rehash
 
+groups.sh > /dev/null
+
 monitors=$(xrandr -q | grep -oE "^.* connected (primary )?[0-9]+")
 
 if [[ "$monitors" == *"HDMI"* ]] && [[ "$monitors" == *"VGA"* ]]; then

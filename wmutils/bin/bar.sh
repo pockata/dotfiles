@@ -3,11 +3,9 @@
 # bar - lemonbar output
 #
 
-GROOT=/tmp/groups
+GROOT=/tmp/groups.sh
 GNUMBER=5
 GAP=${GAP:-15}
-
-#~/bin/windows-fyrefree.sh -c >/dev/null
 
 xrdb=$(xrdb -query)
 color=($(echo "$xrdb" | grep -P "color[0-9]*:" | sort -m | cut -f 2-))
@@ -58,7 +56,7 @@ desktop() {
 
         c=${colors[gid]}
 
-        if [ ! -f "$GROOT/group.$gid" ]; then
+        if ! grep --quiet "$gid" "$GROOT/all"; then
             echo -n "%{F#504945}□%{F-} "
         else
             if grep --quiet "$gid" "$GROOT/active" 2>/dev/null; then

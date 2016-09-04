@@ -5,12 +5,13 @@
 
 usage() {
     cat << EOF
-usage: $(basename $0) [-hCU] [-c wid] [-s wid group] [-tmMu group]
+usage: $(basename $0) [-hCU] [-c wid] [-s wid group] [-T wid group] [-tmMu group]
        -h shows this help
        -c cleans WID from group files (and makes it visible)
        -C runs cleanup routine
        -s sets WID's group
        -t toggle group visibility state
+       -T smart toggle group visibility state
        -m maps (shows) group
        -M maps group and unmaps all other groups
        -u unmaps (hides) group
@@ -132,6 +133,28 @@ toggle_group() {
     return
 }
 
+# if a group window is focused, the group is toggled
+# if a group window is not focused, the last focused window regains focus
+smart_toggle_group() {
+    # safety
+    if ! grep -q $2 < $FSDIR/all; then
+        echo "Group doesn't exist"
+        return
+    fi
+
+    if grep -q $2 < $FSDIR/active; then
+        # if window is in group
+        if grep -q $1 < $FSDIR/group.$2; then
+            unmap_group $2
+        else
+            win=$(lsw|grep $(cat $FSDIR/group.$2)|head -1)
+            vroum.sh "$win"
+        fi
+    else
+        map_group $2
+    fi
+}
+
 # removes all the unexistent WIDs from groups
 # removes all group files that don't exist
 # removes from 'all' file all groups that don't exist
@@ -174,7 +197,7 @@ test -f $FSDIR/all || :> $FSDIR/all
 cleanup_everything
 
 # getopts yo
-while getopts "hc:Cs:t:m:M:u:U" opt; do
+while getopts "hc:Cs:t:T:m:M:u:U" opt; do
     case $opt in
         h)
             usage
@@ -194,6 +217,10 @@ while getopts "hc:Cs:t:m:M:u:U" opt; do
             ;;
         t)
             toggle_group $OPTARG
+            break
+            ;;
+        T)
+            smart_toggle_group $OPTARG $(eval echo "\$$OPTIND")
             break
             ;;
         m)

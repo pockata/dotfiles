@@ -15,8 +15,8 @@ mod4 + {Tab, shift + Tab}
     vroum.sh {next, prev}
 
 # cycle throught windows with same class
-mod4 + grave
-    windows-fyrefree.sh --cycle
+mod4 + {grave, shift + grave}
+    next_in_class.sh {next, prev}
 
 # set window fullscreen
 mod4 + f
@@ -28,6 +28,10 @@ mod4 + shift + f
 # resize window
 mod4 + r : {j,k,l,semicolon}
     wrs {-40 0, 0 40, 0 -40, 40 0} $(pfw); pop "resizing"
+
+# launch ranger
+mod4 + control + f
+    urxvtc -name "Terminal" -e zsh -c "ranger"
 
 # reload keybindings
 mod4 + shift + r
@@ -61,15 +65,15 @@ mod4 + {t,v}
 
 # add window to a group
 mod4 + shift + {1,2,3,4,5,0}
-    windows-fyrefree.sh --add $(pfw) {1,2,3,4,5,0}; pop "Added to group"
+    groups.sh -s $(pfw) {1,2,3,4,5,0}; pop "Added to group"
 
 # toggle groups' visibility
 mod4 + {1,2,3,4,5,0}
-    windows-fyrefree.sh --smart {1,2,3,4,5,0};
+    groups.sh -T $(pfw) {1,2,3,4,5,0}
 
 # remove window from all groups
 mod4 + BackSpace
-    windows-fyrefree.sh --clean $(pfw)
+    groups.sh -c $(pfw)
 
 # move windows with the mouse
 mod4 + button1
@@ -79,7 +83,7 @@ mod4 + @button1
     killall xmmv
 
 F2
-    urxvt -geometry 80x3 -name 'bashrun' -e sh -c "/bin/zsh -i -t"
+    urxvt -geometry 80x3 -name 'bashrun' -e zsh
 
 Print
     ~/bin/screenshot.sh

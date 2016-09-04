@@ -74,8 +74,8 @@ Plug 'rhysd/npm-debug-log.vim', { 'for': 'npmdebug' } " TODO: make this work
 " code searching
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
-"Plug 'junegunn/vim-pseudocl'
-"Plug 'junegunn/vim-oblique'
+Plug 'junegunn/vim-pseudocl'
+Plug 'junegunn/vim-oblique'
 "Plug 'ddrscott/vim-side-search'
 Plug 'nhooyr/neoman.vim'
 
@@ -1028,9 +1028,7 @@ function! FollowSymlink()
 endfunction
 
 " follow symlink and set working directory
-autocmd BufWinEnter * ProjectRootLCD
-    "\ call FollowSymlink() |
-    "\ ProjectRootLCD
+autocmd BufWinEnter * call FollowSymlink() | ProjectRootLCD
 
 " a little more informative version of the above
 nmap <Leader>sI :call <SID>SynStack()<CR>

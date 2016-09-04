@@ -78,6 +78,7 @@ export FZF_CTRL_R_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_CTRL_R_OPTS="$FZF_DEFAULT_OPTS"
 export FZF_CTRL_C_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_CTRL_C_OPTS="$FZF_DEFAULT_OPTS"
+command -v tree > /dev/null && export FZF_ALT_C_OPTS="--preview 'tree -C {} | head -$LINES'"
 
 # Use ag instead of the default find command for listing candidates.
 # - The first argument to the function is the base path to start traversal
@@ -91,7 +92,7 @@ _fzf_compgen_path() {
 gshow() {
   git log --graph --color=always \
       --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" "$@" |
-  fzf-tmux --ansi --no-sort --reverse --tiebreak=index --bind=ctrl-s:toggle-sort \
+  fzf --ansi --no-sort --reverse --tiebreak=index --bind=ctrl-s:toggle-sort \
       --header "Press CTRL-S to toggle sort" \
       --preview "echo {} | grep -o '[a-f0-9]\{7\}' | head -1 |
                  xargs -I % sh -c 'git show --color=always % | head -$LINES '" \

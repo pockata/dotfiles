@@ -158,10 +158,11 @@ URxvt.iso14755: false
 URxvt.iso14755_52: false
 
 URxvt*allow_bold: true
-URxvt*font:xft:Meslo LG M DZ for Powerline:style=regular:pixelsize=15
+URxvt*font:xft:Meslo LG M DZ for Powerline:style=regular:pixelsize=14
 
 ! Enables ctrl+; binding in Vim
 URxvt.keysym.C-semicolon: \033[;
+!URxvt.keysym.C-semicolon: \033[1;5C
 !URxvt*transparent: true
 !URxvt*shading: 30
 !URxvt*inheritPixmap: true
@@ -171,11 +172,9 @@ URxvt.keysym.M-u: perl:url-select:select_next
 URxvt.url-select.launcher: /usr/bin/xdg-open
 URxvt.url-select.underline: true
 
-URxvt.perl-ext-common: default,clipboard, resize-font
+URxvt.perl-ext-common: default,clipboard
 URxvt.keysym.Shift-Control-C: perl:clipboard:copy
 URxvt.keysym.Shift-Control-V: perl:clipboard:paste
-URxvt.resize-font.smaller:C-Down
-URxvt.resize-font.bigger:C-Up
 
 ! Rofi
 rofi.color-enabled: true
