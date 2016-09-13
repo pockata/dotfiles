@@ -1,4 +1,4 @@
-#!/bin/sh -e
+#!/bin/bash
 
 ## wait for the dock state to change
 #sleep 0.5
@@ -50,16 +50,18 @@ function switch_to_external {
         --output LVDS1 --off \
         --output VGA1 --mode 1680x1050 --pos 0x0 --rotate left
 
-    sleep 0.5
-    /home/$USER/.screenlayout/home.sh
+    sleep 1
+    /home/pockata/.screenlayout/home.sh
 }
 
 case "$DOCKED" in
     "0")
         #undocked event
+        logger -t DOCKED "undocked"
         switch_to_local ;;
     "1")
         #docked event
+        logger -t DOCKED "docked"
         switch_to_external ;;
 esac
 

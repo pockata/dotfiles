@@ -67,4 +67,5 @@ cowsay
 fortune-mod
 synclient
 nitrogen
+gnome-keyring
 jq
