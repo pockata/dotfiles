@@ -38,7 +38,7 @@ notifyd &
 # make the cursor point in the 'right' direction
 xsetroot -cursor_name left_ptr &
 
-urxvtd -q -f -o &
+urxvtd -q -f -o
 
 unclutter &
 
@@ -58,6 +58,8 @@ if [ -f ~/bin/wew ]; then
 else
     wew | yawee.sh &
 fi
+
+urxvtc -e zsh -c 'tmux has-session && tmux attach -d || tmux' &
 
 exec xwait
 
