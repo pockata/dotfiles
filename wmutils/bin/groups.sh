@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 #
 # Copyright (c) 2015 Greduan <me@greduan.com>, licensed under the WTFPL
 # Adds group-like capabilities, sorta like those you find in CWM and such WMs
@@ -47,7 +47,7 @@ clean_status() {
 map_group() {
     # safety
     if ! grep -q $1 < $FSDIR/all; then
-        echo "Group doesn't exist - $1"
+        echo "Group doesn't exist"
         exit 1
     fi
 
@@ -56,19 +56,8 @@ map_group() {
     # add to active
     echo $1 >> $FSDIR/active
 
-    grp=$(cat $FSDIR/group.$1)
-    files=$(echo "$grp" | wc -l)
-
-    file=1
     # loop through group and map windows
-    while read line; do
-        if [ "$file" -ne "$files" ]; then
-            ignw -s $line
-        fi
-        mapw -m $line
-        ignw -r $line
-        file=$(( file + 1 ))
-    done < <(lsw -u | grep "$grp")
+    xargs mapw -m <$FSDIR/group.$1
 }
 
 # hides all the windows in group ($1)
