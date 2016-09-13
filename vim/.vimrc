@@ -336,12 +336,14 @@ let g:qfenter_hopen_map = ['<C-s>']
 let g:qfenter_topen_map = ['<C-t>']
 
 " from unimpaired
-nmap <silent> [a :<C-U>previous<CR>
-nmap <silent> ]a :<C-U>next<CR>
-nmap <silent> [l :<C-U>lprevious<CR>
-nmap <silent> ]l :<C-U>lnext<CR>
-nmap <silent> [q :<C-U>cprevious<CR>
-nmap <silent> ]q :<C-U>cnext<CR>
+nnoremap <silent> [a :<C-U>previous<CR>
+nnoremap <silent> ]a :<C-U>next<CR>
+nnoremap <silent> [l :<C-U>lprevious<CR>
+nnoremap <silent> ]l :<C-U>lnext<CR>
+nnoremap <silent> [q :<C-U>cprevious<CR>
+nnoremap <silent> ]q :<C-U>cnext<CR>
+nnoremap <silent> ]t :<C-U>:tabn<cr>
+nnoremap <silent> [t :<C-U>:tabp<cr>
 
 " Delay opening of peekaboo window (in ms. default: 0)
 let g:peekaboo_delay = 750
@@ -567,6 +569,7 @@ let g:fzf_action = {
       \ }
 " [Buffers] Jump to the existing window if possible
 let g:fzf_buffers_jump = 1
+let g:fzf_files_options = '--preview "(coderay {} || cat {}) 2> /dev/null | head -'.&lines.'"'
 
 function! SearchVisualSelectionWithAg()
     execute 'Ag' s:getVisualSelection()
@@ -590,6 +593,7 @@ nmap <Leader>w :Windows<CR>
 nmap <Leader>b :Buffers<CR>
 nmap <Leader>c :Commands<CR>
 nmap <Leader>gf :GitFiles?<CR>
+nmap <Leader>gd :Gdiff<CR>
 nnoremap <leader>gs :Gstatus<CR><C-W><S-T>
 
 " Go to first character of line on first press
