@@ -76,5 +76,6 @@
 	default = current
 [diff]
 	mnemonicprefix = true
+	compactionHeuristic = true
 [merge]
 	stat = true
