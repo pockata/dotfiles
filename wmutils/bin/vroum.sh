@@ -59,8 +59,5 @@ setborder active $wid   # activate the new window
 chwso -r $wid           # raise windows
 wtf $wid                # set focus on it
 
-if [ -z "$2" ]; then
-    # Move mouse to middle-ish of window
-    wmp -a $(echo $(wattr whxy $(pfw)) | awk -F " " '{ print ($3+$1/2-30), ($4+$2/2) }')
-fi
+xdotool search --class "Dunst" windowraise
 
