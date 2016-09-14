@@ -82,9 +82,6 @@ mod4 + button1
 mod4 + @button1
     killall xmmv
 
-F2
-    urxvt -geometry 80x3 -name 'bashrun' -e zsh
-
 Print
     ~/bin/screenshot.sh
 

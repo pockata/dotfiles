@@ -1,10 +1,3 @@
-" VIM tips from http://amix.dk/vim/vimrc.html
-
-" Load vim-plug
-"if empty(glob("~/.vim/autoload/plug.vim"))
-"    execute '!curl -fLo ~/.vim/autoload/plug.vim https://raw.github.com/junegunn/vim-plug/master/plug.vim'
-"endif
-
 " required for alt/meta mappings  https://github.com/tpope/vim-sensible/issues/69
 set encoding=utf-8
 
@@ -18,8 +11,6 @@ if !s:plugins "{{{
   endfun
 endif
 
-let g:plug_window = 'enew'
-
 syntax on
 
 call plug#begin('~/.vim/plugged')
@@ -27,7 +18,6 @@ call plug#begin('~/.vim/plugged')
 " colorschemes / start screen
 Plug 'morhetz/gruvbox'
 Plug 'mhinz/vim-startify', { 'on': 'Startify'}
-Plug 'junegunn/seoul256.vim'
 
 " additional text objects
 Plug 'kana/vim-textobj-user'
@@ -39,10 +29,6 @@ Plug 'whatyouhide/vim-textobj-xmlattr'
 Plug 'glts/vim-textobj-comment'
 Plug 'PeterRincker/vim-argumentative'
 
-Plug 'terryma/vim-expand-region', {
-    \'on': ['<Plug>(expand_region_expand)', '<Plug>(expand_region_shrink)']
-\}
-
 " additional key mappings
 Plug 'rhysd/clever-f.vim' " GOLDEN
 Plug 'bkad/CamelCaseMotion'
@@ -53,7 +39,7 @@ Plug 'christoomey/vim-tmux-navigator'
 Plug 'Raimondi/delimitMate'
 Plug 'FooSoft/vim-argwrap', { 'on': 'ArgWrap' }
 Plug 'tpope/vim-surround'
-Plug 'tpope/vim-eunuch'
+Plug 'tpope/vim-eunuch', { 'on': ['Remove', 'Unlink', 'Move', 'Rename', 'Chmod', 'Mkdir', 'Find', 'Locate', 'Wall', 'SudoWrite', 'SudoEdit'] }
 Plug 'tpope/vim-repeat'
 Plug 'Valloric/MatchTagAlways'
 Plug 'junegunn/limelight.vim', { 'on': 'Limelight' }
@@ -69,6 +55,7 @@ Plug 'yssl/QFEnter'
 Plug 'junegunn/gv.vim', { 'on': 'GV' }
 Plug 'rhysd/committia.vim'
 Plug 'rhysd/conflict-marker.vim'
+Plug 'christoomey/vim-conflicted'
 Plug 'rhysd/npm-debug-log.vim', { 'for': 'npmdebug' } " TODO: make this work
 
 " code searching
@@ -76,13 +63,11 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'junegunn/vim-pseudocl'
 Plug 'junegunn/vim-oblique'
-"Plug 'ddrscott/vim-side-search'
-Plug 'nhooyr/neoman.vim'
 
 " navigation
 Plug 'scrooloose/nerdtree', { 'on': ['NERDTree', 'NERDTreeToggle', 'NERDTreeFind', 'NERDTreeOpen'] }
 Plug 'Xuyuanp/nerdtree-git-plugin', { 'on': ['NERDTree', 'NERDTreeToggle', 'NERDTreeFind', 'NERDTreeOpen'] }
-Plug 'MattesGroeger/vim-bookmarks'
+Plug 'MattesGroeger/vim-bookmarks', { 'on': ['BookmarkToggle', 'BookmarkAnnotate', 'BookmarkNext', 'BookmarkPrev', 'BookmarkShowAll' ] }
 Plug 't9md/vim-choosewin', { 'on': ['<Plug>(choosewin)', 'ChooseWin'] }
 Plug 'terryma/vim-smooth-scroll'
 Plug 'takac/vim-hardtime'
@@ -111,6 +96,8 @@ Plug 'mbbill/undotree', { 'on': 'UndotreeToggle' }
 "Plug 'benmills/vimux'
 Plug 'tmux-plugins/vim-tmux-focus-events'
 Plug 'wesQ3/vim-windowswap'
+Plug 'thinca/vim-ref', { 'on': 'Ref' }
+Plug 'osyo-manga/vim-over'
 
 " FOR CONSIDERATION
 "Plug 'Konfekt/FastFold'
@@ -154,7 +141,6 @@ set switchbuf=useopen,usetab
 set t_Co=256
 set background=dark
 
-let base16colorspace=256
 colorscheme gruvbox
 
 let mapleader="\<Space>"
@@ -166,8 +152,9 @@ filetype plugin indent on
 set splitright
 set splitbelow
 
-let g:committia_min_window_width=119
-let g:gruvbox_contrast_light="hard"
+let g:committia_min_window_width = 119
+let g:gruvbox_contrast_light = 'hard'
+let g:gruvbox_contrast_dark = 'hard'
 
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
@@ -175,7 +162,7 @@ let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 1
 let g:syntastic_enable_signs = 1
 let g:syntastic_php_checkers=['php', 'phpcs', 'phpmd']
-let g:syntastic_javascript_checkers = ['eslint']
+let g:syntastic_javascript_checkers = ['eslint', 'jshint']
 let g:syntastic_javascript_eslint_exec = 'eslint_d'
 "let g:syntastic_aggregate_errors = 1
 
@@ -235,15 +222,44 @@ let g:airline_mode_map = {
 " update the matched search background to not obscure the cursor
 "highlight Search ctermbg=139
 
+highlight ObliqueCurrentMatch guibg=#b16286 guifg=#fbf1c7
+
 " highlight long lines (but only one column)
-highlight ColorColumn ctermbg=red ctermfg=white
+highlight ColorColumn guibg=#cc241d guifg=#fbf1c7 ctermbg=red ctermfg=white
 autocmd BufWinEnter * call matchadd('ColorColumn', '\%81v', -1)
 
+function! MarkMargin (on)
+    if exists('b:MarkMargin')
+        try
+            call matchdelete(b:MarkMargin)
+        catch /./
+        endtry
+        unlet b:MarkMargin
+    endif
+    if a:on
+        let b:MarkMargin = matchadd('ColorColumn', '\%81v\s*\S', 100)
+    endif
+endfunction
+
+augroup MarkMargin
+    autocmd!
+    autocmd BufEnter * :call MarkMargin(1)
+augroup END
+
+
 " make the ~ characters on empty lines 'invisible'
-highlight NonText ctermfg=bg
+highlight NonText ctermfg=bg guifg=bg
 
 " make current line number stand out (yellow)
 highlight CursorLineNr ctermfg=3
+
+" use gui colors inside terminal
+set termguicolors
+
+" when termguicolors renders black/white
+" :h xterm-true-color
+set t_8f=[38;2;%lu;%lu;%lum
+set t_8b=[48;2;%lu;%lu;%lum
 
 " remove esc key timeout
 set timeoutlen=500
@@ -320,6 +336,8 @@ let g:qfenter_hopen_map = ['<C-s>']
 let g:qfenter_topen_map = ['<C-t>']
 
 " from unimpaired
+nmap <silent> [a :<C-U>previous<CR>
+nmap <silent> ]a :<C-U>next<CR>
 nmap <silent> [l :<C-U>lprevious<CR>
 nmap <silent> ]l :<C-U>lnext<CR>
 nmap <silent> [q :<C-U>cprevious<CR>
@@ -344,6 +362,14 @@ map <C-t> <esc>:tabnew<CR>
 " easier to reach
 nnoremap [j [m
 nnoremap ]j ]m
+vnoremap [j [m
+vnoremap ]j ]m
+
+" paste n format
+nnoremap <leader>p p`[v`]=
+
+let g:ref_open='vsplit'
+cabbrev man Ref man
 
 "nnoremap <C-Tab> gt
 "nnoremap <C-S-Tab> gT
@@ -669,6 +695,9 @@ let g:startify_list_order = [
 " Disable netrw
 let loaded_netrwPlugin = 1
 
+" Open plug window in new tab
+let g:plug_window = 'tabnew'
+
 " select pasted text
 nmap gp `[v`]
 
@@ -676,6 +705,7 @@ nmap gp `[v`]
 nmap <silent> <leader>ev :execute 'tabnew ' . resolve(expand($MYVIMRC))<CR>
 nmap <silent> <leader>sv :so ~/.vimrc<CR>:AirlineRefresh<CR>
 
+" Open hosts file
 nmap <silent> <leader>eh :tabnew /etc/hosts<CR>
 
 " Sets 4 spaces as indent
@@ -689,6 +719,7 @@ set shiftround
 
 " Show whitespace characters
 set showbreak=↪\ 
+set breakindent
 set list
 set listchars=tab:→\ ,trail:·,extends:›,precedes:‹,nbsp:.
 
@@ -802,18 +833,6 @@ set undoreload=500
 
 set ai "Auto indent
 
-" Default settings. (NOTE: Remove comments in dictionary before sourcing)
-nmap + <Plug>(expand_region_expand)
-vmap + <Plug>(expand_region_expand)
-vmap _ <Plug>(expand_region_shrink)
-let g:expand_region_text_objects = {
-      \ 'iw'  :0,
-      \ 'iW'  :0,
-      \ 'ib'  :1,
-      \ 'il'  :0,
-      \ 'ip'  :0,
-      \ }
-
 " Don't implode
 noremap j h
 "noremap <silent> <expr> k (v:count == 0 ? 'gj' : 'j')
@@ -897,6 +916,7 @@ autocmd BufReadPost *
      \ if line("'\"") > 0 && line("'\"") <= line("$") |
      \   exe "normal! g`\"" |
      \ endif
+
 " Remember info about open buffers on close
 set viminfo^=%
 
@@ -1013,6 +1033,18 @@ function! s:CleanEmptyBuffers()
 endfunction
 
 autocmd BufHidden * silent! call s:CleanEmptyBuffers()
+
+" ----------------------------------------------------------------------------
+" Switch to us layout
+" https://zenbro.github.io/2015/07/24/auto-change-keyboard-layout-in-vim.html
+" ----------------------------------------------------------------------------
+function! RestoreKeyboardLayout(key)
+  call system('xkb-switch -s us')
+  execute 'normal! ' . a:key
+endfunction
+nnoremap <silent> й :call RestoreKeyboardLayout('h')<CR>
+nnoremap <silent> к :call RestoreKeyboardLayout('j')<CR>
+nnoremap <silent> л :call RestoreKeyboardLayout('k')<CR>
 
 " follow symlinked file
 function! FollowSymlink()

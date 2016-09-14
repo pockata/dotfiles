@@ -59,7 +59,7 @@ else
     wew | yawee.sh &
 fi
 
-urxvtc -e zsh -c 'tmux has-session && tmux attach -d || tmux' &
+urxvtc -e zsh -c 'tmux has-session && tmux attach -d || tmux -s main' &
 
 exec xwait
 
