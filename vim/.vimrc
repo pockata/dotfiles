@@ -687,6 +687,7 @@ autocmd VimEnter * call s:startup()
 autocmd User Startified nnoremap <buffer> k j
 autocmd User Startified nnoremap <buffer> l k
 
+let g:startify_change_to_dir = 0
 let g:startify_list_order = [
     \ ['   MRU '. getcwd()], 'dir',
     \ ['   MRU'],            'files',
@@ -1059,7 +1060,6 @@ function! FollowSymlink()
     "   and open the actual file
     let actual_file = resolve(current_file)
     execute 'file ' . actual_file
-    "execute 'bdelete #'
   end
 endfunction
 
