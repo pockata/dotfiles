@@ -4,6 +4,7 @@
     c = commit
     cm = commit -m
     ca = commit --amend
+    cA = commit --amend --reuse-message=HEAD
     st = status -s
     br = branch
     diff = diff --word-diff
