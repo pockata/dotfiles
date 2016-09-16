@@ -98,6 +98,7 @@ Plug 'tmux-plugins/vim-tmux-focus-events'
 Plug 'wesQ3/vim-windowswap'
 Plug 'thinca/vim-ref', { 'on': 'Ref' }
 Plug 'osyo-manga/vim-over'
+Plug 'chrisbra/NrrwRgn'
 
 " FOR CONSIDERATION
 "Plug 'Konfekt/FastFold'
@@ -152,6 +153,9 @@ filetype plugin indent on
 set splitright
 set splitbelow
 
+let g:nrrw_rgn_vert = 1
+let g:nrrw_rgn_wdth = 85
+
 let g:committia_min_window_width = 119
 let g:gruvbox_contrast_light = 'hard'
 let g:gruvbox_contrast_dark = 'hard'
@@ -194,6 +198,13 @@ let g:airline#extensions#tabline#right_alt_sep = ''
 " enable/disable showing only non-zero hunks
 let g:airline#extensions#hunks#enabled = 1
 let g:airline#extensions#hunks#non_zero_only = 1
+
+" vim-windowswap integration
+let g:airline#extensions#windowswap#enabled = 1
+let g:airline#extensions#windowswap#indicator_text = 'SWAP'
+
+" NrrwRgn
+let g:airline#extensions#nrrwrgn#enabled = 1
 
 " configure which whitespace checks to enable
 let g:airline#extensions#whitespace#checks = [ 'indent', 'trailing' ]
@@ -512,10 +523,6 @@ let g:neocomplete#sources#omni#functions.javascript = 'tern#Complete'
 
 autocmd Filetype javascript setlocal omnifunc=tern#Complete
 
-map <F10> :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans<'
-      \ . synIDattr(synID(line("."),col("."),0),"name") . "> lo<"
-      \ . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"<CR>
-
 " Switch between tabs
 execute "set <M-1>=\e1"
 execute "set <M-2>=\e2"
@@ -560,6 +567,7 @@ function! DeleteHiddenBuffers() " {{{
 endfunction " }}}
 
 nnoremap <Leader>cd :lcd %:p:h<CR>
+nnoremap <Leader>cp :ProjectRootLCD<CR>
 
 " FZF
 let g:fzf_action = {
@@ -615,8 +623,6 @@ nnoremap <silent> <c-p> :FZF<cr>
 " move horizontally
 nnoremap z; 30zl
 nnoremap zj 30zh
-
-"nnoremap <leader>p p`[v`]=
 
 nnoremap <silent> <Leader>u :UndotreeToggle<CR>
 " If undotree is opened, it is likely one wants to interact with it.
