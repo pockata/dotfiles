@@ -10,6 +10,10 @@ mod4 + {j,k,l,semicolon}
 mod4 + shift + {u,p,i,o,h}
     corner_mh.sh {tl, tr, bl, br, md} $(pfw)
 
+# move windows to monitors
+mod4 + ctrl + {j,k,l,semicolon}
+    closest_mon.sh {left, down, up, right} $(pfw)
+
 # cycle throught windows
 mod4 + {Tab, shift + Tab}
     vroum.sh {next, prev}

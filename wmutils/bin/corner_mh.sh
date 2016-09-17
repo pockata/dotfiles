@@ -1,10 +1,10 @@
-#!/bin/sh
+#!/bin/dash
 
 GAP=15
 BAR=$((30 + GAP))
 
 CUR=${2:-$(pfw)}
-ANCHOR=${3:-$CUR}
+ANCHOR=${3:-$(pfw)}
 
 # exit if we can't find another window to move
 if ! wattr $CUR; then
@@ -14,16 +14,14 @@ fi
 
 # if there's no anchor to use, use the root window
 # this way we use the monitor with most pixels
-if ! wattr $ANCHOR; then
+if ! wattr $ANCHOR && ! mattr $ANCHOR; then
     ANCHOR=$(lsw -r)
 fi
 
-MON=($(mattr whxy $ANCHOR))
-
-SW=${MON[0]}
-SH=${MON[1]}
-SX=${MON[2]}
-SY=${MON[3]}
+SW=$(mattr w $ANCHOR)
+SH=$(mattr h $ANCHOR)
+SX=$(mattr x $ANCHOR)
+SY=$(mattr y $ANCHOR)
 
 BW=$(wattr b $CUR)
 W=$(wattr w $CUR)
@@ -42,7 +40,9 @@ case $1 in
     br) X=$((SX + SW - W - BW*2 - GAP))
         Y=$((SY + SH - H - BW*2 - GAP)) ;;
     md) X=$((SX + SW/2 - W/2 - BW))
-        Y=$((SY + SH/2 - H/2 - BW));;
+        Y=$((SY + SH/2 - H/2 - BW))
+        test "$Y" -lt $((BAR + GAP)) && Y=$((BAR + GAP))
+        ;;
 esac
 
 wtp $X $Y $W $H $CUR

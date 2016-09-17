@@ -1,6 +1,5 @@
 #!/bin/sh
 
-PFW="$(pfw)"
 [ -z "$CUR_WINDOW" ] && CUR_WINDOW="$(pfw)"
 
 while IFS=: read ev wid; do
@@ -9,12 +8,6 @@ while IFS=: read ev wid; do
         -d|--debug) printf '%s\n' "$ev $wid $(pfw)" ;;
     esac
 
-    #if wattr o "$wid"; then
-    #    continue;
-    #fi
-
-    PFW="$(pfw)"
-
     case $ev in
 
         # window creation
@@ -22,14 +15,10 @@ while IFS=: read ev wid; do
             if ! wattr o $wid; then
                 ! wattr "$wid" || {
                     CUR_WINDOW="$wid"
-                    corner_mh.sh md "$wid" ""
+                    corner_mh.sh md "$wid"
                 }
             fi
             ;;
-
-        #17)
-        #    ~/bin/windows-fyrefree.sh -c "$wid"
-        #    ;;
 
         # mapping requests (show window)
         19)
@@ -45,7 +34,7 @@ while IFS=: read ev wid; do
         # focus prev window when hiding(unmapping)/deleting focused window
         18)
             #(wattr "$(pfw)" && ! wattr m "$(pfw)") || {
-            wattr "$PFW" || {
+            wattr "$(pfw)" || {
                 vroum.sh prev 2>/dev/null
             }
             groups.sh > /dev/null
