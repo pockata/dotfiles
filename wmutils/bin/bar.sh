@@ -6,55 +6,49 @@
 GROOT=/tmp/groups.sh
 GNUMBER=5
 GAP=${GAP:-15}
+BAR=${BAR:-30}
 
-xrdb=$(xrdb -query)
-color=($(echo "$xrdb" | grep -P "color[0-9]*:" | sort -m | cut -f 2-))
-sp=($(echo "$xrdb" | grep -P "(foreground|background):" | cut -f 2-))
-
-#       inactive    groups 1-5
-colors=("${sp[0]}", "${color[1]}", "${color[2]}", "${color[3]}", "${color[4]}", "${color[5]}")
-
-has_vga=$(mattr "VGA")
-has_hdmi=$(mattr "HDMI")
-has_lvds=$(mattr "LVDS")
-
-if [ -z "$has_lvds" ]; then
-    lvdsc=($(mattr wxy "LVDS"))
-    mon1_w="${lvdsc[0]}"
-    mon1_x="${lvdsc[1]}"
-    mon1_y="${lvdsc[2]}"
-fi
-
-if [ -z "$has_vga" ]; then
-    vgac=($(mattr wxy "VGA1"))
-    mon2_w="${vgac[0]}"
-    mon2_x="${vgac[1]}"
-    mon2_y="${vgac[2]}"
-fi
-
-if [ -z "$has_hdmi" ]; then
-    hdmic=($(mattr wxy "HDMI"))
-    mon1_w="${hdmic[0]}"
-    mon1_x="${hdmic[1]}"
-    mon1_y="${hdmic[2]}"
-fi
+monitors="$(lsm)"
+num_monitors=$(echo "$monitors" | wc -l)
 
 # bar dimensions
 b_w=240
-b_h=30
+b_h="$BAR"
 
 # bar fonts
 b_f="Meslo LG M DZ for Powerline:style=regular:size=9"
 b_fi="Font Awesome:style=regular:size=11"
 
-# bar geometries
-b_geo="${b_w}x${b_h}+$((mon1_x + mon1_w - b_w - GAP))+${GAP}"
-b_geo2="${b_w}x${b_h}+$((mon2_x + mon2_w - b_w - GAP))+${GAP}"
+xrdb="$(xrdb -query)"
+xcolors="$(echo "$xrdb" | grep -P "\*color[0-9]*:" | sed 's/\*color//' | sort -n -k1,1 | cut -f 2-)"
+color_fg=$(echo "$xrdb" | grep -P "foreground:" | cut -f 2-)
+color_bg=$(echo "$xrdb" | grep -P "background:" | cut -f 2-)
+
+xcolor() {
+    echo "$xcolors" | sed -n "$1p"
+}
+
+color() {
+    echo "$colors" | sed -n "$1p"
+}
+
+colors="$(xcolor 2)
+$(xcolor 3)
+$(xcolor 4)
+$(xcolor 5)
+$(xcolor 6)"
+
+barGeo() {
+    mon_x="$(mattr x $1)"
+    mon_w="$(mattr w $1)"
+
+    echo "${b_w}x${b_h}+$((mon_x + mon_w - b_w - GAP))+${GAP}"
+}
 
 desktop() {
     for gid in $(seq 1 $GNUMBER); do
 
-        c=${colors[gid]}
+        c=$(color "$gid")
 
         if ! grep --quiet "$gid" "$GROOT/all"; then
             echo -n "%{F#504945}□%{F-} "
@@ -69,27 +63,33 @@ desktop() {
 }
 
 clock() {
-  date=$(date "+%a %b %d %k:%M")
-  printf '%s\n' " $date"
+    date=$(date "+%a %b %d %k:%M")
+    printf '%s\n' " $date"
 }
 
 lemonize(){
-  buf=""
-  buf="${buf}$(desktop) $(clock)"
-  printf '%s\n' "%{c}$buf"
-  sleep 1
+    buf=""
+    buf="${buf}$(desktop) $(clock)"
+    printf '%s\n' "%{c}$buf"
+    sleep 1
 }
 
-if [ -z "$has_vga" ] && [ -z "$has_hdmi" ]; then
+mon1=$(echo "$monitors" | sed -n '1p')
+b_geo1="$(barGeo "$mon1")"
+
+if [ "$num_monitors" -eq 2 ]; then
+    mon2=$(echo "$monitors" | sed -n '2p')
+    b_geo2="$(barGeo "$mon2")"
+
     while :; do
         lemonize
     done |
-        tee >(lemonbar -B "${sp[0]}" -F "${sp[1]}" -d -f "$b_f" -f "$b_fi" -g "$b_geo") |
-        lemonbar -B "${sp[0]}" -F "${sp[1]}" -d -f "$b_f" -f "$b_fi" -g "$b_geo2"
+        tee >(lemonbar -B "$color_bg" -F "$color_fg" -d -f "$b_f" -f "$b_fi" -g "$b_geo1") |
+        lemonbar -B "$color_bg" -F "$color_fg" -d -f "$b_f" -f "$b_fi" -g "$b_geo2"
 else
     while :; do
         lemonize
     done |
-        lemonbar -B "${sp[0]}" -F "${sp[1]}" -d -f "$b_f" -f "$b_fi" -g "$b_geo"
+        lemonbar -B "$color_bg" -F "$color_fg" -d -f "$b_f" -f "$b_fi" -g "$b_geo1"
 fi
 
