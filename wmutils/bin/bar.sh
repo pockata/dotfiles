@@ -40,9 +40,10 @@ $(xcolor 6)"
 
 barGeo() {
     mon_x="$(mattr x $1)"
+    mon_y="$(mattr y $1)"
     mon_w="$(mattr w $1)"
 
-    echo "${b_w}x${b_h}+$((mon_x + mon_w - b_w - GAP))+${GAP}"
+    echo "${b_w}x${b_h}+$((mon_x + mon_w - b_w - GAP))+$((mon_y + GAP))"
 }
 
 desktop() {

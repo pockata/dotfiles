@@ -39,8 +39,8 @@ move_to_mon() {
 
 case $1 in
     h|a|east|left)  move_to_mon $(next x "")  2>/dev/null ;;
-    j|s|south|down) move_to_mon $(next y "") 2>/dev/null ;;
-    k|w|north|up)   move_to_mon $(next y r)  2>/dev/null ;;
+    j|s|south|down) move_to_mon $(next y r) 2>/dev/null ;;
+    k|w|north|up)   move_to_mon $(next y "")  2>/dev/null ;;
     l|d|west|right) move_to_mon $(next x r) 2>/dev/null ;;
     *) usage ;;
 esac
