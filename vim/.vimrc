@@ -5,10 +5,8 @@ let g:did_install_default_menus = 1  " avoid stupid menu.vim (saves ~100ms)
 
 let s:plugins = filereadable(expand("~/.vim/autoload/plug.vim", 1))
 if !s:plugins "{{{
-  fun! InstallPlug() "bootstrap plug.vim on new systems
     silent call mkdir(expand("~/.vim/autoload", 1), 'p')
     exe '!curl -fLo '.expand("~/.vim/autoload/plug.vim", 1).' https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-  endfun
 endif
 
 syntax on
@@ -55,19 +53,16 @@ Plug 'yssl/QFEnter'
 Plug 'junegunn/gv.vim', { 'on': 'GV' }
 Plug 'rhysd/committia.vim'
 Plug 'rhysd/conflict-marker.vim'
-Plug 'christoomey/vim-conflicted'
 Plug 'rhysd/npm-debug-log.vim', { 'for': 'npmdebug' } " TODO: make this work
 
 " code searching
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
-Plug 'junegunn/vim-pseudocl'
-Plug 'junegunn/vim-oblique'
+Plug 'pgdouyon/vim-evanesco'
 
 " navigation
 Plug 'scrooloose/nerdtree', { 'on': ['NERDTree', 'NERDTreeToggle', 'NERDTreeFind', 'NERDTreeOpen'] }
 Plug 'Xuyuanp/nerdtree-git-plugin', { 'on': ['NERDTree', 'NERDTreeToggle', 'NERDTreeFind', 'NERDTreeOpen'] }
-Plug 'MattesGroeger/vim-bookmarks', { 'on': ['BookmarkToggle', 'BookmarkAnnotate', 'BookmarkNext', 'BookmarkPrev', 'BookmarkShowAll' ] }
 Plug 't9md/vim-choosewin', { 'on': ['<Plug>(choosewin)', 'ChooseWin'] }
 Plug 'terryma/vim-smooth-scroll'
 Plug 'takac/vim-hardtime'
@@ -384,6 +379,11 @@ nnoremap <leader>p p`[v`]=
 let g:ref_open='vsplit'
 cabbrev man Ref man
 
+cabbrev pc PlugClean!
+cabbrev ps PlugStatus
+cabbrev pi PlugInstall
+cabbrev pu PlugUpgrade \| PlugUpdate
+
 "nnoremap <C-Tab> gt
 "nnoremap <C-S-Tab> gT
 
@@ -566,8 +566,8 @@ function! DeleteHiddenBuffers() " {{{
   endfor
 endfunction " }}}
 
-nnoremap <Leader>cd :lcd %:p:h<CR>
-nnoremap <Leader>cp :ProjectRootLCD<CR>
+nnoremap <silent> <Leader>cd :lcd %:p:h<CR>
+nnoremap <silent> <Leader>cp :ProjectRootLCD<CR>
 
 " FZF
 let g:fzf_action = {
@@ -577,7 +577,7 @@ let g:fzf_action = {
       \ }
 " [Buffers] Jump to the existing window if possible
 let g:fzf_buffers_jump = 1
-let g:fzf_files_options = '--preview "(coderay {} || cat {}) 2> /dev/null | head -'.&lines.'"'
+let g:fzf_files_options = '--preview "(highlight -O ansi {} || cat {}) 2> /dev/null | head -'.&lines.'"'
 
 function! SearchVisualSelectionWithAg()
     execute 'Ag' s:getVisualSelection()
@@ -594,6 +594,11 @@ vnoremap <silent> H :call SearchVisualSelectionWithAg()<CR>
 imap <c-x><c-j> <plug>(fzf-complete-file-ag)
 imap <c-x><c-k> <plug>(fzf-complete-word)
 imap <c-x><c-f> <plug>(fzf-complete-path)
+
+nmap <leader><tab> <plug>(fzf-maps-n)
+xmap <leader><tab> <plug>(fzf-maps-x)
+omap <leader><tab> <plug>(fzf-maps-o)
+
 nmap <Leader>h :History<CR>
 nmap <Leader>j :Lines<CR>
 nmap <Leader>r :BLines<CR>
@@ -602,7 +607,19 @@ nmap <Leader>b :Buffers<CR>
 nmap <Leader>c :Commands<CR>
 nmap <Leader>gf :GitFiles?<CR>
 nmap <Leader>gd :Gdiff<CR>
-nnoremap <leader>gs :Gstatus<CR><C-W><S-T>
+nnoremap <leader>gs :Gstatus<CR>gg<c-n>
+
+" ----------------------------------------------------------------------------
+" Readline-style key bindings in command-line (excerpt from rsi.vim)
+" ----------------------------------------------------------------------------
+cnoremap        <C-A> <Home>
+cnoremap        <C-B> <Left>
+cnoremap <expr> <C-D> getcmdpos()>strlen(getcmdline())?"\<Lt>C-D>":"\<Lt>Del>"
+cnoremap <expr> <C-F> getcmdpos()>strlen(getcmdline())?&cedit:"\<Lt>Right>"
+cnoremap        <M-b> <S-Left>
+cnoremap        <M-f> <S-Right>
+silent! exe "set <S-Left>=\<Esc>b"
+silent! exe "set <S-Right>=\<Esc>f"
 
 " Go to first character of line on first press
 " Go to start of line on second press
@@ -618,7 +635,7 @@ endfunction
 nnoremap <silent> 0 :call ToggleHomeZero()<CR>
 
 nnoremap <silent> <leader>a :ArgWrap<CR>
-nnoremap <silent> <c-p> :FZF<cr>
+nnoremap <expr> <c-p> (expand('%') =~ 'NERD_tree' ? "\<c-w>\<c-w>" : '').":Files\<cr>"
 
 " move horizontally
 nnoremap z; 30zl
@@ -970,10 +987,17 @@ au FileType gitcommit au! BufEnter COMMIT_EDITMSG call setpos('.', [0, 1, 1, 0])
 " https://www.reddit.com/r/vim/comments/4kjgmz/weekly_vim_tips_and_tricks_thread_11/d3g6l8y
 autocmd FileType javascript setl suffixesadd=.js,.jsx,.json,.html
 
-noremap <silent> <c-u> :call smooth_scroll#up(&scroll, 0, 2)<CR>
-noremap <silent> <c-d> :call smooth_scroll#down(&scroll, 0, 2)<CR>
-noremap <silent> <c-b> :call smooth_scroll#up(&scroll*2, 0, 4)<CR>
-noremap <silent> <c-f> :call smooth_scroll#down(&scroll*2, 0, 4)<CR>
+" Faster scroll
+function! s:Smoothie(functionToExecute, params) abort
+    setlocal nocursorline norelativenumber
+    call call(a:functionToExecute, a:params)
+    setlocal cursorline relativenumber
+endfunction
+
+noremap <silent> <c-u> :call <SID>Smoothie('smooth_scroll#up', [&scroll, 0, 2])<CR>
+noremap <silent> <c-d> :call <SID>Smoothie('smooth_scroll#down', [&scroll, 0, 2])<CR>
+noremap <silent> <c-b> :call <SID>Smoothie('smooth_scroll#up', [&scroll*2, 0, 4])<CR>
+noremap <silent> <c-f> :call <SID>Smoothie('smooth_scroll#down', [&scroll*2, 0, 4])<CR>
 
 function! s:ZoomToggle() abort
     if exists('t:zoomed') && t:zoomed
@@ -989,8 +1013,8 @@ endfunction
 
 command! ZoomToggle call s:ZoomToggle()
 " TODO: auto open/close NERDTree
-nnoremap <silent> <C-w>o :ZoomToggle<CR>:NERDTreeClose<CR>:AirlineRefresh<CR>
-nnoremap <silent> <C-w><C-o> :ZoomToggle<CR>:AirlineRefresh<CR>
+nnoremap <silent> <C-w>o :ZoomToggle<CR>
+nnoremap <silent> <C-w><C-o> :ZoomToggle<CR>
 
 " ----------------------------------------------------------------------------
 " Get Visual Selection helper function
@@ -1070,7 +1094,7 @@ function! FollowSymlink()
 endfunction
 
 " follow symlink and set working directory
-autocmd BufWinEnter * call FollowSymlink() | ProjectRootLCD
+autocmd BufEnter * call FollowSymlink() | ProjectRootLCD
 
 " a little more informative version of the above
 nmap <Leader>sI :call <SID>SynStack()<CR>
