@@ -19,8 +19,17 @@ GAP=15
 # should we draw over the bar or not?
 FSSIZE=${2:-"min"}
 
+win="$1"
 # this file is used to store the previous geometry of a window
-FSFILE="/tmp/.fwin-$(printf '%q' "$1")"
+FSFILE="/tmp/.fwin-$(printf '%q' "$win")"
+
+# clear leftover files
+if [ $FSSIZE = "clear" ]; then
+    if [ -f "$FSFILE" ]; then
+        rm "$FSFILE"
+    fi
+    exit
+fi
 
 # this will unset the fullscreen state of any fullscreen window if there is one.
 # this way, there will only be one window in fullscreen at a time, and no window
@@ -62,7 +71,7 @@ setOrig() {
 # fullscreen mode
 if test -f $FSFILE; then
 
-    if [ "$(getFullCoords $1)" != "$(wattr xywh $1)" ]; then
+    if [ "$(getFullCoords $win)" != "$(wattr xywh $win)" ]; then
 
         if [ "$FSSIZE" == "max" ]; then
             sed -i "s/min/max/g" $FSFILE
@@ -70,27 +79,27 @@ if test -f $FSFILE; then
             sed -i "s/max/min/g" $FSFILE
         fi
 
-        setFull $1
+        setFull $win
         exit
     fi
 
     hasMax=$(grep -c "max" $FSFILE)
 
     if [ "$hasMax" -ne 0 ] && [ "$FSSIZE" != "max" ]; then
-        setFull $1
+        setFull $win
         sed -i "s/max/min/g" $FSFILE
     elif [ "$hasMax" -eq 0 ] && [ "$FSSIZE" = "max" ]; then
-        setFull $1
+        setFull $win
         sed -i "s/min/max/g" $FSFILE
     else
         setOrig
     fi
 else
     # save window's geometry and id to $FSFILE
-    echo "$(wattr xywhi $1) $FSSIZE" > $FSFILE
-    setFull $1
+    echo "$(wattr xywhi $win) $FSSIZE" > $FSFILE
+    setFull $win
 fi
 
 # now focus the window, and put it in front, no matter which state we're in, and
-vroum.sh $1
+vroum.sh $win
 

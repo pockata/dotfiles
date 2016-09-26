@@ -31,6 +31,10 @@ while IFS=: read ev wid; do
             fi
             ;;
 
+        17)
+            fullscreen_mh.sh "$wid" "clear"
+            ;;
+
         # focus prev window when hiding(unmapping)/deleting focused window
         18)
             #(wattr "$(pfw)" && ! wattr m "$(pfw)") || {
