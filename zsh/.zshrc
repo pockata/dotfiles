@@ -1,8 +1,8 @@
 # Load zplug
-source ~/.zplug/zplug
+source ~/.zplug/init.zsh
 
 # Let zplug manage itself
-zplug "b4b4r07/zplug"
+zplug "zplug/zplug"
 
 zplug "zsh-users/zsh-completions", as:plugin, use:"src"
 zplug "rupa/z", use:z.sh
@@ -24,13 +24,10 @@ fi
 
 zplug load
 
-export PATH=$HOME/bin:$PATH
+# ruby binaries
+PATH="$HOME/.gem/ruby/2.3.0/bin/:$PATH"
 
-#http://zsh.sourceforge.net/Doc/Release/Options.html
-
-# Loading NVM
-#export NVM_DIR="/home/pockata/.nvm"
-#[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+export PATH="$HOME/bin:$PATH"
 
 export EDITOR='vim'
 
@@ -59,6 +56,9 @@ setopt notify
 # Automatically list choices on an ambiguous completion.
 setopt auto_list
 
+# confirm execution of command from history
+setopt hist_verify
+
 # Share history between sessions
 HISTFILE=~/.history
 HISTSIZE=1000
@@ -85,69 +85,34 @@ command -v tree > /dev/null && export FZF_ALT_C_OPTS="--preview 'tree -C {} | he
 # - Note that ag only lists files not directories
 # - See the source code (completion.{bash,zsh}) for the details.
 _fzf_compgen_path() {
-  ag -g "" "$1"
-}
-
-# fshow - git commit browser
-gshow() {
-  git log --graph --color=always \
-      --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" "$@" |
-  fzf --ansi --no-sort --reverse --tiebreak=index --bind=ctrl-s:toggle-sort \
-      --header "Press CTRL-S to toggle sort" \
-      --preview "echo {} | grep -o '[a-f0-9]\{7\}' | head -1 |
-                 xargs -I % sh -c 'git show --color=always % | head -$LINES '" \
-      --bind "enter:execute:echo {} | grep -o '[a-f0-9]\{7\}' | head -1 |
-              xargs -I % sh -c 'vim fugitive://\$(git rev-parse --show-toplevel)/.git//% < /dev/tty'"
-}
-
-is_in_git_repo() {
-  git rev-parse HEAD > /dev/null 2>&1
-}
-
-gb() {
-  is_in_git_repo || return
-  git branch -a --color=always | grep -v '/HEAD\s' | sort |
-  fzf-tmux --ansi --multi --tac --preview-window right:70% \
-    --preview 'git log --oneline --graph --date=short --pretty="format:%C(auto)%cd %h%d %s" $(sed s/^..// <<< {} | cut -d" " -f1) | head -'$LINES |
-  sed 's/^..//' | cut -d' ' -f1 |
-  sed 's#^remotes/##'
-}
-# fkill - kill process
-fkill() {
-  pid=$(ps -ef | sed 1d | fzf -m | awk '{print $2}')
-
-  if [ "x$pid" != "x" ]
-  then
-    kill -${1:-9} $pid
-  fi
+    ag --hidden -g "" "$1"
 }
 
 # colorize man pages
 # http://boredzo.org/blog/archives/2016-08-15/colorized-man-pages-understood-and-customized
 man() {
-  env \
-    LESS_TERMCAP_mb=$(printf "\e[1;31m") \
-    LESS_TERMCAP_md=$(printf "\e[1;31m") \
-    LESS_TERMCAP_me=$(printf "\e[0m") \
-    LESS_TERMCAP_se=$(printf "\e[0m") \
-    LESS_TERMCAP_so=$(printf "\e[1;44;33m") \
-    LESS_TERMCAP_ue=$(printf "\e[0m") \
-    LESS_TERMCAP_us=$(printf "\e[1;32m") \
-    man "$@"
+    env \
+        LESS_TERMCAP_mb=$(printf "\e[1;31m") \
+        LESS_TERMCAP_md=$(printf "\e[1;31m") \
+        LESS_TERMCAP_me=$(printf "\e[0m") \
+        LESS_TERMCAP_se=$(printf "\e[0m") \
+        LESS_TERMCAP_so=$(printf "\e[1;44;33m") \
+        LESS_TERMCAP_ue=$(printf "\e[0m") \
+        LESS_TERMCAP_us=$(printf "\e[1;32m") \
+        man "$@"
 }
 
 # like normal z when used with arguments but displays an fzf prompt when used without.
 unalias z 2> /dev/null
 z() {
-  [ $# -gt 0 ] && _z "$*" && return
-  cd "$(_z -l 2>&1 | fzf-tmux +s --tac --query "$*" | sed 's/^[0-9,.]* *//')"
+    [ $# -gt 0 ] && _z "$*" && return
+    cd "$(_z -l 2>&1 | fzf-tmux +s --tac --query "$*" | sed 's/^[0-9,.]* *//')"
 }
 
 # Aliases
 alias a="atom-beta"
 alias g="git"
 alias t="tmux -2"
-alias v="gvim"
 alias e="vim"
 alias view="eog"
 alias aur="yaourt"
@@ -170,7 +135,7 @@ alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo
 # Pretty print the path
 alias path='echo $PATH | tr -s ":" "\n"'
 
-alias da='docker run -i -t --entrypoint /bin/bash'
+alias da='docker exec -i -t --entrypoint /bin/bash'
 # Docker Compose
 alias dc='docker-compose'
 alias dcu='docker-compose up -d'
@@ -179,7 +144,7 @@ alias dcr='docker-compose run --rm'
 
 # Create a new directory and enter it
 function mkd() {
-	mkdir -p "$@" && cd "$_";
+    mkdir -p "$@" && cd "$_";
 }
 
 function groot() {
@@ -201,7 +166,7 @@ alias gr='groot'
 # `less` with options to preserve color and line numbers, unless the output is
 # small enough for one screen.
 function tre() {
-	tree -aC -I '.git|node_modules|bower_components' --dirsfirst "$@" | less -FRNX;
+    tree -aC -I '.git|node_modules|bower_components' --dirsfirst "$@" | less -FRNX;
 }
 
 # ctrl-r starts searching history backward
@@ -220,6 +185,7 @@ export EXTRACT="/opt/brackets/samples/root/Getting Started/images"
 export LOLCOMMITS_DIR="${HOME}/Pictures/lolcommits/"
 export LOLCOMMITS_FORK=true
 export LOLCOMMITS_STEALTH=true
+export LOLCOMMITS_ANIMATE=3
 
 # for NPM
 export NPM_PACKAGES="${HOME}/.npm-packages"
@@ -232,39 +198,96 @@ export PATH;
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-c() {
-  local cols sep
-  export cols=$(( COLUMNS / 3 ))
-  export sep='{::}'
+alias headers="curl -s -D - -o /dev/null"
 
-  cp -f ~/.config/chromium/Default/History /tmp/h
-  sqlite3 -separator $sep /tmp/h \
-    "select title, url from urls order by last_visit_time desc" |
-  ruby -ne '
-    cols = ENV["cols"].to_i
-    title, url = $_.split(ENV["sep"])
-    len = 0
-    puts "\x1b[36m" + title.each_char.take_while { |e|
-      if len < cols
-        len += e =~ /\p{Han}|\p{Katakana}|\p{Hiragana}|\p{Hangul}/ ? 2 : 1
-      end
-    }.join + " " * (2 + cols - len) + "\x1b[m" + url' |
-  fzf --ansi --multi --no-hscroll --tiebreak=index |
-  sed 's#.*\(https*://\)#\1#' | xargs xdg-open
-
+# Switch tmux-sessions
+tls() {
+    local session
+    session=$(tmux list-sessions -F "#{session_name}" | \
+        fzf-tmux --query="$1" --select-1 --exit-0) && {
+        test -z "$TMUX" && tmux attach -t "$session" || tmux switch-client -t "$session"
+    }
 }
 
-# fco - checkout git branch/tag
-fco() {
-  local tags branches target
-  tags=$(
-    git tag | awk '{print "\x1b[31;1mtag\x1b[m\t" $1}') || return
-  branches=$(
-    git branch --all | grep -v HEAD             |
-    sed "s/.* //"    | sed "s#remotes/[^/]*/##" |
-    sort -u          | awk '{print "\x1b[34;1mbranch\x1b[m\t" $1}') || return
-  target=$(
-    (echo "$tags"; echo "$branches") |
-    fzf-tmux -l40 -- --no-hscroll --ansi +m -d "\t" -n 2 -1 -q "$*") || return
-  git checkout $(echo "$target" | awk '{print $2}')
+# v - open files in ~/.viminfo
+v() {
+  local files
+  files=$(grep '^>' ~/.viminfo | cut -c3- |
+          while read line; do
+            [ -f "${line/\~/$HOME}" ] && echo "$line"
+          done | fzf-tmux -d -m -q "$*" -1) && vim ${files//\~/$HOME}
 }
+
+chromehist() {
+    local cols sep
+    export cols=$(( COLUMNS / 3 ))
+    export sep='{::}'
+
+    cp -f ~/.config/chromium/Default/History /tmp/h
+    sqlite3 -separator $sep /tmp/h \
+        "select title, url from urls order by last_visit_time desc" |
+    ruby -ne '
+        cols = ENV["cols"].to_i
+        title, url = $_.split(ENV["sep"])
+        len = 0
+        puts "\x1b[36m" + title.each_char.take_while { |e|
+        if len < cols
+            len += e =~ /\p{Han}|\p{Katakana}|\p{Hiragana}|\p{Hangul}/ ? 2 : 1
+        end
+        }.join + " " * (2 + cols - len) + "\x1b[m" + url' |
+    fzf --ansi --multi --no-hscroll --tiebreak=index |
+    sed 's#.*\(https*://\)#\1#' | xargs xdg-open
+}
+
+is_in_git_repo() {
+    git rev-parse HEAD > /dev/null 2>&1
+}
+
+# gshow - git commit browser
+gshow() {
+    is_in_git_repo || return
+    git l --graph --color=always "$@" |
+    fzf -d 100% --ansi --no-sort --reverse --tiebreak=index --bind=ctrl-s:toggle-sort \
+        --header "Press CTRL-S to toggle sort" \
+        --preview "echo {} | grep -o '[a-f0-9]\{7\}' | head -1 |
+            xargs -I % sh -c 'git show --color=always % | head -$LINES '" \
+        --bind "enter:execute:echo {} | grep -o '[a-f0-9]\{7\}' | head -1 |
+            xargs -I % sh -c 'vim fugitive://\$(git rev-parse --show-toplevel)/.git//% < /dev/tty'"
+}
+
+gb() {
+    is_in_git_repo || return
+    git branch -a --color=always | grep -v '/HEAD\s' | sort |
+    fzf-tmux --ansi --multi --tac --preview-window right:70% \
+        --preview 'git log --oneline --graph --date=short --pretty="format:%C(auto)%cd %h%d %s" $(sed s/^..// <<< {} | cut -d" " -f1) | head -'$LINES |
+    sed 's/^..//' | cut -d' ' -f1 |
+    sed 's#^remotes/##'
+}
+
+gf() {
+    is_in_git_repo || return
+    git -c color.status=always status --short |
+    fzf-tmux -m --ansi --nth 2..,.. \
+        --preview 'NAME="$(cut -c4- <<< {})" &&
+        (git diff --color=always "$NAME" | sed 1,4d; cat "$NAME") | head -'$LINES |
+    cut -c4-
+}
+
+# gco - checkout git branch/tag
+gco() {
+    local tags branches target
+    tags=$(
+        git tag | awk '{print "\x1b[31;1mtag\x1b[m\t" $1}') || return
+
+    branches=$(
+        git branch --all | grep -v HEAD             |
+        sed "s/.* //"    | sed "s#remotes/[^/]*/##" |
+        sort -u          | awk '{print "\x1b[34;1mbranch\x1b[m\t" $1}') || return
+
+    target=$(
+        (echo "$tags"; echo "$branches") |
+        fzf --no-hscroll --ansi +m -d "\t" -n 2 -1 -q "$*") || return
+
+    git checkout $(echo "$target" | awk '{print $2}')
+}
+
