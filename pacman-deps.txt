@@ -38,6 +38,7 @@ mplayer
 ranger
 the_silver_searcher
 rxvt-unicode
+rofi
 firefox
 chromium
 compton

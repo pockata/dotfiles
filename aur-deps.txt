@@ -1,6 +1,5 @@
 wmutils-git
 lemonbar-xft-git
-rofi-git
 hsetroot
 xkb-switch-git
 sublime-text-dev
