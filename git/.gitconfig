@@ -71,7 +71,7 @@
     whitespace = nowarn
 [core]
 	editor = vim
-	pager = less -F -X
+	pager = diff-so-fancy | less --tabs=4 -RFX --pattern '^(Date|added|deleted|modified): '
 	autocrlf = input
 [push]
 	default = current

@@ -68,4 +68,5 @@ fortune-mod
 synclient
 nitrogen
 gnome-keyring
+diff-so-fancy
 jq
