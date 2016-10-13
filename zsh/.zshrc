@@ -90,17 +90,14 @@ _fzf_compgen_path() {
 
 # colorize man pages
 # http://boredzo.org/blog/archives/2016-08-15/colorized-man-pages-understood-and-customized
-man() {
-    env \
-        LESS_TERMCAP_mb=$(printf "\e[1;31m") \
-        LESS_TERMCAP_md=$(printf "\e[1;31m") \
-        LESS_TERMCAP_me=$(printf "\e[0m") \
-        LESS_TERMCAP_se=$(printf "\e[0m") \
-        LESS_TERMCAP_so=$(printf "\e[1;44;33m") \
-        LESS_TERMCAP_ue=$(printf "\e[0m") \
-        LESS_TERMCAP_us=$(printf "\e[1;32m") \
-        man "$@"
-}
+export LESS_TERMCAP_mb=$(printf "\e[1;31m")
+export LESS_TERMCAP_md=$(printf "\e[1;31m")
+export LESS_TERMCAP_me=$(printf "\e[0m")
+export LESS_TERMCAP_se=$(printf "\e[0m")
+export LESS_TERMCAP_so=$(printf "\e[1;44;33m")
+export LESS_TERMCAP_ue=$(printf "\e[0m")
+export LESS_TERMCAP_us=$(printf "\e[1;32m")
+export LESS='--quit-if-one-screen --ignore-case --status-column --LONG-PROMPT --RAW-CONTROL-CHARS --HILITE-UNREAD --tabs=4 --no-init --window=-4'
 
 # like normal z when used with arguments but displays an fzf prompt when used without.
 unalias z 2> /dev/null
@@ -185,7 +182,6 @@ export EXTRACT="/opt/brackets/samples/root/Getting Started/images"
 export LOLCOMMITS_DIR="${HOME}/Pictures/lolcommits/"
 export LOLCOMMITS_FORK=true
 export LOLCOMMITS_STEALTH=true
-export LOLCOMMITS_ANIMATE=3
 
 # for NPM
 export NPM_PACKAGES="${HOME}/.npm-packages"
@@ -218,7 +214,8 @@ v() {
           done | fzf-tmux -d -m -q "$*" -1) && vim ${files//\~/$HOME}
 }
 
-chromehist() {
+# christ?
+chist() {
     local cols sep
     export cols=$(( COLUMNS / 3 ))
     export sep='{::}'
