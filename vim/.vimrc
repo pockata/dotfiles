@@ -248,25 +248,6 @@ highlight SpellBad guifg=red
 highlight ColorColumn guibg=#cc241d guifg=#fbf1c7 ctermbg=red ctermfg=white
 autocmd BufWinEnter * call matchadd('ColorColumn', '\%81v', -1)
 
-function! MarkMargin (on)
-    if exists('b:MarkMargin')
-        try
-            call matchdelete(b:MarkMargin)
-        catch /./
-        endtry
-        unlet b:MarkMargin
-    endif
-    if a:on
-        let b:MarkMargin = matchadd('ColorColumn', '\%81v\s*\S', 100)
-    endif
-endfunction
-
-augroup MarkMargin
-    autocmd!
-    autocmd BufEnter * :call MarkMargin(1)
-augroup END
-
-
 " make the ~ characters on empty lines 'invisible'
 highlight EndOfBuffer ctermfg=bg guifg=bg
 
@@ -737,6 +718,10 @@ nnoremap <silent> <Leader>u :UndotreeToggle<CR>
 " If undotree is opened, it is likely one wants to interact with it.
 let g:undotree_SetFocusWhenToggle=1
 let g:undotree_WindowLayout = 2
+
+" TODO: figure out evanesco workaround
+"nnoremap n nzzzv
+"nnoremap N Nzzzv
 
 " https://technotales.wordpress.com/2010/04/29/vim-splits-a-guide-to-doing-exactly-what-you-want/
 " Smarter? splits
@@ -1213,31 +1198,33 @@ endfunc
 " ----------------------------------------------------------------------------
 " Todo
 " ----------------------------------------------------------------------------
+
+" TODO: Add bang! option to use regex without semicolon
 function! s:todo() abort
-  let entries = []
-  for cmd in ['ag --vimgrep --hidden "(TODO|FIXME|XXX|NOTE|OPTIMIZE|HACK|BUG):" 2> /dev/null']
+    let entries = []
+    for cmd in ['ag --vimgrep --hidden "(TODO|FIXME|XXX|NOTE|OPTIMIZE|HACK|BUG):" 2> /dev/null']
 
-    let lines = split(system(cmd), '\n')
-    if v:shell_error != 0 | continue | endif
+        let lines = split(system(cmd), '\n')
+        if v:shell_error != 0 | continue | endif
 
-    for line in lines
-      let lst = matchlist(line, '^\([^:]*\):\([^:]*\):\(.*\)')
-      if len(lst) < 1 | continue | endif
+        for line in lines
+            let lst = matchlist(line, '^\([^:]*\):\([^:]*\):\(.*\)')
+            if len(lst) < 1 | continue | endif
 
-      let [fname, lno, text] = lst[1:3]
+            let [fname, lno, text] = lst[1:3]
 
-      " grab text after todo/fixme/xxx tag
-      let mt = matchlist(text, '\(TODO\|FIXME\|XXX\|NOTE\|OPTIMIZE\|HACK\|BUG\):\(.*\)')[1:2]
+            " grab text after todo/fixme/xxx tag
+            let mt = matchlist(text, '\(TODO\|FIXME\|XXX\|NOTE\|OPTIMIZE\|HACK\|BUG\):\(.*\)')[1:2]
 
-      call add(entries, { 'filename': fname, 'lnum': lno, 'text': join(mt, ':') })
+            call add(entries, { 'filename': fname, 'lnum': lno, 'text': join(mt, ':') })
+        endfor
+        break
     endfor
-    break
-  endfor
 
-  if !empty(entries)
-    call setqflist(entries)
-    copen
-  endif
+    if !empty(entries)
+        call setqflist(entries)
+        copen
+    endif
 endfunction
 command! Todo call s:todo()
 
