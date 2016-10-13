@@ -22,9 +22,9 @@ groups.sh > /dev/null
 monitors=$(xrandr -q | grep -oE "^.* connected (primary )?[0-9]+")
 
 if [[ "$monitors" == *"HDMI"* ]] && [[ "$monitors" == *"VGA"* ]]; then
-    ~/bin/monitors.sh Home &
+    ~/bin/monitors.sh Home
 elif [[ "$monitors" == *"LVDS"* ]] && [[ "$monitors" == *"VGA"* ]]; then
-    ~/bin/monitors.sh Work &
+    ~/bin/monitors.sh Work
 else
     nitrogen --restore &
     ~/bin/bar.sh &
@@ -64,7 +64,7 @@ else
     wew | yawee.sh &
 fi
 
-urxvtc -e zsh -c 'tmux has-session && tmux attach -d || tmux -s main' &
+urxvtc -e zsh -c 'tmux has-session && tmux attach -d || tmux new -s main' &
 
 exec xwait
 
