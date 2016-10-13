@@ -21,11 +21,12 @@ Plug 'mhinz/vim-startify', { 'on': 'Startify'}
 Plug 'kana/vim-textobj-user'
 Plug 'kana/vim-textobj-indent'
 Plug 'kana/vim-textobj-line'
-Plug 'rhysd/vim-textobj-anyblock'
 Plug 'kana/vim-textobj-entire'
 Plug 'whatyouhide/vim-textobj-xmlattr'
 Plug 'glts/vim-textobj-comment'
 Plug 'PeterRincker/vim-argumentative'
+Plug 'vimtaku/vim-textobj-keyvalue'
+Plug 'zandrmartin/vim-textobj-blanklines'
 
 " additional key mappings
 Plug 'rhysd/clever-f.vim' " GOLDEN
@@ -40,7 +41,7 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-eunuch', { 'on': ['Remove', 'Unlink', 'Move', 'Rename', 'Chmod', 'Mkdir', 'Find', 'Locate', 'Wall', 'SudoWrite', 'SudoEdit'] }
 Plug 'tpope/vim-repeat'
 Plug 'Valloric/MatchTagAlways'
-Plug 'junegunn/limelight.vim', { 'on': 'Limelight' }
+Plug 'junegunn/goyo.vim', { 'on': 'Goyo' }
 
 " code/project management
 Plug 'airblade/vim-gitgutter'
@@ -53,7 +54,6 @@ Plug 'yssl/QFEnter'
 Plug 'junegunn/gv.vim', { 'on': 'GV' }
 Plug 'rhysd/committia.vim'
 Plug 'rhysd/conflict-marker.vim'
-Plug 'rhysd/npm-debug-log.vim', { 'for': 'npmdebug' } " TODO: make this work
 
 " code searching
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
@@ -62,10 +62,8 @@ Plug 'pgdouyon/vim-evanesco'
 
 " navigation
 Plug 'scrooloose/nerdtree', { 'on': ['NERDTree', 'NERDTreeToggle', 'NERDTreeFind', 'NERDTreeOpen'] }
-Plug 'Xuyuanp/nerdtree-git-plugin', { 'on': ['NERDTree', 'NERDTreeToggle', 'NERDTreeFind', 'NERDTreeOpen'] }
 Plug 't9md/vim-choosewin', { 'on': ['<Plug>(choosewin)', 'ChooseWin'] }
 Plug 'terryma/vim-smooth-scroll'
-Plug 'takac/vim-hardtime'
 Plug 'itchyny/vim-cursorword'
 Plug 'kana/vim-smartword'
 
@@ -80,7 +78,6 @@ Plug 'junegunn/vim-peekaboo'
 
 " extra language support
 Plug 'scrooloose/syntastic'
-Plug 'sheerun/vim-polyglot'
 
 " statusline
 Plug 'bling/vim-airline'
@@ -136,6 +133,7 @@ set switchbuf=useopen,usetab
 
 set t_Co=256
 set background=dark
+set t_ut=
 
 colorscheme gruvbox
 
@@ -153,7 +151,7 @@ let g:nrrw_rgn_wdth = 85
 
 let g:committia_min_window_width = 119
 let g:gruvbox_contrast_light = 'hard'
-let g:gruvbox_contrast_dark = 'hard'
+let g:gruvbox_contrast_dark = 'soft'
 
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
@@ -164,16 +162,6 @@ let g:syntastic_php_checkers=['php', 'phpcs', 'phpmd']
 let g:syntastic_javascript_checkers = ['eslint', 'jshint']
 let g:syntastic_javascript_eslint_exec = 'eslint_d'
 "let g:syntastic_aggregate_errors = 1
-
-" GAME ON
-let g:hardtime_default_on = 1
-let g:hardtime_ignore_buffer_patterns = [ "NERD.*", "undotree.*", "help.*" ]
-let g:hardtime_ignore_quickfix = 1
-let g:hardtime_allow_different_key = 1
-let g:hardtime_maxcount = 2 " for when I hit the wrong line number
-let g:list_of_normal_keys = ["j", "k", "l", ";"]
-let g:list_of_visual_keys = ["j", "k", "l", ";"]
-let g:list_of_insert_keys = []
 
 let g:airline_powerline_fonts = 1
 let g:airline_theme = 'gruvbox'
@@ -315,24 +303,10 @@ let g:NERDTreeMapOpenVSplit="<C-v>"
 let g:NERDTreeAutoCenter = 1
 let g:NERDTreeWinSize = 25
 let g:NERDTreeSortHiddenFirst = 1
-let g:NERDTreeIndicatorMapCustom = {
-    \ "Modified"  : "✹",
-    \ "Staged"    : "✚",
-    \ "Untracked" : "✭",
-    \ "Renamed"   : "➜",
-    \ "Unmerged"  : "═",
-    \ "Deleted"   : "✖",
-    \ "Dirty"     : "✗",
-    \ "Clean"     : "✔︎",
-    \ "Unknown"   : "?"
-    \ }
 
 let g:clever_f_smart_case = 1
 let g:clever_f_across_no_line = 1
 let g:clever_f_fix_key_direction = 1
-
-nnoremap ' <Plug>(clever-f-repeat-forward)<cr>
-nnoremap , <Plug>(clever-f-repeat-back)<cr>
 
 " QFEnter
 " http://vi.stackexchange.com/questions/8534/make-cnext-and-cprevious-loop-back-to-the-begining
@@ -1054,7 +1028,7 @@ function! s:helptab()
     nnoremap <buffer> q :q<cr>
   endif
 endfunction
-autocmd BufEnter *.txt call s:helptab()
+autocmd BufEnter *.txt silent! call s:helptab()
 
 " ----------------------------------------------------------------------------
 " Clean empty buffers
@@ -1136,4 +1110,6 @@ function! s:todo() abort
   endif
 endfunction
 command! Todo call s:todo()
+
+autocmd FileType ref-* nnoremap <buffer> <silent> q :<C-u>close<CR>
 
