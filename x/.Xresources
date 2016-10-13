@@ -142,7 +142,6 @@ Xft.hinting:    1
 Xft.lcdfilter:  lcddefault
 Xft.hintstyle:  hintfull
 
-URxvt.termName: xterm-256color
 URxvt*scrollBar: false
 URxvt*internalBorder: 4
 
@@ -158,7 +157,7 @@ URxvt.iso14755: false
 URxvt.iso14755_52: false
 
 URxvt*allow_bold: true
-URxvt*font:xft:Meslo LG M DZ for Powerline:style=regular:pixelsize=14
+URxvt*font:xft:Meslo LG M DZ for Powerline:style=regular:pixelsize=13
 
 ! Enables ctrl+; binding in Vim
 URxvt.keysym.C-semicolon: \033[;

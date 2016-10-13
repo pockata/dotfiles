@@ -57,7 +57,7 @@ mod4 + shift + m
 
 # run urxvt
 mod4 + Return
-    urxvtc -g 50x15
+    urxvtc -g 60x18
 
 # kill window
 mod4 + shift + q
