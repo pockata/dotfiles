@@ -54,6 +54,7 @@ Plug 'yssl/QFEnter'
 Plug 'junegunn/gv.vim', { 'on': 'GV' }
 Plug 'rhysd/committia.vim'
 Plug 'rhysd/conflict-marker.vim'
+Plug 'moll/vim-bbye'
 
 " code searching
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
@@ -78,6 +79,8 @@ Plug 'junegunn/vim-peekaboo'
 
 " extra language support
 Plug 'scrooloose/syntastic'
+Plug 'thinca/vim-ref', { 'on': 'Ref' }
+Plug 'rstacruz/sparkup', {'rtp': 'vim/'}
 
 " statusline
 Plug 'bling/vim-airline'
@@ -88,9 +91,11 @@ Plug 'mbbill/undotree', { 'on': 'UndotreeToggle' }
 "Plug 'benmills/vimux'
 Plug 'tmux-plugins/vim-tmux-focus-events'
 Plug 'wesQ3/vim-windowswap'
-Plug 'thinca/vim-ref', { 'on': 'Ref' }
 Plug 'osyo-manga/vim-over'
 Plug 'chrisbra/NrrwRgn'
+
+Plug 'AndrewRadev/undoquit.vim'
+nnoremap <silent> <c-w>c :call undoquit#SaveWindowQuitHistory()<cr><c-w>c
 
 " FOR CONSIDERATION
 "Plug 'Konfekt/FastFold'
@@ -150,8 +155,28 @@ let g:nrrw_rgn_vert = 1
 let g:nrrw_rgn_wdth = 85
 
 let g:committia_min_window_width = 119
-let g:gruvbox_contrast_light = 'hard'
-let g:gruvbox_contrast_dark = 'soft'
+
+let g:committia_hooks = {}
+function! g:committia_hooks.edit_open(info)
+    " If no commit message, start with insert mode
+    if a:info.vcs ==# 'git' && getline(1) ==# ''
+        startinsert
+    end
+
+    " Scroll the diff window from insert mode
+    " Map <C-n> and <C-p>
+    imap <buffer><C-n> <Plug>(committia-scroll-diff-down-half)
+    imap <buffer><C-p> <Plug>(committia-scroll-diff-up-half)
+
+endfunction
+
+" prevent scroll up/down jumping when using Smoothie
+function! g:committia_hooks.diff_open(info)
+    setlocal number
+endfunction
+
+let g:gruvbox_contrast_light = 'medium'
+let g:gruvbox_contrast_dark = 'hard'
 
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
@@ -178,9 +203,9 @@ let g:airline#extensions#tabline#left_alt_sep = ''
 let g:airline#extensions#tabline#right_sep = ''
 let g:airline#extensions#tabline#right_alt_sep = ''
 
-" enable/disable showing only non-zero hunks
-let g:airline#extensions#hunks#enabled = 1
-let g:airline#extensions#hunks#non_zero_only = 1
+"" enable/disable showing only non-zero hunks
+"let g:airline#extensions#hunks#enabled = 1
+"let g:airline#extensions#hunks#non_zero_only = 1
 
 " vim-windowswap integration
 let g:airline#extensions#windowswap#enabled = 1
@@ -193,7 +218,7 @@ let g:airline#extensions#nrrwrgn#enabled = 1
 let g:airline#extensions#whitespace#checks = [ 'indent', 'trailing' ]
 
 if !exists('g:airline_symbols')
-  let g:airline_symbols = {}
+    let g:airline_symbols = {}
 endif
 let g:airline_symbols.maxlinenr = ''
 let g:airline_symbols.linenr = ''
@@ -214,9 +239,10 @@ let g:airline_mode_map = {
         \ }
 
 " update the matched search background to not obscure the cursor
-"highlight Search ctermbg=139
+highlight IncSearch guifg=purple guibg=white
 
-highlight ObliqueCurrentMatch guibg=#b16286 guifg=#fbf1c7
+" Highlight spelling errors (guitermfo
+highlight SpellBad guifg=red
 
 " highlight long lines (but only one column)
 highlight ColorColumn guibg=#cc241d guifg=#fbf1c7 ctermbg=red ctermfg=white
@@ -242,10 +268,10 @@ augroup END
 
 
 " make the ~ characters on empty lines 'invisible'
-highlight NonText ctermfg=bg guifg=bg
+highlight EndOfBuffer ctermfg=bg guifg=bg
 
-" make current line number stand out (yellow)
-highlight CursorLineNr ctermfg=3
+" make the precedes & extends characters purple
+highlight NonText guifg=red
 
 " use gui colors inside terminal
 set termguicolors
@@ -268,11 +294,17 @@ set showcmd
 " Enable mouse mode
 set mouse=a
 
-" dont continue comments when pushing o/O
-set formatoptions-=o
+set formatoptions+=r " Insert comment leader after hitting <Enter>
+set formatoptions+=o " Insert comment leader after hitting o or O in normal mode
+set formatoptions+=t " Auto-wrap text using textwidth
+set formatoptions+=c " Autowrap comments using textwidth
+set formatoptions+=j " Delete comment character when joining commented lines
 
 " No scratch (little box that shows a definition)
 set completeopt-=preview
+
+" Close preview and quickfix windows.
+nnoremap <silent> <C-W>z :wincmd z<Bar>cclose<Bar>lclose<CR>
 
 " gvim: remove menu, toolbar and scrollbars
 set guioptions-=m
@@ -347,16 +379,36 @@ nnoremap ]j ]m
 vnoremap [j [m
 vnoremap ]j ]m
 
+" Source
+nnoremap <leader>S ^vg_y:execute @@<CR>:echo 'Sourced line.'<CR>
+vnoremap <leader>S y:@"<CR>:echo 'Sourced lines.'<CR>
+
 " paste n format
 nnoremap <leader>p p`[v`]=
 
+autocmd! FileType ref-* setlocal number wrap
+
 let g:ref_open='vsplit'
 cabbrev man Ref man
+
+" Xtract
+cabbrev xtract Xtract
+cabbrev extr Xtract
+cabbrev extra Xtract
+
+cabbrev bd Bdelete
 
 cabbrev pc PlugClean!
 cabbrev ps PlugStatus
 cabbrev pi PlugInstall
 cabbrev pu PlugUpgrade \| PlugUpdate
+
+let g:simple_todo_map_keys = 0
+nmap <leader>tl :vsplit /tmp/todo.md<cr>
+nmap <leader>tn <Plug>(simple-todo-below)
+nmap <leader>ts <Plug>(simple-todo-new-list-item)
+nmap <leader>td <Plug>(simple-todo-mark-as-done)
+nmap <leader>tu <Plug>(simple-todo-mark-as-undone)
 
 "nnoremap <C-Tab> gt
 "nnoremap <C-S-Tab> gT
@@ -364,15 +416,15 @@ cabbrev pu PlugUpgrade \| PlugUpdate
 " paste register content and escape it
 cnoremap <c-x> <c-r>=<SID>PasteEscaped()<cr>
 function! s:PasteEscaped()
-  echo "\\".getcmdline()."\""
-  let char = getchar()
-  if char == "\<esc>"
-    return ''
-  else
-    let register_content = getreg(nr2char(char))
-    let escaped_register = escape(register_content, '\'.getcmdtype())
-    return substitute(escaped_register, '\n', '\\n', 'g')
-  endif
+    echo "\\".getcmdline()."\""
+    let char = getchar()
+    if char == "\<esc>"
+        return ''
+    else
+        let register_content = getreg(nr2char(char))
+        let escaped_register = escape(register_content, '\'.getcmdtype())
+        return substitute(escaped_register, '\n', '\\n', 'g')
+    endif
 endfunction
 
 " Execute macro in q
@@ -386,19 +438,31 @@ function! MergeTabs()
     if tabpagenr() == 1
         return
     endif
+
     let bufferName = bufname("%")
+
     if tabpagenr("$") == tabpagenr()
         close!
     else
         close!
         tabprev
     endif
+
     vsplit
+
     execute "buffer " . bufferName
 endfunction
 
-nmap <C-W>u :call MergeTabs()<CR>
+nmap <C-W>m :call MergeTabs()<CR>
 nnoremap <C-W>t <C-W>T
+
+" Execute macro over visual lines
+xnoremap @ :<C-u>call ExecuteMacroOverVisualRange()<CR>
+
+function! ExecuteMacroOverVisualRange()
+    echo "@".getcmdline()
+    execute ":'<,'>normal @".nr2char(getchar())
+endfunction
 
 " Disable AutoComplPop.
 let g:acp_enableAtStartup = 0
@@ -416,8 +480,8 @@ let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
 
 " Define dictionary.
 let g:neocomplete#sources#dictionary#dictionaries = {
-    \ 'default' : '',
-    \ }
+  \ 'default' : '',
+  \ }
 
 " Define keyword.
 if !exists('g:neocomplete#keyword_patterns')
@@ -452,22 +516,22 @@ inoremap <expr><C-l>     neocomplete#complete_common_string()
 "endfunction
 
 function! CleverCr()
-    if pumvisible()
-        if neosnippet#expandable_or_jumpable()
-            return "\<Plug>(neosnippet_expand_or_jump)"
-          else
-            return "\<C-y>"
-        endif
-    else
-        return "\<Plug>delimitMateCR"
-    endif
+  if pumvisible()
+      if neosnippet#expandable_or_jumpable()
+          return "\<Plug>(neosnippet_expand_or_jump)"
+        else
+          return "\<C-y>"
+      endif
+  else
+      return "\<Plug>delimitMateCR"
+  endif
 endfunction
 
 " <CR> close popup and save indent or expand snippet
 imap <expr> <CR> CleverCr()
 imap <expr> <tab> neosnippet#jumpable() ?
-      \ "\<Plug>(neosnippet_jump)"
-      \ : pumvisible() ? "\<C-n>" : "\<tab>"
+    \ "\<Plug>(neosnippet_jump)"
+    \ : pumvisible() ? "\<C-n>" : "\<tab>"
 
 
 "smap <expr><tab> neosnippet#expandable_or_jumpable() ?
@@ -486,7 +550,7 @@ inoremap <expr><Space> pumvisible() ? "\<C-y>\<Space>" : "\<Space>"
 
 " Enable heavy omni completion.
 if !exists('g:neocomplete#sources#omni#input_patterns')
-  let g:neocomplete#sources#omni#input_patterns = {}
+let g:neocomplete#sources#omni#input_patterns = {}
 endif
 let g:neocomplete#sources#omni#input_patterns.javascript = '\%(\h\w*\|[^. \t]\.\w*\)'
 let g:neocomplete#sources#omni#input_patterns.markdown = ''
@@ -496,6 +560,7 @@ let g:neocomplete#sources#omni#functions = get(g:, 'neocomplete#sources#omni#fun
 let g:neocomplete#sources#omni#functions.javascript = 'tern#Complete'
 
 autocmd Filetype javascript setlocal omnifunc=tern#Complete
+au FileType markdown,gitcommit setlocal spell
 
 " Switch between tabs
 execute "set <M-1>=\e1"
@@ -533,11 +598,13 @@ nnoremap <Leader>o <C-^>
 " Delete all hidden buffers
 nnoremap <silent> <Leader><BS>b :call DeleteHiddenBuffers()<CR>
 function! DeleteHiddenBuffers() " {{{
-  let tpbl=[]
-  call map(range(1, tabpagenr('$')), 'extend(tpbl, tabpagebuflist(v:val))')
-  for buf in filter(range(1, bufnr('$')), 'bufexists(v:val) && index(tpbl, v:val)==-1')
-    silent execute 'bwipeout' buf
-  endfor
+    let tpbl=[]
+
+    call map(range(1, tabpagenr('$')), 'extend(tpbl, tabpagebuflist(v:val))')
+
+    for buf in filter(range(1, bufnr('$')), 'bufexists(v:val) && index(tpbl, v:val)==-1')
+        silent execute 'bwipeout' buf
+    endfor
 endfunction " }}}
 
 nnoremap <silent> <Leader>cd :lcd %:p:h<CR>
@@ -545,10 +612,10 @@ nnoremap <silent> <Leader>cp :ProjectRootLCD<CR>
 
 " FZF
 let g:fzf_action = {
-      \ 'ctrl-t': 'tab split',
-      \ 'ctrl-s': 'split',
-      \ 'ctrl-v': 'vsplit'
-      \ }
+    \ 'ctrl-t': 'tab split',
+    \ 'ctrl-s': 'split',
+    \ 'ctrl-v': 'vsplit'
+    \ }
 " [Buffers] Jump to the existing window if possible
 let g:fzf_buffers_jump = 1
 let g:fzf_files_options = '--preview "(highlight -O ansi {} || cat {}) 2> /dev/null | head -'.&lines.'"'
@@ -558,7 +625,7 @@ function! SearchVisualSelectionWithAg()
 endfunction
 
 function! SearchWordWithAg()
-  execute 'Ag' expand('<cword>')
+    execute 'Ag' expand('<cword>')
 endfunction
 
 nnoremap <silent> H :call SearchWordWithAg()<CR>
@@ -574,26 +641,77 @@ xmap <leader><tab> <plug>(fzf-maps-x)
 omap <leader><tab> <plug>(fzf-maps-o)
 
 nmap <Leader>h :History<CR>
-nmap <Leader>j :Lines<CR>
-nmap <Leader>r :BLines<CR>
-nmap <Leader>w :Windows<CR>
-nmap <Leader>b :Buffers<CR>
-nmap <Leader>c :Commands<CR>
+nmap <Leader>j :Lines!<CR>
+nmap <Leader>r :BLines!<CR>
+nmap <Leader>w :Windows!<CR>
+nmap <Leader>b :Buffers!<CR>
+nmap <Leader>c :Commands!<CR>
 nmap <Leader>gf :GitFiles?<CR>
-nmap <Leader>gd :Gdiff<CR>
-nnoremap <leader>gs :Gstatus<CR>gg<c-n>
+nnoremap <leader>gs :Gstatus<CR>
+nnoremap <leader>gw :Gwrite<CR>
+
+" http://vim.wikia.com/wiki/Always_start_on_first_line_of_git_commit_message
+autocmd! BufEnter COMMIT_EDITMSG call setpos('.', [0, 1, 1, 0])
+autocmd! BufReadPost fugitive://* set bufhidden=delete
+autocmd! User fugitive
+            \ if fugitive#buffer().type() =~# '^\%(tree\|blob\)$' |
+            \   nnoremap <buffer> .. :edit %:h<CR> |
+            \ endif
+
+" Jump to first file
+autocmd BufWinEnter .git/index :call feedkeys("\<C-n>")
+
+" vimdiff current vs git head (fugitive extension) {{{2
+" Close any corresponding fugitive diff buffer.
+function! MyCloseDiff()
+    if (&diff == 0 || getbufvar('#', '&diff') == 0)
+                \ && (bufname('%') !~ '^fugitive:' && bufname('#') !~ '^fugitive:')
+        echom "Not in diff view."
+        return
+    endif
+
+    diffoff " safety net / required to workaround powerline issue
+
+    " Close current buffer if alternate is not fugitive but current one is.
+    if bufname('#') !~ '^fugitive:' && bufname('%') =~ '^fugitive:'
+        if bufwinnr("#") == -1
+            " XXX: might not work reliable (old comment)
+            b #
+            bd #
+        else
+            bd
+        endif
+    else
+        bd #
+    endif
+endfunction
+
+" Maps related to version control (Git). {{{1
+" Toggle `:Gdiff`.
+nnoremap <Leader>gd :if !&diff \| Gdiff \| else \| call MyCloseDiff() \| endif <cr>
+
+" "wincmd p" might not work initially, although there are two windows.
+fun! MyWincmdPrevious()
+    let w = winnr()
+    wincmd p
+    if winnr() == w
+        wincmd w
+    endif
+endfun
+" Diff this window with the previous one.
+command! DiffThese diffthis | call MyWincmdPrevious() | diffthis | wincmd p
+command! DiffOff   Windo diffoff
 
 " ----------------------------------------------------------------------------
 " Readline-style key bindings in command-line (excerpt from rsi.vim)
 " ----------------------------------------------------------------------------
-cnoremap        <C-A> <Home>
-cnoremap        <C-B> <Left>
-cnoremap <expr> <C-D> getcmdpos()>strlen(getcmdline())?"\<Lt>C-D>":"\<Lt>Del>"
-cnoremap <expr> <C-F> getcmdpos()>strlen(getcmdline())?&cedit:"\<Lt>Right>"
-cnoremap        <M-b> <S-Left>
-cnoremap        <M-f> <S-Right>
-silent! exe "set <S-Left>=\<Esc>b"
-silent! exe "set <S-Right>=\<Esc>f"
+cnoremap <C-A> <Home>
+cnoremap <C-B> <Left>
+"cnoremap <expr> <C-F> getcmdpos()>strlen(getcmdline())?&cedit:"\<Lt>Right>"
+
+" Make Ctrl-a/e jump to the start/end of the current line in the insert mode
+inoremap <C-e> <C-o>$
+inoremap <C-a> <C-o>^
 
 " Go to first character of line on first press
 " Go to start of line on second press
@@ -608,8 +726,8 @@ endfunction
 
 nnoremap <silent> 0 :call ToggleHomeZero()<CR>
 
-nnoremap <silent> <leader>a :ArgWrap<CR>
-nnoremap <expr> <c-p> (expand('%') =~ 'NERD_tree' ? "\<c-w>\<c-w>" : '').":Files\<cr>"
+nnoremap <silent> <leader>aw :ArgWrap<CR>
+nnoremap <expr> <c-p> (expand('%') =~ 'NERD_tree' ? "\<c-w>\<c-w>" : '').":Files!\<cr>"
 
 " move horizontally
 nnoremap z; 30zl
@@ -646,6 +764,12 @@ let g:gitgutter_sign_removed = '▖'
 let g:gitgutter_sign_removed_first_line = '▘'
 let g:gitgutter_sign_modified_removed = '▞'
 
+highlight GitGutterAdd guibg=bg guifg=lightgreen
+highlight GitGutterChange guibg=bg guifg=yellow
+highlight GitGutterDelete guibg=bg guifg=red
+highlight GitGutterChangeDelete guibg=bg guifg=yellow
+"highlight SignColumn guibg=bg
+
 " jump between changed areas (hunks)
 nmap <silent> ]h :GitGutterNextHunk<CR>
 nmap <silent> [h :GitGutterPrevHunk<CR>
@@ -672,12 +796,12 @@ endfunction
 map <silent> <Leader>kb :call SmartNERDTree()<cr>
 
 function! s:startup()
-  let cnt = argc()
-  if (cnt == 0 || cnt == 1 && isdirectory(argv(0)))
-    Startify
-    NERDTree
-    wincmd w
-  endif
+    let cnt = argc()
+    if (cnt == 0 || cnt == 1 && isdirectory(argv(0)))
+        Startify
+        NERDTree
+        wincmd w
+    endif
 endfunction
 
 autocmd VimEnter * call s:startup()
@@ -686,12 +810,12 @@ autocmd User Startified nnoremap <buffer> l k
 
 let g:startify_change_to_dir = 0
 let g:startify_list_order = [
-    \ ['   MRU '. getcwd()], 'dir',
-    \ ['   MRU'],            'files',
-    \ ['   Sessions'],       'sessions',
-    \ ['   Bookmarks'],      'bookmarks',
-    \ ['   Commands'],       'commands',
-    \ ]
+  \ ['   MRU '. getcwd()], 'dir',
+  \ ['   MRU'],            'files',
+  \ ['   Sessions'],       'sessions',
+  \ ['   Bookmarks'],      'bookmarks',
+  \ ['   Commands'],       'commands',
+  \ ]
 
 
 " Disable netrw
@@ -704,11 +828,11 @@ let g:plug_window = 'tabnew'
 nmap gp `[v`]
 
 " Quickly edit/reload the vimrc file
-nmap <silent> <leader>ev :execute 'tabnew ' . resolve(expand($MYVIMRC))<CR>
+nmap <silent> <leader>ev :execute 'vsplit ' . resolve(expand($MYVIMRC))<CR>
 nmap <silent> <leader>sv :so ~/.vimrc<CR>:AirlineRefresh<CR>
 
 " Open hosts file
-nmap <silent> <leader>eh :tabnew /etc/hosts<CR>
+nmap <silent> <leader>eh :vsplit /etc/hosts<CR>
 
 " Sets 4 spaces as indent
 set tabstop=4
@@ -758,13 +882,12 @@ set diffopt+=vertical
 set ruler
 
 " Highlight current line
-
 set cursorline relativenumber number
 
 augroup CursorLineOnlyInActiveWindow
-  autocmd!
-  autocmd VimEnter,WinEnter,BufWinEnter * setlocal cursorline
-  autocmd WinLeave * setlocal nocursorline
+    autocmd!
+    autocmd VimEnter,WinEnter,BufWinEnter * setlocal cursorline
+    autocmd WinLeave * setlocal nocursorline
 augroup END
 
 " Configure backspace so it acts as it should act
@@ -799,7 +922,7 @@ nnoremap <silent> <Leader>l :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate':''<CR
 
 " Load matchit.vim, but only if the user hasn't installed a newer version.
 if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &rtp) ==# ''
-  runtime! macros/matchit.vim
+    runtime! macros/matchit.vim
 endif
 
 " For expressions turn magic on
@@ -829,7 +952,7 @@ if !isdirectory($HOME."/.vim/undo")
 endif
 
 set undofile                " Save undo's after file closes
-set undodir=~/.vim/undo     " where to save undo histories
+set undodir=~/.vim/undo//     " where to save undo histories
 set undolevels=500
 set undoreload=500
 
@@ -854,23 +977,29 @@ noremap <silent> <C-k> :TmuxNavigateDown<CR>
 noremap <silent> <C-l> :TmuxNavigateUp<CR>
 noremap <silent> <C-Semicolon> :TmuxNavigateRight<CR>
 
+" Make those behave like ci' , ci"
+nnoremap ci( f(ci(
+nnoremap ci{ f{ci{
+nnoremap ci[ f[ci[
+
 " Be aware of whether you are right or left vertical split
 " so you can use arrows more naturally.
 " Inspired by https://github.com/ethagnawl.
 function! IntelligentVerticalResize(direction) abort
-  let l:window_resize_count = 5
-  let l:current_window_is_last_window = (winnr() == winnr('$'))
+    let l:window_resize_count = 5
+    let l:current_window_is_last_window = (winnr() == winnr('$'))
 
-  if (a:direction ==# 'left')
-    let [l:modifier_1, l:modifier_2] = ['+', '-']
-  else
-    let [l:modifier_1, l:modifier_2] = ['-', '+']
-  endif
+    if (a:direction ==# 'left')
+        let [l:modifier_1, l:modifier_2] = ['+', '-']
+    else
+        let [l:modifier_1, l:modifier_2] = ['-', '+']
+    endif
 
-  let l:modifier = l:current_window_is_last_window ? l:modifier_1 : l:modifier_2
-  let l:command = 'vertical resize ' . l:modifier . l:window_resize_count . '<CR>'
-  execute l:command
+    let l:modifier = l:current_window_is_last_window ? l:modifier_1 : l:modifier_2
+    let l:command = 'vertical resize ' . l:modifier . l:window_resize_count . '<CR>'
+    execute l:command
 endfunction
+
 nnoremap <silent> <Right> :call IntelligentVerticalResize('right')<CR>
 nnoremap <silent> <Left> :call IntelligentVerticalResize('left')<CR>
 
@@ -890,7 +1019,7 @@ vnoremap L :m '<-2<CR>gv=gv
 
 " let terminal resize scale the internal windows
 " http://vimrcfu.com/snippet/186
-autocmd VimResized * silent! :wincmd =
+"autocmd VimResized * silent! :wincmd =
 
 " Change shape of cursor in different modes
 if exists('$TMUX')
@@ -930,9 +1059,9 @@ set statusline=\ %F%m%r%h\ %w\ \ CWD:\ %r%{getcwd()}%h\ \ \ Line:\ %l
 
 " Delete tra iling white space on save, useful for Python and CoffeeScript ;)
 func! DeleteTrailingWS()
-  exe "normal mz"
-  %s/\s\+$//ge
-  exe "normal `z"
+    exe "normal mz"
+    %s/\s\+$//ge
+    exe "normal `z"
 endfunc
 
 autocmd BufWrite *.py :call DeleteTrailingWS()
@@ -952,10 +1081,7 @@ autocmd BufWrite *.cpp :call DeleteTrailingWS()
 autocmd BufNewFile,BufRead *.scss set ft=scss.css sw=4
 autocmd BufNewFile,BufRead *.jsx set ft=javascript.jsx sw=4
 
-autocmd Filetype css setlocal iskeyword+=-
-
-" http://vim.wikia.com/wiki/Always_start_on_first_line_of_git_commit_message
-au FileType gitcommit au! BufEnter COMMIT_EDITMSG call setpos('.', [0, 1, 1, 0])
+autocmd Filetype css setlocal iskeyword-=-:
 
 " Enhance `gf`, use these file extensions
 " https://www.reddit.com/r/vim/comments/4kjgmz/weekly_vim_tips_and_tricks_thread_11/d3g6l8y
@@ -1009,11 +1135,11 @@ endfunction
 " <Leader>?/! | Google it / Feeling lucky
 " ----------------------------------------------------------------------------
 function! s:goog(pat, lucky)
-  let q = '"'.substitute(a:pat, '["\n]', ' ', 'g').'"'
-  let q = substitute(q, '[[:punct:] ]',
-       \ '\=printf("%%%02X", char2nr(submatch(0)))', 'g')
-  call system(printf('xdg-open "https://www.google.com/search?%sq=%s"',
-                   \ a:lucky ? 'btnI&' : '', q))
+    let q = '"'.substitute(a:pat, '["\n]', ' ', 'g').'"'
+    let q = substitute(q, '[[:punct:] ]',
+                \ '\=printf("%%%02X", char2nr(submatch(0)))', 'g')
+    call system(printf('xdg-open "https://www.google.com/search?%sq=%s"',
+                \ a:lucky ? 'btnI&' : '', q))
 endfunction
 
 nnoremap <silent> <leader>/ :call <SID>goog(expand("<cWORD>"), 0)<cr>
@@ -1023,10 +1149,10 @@ vnoremap <silent> <leader>/ :call <SID>goog(<SID>getVisualSelection(), 0)<cr>
 " Help in new tabs
 " ----------------------------------------------------------------------------
 function! s:helptab()
-  if &buftype == 'help'
-    wincmd T
-    nnoremap <buffer> q :q<cr>
-  endif
+    if &buftype == 'help'
+        wincmd T
+        nnoremap <buffer> q :q<cr>
+    endif
 endfunction
 autocmd BufEnter *.txt silent! call s:helptab()
 
@@ -1035,21 +1161,21 @@ autocmd BufEnter *.txt silent! call s:helptab()
 " http://stackoverflow.com/a/10102604
 " ----------------------------------------------------------------------------
 function! s:CleanEmptyBuffers()
-  let buffers = filter(range(0, bufnr('$')), 'buflisted(v:val) && empty(bufname(v:val)) && bufwinnr(v:val)<0')
-  if !empty(buffers)
-    silent! exe 'bw '.join(buffers, ' ')
-  endif
+    let buffers = filter(range(0, bufnr('$')), 'buflisted(v:val) && empty(bufname(v:val)) && bufwinnr(v:val)<0')
+    if !empty(buffers)
+        silent! exe 'bw '.join(buffers, ' ')
+    endif
 endfunction
 
-autocmd BufHidden * silent! call s:CleanEmptyBuffers()
+autocmd BufHidden * silent! call <SID>CleanEmptyBuffers()
 
 " ----------------------------------------------------------------------------
 " Switch to us layout
 " https://zenbro.github.io/2015/07/24/auto-change-keyboard-layout-in-vim.html
 " ----------------------------------------------------------------------------
 function! RestoreKeyboardLayout(key)
-  call system('xkb-switch -s us')
-  execute 'normal! ' . a:key
+    call system('xkb-switch -s us')
+    execute 'normal! ' . a:key
 endfunction
 nnoremap <silent> й :call RestoreKeyboardLayout('h')<CR>
 nnoremap <silent> к :call RestoreKeyboardLayout('j')<CR>
@@ -1057,18 +1183,22 @@ nnoremap <silent> л :call RestoreKeyboardLayout('k')<CR>
 
 " follow symlinked file
 function! FollowSymlink()
-  let current_file = expand('%:p')
-  " check if file type is a symlink
-  if getftype(current_file) == 'link'
-    " if it is a symlink resolve to the actual file path
-    "   and open the actual file
-    let actual_file = resolve(current_file)
-    execute 'file ' . actual_file
-  end
+    let current_file = expand('%:p')
+    " check if file type is a symlink
+    if getftype(current_file) == 'link'
+        " if it is a symlink resolve to the actual file path
+        "   and open the actual file
+        let actual_file = resolve(current_file)
+        execute 'file ' . actual_file
+
+        redraw
+        echomsg 'Resolved symlink: =>' fnameescape(actual_file)
+    end
 endfunction
 
 " follow symlink and set working directory
-autocmd BufEnter * call FollowSymlink() | ProjectRootLCD
+autocmd BufReadPost * call FollowSymlink()
+autocmd BufWinEnter * ProjectRootLCD
 
 " a little more informative version of the above
 nmap <Leader>sI :call <SID>SynStack()<CR>
