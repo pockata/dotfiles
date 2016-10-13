@@ -8,6 +8,7 @@
     st = status -s
     br = branch
     diff = diff --word-diff
+    mt = mergetool --tool=diffconflicts
     l = log --graph --decorate --pretty=oneline --abbrev-commit --pretty=format:'%C(yellow)%h %Cred%d %Creset%s %C(green)(%cr) %C(blue)<%cn>' --date=format:'%d-%m-%Y'
     la = log --graph --decorate --pretty=oneline --abbrev-commit --all --pretty=format:'%C(yellow)%h %Cred%d %Creset%s %C(green)(%cr) %C(blue)<%cn>' --date=short
     ldf = "!git diff --name-only \"$(git merge-base HEAD ${1:-master})\""
@@ -78,5 +79,11 @@
 [diff]
 	mnemonicprefix = true
 	compactionHeuristic = true
+	tool = vimdiff
 [merge]
 	stat = true
+	tool = diffconflicts
+[mergetool "diffconflicts"]
+	cmd = diffconflicts vim $BASE $LOCAL $REMOTE $MERGED
+	trustExitCode = true
+	keepBackup = false
