@@ -67,6 +67,7 @@ Plug 't9md/vim-choosewin', { 'on': ['<Plug>(choosewin)', 'ChooseWin'] }
 Plug 'terryma/vim-smooth-scroll'
 Plug 'itchyny/vim-cursorword'
 Plug 'kana/vim-smartword'
+Plug 'talek/obvious-resize'
 
 " completion
 Plug 'shougo/neocomplete.vim'
@@ -971,29 +972,11 @@ nnoremap ci( f(ci(
 nnoremap ci{ f{ci{
 nnoremap ci[ f[ci[
 
-" Be aware of whether you are right or left vertical split
-" so you can use arrows more naturally.
-" Inspired by https://github.com/ethagnawl.
-function! IntelligentVerticalResize(direction) abort
-    let l:window_resize_count = 5
-    let l:current_window_is_last_window = (winnr() == winnr('$'))
-
-    if (a:direction ==# 'left')
-        let [l:modifier_1, l:modifier_2] = ['+', '-']
-    else
-        let [l:modifier_1, l:modifier_2] = ['-', '+']
-    endif
-
-    let l:modifier = l:current_window_is_last_window ? l:modifier_1 : l:modifier_2
-    let l:command = 'vertical resize ' . l:modifier . l:window_resize_count . '<CR>'
-    execute l:command
-endfunction
-
-nnoremap <silent> <Right> :call IntelligentVerticalResize('right')<CR>
-nnoremap <silent> <Left> :call IntelligentVerticalResize('left')<CR>
-
-nnoremap <silent> <up> :resize +5<cr>
-nnoremap <silent> <down> :resize -5<cr>
+let g:obvious_resize_default = 5
+noremap <silent> <Up> :<C-U>ObviousResizeUp<CR>
+noremap <silent> <Down> :<C-U>ObviousResizeDown<CR>
+noremap <silent> <Left> :<C-U>ObviousResizeLeft<CR>
+noremap <silent> <Right> :<C-U>ObviousResizeRight<CR>
 
 " invoke with '-'
 nmap - <Plug>(choosewin)
