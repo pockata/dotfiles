@@ -781,6 +781,10 @@ endfunction
 map <silent> <Leader>kb :call SmartNERDTree()<cr>
 
 function! s:startup()
+    if exists('g:loaded_startify')
+        return
+    endif
+
     let cnt = argc()
     if (cnt == 0 || cnt == 1 && isdirectory(argv(0)))
         Startify

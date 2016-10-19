@@ -109,6 +109,7 @@ z() {
 # Aliases
 alias a="atom-beta"
 alias g="git"
+alias gv='vim +"let g:loaded_startify = 1" +GV +"autocmd BufWipeout <buffer> qall"'
 alias t="tmux -2"
 alias e="vim"
 alias view="eog"
