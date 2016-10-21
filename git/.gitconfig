@@ -13,6 +13,13 @@
     la = log --graph --decorate --pretty=oneline --abbrev-commit --all --pretty=format:'%C(yellow)%h %Cred%d %Creset%s %C(green)(%cr) %C(blue)<%cn>' --date=short
     ldf = "!git diff --name-only \"$(git merge-base HEAD ${1:-master})\""
 
+    # edit global config in default editor
+    ec = config --global -e
+    ce = ec
+
+    # Delete branches that have been merged into branch [master]
+    bclean = "!f() { git branch --merged ${1-master} | grep -v " ${1-master}$" | xargs -r git branch -d; }; f"
+
     # Show the diff between the latest commit and the current state
     d = !"git diff-index --quiet HEAD -- || clear; git diff --patch-with-stat"
 

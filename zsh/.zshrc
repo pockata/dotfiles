@@ -169,6 +169,7 @@ function tre() {
 
 # ctrl-r starts searching history backward
 bindkey '^r' history-incremental-search-backward
+bindkey -s '^f' '^qgf\n'
 
 # Add bindings to the vicmd keymap
 bindkey -a j backward-char
@@ -257,7 +258,7 @@ gb() {
     is_in_git_repo || return
     git branch -a --color=always | grep -v '/HEAD\s' | sort |
     fzf-tmux --ansi --multi --tac --preview-window right:70% \
-        --preview 'git log --oneline --graph --date=short --pretty="format:%C(auto)%cd %h%d %s" $(sed s/^..// <<< {} | cut -d" " -f1) | head -'$LINES |
+        --preview 'git log --oneline --graph --color="always" --date=short --pretty="format:%C(auto)%cd %h%d %s" $(sed s/^..// <<< {} | cut -d" " -f1) | head -'$LINES |
     sed 's/^..//' | cut -d' ' -f1 |
     sed 's#^remotes/##'
 }
@@ -288,4 +289,31 @@ gco() {
 
     git checkout $(echo "$target" | awk '{print $2}')
 }
+
+git-branches-widget() {
+    LBUFFER="${LBUFFER}$(gb)"
+    local ret=$?
+    zle redisplay
+    typeset -f zle-line-init >/dev/null && zle zle-line-init
+    return $ret
+}
+
+git-changedfiles-widget() {
+    LBUFFER="${LBUFFER}$(gf)"
+    local ret=$?
+    zle redisplay
+    typeset -f zle-line-init >/dev/null && zle zle-line-init
+    return $ret
+}
+
+autoload -U edit-command-line
+
+zle -N edit-command-line
+zle -N git-branches-widget
+zle -N git-changedfiles-widget
+
+bindkey -r '^G'
+bindkey '^G^F' git-changedfiles-widget
+bindkey '^G^B' git-branches-widget
+bindkey '^X^E' edit-command-line
 
