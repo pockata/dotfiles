@@ -14,7 +14,7 @@ GAP=${GAP:-15}
 BAR=${BAR:-30}
 
 next() {
-    lsm | xargs mattr i"$1" | uniq -f1 -u | sort -n"$2" | awk '{ print $2, $1; }' | sed "0,/$MON/d" | sed "1s/^[0-9]* //p;d"
+    lsm | xargs mattr i"$1" | uniq -f1 -u | sort -k2 -n"$2" | awk '{ print $2, $1; }' | sed "0,/$MON/d" | sed "1s/^[0-9]* //p;d"
 }
 
 move_to_mon() {
@@ -38,10 +38,10 @@ move_to_mon() {
 }
 
 case $1 in
-    h|a|east|left)  move_to_mon $(next x "")  2>/dev/null ;;
-    j|s|south|down) move_to_mon $(next y r) 2>/dev/null ;;
-    k|w|north|up)   move_to_mon $(next y "")  2>/dev/null ;;
-    l|d|west|right) move_to_mon $(next x r) 2>/dev/null ;;
+    h|a|east|left)  move_to_mon $(next x r)  2>/dev/null ;;
+    j|s|south|down) move_to_mon $(next y "") 2>/dev/null ;;
+    k|w|north|up)   move_to_mon $(next y r)  2>/dev/null ;;
+    l|d|west|right) move_to_mon $(next x "") 2>/dev/null ;;
     *) usage ;;
 esac
 
