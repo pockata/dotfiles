@@ -12,6 +12,10 @@ if command -v gnome-keyring-daemon >> /dev/null; then
     export SSH_AUTH_SOCK
 fi
 
+# Set output provider when using eGPU
+NUM_PROVIDERS=$(xrandr --listproviders | head -1 | cut -d ":" -f3)
+[ "$NUM_PROVIDERS" -gt 1 ] && xrandr --setprovideroutputsource 1 0
+
 [[ -f ~/.Xresources ]] && xrdb -load ~/.Xresources
 
 xset +fp ~/.fonts
