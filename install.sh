@@ -94,7 +94,7 @@ if ask "${txtylw}Install packages?${txtrst}" Y; then
     echo "Don't forget to run zplug update --self within ZSH"
 fi
 
-if ask "\n${txtylw}Symlink dotfiles?${txtrst}" Y; then
+if ask "${txtylw}Symlink dotfiles?${txtrst}" Y; then
 
     mkdir -p ~/dotfile_conflicts
     echo -e "${undylw}Backing up conflicts to ~/dotfile_conflicts..${txtrst}"
@@ -116,6 +116,18 @@ if ask "\n${txtylw}Symlink dotfiles?${txtrst}" Y; then
     stow $(ls */ -d)
 fi
 
+if ask "${txtylw}Setup/update mmutils?${txtrst}" N; then
+    CURR=$(pwd)
+    cd /tmp/
+    git clone --depth 1 https://github.com/pockata/mmutils
+    cd mmutils
+    make
+    cp lsm mattr ~/bin/
+    cd ../
+    rm -rf mmutils
+    cd "$CURR"
+fi
+
 if ask "${txtylw}Replace sh with dash?${txtrst}" N; then
 
     if [[ -f /usr/bin/dash ]]; then
@@ -129,9 +141,14 @@ fi
 if ask "${txtylw}Set time/date options?${txtrst}" N; then
     timedatectl set-timezone "Europe/Sofia"
     timedatectl set-ntp true
-    hwclock --systohc --utc
+    sudo hwclock --systohc --utc
     echo "NTP has been enabled and hardware clock will be in UTC. More information: https://wiki.archlinux.org/index.php/Time"
 fi
 
-echo -e "\n\n${txtgrn}BYE!${txtrst}"
+if ask "${txtylw}Set system locale to en_US.UTF-8?${txtrst}" N; then
+    sudo localectl set-locale LANG=en_US.UTF-8
+    echo "If having weird locale problems, check https://wiki.archlinux.org/index.php/Locale"
+fi
+
+echo -e "\n${txtgrn}BYE!${txtrst}"
 

@@ -9,6 +9,8 @@ xorg-xinput
 xorg-xprop
 xorg-xbacklight
 xorg-xsetroot
+xf86-video-fbdev
+xf86-video-vesa
 xclip
 acpi
 ntp
@@ -23,6 +25,7 @@ gvim
 arandr
 sxhkd
 zsh
+dash
 tcc
 tree
 p7zip
@@ -66,7 +69,6 @@ figlet
 doge
 cowsay
 fortune-mod
-synclient
 nitrogen
 gnome-keyring
 diff-so-fancy
