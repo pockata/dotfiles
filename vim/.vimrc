@@ -23,7 +23,7 @@ Plug 'kana/vim-textobj-indent'
 Plug 'kana/vim-textobj-line'
 Plug 'kana/vim-textobj-entire'
 Plug 'whatyouhide/vim-textobj-xmlattr'
-Plug 'glts/vim-textobj-comment'
+Plug 'Chun-Yang/vim-textobj-chunk'
 Plug 'PeterRincker/vim-argumentative'
 Plug 'vimtaku/vim-textobj-keyvalue'
 Plug 'zandrmartin/vim-textobj-blanklines'
@@ -63,14 +63,16 @@ Plug 'pgdouyon/vim-evanesco'
 
 " navigation
 Plug 'scrooloose/nerdtree', { 'on': ['NERDTree', 'NERDTreeToggle', 'NERDTreeFind', 'NERDTreeOpen'] }
+Plug 'Xuyuanp/nerdtree-git-plugin', { 'on': ['NERDTree', 'NERDTreeToggle', 'NERDTreeFind', 'NERDTreeOpen'] }
 Plug 't9md/vim-choosewin', { 'on': ['<Plug>(choosewin)', 'ChooseWin'] }
 Plug 'terryma/vim-smooth-scroll'
 Plug 'itchyny/vim-cursorword'
 Plug 'kana/vim-smartword'
+Plug 'kana/vim-niceblock'
 Plug 'talek/obvious-resize'
 
 " completion
-Plug 'shougo/neocomplete.vim'
+Plug 'Shougo/neocomplete.vim'
 Plug 'Shougo/neosnippet'
 Plug 'Shougo/neosnippet-snippets'
 Plug 'pangloss/vim-javascript', { 'for': 'javascript' }
@@ -125,7 +127,7 @@ nmap  [; <C-Semicolon>
 "nmap! [; <C-Semicolon>
 
 set ttyfast " faster reflow
-set shortmess+=I " No intro when starting Vim
+set shortmess+=Ic " No intro when starting Vim
 set smartindent " Smart... indent
 set gdefault " The substitute flag g is on
 set hidden " Hide the buffer instead of closing when switching
@@ -205,7 +207,7 @@ let g:airline#extensions#tabline#right_sep = ''
 let g:airline#extensions#tabline#right_alt_sep = ''
 
 "" enable/disable showing only non-zero hunks
-"let g:airline#extensions#hunks#enabled = 1
+let g:airline#extensions#hunks#enabled = 0
 "let g:airline#extensions#hunks#non_zero_only = 1
 
 " vim-windowswap integration
@@ -247,7 +249,8 @@ highlight SpellBad guifg=red
 
 " highlight long lines (but only one column)
 highlight ColorColumn guibg=#cc241d guifg=#fbf1c7 ctermbg=red ctermfg=white
-autocmd BufWinEnter * call matchadd('ColorColumn', '\%81v', -1)
+let colorcolumn_blacklist = ['Startify', 'html', 'git', 'markdown', '']
+autocmd BufWinEnter * if index(colorcolumn_blacklist, &ft) < 0 | call matchadd('ColorColumn', '\%81v', -1)
 
 " make the ~ characters on empty lines 'invisible'
 highlight EndOfBuffer ctermfg=bg guifg=bg
@@ -351,6 +354,15 @@ nnoremap <silent> <C-W><C-W> :call WindowSwap#EasyWindowSwap()<CR>
 " camelcasemotion
 autocmd VimEnter * call camelcasemotion#CreateMotionMappings(',')
 
+" PHP textobject
+call textobj#user#plugin('php', {
+\   'code': {
+\     'pattern': ['<?php\>', '?>'],
+\     'select-a': 'aP',
+\     'select-i': 'iP',
+\   },
+\ })
+
 map <C-s> <esc>:w<CR>
 imap <C-s> <esc>:w<CR>
 map <C-t> <esc>:tabnew<CR>
@@ -369,31 +381,20 @@ vnoremap <leader>S y:@"<CR>:echo 'Sourced lines.'<CR>
 nnoremap <leader>p p`[v`]=
 
 autocmd! FileType ref-* setlocal number wrap
+autocmd! FileType ref-* nnoremap <buffer> <silent> q :<C-u>close<CR>
 
 let g:ref_open='vsplit'
 cabbrev man Ref man
 
-" Xtract
-cabbrev xtract Xtract
-cabbrev extr Xtract
-cabbrev extra Xtract
+" Reformat whole file and move back to original position
+nnoremap g= gg=G``
 
 cabbrev bd Bdelete
 
-cabbrev pc PlugClean!
+cabbrev pc PlugClean
 cabbrev ps PlugStatus
 cabbrev pi PlugInstall
 cabbrev pu PlugUpgrade \| PlugUpdate
-
-let g:simple_todo_map_keys = 0
-nmap <leader>tl :vsplit /tmp/todo.md<cr>
-nmap <leader>tn <Plug>(simple-todo-below)
-nmap <leader>ts <Plug>(simple-todo-new-list-item)
-nmap <leader>td <Plug>(simple-todo-mark-as-done)
-nmap <leader>tu <Plug>(simple-todo-mark-as-undone)
-
-"nnoremap <C-Tab> gt
-"nnoremap <C-S-Tab> gT
 
 " paste register content and escape it
 cnoremap <c-x> <c-r>=<SID>PasteEscaped()<cr>
@@ -408,6 +409,18 @@ function! s:PasteEscaped()
         return substitute(escaped_register, '\n', '\\n', 'g')
     endif
 endfunction
+
+" ----------------------------------------------------------------------------
+" gv.vim / gl.vim
+" ----------------------------------------------------------------------------
+function! s:gv_expand()
+    let line = getline('.')
+    GV --name-status
+    call search('\V'.line, 'c')
+    normal! zz
+endfunction
+
+autocmd! FileType GV nnoremap <buffer> <silent> + :call <sid>gv_expand()<cr>
 
 " Execute macro in q
 map Q @q
@@ -532,8 +545,12 @@ inoremap <expr><Space> pumvisible() ? "\<C-y>\<Space>" : "\<Space>"
 
 " Enable heavy omni completion.
 if !exists('g:neocomplete#sources#omni#input_patterns')
-let g:neocomplete#sources#omni#input_patterns = {}
+  let g:neocomplete#sources#omni#input_patterns = {}
 endif
+
+let g:neocomplete#sources#omni#input_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
+let g:neocomplete#sources#omni#input_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
+let g:neocomplete#sources#omni#input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
 let g:neocomplete#sources#omni#input_patterns.javascript = '\%(\h\w*\|[^. \t]\.\w*\)'
 let g:neocomplete#sources#omni#input_patterns.markdown = ''
 let g:neocomplete#sources#omni#input_patterns.gitcommit = ''
@@ -541,7 +558,16 @@ let g:neocomplete#sources#omni#functions = get(g:, 'neocomplete#sources#omni#fun
 
 let g:neocomplete#sources#omni#functions.javascript = 'tern#Complete'
 
-autocmd Filetype javascript setlocal omnifunc=tern#Complete
+autocmd FileType html       setlocal omnifunc=htmlcomplete#CompleteTags
+autocmd FileType python     setlocal omnifunc=pythoncomplete#Complete
+autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+autocmd FileType css        setlocal omnifunc=csscomplete#CompleteCSS
+autocmd FileType xml        setlocal omnifunc=xmlcomplete#CompleteTags
+autocmd FileType php        setlocal omnifunc=phpcomplete#CompletePHP
+autocmd FileType c          setlocal omnifunc=ccomplete#Complete
+autocmd FileType ruby,eruby setlocal omnifunc=rubycomplete#Complete
+
+"autocmd Filetype javascript setlocal omnifunc=tern#Complete
 au FileType markdown,gitcommit setlocal spell
 
 " Switch between tabs
@@ -600,7 +626,6 @@ let g:fzf_action = {
     \ }
 " [Buffers] Jump to the existing window if possible
 let g:fzf_buffers_jump = 1
-let g:fzf_files_options = '--preview "(highlight -O ansi {} || cat {}) 2> /dev/null | head -'.&lines.'"'
 
 function! SearchVisualSelectionWithAg()
     execute 'Ag' s:getVisualSelection()
@@ -614,35 +639,29 @@ nnoremap <silent> H :call SearchWordWithAg()<CR>
 vnoremap <silent> H :call SearchVisualSelectionWithAg()<CR>
 
 " Insert mode completion
-imap <c-x><c-j> <plug>(fzf-complete-file-ag)
-imap <c-x><c-k> <plug>(fzf-complete-word)
-imap <c-x><c-f> <plug>(fzf-complete-path)
-
 nmap <leader><tab> <plug>(fzf-maps-n)
 xmap <leader><tab> <plug>(fzf-maps-x)
 omap <leader><tab> <plug>(fzf-maps-o)
 
 nmap <Leader>h :History<CR>
-nmap <Leader>j :Lines!<CR>
-nmap <Leader>r :BLines!<CR>
-nmap <Leader>w :Windows!<CR>
-nmap <Leader>b :Buffers!<CR>
-nmap <Leader>c :Commands!<CR>
+nmap <Leader>j :Lines<CR>
+nmap <Leader>r :BLines<CR>
+nmap <Leader>w :Windows<CR>
+nmap <Leader>b :Buffers<CR>
+nmap <Leader>c :Commands<CR>
 nmap <Leader>gf :GitFiles?<CR>
-nnoremap <leader>gs :Gstatus<CR>
+nnoremap <leader>gs :tabedit %<CR>:Gstatus<CR>
 nnoremap <leader>gw :Gwrite<CR>
 
 " http://vim.wikia.com/wiki/Always_start_on_first_line_of_git_commit_message
 autocmd! BufEnter COMMIT_EDITMSG call setpos('.', [0, 1, 1, 0])
 autocmd! BufReadPost fugitive://* set bufhidden=delete
-autocmd! User fugitive
-            \ if fugitive#buffer().type() =~# '^\%(tree\|blob\)$' |
-            \   nnoremap <buffer> .. :edit %:h<CR> |
-            \ endif
+autocmd! BufRead fugitive://* xnoremap <buffer> dp :diffput<CR>|xnoremap <buffer> do :diffget<CR>
 
 " Jump to first file
-autocmd BufWinEnter .git/index :call feedkeys("\<C-n>")
+autocmd! BufCreate .git/index :call feedkeys("\<C-n>")
 
+" TODO: Improve/Remove this
 " vimdiff current vs git head (fugitive extension) {{{2
 " Close any corresponding fugitive diff buffer.
 function! MyCloseDiff()
@@ -670,7 +689,7 @@ endfunction
 
 " Maps related to version control (Git). {{{1
 " Toggle `:Gdiff`.
-nnoremap <Leader>gd :if !&diff \| Gdiff \| else \| call MyCloseDiff() \| endif <cr>
+nnoremap <Leader>gd :if !&diff \| tabedit % \| Gdiff \| else \| call MyCloseDiff() \| endif <cr>
 
 " "wincmd p" might not work initially, although there are two windows.
 fun! MyWincmdPrevious()
@@ -689,11 +708,31 @@ command! DiffOff   Windo diffoff
 " ----------------------------------------------------------------------------
 cnoremap <C-A> <Home>
 cnoremap <C-B> <Left>
-"cnoremap <expr> <C-F> getcmdpos()>strlen(getcmdline())?&cedit:"\<Lt>Right>"
+cnoremap <expr> <C-F> getcmdpos()>strlen(getcmdline())?&cedit:"\<Lt>Right>"
 
 " Make Ctrl-a/e jump to the start/end of the current line in the insert mode
 inoremap <C-e> <C-o>$
 inoremap <C-a> <C-o>^
+
+" ----------------------------------------------------------------------------
+" :Count
+" ----------------------------------------------------------------------------
+command! -nargs=1 Count execute printf('%%s/%s//gn', escape(<q-args>, '/')) | normal! ``
+
+" ----------------------------------------------------------------------------
+" Profile
+" ----------------------------------------------------------------------------
+function! s:profile(bang)
+    if a:bang
+        profile pause
+        noautocmd qall
+    else
+        profile start /tmp/profile.log
+        profile func *
+        profile file *
+    endif
+endfunction
+command! -bang Profile call s:profile(<bang>0)
 
 " Go to first character of line on first press
 " Go to start of line on second press
@@ -709,7 +748,7 @@ endfunction
 nnoremap <silent> 0 :call ToggleHomeZero()<CR>
 
 nnoremap <silent> <leader>aw :ArgWrap<CR>
-nnoremap <expr> <c-p> (expand('%') =~ 'NERD_tree' ? "\<c-w>\<c-w>" : '').":Files!\<cr>"
+nnoremap <expr> <c-p> (expand('%') =~ 'NERD_tree' ? "\<c-w>\<c-w>" : '').":Files\<cr>"
 
 " move horizontally
 nnoremap z; 30zl
@@ -743,6 +782,7 @@ let g:gitgutter_map_keys = 0
 let g:gitgutter_max_signs = 200
 let g:gitgutter_realtime = 0
 let g:gitgutter_eager = 1
+let g:gitgutter_override_sign_column_highlight = 0
 
 let g:gitgutter_sign_added = '▌'
 let g:gitgutter_sign_modified = '▐'
@@ -750,11 +790,11 @@ let g:gitgutter_sign_removed = '▖'
 let g:gitgutter_sign_removed_first_line = '▘'
 let g:gitgutter_sign_modified_removed = '▞'
 
-highlight GitGutterAdd guibg=bg guifg=lightgreen
-highlight GitGutterChange guibg=bg guifg=yellow
-highlight GitGutterDelete guibg=bg guifg=red
-highlight GitGutterChangeDelete guibg=bg guifg=yellow
-"highlight SignColumn guibg=bg
+highlight clear SignColumn
+highlight GitGutterAdd guibg=bg guifg=#b8bb26
+highlight GitGutterChange guibg=bg guifg=#fabd2f
+highlight GitGutterDelete guibg=bg guifg=#fb4934
+highlight GitGutterChangeDelete guibg=bg guifg=#fabd2f
 
 " jump between changed areas (hunks)
 nmap <silent> ]h :GitGutterNextHunk<CR>
@@ -775,6 +815,7 @@ function! SmartNERDTree()
     if exists("t:NERDTreeBufName") && bufwinnr(t:NERDTreeBufName) != -1
         :NERDTreeClose
     else
+        " TODO: Recreate functionality of ProjectRootExe & remove plugin
         :ProjectRootExe NERDTreeFind
     endif
 endfunction
@@ -806,7 +847,8 @@ let g:startify_list_order = [
   \ ['   Bookmarks'],      'bookmarks',
   \ ['   Commands'],       'commands',
   \ ]
-
+let g:startify_custom_header =
+    \ map(split(system('fortune | cowsay'), '\n'), '"   ". v:val') + ['','']
 
 " Disable netrw
 let loaded_netrwPlugin = 1
@@ -876,8 +918,8 @@ set cursorline relativenumber number
 
 augroup CursorLineOnlyInActiveWindow
     autocmd!
-    autocmd VimEnter,WinEnter,BufWinEnter * setlocal cursorline
-    autocmd WinLeave * setlocal nocursorline
+    autocmd WinEnter,BufEnter * setlocal cursorline
+    autocmd WinLeave,BufLeave * setlocal nocursorline
 augroup END
 
 " Configure backspace so it acts as it should act
@@ -909,6 +951,11 @@ set hlsearch
 set incsearch
 " Use <C-L> to clear the highlighting of :set hlsearch.
 nnoremap <silent> <Leader>l :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-L>
+
+augroup diff_update
+    au!
+    au BufWritePost * if &diff == 1 | diffupdate | endif
+augroup END
 
 " Load matchit.vim, but only if the user hasn't installed a newer version.
 if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &rtp) ==# ''
@@ -967,7 +1014,10 @@ noremap <silent> <C-k> :TmuxNavigateDown<CR>
 noremap <silent> <C-l> :TmuxNavigateUp<CR>
 noremap <silent> <C-Semicolon> :TmuxNavigateRight<CR>
 
-" Make those behave like ci' , ci"
+" Make those behave like ci', ci", vi', vi"
+nnoremap vi( f(vi(
+nnoremap vi{ f{vi{
+nnoremap vi[ f[vi[
 nnoremap ci( f(ci(
 nnoremap ci{ f{ci{
 nnoremap ci[ f[ci[
@@ -1061,9 +1111,16 @@ autocmd FileType javascript setl suffixesadd=.js,.jsx,.json,.html
 
 " Faster scroll
 function! s:Smoothie(functionToExecute, params) abort
-    setlocal nocursorline norelativenumber
+    let setVars = &number
+
+    if setVars
+        setlocal nocursorline norelativenumber
+    endif 
     call call(a:functionToExecute, a:params)
-    setlocal cursorline relativenumber
+
+    if setVars
+        setlocal cursorline relativenumber
+    endif
 endfunction
 
 noremap <silent> <c-u> :call <SID>Smoothie('smooth_scroll#up', [&scroll, 0, 2])<CR>
@@ -1164,12 +1221,12 @@ function! FollowSymlink()
         execute 'file ' . actual_file
 
         redraw
-        echomsg 'Resolved symlink: =>' fnameescape(actual_file)
     end
 endfunction
 
 " follow symlink and set working directory
 autocmd BufReadPost * call FollowSymlink()
+" TODO: Replace with Glcd
 autocmd BufWinEnter * ProjectRootLCD
 
 " a little more informative version of the above
@@ -1214,6 +1271,4 @@ function! s:todo() abort
     endif
 endfunction
 command! Todo call s:todo()
-
-autocmd FileType ref-* nnoremap <buffer> <silent> q :<C-u>close<CR>
 
