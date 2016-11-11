@@ -78,7 +78,19 @@ lemonize(){
 mon1=$(echo "$monitors" | sed -n '1p')
 b_geo1="$(barGeo "$mon1")"
 
-if [ "$num_monitors" -eq 2 ]; then
+if [ "$num_monitors" -gt 2 ]; then
+    mon2=$(echo "$monitors" | sed -n '2p')
+    mon3=$(echo "$monitors" | sed -n '3p')
+    b_geo2="$(barGeo "$mon2")"
+    b_geo3="$(barGeo "$mon3")"
+
+    while :; do
+        lemonize
+    done |
+        tee >(lemonbar -B "$color_bg" -F "$color_fg" -d -f "$b_f" -f "$b_fi" -g "$b_geo1") |
+        tee >(lemonbar -B "$color_bg" -F "$color_fg" -d -f "$b_f" -f "$b_fi" -g "$b_geo2") |
+        lemonbar -B "$color_bg" -F "$color_fg" -d -f "$b_f" -f "$b_fi" -g "$b_geo3"
+elif [ "$num_monitors" -gt 1 ]; then
     mon2=$(echo "$monitors" | sed -n '2p')
     b_geo2="$(barGeo "$mon2")"
 
