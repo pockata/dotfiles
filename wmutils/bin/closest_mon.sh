@@ -33,7 +33,7 @@ move_to_mon() {
     horiz_space=$((mh - GAP*2))
 
     if [ "$w" -gt "$horiz_space" ] || [ "$h" -gt "$vert_space" ]; then
-        fullscreen_mh.sh $PFW
+        fullscreen_mh.sh $PFW max
     fi
 }
 
