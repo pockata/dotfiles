@@ -42,7 +42,10 @@ export KEYTIMEOUT=1 # reduces to 0.1
 
 zstyle ':completion:*' menu select
 zstyle ':completion:*' matcher-list	'' 'm:{[:lower:][:upper:]}={[:upper:][:lower:]}' '+l:|=* r:|=*'
+zstyle ':zplug:tag' depth 1
 bindkey '^[[Z' reverse-menu-complete
+
+unset ZPLUG_CLONE_DEPTH
 
 # Try to correct the spelling of commands.
 setopt correctall
