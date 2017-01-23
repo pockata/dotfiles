@@ -49,7 +49,7 @@ mod4 + w
     ~/bin/rofi-window-switcher.sh
 
 mod4 + d
-    rofi -show "run"
+    rofi -show "drun"
 
 # select monitor setup
 mod4 + shift + m
