@@ -12,14 +12,14 @@ volmute() {
 }
 
 battery() {
-    bat=$(cat /sys/class/power_supply/BAT1/capacity)
+    bat=$(cat /sys/class/power_supply/BAT0/capacity)
     pop " ${bat}% battery"
 }
 
 batterywarn() {
-    lvl=15
-    batp=$(sed 's/%//' /sys/class/power_supply/BAT1/capacity)
-    bats=$(cat /sys/class/power_supply/BAT1/status)
+    lvl=20
+    batp=$(sed 's/%//' /sys/class/power_supply/BAT0/capacity)
+    bats=$(cat /sys/class/power_supply/BAT0/status)
     while :; do
         if [ "$bats" = "Discharging" ]; then
             [ "${batp}" -le "${lvl}" ] && pop " low battery!"

@@ -29,6 +29,7 @@ dash
 tcc
 tree
 p7zip
+xsel
 nmap
 python-gobject
 nodejs

@@ -44,6 +44,8 @@ dunst &
 
 notifyd &
 
+notifier batterywarn &
+
 # make the cursor point in the 'right' direction
 xsetroot -cursor_name left_ptr &
 
@@ -51,7 +53,7 @@ urxvtd -q -f -o
 
 unclutter &
 
-xautolock -detectsleep -notify 7 -notifier "pop \"locking screen...\"" -locker ~/bin/lock.sh -time 8 -killtime 15 -killer "systemctl suspend" -corners -000 &
+xautolock -detectsleep -notify 7 -notifier "pop \"locking screen...\"" -locker ~/bin/lock.sh -time 9 -killtime 10 -killer "systemctl suspend" -corners -000 &
 
 # set shell that sxhkd uses to execute commands:
 export SXHKD_SHELL=sh

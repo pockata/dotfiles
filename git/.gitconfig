@@ -62,7 +62,7 @@
     undo = reset --soft HEAD^
 
     # Shows commits not pushed to origin
-    unpushed = "log --branches --not --remotes --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)%Creset' --abbrev-commit"
+    unpushed = "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)%Creset' --abbrev-commit @{u}.."
 [user]
     name = Rosen Stoyanov
     email = me@pockata.org
@@ -79,7 +79,7 @@
     whitespace = nowarn
 [core]
 	editor = vim
-	pager = diff-so-fancy | less --tabs=4 -RFX --pattern '^(Date|added|deleted|modified): '
+	pager = diff-so-fancy | less --tabs=4 -RFX
 	autocrlf = input
 [push]
 	default = current

@@ -1,4 +1,8 @@
 # Load zplug
+
+unset ZPLUG_CLONE_DEPTH
+unset ZPLUG_CACHE_FILE
+
 source ~/.zplug/init.zsh
 
 # Let zplug manage itself
@@ -12,7 +16,7 @@ zplug "mafredri/zsh-async"
 zplug "sindresorhus/pure"
 
 # nice:10 needed to load after compinit
-zplug "zsh-users/zsh-syntax-highlighting", nice:10
+zplug "zsh-users/zsh-syntax-highlighting", defer:3
 
 # Install plugins if there are plugins that have not been installed
 if ! zplug check --verbose; then
@@ -45,8 +49,6 @@ zstyle ':completion:*' matcher-list	'' 'm:{[:lower:][:upper:]}={[:upper:][:lower
 zstyle ':zplug:tag' depth 1
 bindkey '^[[Z' reverse-menu-complete
 
-unset ZPLUG_CLONE_DEPTH
-
 # Try to correct the spelling of commands.
 setopt correctall
 setopt autocd
@@ -73,15 +75,16 @@ setopt hist_ignore_all_dups
 setopt extended_history
 setopt hist_ignore_space
 
-export FZF_DEFAULT_COMMAND='ag --hidden -g ""' # Use ag as the default source for fzf
+#export FZF_DEFAULT_COMMAND='ag --hidden -g ""' # Use ag as the default source for fzf
+export FZF_DEFAULT_COMMAND="rg --files --no-ignore --hidden --follow --glob '!.git/*' --glob '!node_modules/*' 2>&1"
 export FZF_DEFAULT_OPTS='--multi --bind=ctrl-k:down,ctrl-l:up'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_CTRL_T_OPTS="$FZF_DEFAULT_OPTS"
 export FZF_CTRL_R_COMMAND="$FZF_DEFAULT_COMMAND"
-export FZF_CTRL_R_OPTS="$FZF_DEFAULT_OPTS"
-export FZF_CTRL_C_COMMAND="$FZF_DEFAULT_COMMAND"
-export FZF_CTRL_C_OPTS="$FZF_DEFAULT_OPTS"
-command -v tree > /dev/null && export FZF_ALT_C_OPTS="--preview 'tree -C {} | head -$LINES'"
+export FZF_CTRL_R_OPTS="$FZF_DEFAULT_OPTS --preview 'echo {}' --preview-window down:3:hidden:wrap --bind '?:toggle-preview' --bind 'ctrl-y:execute-silent(echo -n {2..} | pbcopy)+abort' --header 'Press CTRL-Y to copy command into clipboard' --border"
+#export FZF_ALT_C_COMMAND="$FZF_DEFAULT_COMMAND"
+#export FZF_ALT_C_OPTS="$FZF_DEFAULT_OPTS"
+command -v tree > /dev/null && export FZF_ALT_C_OPTS="$FZF_DEFAULT_OPTS --preview 'tree -C {} | head -$LINES'"
 
 # Use ag instead of the default find command for listing candidates.
 # - The first argument to the function is the base path to start traversal
@@ -172,7 +175,6 @@ function tre() {
 
 # ctrl-r starts searching history backward
 bindkey '^r' history-incremental-search-backward
-bindkey -s '^f' '^qgf\n'
 
 # Add bindings to the vicmd keymap
 bindkey -a j backward-char
@@ -245,6 +247,17 @@ is_in_git_repo() {
     git rev-parse HEAD > /dev/null 2>&1
 }
 
+# cselect - git commit selector
+cselect() {
+    is_in_git_repo || return
+    git l --graph --color=always "$@" |
+    fzf -d 100% --ansi --no-sort --reverse --tiebreak=index --bind=ctrl-s:toggle-sort \
+        --header "Press CTRL-S to toggle sort" \
+        --preview "echo {} | grep -o '[a-f0-9]\{7\}' | head -1 |
+            xargs -I % sh -c 'git show --format=medium --stat --color=always % | head -$LINES '" |
+            grep -o "[a-f0-9]\{7,\}"
+}
+
 # gshow - git commit browser
 gshow() {
     is_in_git_repo || return
@@ -261,7 +274,7 @@ gb() {
     is_in_git_repo || return
     git branch -a --color=always | grep -v '/HEAD\s' | sort | sed 's#remotes/##' |
     fzf-tmux --ansi --multi --tac --preview-window right:70% \
-        --preview 'git log --oneline --graph --color="always" --date=short --pretty="format:%C(auto)%cd %h%d %s" $(sed s/^..// <<< {} | cut -d" " -f1) | head -'$LINES
+        --preview 'git log --oneline --graph --color="always" --date=short --pretty="format:%C(auto)%cd %h%d %s" $(sed s/^..// <<< {} | cut -d" " -f1) -- | head -'$LINES
 }
 
 gf() {
@@ -307,14 +320,24 @@ git-changedfiles-widget() {
     return $ret
 }
 
+git-commitfinder-widget() {
+    LBUFFER="${LBUFFER}$(cselect)"
+    local ret=$?
+    zle redisplay
+    typeset -f zle-line-init >/dev/null && zle zle-line-init
+    return $ret
+}
+
 autoload -U edit-command-line
 
 zle -N edit-command-line
 zle -N git-branches-widget
 zle -N git-changedfiles-widget
+zle -N git-commitfinder-widget
 
 bindkey -r '^G'
 bindkey '^G^F' git-changedfiles-widget
+bindkey '^G^R' git-commitfinder-widget
 bindkey '^G^B' git-branches-widget
 bindkey '^X^E' edit-command-line
 

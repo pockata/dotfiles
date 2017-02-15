@@ -49,7 +49,7 @@ Plug 'junegunn/limelight.vim', { 'on': 'Limelight' }
 Plug 'yuttie/comfortable-motion.vim'
 
 " code/project management
-Plug 'mhinz/vim-signify'
+Plug 'airblade/vim-gitgutter'
 Plug 'dbakker/vim-projectroot'
 "Plug '/airblade/vim-rooter'
 Plug 'tpope/vim-fugitive'
@@ -64,7 +64,7 @@ Plug 'moll/vim-bbye'
 " code searching
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
-Plug 'pgdouyon/vim-evanesco'
+Plug 'junegunn/vim-slash'
 Plug 'thinca/vim-qfreplace'
 
 " navigation
@@ -77,14 +77,13 @@ Plug 'talek/obvious-resize'
 
 " completion
 Plug 'lifepillar/vim-mucomplete'
-Plug 'pangloss/vim-javascript', { 'for': 'javascript' }
-Plug 'mxw/vim-jsx', { 'for': 'jsx' }
 Plug 'ternjs/tern_for_vim', { 'do': 'npm install', 'for': 'javascript' }
 Plug 'junegunn/vim-peekaboo'
+"Plug 'vim-scripts/SyntaxComplete'
 
 " extra language support
-Plug 'scrooloose/syntastic'
-Plug 'thinca/vim-ref', { 'on': 'Ref' }
+Plug 'pangloss/vim-javascript', { 'for': 'javascript' }
+Plug 'mxw/vim-jsx', { 'for': 'jsx' }
 
 " statusline
 Plug 'bling/vim-airline'
@@ -92,34 +91,20 @@ Plug 'vim-airline/vim-airline-themes'
 
 " misc
 Plug 'mbbill/undotree', { 'on': 'UndotreeToggle' }
-"Plug 'benmills/vimux'
 Plug 'tmux-plugins/vim-tmux-focus-events'
 Plug 'wesQ3/vim-windowswap'
 Plug 'osyo-manga/vim-over'
 Plug 'chrisbra/NrrwRgn'
 Plug 'AndrewRadev/undoquit.vim'
+
+Plug 'scrooloose/syntastic'
+Plug 'thinca/vim-ref', { 'on': 'Ref' }
+
 nnoremap <silent> <c-w>c :call undoquit#SaveWindowQuitHistory()<cr><c-w>c
+
 " Faster viewport scrolling
 nnoremap <C-e> 3<C-e>
 nnoremap <C-y> 3<C-y>
-" FOR CONSIDERATION
-"Plug 'Konfekt/FastFold'
-"Plug 'mhinz/vim-grepper'
-" https://github.com/kana/vim-smartword/blob/master/doc/smartword.txt
-
-"Plug 'janko-m/vim-test'
-"function! TerminalSplitStrategy(cmd) abort
-"tabnew | call termopen(a:cmd) | startinsert
-"endfunction
-"let g:test#custom_strategies = get(g:, 'test#custom_strategies', {})
-"let g:test#custom_strategies.terminal_split = function('TerminalSplitStrategy')
-"let test#strategy = 'terminal_split'
-
-"nnoremap <silent> <leader>rr :TestFile<CR>
-"nnoremap <silent> <leader>rf :TestNearest<CR>
-"nnoremap <silent> <leader>rs :TestSuite<CR>
-"nnoremap <silent> <leader>ra :TestLast<CR>
-"nnoremap <silent> <leader>ro :TestVisit<CR>
 
 call plug#end()
 
@@ -135,9 +120,10 @@ set gdefault " The substitute flag g is on
 set hidden " Hide the buffer instead of closing when switching
 set synmaxcol=300 " Don't try to highlight long lines
 set virtualedit=onemore,block " Allow for cursor beyond last character
-set foldmethod=indent
-set foldlevel=8
-set foldminlines=3
+"set foldmethod=indent
+"set foldlevel=8
+"set foldminlines=3
+set nobomb
 
 set switchbuf=useopen,usetab
 
@@ -303,18 +289,18 @@ set completeopt-=preview
 set completeopt+=menu,menuone,noinsert,noselect
 
 let g:mucomplete#enable_auto_at_startup = 1
-let g:mucomplete#auto_select = 0
 let g:mucomplete#chains = {}
-let g:mucomplete#chains.default = ['path', 'omni', 'incl', 'c-n', 'line', 'user', 'uspl']
-let g:mucomplete#trigger_auto_pattern = { 'default': '\k\k$\|/$' }
+"let g:mucomplete#chains.default = ['c-n', 'omni', 'line', 'incl', 'user', 'uspl']
+let g:mucomplete#chains.default = ['omni', 'line']
+"let g:mucomplete#trigger_auto_pattern = { 'default': '\k\k$\|/$' }
 
-" :h complete_CTRL-E
-inoremap <expr> <C-e> pumvisible() ? "\<C-y>\<C-e>" : "\<C-e>"
-
-inoremap <silent> <plug>(MUcompleteFwdKey) <right>
+inoremap <silent> <plug>(MUcompleteFwdKey) <cr>
 imap <right> <plug>(MUcompleteCycFwd)
 inoremap <silent> <plug>(MUcompleteBwdKey) <left>
 imap <left> <plug>(MUcompleteCycBwd)
+
+" :h complete_CTRL-E
+"inoremap <expr> <C-e> pumvisible() ? "\<C-y>\<C-e>" : "\<C-e>"
 
 " :h mucomplete-path-complete
 function! IsBehindDir()
@@ -448,8 +434,6 @@ cabbrev man Ref man
 " Reformat whole file and move back to original position
 nnoremap g= gg=G``
 
-cabbrev bd Bdelete
-
 cabbrev pc PlugClean
 cabbrev ps PlugStatus
 cabbrev pi PlugInstall
@@ -566,14 +550,14 @@ imap <expr> <CR> pumvisible()
 
 "inoremap <expr><S-TAB>   pumvisible() ? "\<C-p>" : "\<C-h>"
 
-autocmd FileType html       setlocal omnifunc=htmlcomplete#CompleteTags
-autocmd FileType python     setlocal omnifunc=pythoncomplete#Complete
-autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-autocmd FileType css,scss   setlocal omnifunc=csscomplete#CompleteCSS
-autocmd FileType xml        setlocal omnifunc=xmlcomplete#CompleteTags
-autocmd FileType php        setlocal omnifunc=phpcomplete#CompletePHP
-autocmd FileType c          setlocal omnifunc=ccomplete#Complete
-autocmd FileType ruby,eruby setlocal omnifunc=rubycomplete#Complete
+"autocmd FileType html       setlocal omnifunc=htmlcomplete#CompleteTags
+"autocmd FileType python     setlocal omnifunc=pythoncomplete#Complete
+"autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+"autocmd FileType css,scss   setlocal omnifunc=csscomplete#CompleteCSS
+"autocmd FileType xml        setlocal omnifunc=xmlcomplete#CompleteTags
+"autocmd FileType php        setlocal omnifunc=phpcomplete#CompletePHP
+"autocmd FileType c          setlocal omnifunc=ccomplete#Complete
+"autocmd FileType ruby,eruby setlocal omnifunc=rubycomplete#Complete
 
 "autocmd Filetype javascript setlocal omnifunc=tern#Complete
 au FileType markdown,gitcommit setlocal spell
@@ -785,29 +769,40 @@ nmap <Leader>s; :rightbelow vnew<CR>
 nmap <Leader>sl :leftabove  new<CR>
 nmap <Leader>sk :rightbelow new<CR>
 
-" Signify
-let g:signify_vcs_list = ['git']
-let g:signify_sign_show_count = 0
-let g:signify_update_on_focusgained = 1
+" Gitgutter
+let g:gitgutter_map_keys = 0
+let g:gitgutter_max_signs = 200
+let g:gitgutter_realtime = 0
+let g:gitgutter_eager = 1
+let g:gitgutter_override_sign_column_highlight = 0
 
-let g:signify_sign_add = '▌'
-let g:signify_sign_delete = '▖'
-let g:signify_sign_delete_first_line = '▘'
-let g:signify_sign_change = '▐'
-let g:signify_sign_changedelete = '▞'
+let g:gitgutter_sign_added = '▌'
+let g:gitgutter_sign_modified = '▐'
+let g:gitgutter_sign_removed = '▖'
+let g:gitgutter_sign_removed_first_line = '▘'
+let g:gitgutter_sign_modified_removed = '▞'
 
 highlight clear SignColumn
-highlight GitGutterAdd guibg=bg guifg=#b8bb26
-highlight GitGutterChange guibg=bg guifg=#fabd2f
-highlight GitGutterDelete guibg=bg guifg=#fb4934
-highlight GitGutterChangeDelete guibg=bg guifg=#fabd2f
+highlight GitGutterAdd guibg=#4E4E4E guifg=#b8bb26
+highlight GitGutterChange guibg=#4E4E4E guifg=#fabd2f
+highlight GitGutterDelete guibg=#4E4E4E guifg=#fb4934
+highlight GitGutterChangeDelete guibg=#4E4E4E guifg=#fabd2f
 
 highlight SignColumn guibg=#4E4E4E guifg=#ff0000
-highlight link SignifySignAdd             DiffAdd
-highlight link SignifySignChange          DiffChange
-highlight link SignifySignDelete          DiffDelete
-highlight link SignifySignChangeDelete    SignifySignChange
-highlight link SignifySignDeleteFirstLine SignifySignDelete
+
+" jump between changed areas (hunks)
+nmap <silent> ]h :GitGutterNextHunk<CR>
+nmap <silent> [h :GitGutterPrevHunk<CR>
+" text objects for hunks
+omap ih <Plug>GitGutterTextObjectInnerPending
+omap ah <Plug>GitGutterTextObjectOuterPending
+xmap ih <Plug>GitGutterTextObjectInnerVisual
+xmap ah <Plug>GitGutterTextObjectOuterVisual
+" stage/unstage hunk
+nmap <Leader>hs <Plug>GitGutterStageHunk
+nmap <Leader>hu <Plug>GitGutterUndoHunk
+" detailed preview of changes in hunk
+nmap <Leader>hp <Plug>GitGutterPreviewHunk
 
 " Show NERDTree
 function! SmartNERDTree()
@@ -819,7 +814,7 @@ function! SmartNERDTree()
     endif
 endfunction
 
-map <silent> <Leader>kb :call SmartNERDTree()<cr>
+map <silent> <Leader>kb :NERDTreeToggle<cr>
 
 function! s:startup()
     if exists('g:loaded_startify')
@@ -1084,8 +1079,8 @@ autocmd BufWrite *.c :call DeleteTrailingWS()
 autocmd BufWrite *.cpp :call DeleteTrailingWS()
 
 " identify sass files as such
-autocmd BufNewFile,BufRead *.scss set ft=scss.css sw=4
-autocmd BufNewFile,BufRead *.jsx set ft=javascript.jsx sw=4
+autocmd BufNewFile,BufRead *.scss set sw=4
+autocmd BufNewFile,BufRead *.jsx set sw=4
 
 autocmd Filetype css setlocal iskeyword-=-:
 
