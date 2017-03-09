@@ -14,12 +14,12 @@ syntax on
 call plug#begin('~/.vim/plugged')
 
 " colorschemes / start screen
-Plug 'morhetz/gruvbox'
 Plug 'junegunn/seoul256.vim'
 Plug 'mhinz/vim-startify', { 'on': 'Startify'}
 
 " additional text objects
 Plug 'kana/vim-textobj-user'
+Plug 'kana/vim-textobj-function'
 Plug 'kana/vim-textobj-indent'
 Plug 'kana/vim-textobj-line'
 Plug 'kana/vim-textobj-entire'
@@ -30,20 +30,23 @@ Plug 'vimtaku/vim-textobj-keyvalue'
 Plug 'zandrmartin/vim-textobj-blanklines'
 Plug 'tkhren/vim-textobj-numeral'
 Plug 'jceb/vim-textobj-uri'
+Plug 'gilligan/textobj-gitgutter'
+Plug 'glts/vim-textobj-comment'
+Plug 'glts/vim-textobj-indblock'
 
 " additional key mappings
 Plug 'justinmk/vim-sneak' " GOLDEN
 Plug 'bkad/CamelCaseMotion'
-Plug 'scrooloose/nerdcommenter'
+Plug 'tomtom/tcomment_vim'
 Plug 'christoomey/vim-tmux-navigator'
 
 " text manipulation / display
-Plug 'Raimondi/delimitMate'
+Plug 'jiangmiao/auto-pairs'
 Plug 'FooSoft/vim-argwrap', { 'on': 'ArgWrap' }
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-eunuch', { 'on': ['Remove', 'Unlink', 'Move', 'Rename', 'Chmod', 'Mkdir', 'Find', 'Locate', 'Wall', 'SudoWrite', 'SudoEdit'] }
 Plug 'tpope/vim-repeat'
-Plug 'Valloric/MatchTagAlways'
+" Plug 'Valloric/MatchTagAlways'
 Plug 'junegunn/goyo.vim', { 'on': 'Goyo' }
 Plug 'junegunn/limelight.vim', { 'on': 'Limelight' }
 Plug 'yuttie/comfortable-motion.vim'
@@ -53,27 +56,27 @@ Plug 'airblade/vim-gitgutter'
 Plug 'dbakker/vim-projectroot'
 "Plug '/airblade/vim-rooter'
 Plug 'tpope/vim-fugitive'
-Plug 'tpope/vim-sleuth'
+" Plug 'tpope/vim-sleuth'
 "Plug 'jmcantrell/vim-diffchanges', { 'on': 'DiffChangesDiffToggle' }
 Plug 'yssl/QFEnter'
 Plug 'junegunn/gv.vim', { 'on': 'GV' }
-Plug 'rhysd/committia.vim'
+" Plug 'rhysd/committia.vim'
 Plug 'rhysd/conflict-marker.vim'
-Plug 'moll/vim-bbye'
+" Plug 'moll/vim-bbye'
 
 " code searching
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'junegunn/vim-slash'
-Plug 'thinca/vim-qfreplace'
+" Plug 'thinca/vim-qfreplace'
 
 " navigation
-Plug 'scrooloose/nerdtree', { 'on': ['NERDTree', 'NERDTreeToggle', 'NERDTreeFind', 'NERDTreeOpen'] }
-Plug 'Xuyuanp/nerdtree-git-plugin', { 'on': ['NERDTree', 'NERDTreeToggle', 'NERDTreeFind', 'NERDTreeOpen'] }
-Plug 'terryma/vim-smooth-scroll'
+" Plug 'terryma/vim-smooth-scroll'
 Plug 'itchyny/vim-cursorword'
 Plug 'kana/vim-smartword'
 Plug 'talek/obvious-resize'
+Plug 'justinmk/vim-dirvish'
+Plug 'justinmk/vim-ipmotion'
 
 " completion
 Plug 'lifepillar/vim-mucomplete'
@@ -84,6 +87,7 @@ Plug 'junegunn/vim-peekaboo'
 " extra language support
 Plug 'pangloss/vim-javascript', { 'for': 'javascript' }
 Plug 'mxw/vim-jsx', { 'for': 'jsx' }
+Plug 'StanAngeloff/php.vim'
 
 " statusline
 Plug 'bling/vim-airline'
@@ -96,15 +100,12 @@ Plug 'wesQ3/vim-windowswap'
 Plug 'osyo-manga/vim-over'
 Plug 'chrisbra/NrrwRgn'
 Plug 'AndrewRadev/undoquit.vim'
-
+Plug 'chrisbra/vim-diff-enhanced'
 Plug 'scrooloose/syntastic'
 Plug 'thinca/vim-ref', { 'on': 'Ref' }
+Plug 'machakann/vim-highlightedyank'
 
 nnoremap <silent> <c-w>c :call undoquit#SaveWindowQuitHistory()<cr><c-w>c
-
-" Faster viewport scrolling
-nnoremap <C-e> 3<C-e>
-nnoremap <C-y> 3<C-y>
 
 call plug#end()
 
@@ -131,9 +132,6 @@ set t_Co=256
 set background=dark
 set t_ut=
 
-let g:gruvbox_contrast_light = 'medium'
-let g:gruvbox_contrast_dark = 'soft'
-
 let g:seoul256_background = 236
 
 colorscheme seoul256
@@ -147,30 +145,6 @@ filetype plugin indent on
 set splitright
 set splitbelow
 
-let g:nrrw_rgn_vert = 1
-let g:nrrw_rgn_wdth = 45
-
-let g:committia_min_window_width = 119
-
-let g:committia_hooks = {}
-function! g:committia_hooks.edit_open(info)
-    " If no commit message, start with insert mode
-    if a:info.vcs ==# 'git' && getline(1) ==# ''
-        startinsert
-    end
-
-    " Scroll the diff window from insert mode
-    " Map <C-n> and <C-p>
-    imap <buffer><C-n> <Plug>(committia-scroll-diff-down-half)
-    imap <buffer><C-p> <Plug>(committia-scroll-diff-up-half)
-
-endfunction
-
-"" prevent scroll up/down jumping when using Smoothie
-"function! g:committia_hooks.diff_open(info)
-"    setlocal number
-"endfunction
-
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
@@ -182,7 +156,7 @@ let g:syntastic_javascript_eslint_exec = 'eslint_d'
 "let g:syntastic_aggregate_errors = 1
 
 let g:airline_powerline_fonts = 1
-let g:airline_theme = 'gruvbox'
+let g:airline_theme = 'sierra'
 let g:airline#extensions#tabline#tabs_label = 'party hard'
 let g:airline_left_sep=''
 let g:airline_right_sep=''
@@ -203,9 +177,6 @@ let g:airline#extensions#hunks#enabled = 0
 " vim-windowswap integration
 let g:airline#extensions#windowswap#enabled = 1
 let g:airline#extensions#windowswap#indicator_text = 'SWAP'
-
-" NrrwRgn
-let g:airline#extensions#nrrwrgn#enabled = 1
 
 " configure which whitespace checks to enable
 let g:airline#extensions#whitespace#checks = [ 'indent', 'trailing' ]
@@ -242,7 +213,7 @@ highlight ColorColumn guibg=#cc241d guifg=#fbf1c7 ctermbg=red ctermfg=white
 let colorcolumn_blacklist = ['Startify', 'html', 'git', 'markdown', '']
 autocmd BufWinEnter * if index(colorcolumn_blacklist, &ft) < 0 | call matchadd('ColorColumn', '\%81v', -1)
 
-autocmd! FileType htm,html setlocal sw=4 expandtab
+autocmd! FileType * setlocal sw=4 expandtab
 
 " make the ~ characters on empty lines 'invisible'
 highlight EndOfBuffer ctermfg=bg guifg=bg
@@ -272,6 +243,8 @@ set autoindent
 set complete-=i
 set complete-=t
 
+set confirm
+
 " Show incomplete commands
 set showcmd
 
@@ -286,12 +259,13 @@ set formatoptions+=j " Delete comment character when joining commented lines
 
 " No scratch (little box that shows a definition)
 set completeopt-=preview
-set completeopt+=menu,menuone,noinsert,noselect
+set completeopt-=menu
+set completeopt+=menuone,noinsert,noselect
 
 let g:mucomplete#enable_auto_at_startup = 1
 let g:mucomplete#chains = {}
 "let g:mucomplete#chains.default = ['c-n', 'omni', 'line', 'incl', 'user', 'uspl']
-let g:mucomplete#chains.default = ['omni', 'line']
+let g:mucomplete#chains.default = ['omni', 'c-n']
 "let g:mucomplete#trigger_auto_pattern = { 'default': '\k\k$\|/$' }
 
 inoremap <silent> <plug>(MUcompleteFwdKey) <cr>
@@ -300,14 +274,7 @@ inoremap <silent> <plug>(MUcompleteBwdKey) <left>
 imap <left> <plug>(MUcompleteCycBwd)
 
 " :h complete_CTRL-E
-"inoremap <expr> <C-e> pumvisible() ? "\<C-y>\<C-e>" : "\<C-e>"
-
-" :h mucomplete-path-complete
-function! IsBehindDir()
-    return strpart(getline('.'), 0, col('.') - 1)  =~# '\f\+/$'
-endfunction
-
-inoremap <expr> / pumvisible() && IsBehindDir() ? "\<c-y>" : '/'
+inoremap <expr> <C-e> pumvisible() ? "\<Esc>\<C-e>" : "\<C-e>"
 
 " Close preview and quickfix windows.
 nnoremap <silent> <C-W>z :wincmd z<Bar>cclose<Bar>lclose<CR>
@@ -315,27 +282,7 @@ nnoremap <silent> <C-W>z :wincmd z<Bar>cclose<Bar>lclose<CR>
 " reformat html -> each tag on own row
 " nmap <leader><F3> :%s/<[^>]*>/\r&\r/g<cr>gg=G:g/^$/d<cr><leader>/
 
-" Add proper indent when hitting <CR> inside curly braces
-let g:delimitMate_expand_cr = 1
-let g:delimitMate_expand_space = 1
-let g:delimitMate_jump_expansion = 1
-let g:delimitMate_balance_matchpairs = 0
-
-let g:NERDCustomDelimiters = {
-    \ 'html': {  'left': '<!-- ', 'right': '-->', 'leftAlt': '/*','rightAlt': '*/' },
-    \ 'xhtml': {  'left': '<!-- ', 'right': '-->', 'leftAlt': '/*','rightAlt': '*/'},
-\}
-let NERD_html_alt_style=1
-let NERDTreeShowHidden=1
-let NERDTreeHijackNetrw = 1
-let NERDTreeMinimalUI = 1
-let g:NERDTreeMapOpenInTab="<C-t>"
-let g:NERDTreeMapOpenSplit="<C-s>"
-let g:NERDTreeMapOpenVSplit="<C-v>"
-let g:NERDTreeAutoCenter = 1
-let g:NERDTreeWinSize = 25
-let g:NERDTreeSortHiddenFirst = 1
-
+let g:sneak#label = 1
 let g:sneak#streak = 1
 let g:sneak#s_next = 1
 let g:sneak#absolute_dir = 1
@@ -387,8 +334,6 @@ let g:qfenter_hopen_map = ['<C-s>']
 let g:qfenter_topen_map = ['<C-t>']
 
 " from unimpaired
-nnoremap <silent> [a :<C-U>previous<CR>
-nnoremap <silent> ]a :<C-U>next<CR>
 nnoremap <silent> [l :<C-U>lprevious<CR>
 nnoremap <silent> ]l :<C-U>lnext<CR>
 nnoremap <silent> [q :<C-U>cprevious<CR>
@@ -396,6 +341,7 @@ nnoremap <silent> ]q :<C-U>cnext<CR>
 
 " Delay opening of peekaboo window (in ms. default: 0)
 let g:peekaboo_delay = 750
+let g:peekaboo_prefix = '<c-x>'
 let g:peekaboo_ins_prefix = '<c-x>'
 
 " Windowswap
@@ -452,6 +398,18 @@ function! s:PasteEscaped()
         return substitute(escaped_register, '\n', '\\n', 'g')
     endif
 endfunction
+
+" Expand dirname for current file.
+cnoreabbrev <expr> %% expand('%:h')
+
+" Insert some "Lorem ipsum" text.
+inoreabbrev Lorem Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+  \ Fusce vel orci at risus convallis bibendum eget vitae turpis. Integer
+  \ sagittis risus quis lacus volutpat congue. Aenean porttitor facilisis
+  \ risus, a varius purus vestibulum non. In porttitor molestie diam, nec
+  \ placerat neque malesuada non. Aenean auctor, mi in suscipit bibendum, quam
+  \ risus tincidunt enim, id pretium leo risus ac lectus. Ut eget nisl nunc.
+  \ Vivamus vestibulum semper aliquam. Mauris rutrum convallis malesuada.
 
 " ----------------------------------------------------------------------------
 " gv.vim / gl.vim
@@ -513,51 +471,14 @@ xmap aa <Plug>Argumentative_OuterTextObject
 omap ia <Plug>Argumentative_OpPendingInnerTextObject
 omap aa <Plug>Argumentative_OpPendingOuterTextObject
 
-imap <expr> <CR> pumvisible()
-                    \ ? "\<C-Y>"
-                    \ : "<Plug>delimitMateCR"
-
-
-"inoremap <expr> <CR> <SID>my_cr_function()
-"function! s:my_cr_function()
-"    return pumvisible() ? "\<C-y>" : "<Plug>delimitMateCR"
-"    "return pumvisible() ? "\<C-y>" : "\<CR>"
-"endfunction
-
-"function! CleverCr()
-"  if pumvisible()
-"      if neosnippet#expandable_or_jumpable()
-"          return "\<Plug>(neosnippet_expand_or_jump)"
-"        else
-"          return "\<C-y>"
-"      endif
-"  else
-"      return "\<Plug>delimitMateCR"
-"  endif
-"endfunction
-
-" <CR> close popup and save indent or expand snippet
-"imap <expr> <CR> CleverCr()
-"imap <expr> <tab> neosnippet#jumpable() ?
-"    \ "\<Plug>(neosnippet_jump)"
-"    \ : pumvisible() ? "\<C-n>" : "\<tab>"
-
-
-"smap <expr><tab> neosnippet#expandable_or_jumpable() ?
-"      \ "\<Plug>(neosnippet_expand_or_jump)" : "\<tab>"
-
-" <TAB>: completion.
-
-"inoremap <expr><S-TAB>   pumvisible() ? "\<C-p>" : "\<C-h>"
-
-"autocmd FileType html       setlocal omnifunc=htmlcomplete#CompleteTags
-"autocmd FileType python     setlocal omnifunc=pythoncomplete#Complete
-"autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-"autocmd FileType css,scss   setlocal omnifunc=csscomplete#CompleteCSS
-"autocmd FileType xml        setlocal omnifunc=xmlcomplete#CompleteTags
-"autocmd FileType php        setlocal omnifunc=phpcomplete#CompletePHP
-"autocmd FileType c          setlocal omnifunc=ccomplete#Complete
-"autocmd FileType ruby,eruby setlocal omnifunc=rubycomplete#Complete
+autocmd FileType html       setlocal omnifunc=htmlcomplete#CompleteTags
+autocmd FileType python     setlocal omnifunc=pythoncomplete#Complete
+autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+autocmd FileType css,scss   setlocal omnifunc=csscomplete#CompleteCSS
+autocmd FileType xml        setlocal omnifunc=xmlcomplete#CompleteTags
+autocmd FileType php        setlocal omnifunc=phpcomplete#CompletePHP
+autocmd FileType c          setlocal omnifunc=ccomplete#Complete
+autocmd FileType ruby,eruby setlocal omnifunc=rubycomplete#Complete
 
 "autocmd Filetype javascript setlocal omnifunc=tern#Complete
 au FileType markdown,gitcommit setlocal spell
@@ -596,7 +517,7 @@ nnoremap <M-9> 9gt
 nnoremap <Leader>o <C-^>
 
 " Delete all hidden buffers
-nnoremap <silent> <Leader><BS>b :call DeleteHiddenBuffers()<CR>
+nnoremap <silent> <Leader><BS> :call DeleteHiddenBuffers()<CR>
 function! DeleteHiddenBuffers() " {{{
     let tpbl=[]
 
@@ -644,6 +565,8 @@ nmap <Leader>c :Commands<CR>
 nmap <Leader>gf :GitFiles?<CR>
 nnoremap <leader>gs :tabedit %<CR>:Gstatus<CR>
 nnoremap <leader>gw :Gwrite<CR>
+nnoremap <leader>gc :Gcommit<CR>
+nnoremap <leader>ga :Gcommit --amend --reuse-message=HEAD<CR>
 
 " http://vim.wikia.com/wiki/Always_start_on_first_line_of_git_commit_message
 autocmd! BufEnter COMMIT_EDITMSG call setpos('.', [0, 1, 1, 0])
@@ -693,7 +616,51 @@ fun! MyWincmdPrevious()
 endfun
 " Diff this window with the previous one.
 command! DiffThese diffthis | call MyWincmdPrevious() | diffthis | wincmd p
-command! DiffOff   Windo diffoff
+command! DiffOrig leftabove vnew | set bt=nofile | r ++edit # | 0d_ | diffthis | wincmd p | diffthis
+
+nnoremap co<space> :set <C-R>=(&diffopt =~# 'iwhite') ? 'diffopt-=iwhite' : 'diffopt+=iwhite'<CR><CR>
+
+"read last visual-selection into command line
+cnoremap <c-r><c-v> <c-r>=join(<sid>get_visual_selection_list(), " ")<cr>
+inoremap <c-r><c-v> <c-r>=join(<sid>get_visual_selection_list(), " ")<cr>
+
+" This doesn't work?
+" autocmd FileType dirvish call fugitive#detect(@%)
+
+" sort directories first & show from which folder you just came
+" https://github.com/justinmk/vim-dirvish/issues/45#issuecomment-219991563
+autocmd FileType dirvish let b:dirvish['foo']=getline('.') |
+            \ sort ir /^.*[^\/]$/ |
+            \ keepjumps call search('\V\^'.escape(b:dirvish['foo'],'\').'\$', 'cw')
+
+
+autocmd BufWinEnter * if empty(expand('<afile>'))|call fugitive#detect(getcwd())|endif
+nnoremap <silent> g/w :call fzf#run({'source':tmuxcomplete#list('words', 0),
+            \                              'sink':function('<SID>fzf_insert_at_point')})<CR>
+
+func! s:get_visual_selection_list() abort
+  let [lnum1, col1] = getpos("'<")[1:2]
+  let [lnum2, col2] = getpos("'>")[1:2]
+  let lines = getline(lnum1, lnum2)
+  let lines[-1] = lines[-1][: col2 - (&selection ==? 'inclusive' ? 1 : 2)]
+  let lines[0] = lines[0][col1 - 1:]
+  return lines
+endf
+"read the current line into command line
+cnoremap <c-r><c-l> <c-r>=getline('.')<cr>
+
+hi MarkLine guibg=darkred guifg=gray ctermbg=9 ctermfg=15
+func! s:markline() abort
+    let b:vimrc_markedlines = get(b:, "vimrc_markedlines", {})
+    "TODO: This will get stale if the line moves.
+    "      :sign is a solution, but need to create a way to get un-used sign {id}s.
+    let b:vimrc_markedlines[line('.')] = matchaddpos("MarkLine", [line('.')])
+endf
+nnoremap <silent> m.  :call <sid>markline()<cr>
+nnoremap <silent> m<space> :call matchdelete(b:vimrc_markedlines[line('.')])<cr>
+
+" started In Diff-Mode set diffexpr (plugin not loaded yet)
+let &diffexpr='EnhancedDiff#Diff("git diff", "--diff-algorithm=patience")'
 
 " ----------------------------------------------------------------------------
 " Readline-style key bindings in command-line (excerpt from rsi.vim)
@@ -740,7 +707,6 @@ endfunction
 nnoremap <silent> 0 :call ToggleHomeZero()<CR>
 
 nnoremap <silent> <leader>aw :ArgWrap<CR>
-nnoremap <expr> <c-p> (expand('%') =~ 'NERD_tree' ? "\<c-w>\<c-w>" : '').":Files\<cr>"
 
 " move horizontally
 nnoremap z; 30zl
@@ -750,10 +716,6 @@ nnoremap <silent> <Leader>u :UndotreeToggle<CR>
 " If undotree is opened, it is likely one wants to interact with it.
 let g:undotree_SetFocusWhenToggle=1
 let g:undotree_WindowLayout = 2
-
-" TODO: figure out evanesco workaround
-"nnoremap n nzzzv
-"nnoremap N Nzzzv
 
 " https://technotales.wordpress.com/2010/04/29/vim-splits-a-guide-to-doing-exactly-what-you-want/
 " Smarter? splits
@@ -804,17 +766,8 @@ nmap <Leader>hu <Plug>GitGutterUndoHunk
 " detailed preview of changes in hunk
 nmap <Leader>hp <Plug>GitGutterPreviewHunk
 
-" Show NERDTree
-function! SmartNERDTree()
-    if exists("t:NERDTreeBufName") && bufwinnr(t:NERDTreeBufName) != -1
-        :NERDTreeClose
-    else
-        " TODO: Recreate functionality of ProjectRootExe & remove plugin
-        :ProjectRootExe NERDTreeFind
-    endif
-endfunction
-
-map <silent> <Leader>kb :NERDTreeToggle<cr>
+command! VleftDirvish leftabove vsplit | vertical resize 30 | silent Dirvish
+map <silent> <Leader>kb :VleftDirvish<cr>
 
 function! s:startup()
     if exists('g:loaded_startify')
@@ -824,8 +777,6 @@ function! s:startup()
     let cnt = argc()
     if (cnt == 0 || cnt == 1 && isdirectory(argv(0)))
         Startify
-        NERDTree
-        wincmd w
     endif
 endfunction
 
@@ -843,6 +794,17 @@ let g:startify_list_order = [
   \ ]
 let g:startify_custom_header =
     \ map(split(system('fortune | cowsay'), '\n'), '"   ". v:val') + ['','']
+
+" Disable built in stuff
+let g:loaded_vimballPlugin = 1
+let g:loaded_getscriptPlugin = 1
+let g:loaded_rrhelper = 1
+let g:did_install_default_menus = 1  " avoid stupid menu.vim (saves ~100ms)
+
+" HighlightedYank
+let g:highlightedyank_highlight_duration = 200
+map y <Plug>(highlightedyank)
+" hi HighlightedyankRegion cterm=reverse gui=reverse
 
 " Disable netrw
 let loaded_netrwPlugin = 1
@@ -924,7 +886,7 @@ set whichwrap+=<,>,h,l
 set nowrap
 
 " Use system clipboard
-set clipboard=unnamedplus
+set clipboard=unnamed,unnamedplus
 
 " :W sudo saves the file
 command! W w !sudo tee % > /dev/null
@@ -946,7 +908,7 @@ set showmatch
 " Makes search act like search in modern browsers
 set incsearch
 " Use <C-L> to clear the highlighting of :set hlsearch.
-nnoremap <silent> <Leader>l :nohlsearch<BAR>:SignifyRefresh<C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-L>
+nnoremap <silent> <Leader>l :nohlsearch<BAR><C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-L>
 
 augroup diff_update
     au!
@@ -1043,6 +1005,13 @@ endif
 "https://www.reddit.com/r/vim/comments/3er2az/how_to_suppress_vims_warning_editing_a_read_only/
 au BufEnter * set noro
 
+if has("autocmd") && exists("+omnifunc")
+    autocmd Filetype *
+                \    if &omnifunc == "" |
+                \        setlocal omnifunc=syntaxcomplete#Complete |
+                \    endif
+endif
+
 " Return to last edit position when opening files (You want this!)
 autocmd BufReadPost *
      \ if line("'\"") > 0 && line("'\"") <= line("$") |
@@ -1058,7 +1027,7 @@ set laststatus=2
 " Format the status line
 set statusline=\ %F%m%r%h\ %w\ \ CWD:\ %r%{getcwd()}%h\ \ \ Line:\ %l
 
-" Delete tra iling white space on save, useful for Python and CoffeeScript ;)
+" Delete trailing white space on save, useful for Python and CoffeeScript ;)
 func! DeleteTrailingWS()
     exe "normal mz"
     %s/\s\+$//ge
@@ -1078,34 +1047,11 @@ autocmd BufWrite *.sh :call DeleteTrailingWS()
 autocmd BufWrite *.c :call DeleteTrailingWS()
 autocmd BufWrite *.cpp :call DeleteTrailingWS()
 
-" identify sass files as such
-autocmd BufNewFile,BufRead *.scss set sw=4
-autocmd BufNewFile,BufRead *.jsx set sw=4
-
 autocmd Filetype css setlocal iskeyword-=-:
 
 " Enhance `gf`, use these file extensions
 " https://www.reddit.com/r/vim/comments/4kjgmz/weekly_vim_tips_and_tricks_thread_11/d3g6l8y
 autocmd FileType javascript setl suffixesadd=.js,.jsx,.json,.html
-
-" Faster scroll
-"function! s:Smoothie(functionToExecute, params) abort
-"    let setVars = &number
-
-"    if setVars
-"        setlocal nocursorline norelativenumber
-"    endif 
-"    call call(a:functionToExecute, a:params)
-
-"    if setVars
-"        setlocal cursorline relativenumber
-"    endif
-"endfunction
-
-"noremap <silent> <c-u> :call <SID>Smoothie('smooth_scroll#up', [&scroll, 0, 2])<CR>
-"noremap <silent> <c-d> :call <SID>Smoothie('smooth_scroll#down', [&scroll, 0, 2])<CR>
-"noremap <silent> <c-b> :call <SID>Smoothie('smooth_scroll#up', [&scroll*2, 0, 4])<CR>
-"noremap <silent> <c-f> :call <SID>Smoothie('smooth_scroll#down', [&scroll*2, 0, 4])<CR>
 
 function! s:ZoomToggle() abort
     if exists('t:zoomed') && t:zoomed
