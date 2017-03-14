@@ -38,10 +38,10 @@ setborder() {
 
 case $1 in
     next)
-        wid=$(lsw|grep -v $CUR|sed '1 p;d')
+        wid=$(lsw|grep -v "$CUR"|sed '1 p;d')
         ;;
     prev)
-        wid=$(lsw|grep -v $CUR|sed '$ p;d')
+        wid=$(lsw|grep -v "$CUR"|sed '$ p;d')
         ;;
     0x*) wattr $1 && wid=$1 ;;
     *) usage ;;

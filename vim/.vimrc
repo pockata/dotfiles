@@ -274,7 +274,7 @@ inoremap <silent> <plug>(MUcompleteBwdKey) <left>
 imap <left> <plug>(MUcompleteCycBwd)
 
 " :h complete_CTRL-E
-inoremap <expr> <C-e> pumvisible() ? "\<Esc>\<C-e>" : "\<C-e>"
+inoremap <expr> <C-e> pumvisible() ? "\<Esc>$A" : "\<C-o>$"
 
 " Close preview and quickfix windows.
 nnoremap <silent> <C-W>z :wincmd z<Bar>cclose<Bar>lclose<CR>
@@ -556,17 +556,18 @@ nmap <leader><tab> <plug>(fzf-maps-n)
 xmap <leader><tab> <plug>(fzf-maps-x)
 omap <leader><tab> <plug>(fzf-maps-o)
 
-nmap <Leader>h :History<CR>
-nmap <Leader>j :Lines<CR>
-nmap <Leader>r :BLines<CR>
-nmap <Leader>w :Windows<CR>
-nmap <Leader>b :Buffers<CR>
-nmap <Leader>c :Commands<CR>
-nmap <Leader>gf :GitFiles?<CR>
+nnoremap <Leader>h :History<CR>
+nnoremap <Leader>j :Lines<CR>
+nnoremap <Leader>r :BLines<CR>
+nnoremap <Leader>w :Windows<CR>
+nnoremap <Leader>b :Buffers<CR>
+nnoremap <Leader>c :Commands<CR>
+nnoremap <Leader>gf :GitFiles?<CR>
 nnoremap <leader>gs :tabedit %<CR>:Gstatus<CR>
 nnoremap <leader>gw :Gwrite<CR>
 nnoremap <leader>gc :Gcommit<CR>
 nnoremap <leader>ga :Gcommit --amend --reuse-message=HEAD<CR>
+nnoremap <c-p> :Files<CR>
 
 " http://vim.wikia.com/wiki/Always_start_on_first_line_of_git_commit_message
 autocmd! BufEnter COMMIT_EDITMSG call setpos('.', [0, 1, 1, 0])
@@ -886,7 +887,7 @@ set whichwrap+=<,>,h,l
 set nowrap
 
 " Use system clipboard
-set clipboard=unnamed,unnamedplus
+set clipboard=unnamedplus,unnamed
 
 " :W sudo saves the file
 command! W w !sudo tee % > /dev/null

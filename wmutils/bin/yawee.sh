@@ -38,21 +38,12 @@ while IFS=: read ev wid; do
         # focus prev window when hiding(unmapping)/deleting focused window
         18)
             #(wattr "$(pfw)" && ! wattr m "$(pfw)") || {
-            wattr "$(pfw)" || {
-                vroum.sh prev 2>/dev/null
-            }
+            #wattr "$(pfw)" || {
+                #vroum.sh prev 2>/dev/null
+                vroum.sh "$(lsw | tail -1)" 2>/dev/null
+            #}
             groups.sh > /dev/null
             ;;
-
-        4)
-            if ! wattr o $wid; then
-                if [ "$wid" != "$CUR_WINDOW" ] && wattr "$wid"; then
-                    CUR_WINDOW="$wid"
-                    vroum.sh "$wid" &
-                fi
-            fi
-            ;;
-        #7) wattr o $wid || vroum.sh $wid ;;
     esac
 done
 

@@ -64,11 +64,7 @@ export INFINALITY_FT_FILTER_PARAMS="0.00 0.35 0.35 0.35 0.00"
 
 redshift-gtk &
 
-if [ -f ~/bin/wew ]; then
-    ~/bin/wew | yawee.sh &
-else
-    wew | yawee.sh &
-fi
+wew | yawee.sh &
 
 urxvtc -e zsh -c 'tmux has-session && tmux attach -d || tmux new -s main' &
 
