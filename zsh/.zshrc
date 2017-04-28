@@ -409,3 +409,9 @@ function zle-line-init zle-keymap-select {
 zle -N zle-line-init
 zle -N zle-keymap-select
 
+# Complete word from history with menu
+# https://github.com/mika/zsh-pony
+zle -C hist-complete complete-word _generic
+zstyle ':completion:hist-complete:*' completer _history
+bindkey "^X^X" hist-complete
+
