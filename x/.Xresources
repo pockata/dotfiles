@@ -97,7 +97,8 @@ URxvt*allow_bold: true
 URxvt*font:xft:Meslo LG M DZ for Powerline:style=regular:pixelsize=13
 
 ! Enables ctrl+; binding in Vim
-URxvt.keysym.C-semicolon: \033[;
+!URxvt.keysym.C-semicolon: \033[;
+URxvt.keysym.C-semicolon: \033[
 !URxvt.keysym.C-semicolon: \033[1;5C
 !URxvt*transparent: true
 !URxvt*shading: 30

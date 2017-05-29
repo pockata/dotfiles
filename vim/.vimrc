@@ -111,7 +111,7 @@ call plug#end()
 
 " Use ctrl + semicolon mapping
 " http://stackoverflow.com/a/28276482/334432
-nmap  [; <C-Semicolon>
+nmap  [ <C-Semicolon>
 "nmap! [; <C-Semicolon>
 
 set ttyfast " faster reflow
