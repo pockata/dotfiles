@@ -12,10 +12,10 @@ zplug "zsh-users/zsh-completions", as:plugin, use:"src"
 zplug "rupa/z", use:z.sh
 
 # pure prompt
-zplug "mafredri/zsh-async"
-zplug "sindresorhus/pure"
+zplug "mafredri/zsh-async", from:github
+zplug "sindresorhus/pure", use:"pure.zsh", from:github, as:theme
 
-# nice:10 needed to load after compinit
+# defer:3 needed to load after compinit
 zplug "zsh-users/zsh-syntax-highlighting", defer:3
 
 # Install plugins if there are plugins that have not been installed
@@ -54,6 +54,9 @@ setopt correctall
 setopt autocd
 setopt extendedglob
 setopt autopushd
+
+# Allow comments in the command line
+setopt interactivecomments
 
 # Report the status of background jobs immediately, rather than waiting until just before printing a prompt.
 setopt notify
@@ -113,19 +116,18 @@ z() {
 }
 
 # Aliases
-alias a="atom-beta"
 alias g="git"
+alias ga="g add \$(gf) && g st"
 alias gv='vim +"let g:loaded_startify = 1" +GV +tabonly +"autocmd BufWipeout <buffer> qall"'
 alias t="tmux -2"
 alias e="vim"
 alias view="eog"
 alias aur="yaourt"
 alias myip="dig +short myip.opendns.com @resolver1.opendns.com"
-alias localip="ipconfig getifaddr en0"
-alias cu="caniuse --long --mobile --percentages"
+alias ips="ip a | grep 'inet ' | sed -e 's/^.*inet //g' -e 's/\/.*//g' | grep -v '127.0.0.1'"
 alias ls='LC_COLLATE=C ls -A --color -h --group-directories-first'
+alias ll='ls -l'
 alias lsym='ls -la | grep -i "\->" | awk "/ / { print \$9, \$11 }"'
-alias lsg='ls -la | grep -ni dot'
 alias busy="cat /dev/urandom | hexdump -C | grep --color=auto \"ca fe\""
 
 alias addr="ip -o a | cut -d ' ' -f2,7"
@@ -139,7 +141,7 @@ alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo
 # Pretty print the path
 alias path='echo $PATH | tr -s ":" "\n"'
 
-alias da='docker exec -i -t --entrypoint /bin/bash'
+alias da='docker exec -i -t'
 # Docker Compose
 alias dc='docker-compose'
 alias dcu='docker-compose up -d'
@@ -283,7 +285,7 @@ gf() {
     fzf-tmux -m --ansi --nth 2..,.. \
         --preview 'NAME="$(cut -c4- <<< {})" &&
         (git diff --color=always "$NAME" | sed 1,4d; cat "$NAME") | head -'$LINES |
-    cut -c4-
+    cut -c4- | tr '\n' ' '
 }
 
 # gco - checkout git branch/tag
@@ -340,4 +342,24 @@ bindkey '^G^F' git-changedfiles-widget
 bindkey '^G^R' git-commitfinder-widget
 bindkey '^G^B' git-branches-widget
 bindkey '^X^E' edit-command-line
+
+# Vi mode indicator
+# https://github.com/sindresorhus/pure/wiki
+VIM_PROMPT="❯"
+PROMPT='%(?.%F{magenta}.%F{red})${VIM_PROMPT}%f '
+
+prompt_pure_update_vim_prompt() {
+    zle || {
+    print "error: pure_update_vim_prompt must be called when zle is active"
+    return 1
+}
+VIM_PROMPT=${${KEYMAP/vicmd/❮}/(main|viins)/❯}
+zle .reset-prompt
+}
+
+function zle-line-init zle-keymap-select { 
+prompt_pure_update_vim_prompt
+}
+zle -N zle-line-init
+zle -N zle-keymap-select
 

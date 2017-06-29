@@ -137,6 +137,16 @@ super + @button3
 super + alt + Escape
     pkill xwait
 
+# Thyme (pomodoro)
+alt + ctrl + d
+    thyme -d
+
+alt + ctrl + s
+    thyme -s
+
+alt + ctrl + b
+    thyme -d -b
+
 ## on alt+shift language change
 #mod1 + @50
 #    pop "bruh"

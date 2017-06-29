@@ -17,6 +17,8 @@ call plug#begin('~/.vim/plugged')
 Plug 'junegunn/seoul256.vim'
 Plug 'mhinz/vim-startify', { 'on': 'Startify'}
 
+Plug 'rlue/vim-getting-things-down'
+
 " additional text objects
 Plug 'kana/vim-textobj-user'
 Plug 'kana/vim-textobj-function'
@@ -41,6 +43,7 @@ Plug 'glts/vim-textobj-comment'
 Plug 'justinmk/vim-sneak' " GOLDEN
 Plug 'bkad/CamelCaseMotion'
 Plug 'christoomey/vim-tmux-navigator'
+Plug 'triglav/vim-visual-increment'
 
 " text manipulation / display
 Plug 'jiangmiao/auto-pairs'
@@ -48,7 +51,7 @@ Plug 'FooSoft/vim-argwrap', { 'on': 'ArgWrap' }
 Plug 'AndrewRadev/splitjoin.vim'
 Plug 'AndrewRadev/inline_edit.vim'
 Plug 'AndrewRadev/dsf.vim'
-Plug 'AndrewRadev/whitespaste.vim'
+" Plug 'AndrewRadev/whitespaste.vim'
 " CONFIGURE THIS!
 " Plug 'AndrewRadev/switch.vim'
 Plug 'tpope/vim-surround'
@@ -85,9 +88,14 @@ Plug 'lifepillar/vim-mucomplete'
 Plug 'ternjs/tern_for_vim', { 'do': 'npm install', 'for': 'javascript' }
 
 " extra language support
+Plug 'sheerun/vim-polyglot'
 Plug 'pangloss/vim-javascript', { 'for': 'javascript' }
 Plug 'mxw/vim-jsx', { 'for': 'jsx' }
 Plug 'StanAngeloff/php.vim', { 'for': 'php' }
+
+Plug 'mattn/emmet-vim'
+let g:user_emmet_install_global = 0
+autocmd FileType html,css EmmetInstall
 
 " statusline
 "
@@ -133,7 +141,8 @@ set nojoinspaces " one space after J or gq
 
 set switchbuf=useopen,usetab
 
-set t_Co=256
+" As per romainl
+" set t_Co=256
 set background=dark
 set t_ut=
 
@@ -244,6 +253,8 @@ let g:airline_mode_map = {
 let g:gutentags_enabled = 0
 
 autocmd! FileType * setlocal sw=4 expandtab
+
+autocmd! FileType apache setlocal commentstring=#%s
 
 set nrformats-=octal
 
@@ -377,6 +388,8 @@ let g:qfenter_hopen_map = ['<C-s>']
 let g:qfenter_topen_map = ['<C-t>']
 
 " from unimpaired
+nnoremap <silent> [b :<C-U>bprevious<CR>
+nnoremap <silent> ]b :<C-U>bnext<CR>
 nnoremap <silent> [l :<C-U>lprevious<CR>
 nnoremap <silent> ]l :<C-U>lnext<CR>
 nnoremap <silent> [q :<C-U>cprevious<CR>
@@ -574,9 +587,9 @@ nnoremap <M-7> 7gt
 nnoremap <M-8> 8gt
 nnoremap <M-9> 9gt
 
-" ctrl (+ shift) + Tab
-nnoremap <silent> } :tabNext<CR>
-nnoremap <silent> { :tabnext<CR>
+" " ctrl (+ shift) + Tab
+" nnoremap <silent> } :tabNext<CR>
+" nnoremap <silent> { :tabnext<CR>
 
 " p: go to the previously open file.
 nnoremap <Leader>o <C-^>
@@ -633,7 +646,11 @@ nnoremap <Leader>gf :GitFiles?<CR>
 nnoremap <leader>gs :tabedit %<CR>:Gstatus<CR>
 nnoremap <leader>gw :Gwrite<CR>
 nnoremap <leader>gc :Gcommit<CR>
-nnoremap <leader>ga :Gcommit --amend --reuse-message=HEAD<CR>
+nnoremap <leader>ga :Gcommit --amend --reuse-message=HEAD
+nnoremap <leader>gv :GV<CR>
+
+noremap <leader>do :diffoff \| windo if &diff \| hide \| endif<cr>
+
 nnoremap <c-p> :GitFiles<CR>
 nnoremap <c-t> :Files<CR>
 
@@ -644,37 +661,6 @@ autocmd! BufRead fugitive://* xnoremap <buffer> dp :diffput<CR>|xnoremap <buffer
 
 " Jump to first file
 autocmd! BufCreate .git/index :call feedkeys("\<C-n>")
-
-" TODO: Improve/Remove this
-" vimdiff current vs git head (fugitive extension) {{{2
-" Close any corresponding fugitive diff buffer.
-function! MyCloseDiff()
-    if (&diff == 0 || getbufvar('#', '&diff') == 0)
-                \ && (bufname('%') !~ '^fugitive:' && bufname('#') !~ '^fugitive:')
-        echom "Not in diff view."
-        return
-    endif
-
-    diffoff " safety net / required to workaround powerline issue
-
-    " Close current buffer if alternate is not fugitive but current one is.
-    if bufname('#') !~ '^fugitive:' && bufname('%') =~ '^fugitive:'
-        if bufwinnr("#") == -1
-            " XXX: might not work reliable (old comment)
-            b #
-            bd! #
-        else
-            bd!
-        endif
-    else
-        bd! #
-    endif
-endfunction
-
-" Maps related to version control (Git). {{{1
-" Toggle `:Gdiff`.
-" TODO: tabedit only if more than one pane
-nnoremap <Leader>gd :if !&diff \| tabedit % \| Gdiff \| else \| call MyCloseDiff() \| endif <cr>
 
 " "wincmd p" might not work initially, although there are two windows.
 fun! MyWincmdPrevious()
@@ -1007,7 +993,9 @@ set ai "Auto indent
 " Don't implode
 noremap j h
 noremap <silent> <expr> k (v:count == 0 ? 'gj' : 'j')
+xnoremap <silent> <expr> k (v:count == 0 ? 'gj' : 'j')
 noremap <silent> <expr> l (v:count == 0 ? 'gk' : 'k')
+xnoremap <silent> <expr> l (v:count == 0 ? 'gk' : 'k')
 noremap ; l
 
 noremap <C-w>j <C-w>h
@@ -1153,6 +1141,7 @@ endfunction
 autocmd! BufHidden * silent! call <SID>CleanEmptyBuffers()
 
 " https://github.com/StanAngeloff/dotfiles/blob/master/.vimrc
+" TODO: handle jkl;
 set langmap+=чявертъуиопшщасдфгхйклзьцжбнмЧЯВЕРТЪУИОПШЩАСДФГХЙКЛЗѝЦЖБНМ;`qwertyuiop[]asdfghjklzxcvbnm~QWERTYUIOP{}ASDFGHJKLZXCVBNM,ю\\,Ю\|,
 
 " follow symlinked file

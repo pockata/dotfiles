@@ -7,7 +7,7 @@
     alignment = center
     bounce_freq = 0
     show_age_threshold = 60
-    word_wrap = no
+    word_wrap = yes
     ignore_newline = no
     geometry = "0x1+15+15"
     shrink = 1
@@ -33,7 +33,7 @@
     history = ctrl+grave
     context = ctrl+shift+period
 
-[urgency_low]
+    [urgency_low]
     background = "#d79921"
     foreground = "#a89984"
     timeout = 30

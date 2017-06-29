@@ -13,9 +13,13 @@
     la = log --graph --decorate --pretty=oneline --abbrev-commit --all --pretty=format:'%C(yellow)%h %Cred%d %Creset%s %C(green)(%cr) %C(blue)<%cn>' --date=short
     ldf = "!git diff --name-only \"$(git merge-base HEAD ${1:-master})\""
 
+    # show repo activity (branch, last commiter name + date)
+    # https://www.alexkras.com/19-git-tips-for-everyday-use/#find-old-branches
+    activity = "!f() { git for-each-ref --sort=committerdate --format='%(refname:short) * %(authorname) * %(committerdate:relative)' refs/remotes/ | column -t -s '*'; }; f"
+
     # edit global config in default editor
     ec = config --global -e
-    ce = ec
+    ce = !git ec
 
     # Delete branches that have been merged into branch [master]
     bclean = "!f() { git branch --merged ${1-master} | grep -v " ${1-master}$" | xargs -r git branch -d; }; f"
@@ -55,14 +59,15 @@
 
     # http://stackoverflow.com/questions/1139762/ignore-files-that-have-already-been-committed-to-a-git-repository
     untrack = update-index --assume-unchanged
-    ignored = !git ls-files -v | grep "^[[:lower:]]"
+    untracked = !git untrack
+    ignored = !git ls-files -v | grep "^[[:lower:]] | cut -f2 -d' '"
 
     unstage = reset HEAD
     # Undo your last commit, but don't throw away your changes
     undo = reset --soft HEAD^
 
     # Shows commits not pushed to origin
-    unpushed = "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)%Creset' --abbrev-commit @{u}.."
+    unpushed = "!git log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)%Creset' --abbrev-commit ${1:-'@{u}'}.."
 [user]
     name = Rosen Stoyanov
     email = me@pockata.org
@@ -93,4 +98,7 @@
 [mergetool "diffconflicts"]
 	cmd = diffconflicts vim $BASE $LOCAL $REMOTE $MERGED
 	trustExitCode = true
+    # Don't create .orig files
+    keepBackup = false
+[mergetool]
 	keepBackup = false
