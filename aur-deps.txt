@@ -7,3 +7,4 @@ redshift-gtk-git
 ttf-ms-fonts
 toilet
 pup-git
+pulseaudio

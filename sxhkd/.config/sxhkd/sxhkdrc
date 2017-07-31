@@ -94,13 +94,13 @@ Print
 
 # volume management
 XF86AudioRaiseVolume
-    amixer -q set Master 5%+ unmute; notifier volume #increase sound volume
+    pamixer --set-volume $(($(pamixer --get-volume) + 10)); notifier volume #increase sound volume
 
 XF86AudioLowerVolume
-    amixer -q set Master 5%- unmute; notifier volume #decrease sound volume
+    pamixer --set-volume $(($(pamixer --get-volume) - 10)); notifier volume #decrease sound volume
 
 XF86AudioMute
-    amixer -q set Master toggle; notifier volmute # mute sound
+    pamixer --toggle-mute; notifier volmute # mute sound
 
 # media keys
 XF86AudioPlay
