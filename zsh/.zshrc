@@ -37,7 +37,7 @@ PATH="$HOME/.gem/ruby/2.3.0/bin/:$PATH"
 
 export PATH="$HOME/bin:$PATH"
 
-export EDITOR='vim'
+export EDITOR='nvim'
 
 # Map Ctrl-S to sth usefull other than XOFF (interrupt data flow).
 stty -ixon
@@ -124,7 +124,7 @@ alias g="git"
 alias ga="g add \$(gf) && g st"
 alias gv='vim +"let g:loaded_startify = 1" +GV +tabonly +"autocmd BufWipeout <buffer> qall"'
 alias t="tmux -2"
-alias e="vim"
+alias e="nvim"
 alias view="eog"
 alias aur="yaourt"
 alias myip="dig +short myip.opendns.com @resolver1.opendns.com"
