@@ -2,8 +2,8 @@
 # z3bra - 2014 (c) wtfpl
 # window focus wrapper that sets borders and can focus next/previous window
 
-BW=${BW:-4}                    # border width
-ACTIVE=${ACTIVE:-0xffffff}     # active border color
+BW=${BW:-6}                    # border width
+ACTIVE=${ACTIVE:-0x87404f}     # active border color
 INACTIVE=${INACTIVE:-0x323232} # inactive border color
 
 # get current window id
