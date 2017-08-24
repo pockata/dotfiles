@@ -189,9 +189,6 @@ bindkey -a ';' forward-char
 bindkey -a k down-history
 bindkey -a l up-history
 
-# for Brackets
-export EXTRACT="/opt/brackets/samples/root/Getting Started/images"
-
 # for lolcommits
 export LOLCOMMITS_DIR="${HOME}/Pictures/lolcommits/"
 export LOLCOMMITS_FORK=true
@@ -295,6 +292,9 @@ gf() {
 
 # gco - checkout git branch/tag
 gco() {
+
+    is_in_git_repo || return
+
     local tags branches target
     tags=$(
         git tag | awk '{print "\x1b[31;1mtag\x1b[m\t" $1}') || return
@@ -311,28 +311,64 @@ gco() {
     git checkout $(echo "$target" | awk '{print $2}')
 }
 
-git-branches-widget() {
-    LBUFFER="${LBUFFER}$(gb)"
+listdirectories() {
+    # TODO: Ignore .git, node_modules, etc
+    find -L . -type d -print -o -type l -print -o \
+        \( -path '*/\.*' -o -fstype 'devfs' -o -fstype 'devtmpfs' -o -fstype 'proc' \) -prune \
+        2> /dev/null | \
+        grep -v '^.$' | \
+        sed 's|\./||g' | \
+        fzf-tmux --ansi --multi --tac --preview-window right:50% \
+            --preview 'tree -C {} | head -$LINES'
+}
+
+project-switcher() {
+    local projects proj 
+
+    projects="$(realpath ~/Projects/)"
+    proj=$(find -L "$projects" -maxdepth 1 -type d -printf "%f\n" -o -type l -printf "%f\n" -o -prune \
+        2> /dev/null | \
+        grep -v '^.$' | \
+        sed 's|\./||g' | \
+        fzf-tmux --ansi --multi --tac --preview-window right:50% \
+            --preview "echo 'Branches\n' && git -C $projects/{} rev-parse HEAD > /dev/null 2>&1 &&
+                git -C $projects/{} branch -vv --color=always &&
+                echo '\n\nCommits\n' && git -C $projects/{} l -10 | head -$LINES") || return
+
+    cd $projects/$proj
+}
+
+widget-helper() {
     local ret=$?
     zle redisplay
     typeset -f zle-line-init >/dev/null && zle zle-line-init
     return $ret
+}
+
+git-branches-widget() {
+    LBUFFER="${LBUFFER}$(gb)"
+    widget-helper
 }
 
 git-changedfiles-widget() {
     LBUFFER="${LBUFFER}$(gf)"
-    local ret=$?
-    zle redisplay
-    typeset -f zle-line-init >/dev/null && zle zle-line-init
-    return $ret
+    widget-helper
 }
 
 git-commitfinder-widget() {
     LBUFFER="${LBUFFER}$(cselect)"
-    local ret=$?
-    zle redisplay
-    typeset -f zle-line-init >/dev/null && zle zle-line-init
-    return $ret
+    widget-helper
+}
+
+listdirectories-widget() {
+    LBUFFER="${LBUFFER}$(listdirectories)"
+    widget-helper
+}
+
+project-switcher-widget() {
+    project-switcher
+    widget-helper
+    zle accept-line
 }
 
 autoload -U edit-command-line
@@ -341,12 +377,17 @@ zle -N edit-command-line
 zle -N git-branches-widget
 zle -N git-changedfiles-widget
 zle -N git-commitfinder-widget
+zle -N listdirectories-widget
+zle -N project-switcher-widget
 
 bindkey -r '^G'
 bindkey '^G^F' git-changedfiles-widget
 bindkey '^G^R' git-commitfinder-widget
 bindkey '^G^B' git-branches-widget
 bindkey '^X^E' edit-command-line
+bindkey '^F' listdirectories-widget
+bindkey -r '^E'
+bindkey '^E^P' project-switcher-widget
 
 # Vi mode indicator
 # https://github.com/sindresorhus/pure/wiki
@@ -359,11 +400,11 @@ prompt_pure_update_vim_prompt() {
     return 1
 }
 VIM_PROMPT=${${KEYMAP/vicmd/❮}/(main|viins)/❯}
-zle .reset-prompt
+    zle .reset-prompt
 }
 
-function zle-line-init zle-keymap-select { 
-prompt_pure_update_vim_prompt
+function zle-line-init zle-keymap-select {
+    prompt_pure_update_vim_prompt
 }
 zle -N zle-line-init
 zle -N zle-keymap-select
