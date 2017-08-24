@@ -1,71 +1,25 @@
-!! Earthsong in progress
+#include </home/pockata/dotfiles/x/synthwave>
+! Colors
+*background:   bg
+*foreground:   fg
+*cursorColor:  cyn
 
-!#define base00 #111417
-!#define base01 #c84134
-!#define base02 #84c44b
-!#define base03 #f4ae2e
-!#define base04 #1397b9
-!#define base05 #d0623c
-!#define base06 #4f9452
-!#define base07 #e5c5a9
-!#define base08 #665e54
-!#define base09 #ff6459
-!#define base0A #97e035
-!#define base0B #dfd561
-!#define base0C #5ed9ff
-!#define base0D #ff9168
-!#define base0E #83ef88
-!#define base0F #f6f6ec
-
-!*.foreground:   #e5c6a8
-!*.background:   #282420
-!*.cursorColor:  #f6f6ec
-
-!!black
-!*.color0:       #111417
-!!red
-!*.color1:       #c84134
-!!green
-!*.color2:       #84c44b
-!!orange
-!*.color3:       #f4ae2e
-!!blue
-!*.color4:       #1397b9
-!!red
-!*.color5:       #d0623c
-!!green
-!*.color6:       #4f9452
-!*.color7:       #e5c5a9
-!*.color8:       #665e54
-!*.color9:       #ff6459
-!*.color10:      #97e035
-!*.color11:      #dfd561
-!*.color12:      #5ed9ff
-!*.color13:      #ff9168
-!*.color14:      #83ef88
-!*.color15:      #f6f6ec
-
-URxvt*background: #444444
-URxvt*foreground: #d0d0d0
-URxvt*color0: #4e4e4e
-URxvt*color1: #d68787
-URxvt*color2: #5f865f
-URxvt*color3: #d8af5f
-URxvt*color4: #85add4
-URxvt*color5: #d7afaf
-URxvt*color6: #87afaf
-URxvt*color7: #d0d0d0
-URxvt*color8: #626262
-URxvt*color9: #d75f87
-URxvt*color10: #87af87
-URxvt*color11: #ffd787
-URxvt*color12: #add4fb
-URxvt*color13: #ffafaf
-URxvt*color14: #87d7d7
-URxvt*color15: #e4e4e4
-URxvt*cursorColor: #d0d0d0
-URxvt*cursorColor2: #3a3a3a
-URxvt*colorBD: #e4e4e4
+*color0:      blk
+*color8:      bblk
+*color1:      red
+*color9:      red
+*color2:      grn
+*color10:     grn
+*color3:      ylw
+*color11:     ylw
+*color4:      blu
+*color12:     blu
+*color5:      mag
+*color13:     mag
+*color6:      cyn
+*color14:     cyn
+*color7:      wht
+*color15:     wht
 
 !-- Xft settings -- !
 Xft.dpi:        96
@@ -76,8 +30,10 @@ Xft.hinting:    1
 Xft.lcdfilter:  lcddefault
 Xft.hintstyle:  hintfull
 
+URxvt*letterSpace: -1
+
 URxvt*scrollBar: false
-URxvt*internalBorder: 4
+URxvt*internalBorder: 0
 
 URxvt.secondaryScreen: 1
 URxvt.secondaryScroll: 0
