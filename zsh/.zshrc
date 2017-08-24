@@ -73,8 +73,9 @@ setopt hist_verify
 
 # Share history between sessions
 HISTFILE=~/.history
-HISTSIZE=1000
-SAVEHIST=1000
+HISTSIZE=100000
+SAVEHIST=100000
+HISTORY_IGNORE="(bg|fg|cd*|rm*|clear|ls|pwd|history|exit|make*|* --help)"
 
 setopt share_history
 setopt inc_append_history
