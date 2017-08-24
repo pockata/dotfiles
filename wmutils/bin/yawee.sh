@@ -33,6 +33,7 @@ while IFS=: read ev wid; do
 
         17)
             fullscreen_mh.sh "$wid" "clear"
+            groups.sh -C > /dev/null
             ;;
 
         # focus prev window when hiding(unmapping)/deleting focused window
@@ -40,9 +41,9 @@ while IFS=: read ev wid; do
             #(wattr "$(pfw)" && ! wattr m "$(pfw)") || {
             #wattr "$(pfw)" || {
                 #vroum.sh prev 2>/dev/null
-                vroum.sh "$(lsw | tail -1)" 2>/dev/null
+                wattr $(pfw) || vroum.sh "$(lsw | tail -1)" 2>/dev/null
             #}
-            groups.sh > /dev/null
+            groups.sh -C > /dev/null
             ;;
     esac
 done
