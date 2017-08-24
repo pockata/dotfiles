@@ -11,6 +11,10 @@ zplug "zplug/zplug"
 zplug "zsh-users/zsh-completions", as:plugin, use:"src"
 zplug "rupa/z", use:z.sh
 
+zplug "zsh-users/zsh-autosuggestions"
+    export ZSH_AUTOSUGGEST_USE_ASYNC=true
+    bindkey '^ ' autosuggest-accept
+
 # pure prompt
 zplug "mafredri/zsh-async", from:github
 zplug "sindresorhus/pure", use:"pure.zsh", from:github, as:theme
