@@ -9,13 +9,18 @@
     br = branch
     diff = diff --word-diff
     mt = mergetool --tool=diffconflicts
-    l = log --graph --decorate --pretty=oneline --abbrev-commit --pretty=format:'%C(yellow)%h %Cred%d %Creset%s %C(green)(%cr) %C(blue)<%cn>' --date=format:'%d-%m-%Y'
+
+    # helper
+    log-format = log --decorate  --pretty=oneline --abbrev-commit --pretty=format:'%C(yellow)%h %Cred%d %Creset%s %C(green)(%cr) %C(blue)<%cn>' --date=format:'%d-%m-%Y'
+    l = !git log-format --graph
     la = log --graph --decorate --pretty=oneline --abbrev-commit --all --pretty=format:'%C(yellow)%h %Cred%d %Creset%s %C(green)(%cr) %C(blue)<%cn>' --date=short
-    ldf = "!git diff --name-only \"$(git merge-base HEAD ${1:-master})\""
 
     # show repo activity (branch, last commiter name + date)
     # https://www.alexkras.com/19-git-tips-for-everyday-use/#find-old-branches
     activity = "!f() { git for-each-ref --sort=committerdate --format='%(refname:short) * %(authorname) * %(committerdate:relative)' refs/remotes/ | column -t -s '*'; }; f"
+
+    # fetch pull requests from github so you can 'git checkout pull/123' and test them locally
+    fetch-pull-requests = fetch origin '+refs/pull/*/head:refs/remotes/origin/pull/*'
 
     # edit global config in default editor
     ec = config --global -e
@@ -35,7 +40,7 @@
 
     # Show verbose output about tags, branches or remotes
     tags = tag -l
-    branches = branch -a
+    branches = branch -avv
     remotes = remote -v
 
     # Find branches containing commit
@@ -67,7 +72,17 @@
     undo = reset --soft HEAD^
 
     # Shows commits not pushed to origin
-    unpushed = "!git log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)%Creset' --abbrev-commit ${1:-'@{u}'}.."
+    unpushed = "!git l --no-merges ${1:-'@{u}'}.."
+
+    # Check which changes you're about to pull
+    ; unpulled = "!git fetch && git l --no-merges ..origin/$(git rev-parse --abbrev-ref HEAD)"
+    unpulled = "!git fetch && git l --no-merges ..${1:-'@{u}'}"
+
+    # https://github.com/git-tips/tips
+    # changes made to the branch since forked from master
+    since-forked = "!git log-format --no-merges --stat ${1:-master}.."
+    # changes made to the master since forked
+    after-forked = "!git log-format --no-merges --stat ..${1:-master}"
 [user]
     name = Rosen Stoyanov
     email = me@pockata.org
@@ -83,7 +98,7 @@
     # Detect whitespace errors when applying a patch
     whitespace = nowarn
 [core]
-	editor = vim
+	editor = $EDITOR
 	pager = diff-so-fancy | less --tabs=4 -RFX
 	autocrlf = input
 [push]
@@ -102,3 +117,5 @@
     keepBackup = false
 [mergetool]
 	keepBackup = false
+; [pull]
+; 	rebase = true
