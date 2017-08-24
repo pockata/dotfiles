@@ -68,5 +68,7 @@ wew | yawee.sh &
 
 urxvtc -e zsh -c 'tmux has-session && tmux attach -d || tmux new -s main' &
 
+greenclip daemon &
+
 exec xwait
 

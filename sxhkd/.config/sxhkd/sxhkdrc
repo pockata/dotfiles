@@ -89,6 +89,9 @@ mod4 + @button1
 ~button1
     ~/bin/vroum.sh $(~/bin/underneath.sh)
 
+mod4 + c
+    rofi -modi "clipboard:greenclip print" -show clipboard
+
 Print
     ~/bin/screenshot.sh
 

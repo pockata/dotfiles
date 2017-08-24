@@ -8,3 +8,4 @@ ttf-ms-fonts
 toilet
 pup-git
 pulseaudio
+greenclip
