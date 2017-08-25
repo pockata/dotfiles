@@ -100,7 +100,7 @@ if ask "${txtylw}Symlink dotfiles?${txtrst}" Y; then
     echo -e "${undylw}Backing up conflicts to ~/dotfile_conflicts..${txtrst}"
     IFS=$'\n'
 
-    for file in $(stow -n $(ls */ -d) 2>&1 | grep -oE ":.+" | cut -c3-); do
+    for file in $(stow -n $(ls */ -d | grep -v "root") 2>&1 | grep -oE ":.+" | cut -c3-); do
         if [ -f ~/$file ]; then
             mkdir -p ~/dotfile_conflicts/$(dirname $file)
             mv ~/$file ~/dotfile_conflicts/$file
@@ -113,7 +113,11 @@ if ask "${txtylw}Symlink dotfiles?${txtrst}" Y; then
     sudo sed -i 's/#HandlePowerKey=poweroff/HandlePowerKey=ignore/g' /etc/systemd/logind.conf
 
     echo -e "${txtylw}Linking dotfiles to home dir...${txtrst}"
-    stow $(ls */ -d)
+    stow $(ls */ -d | grep -v "root")
+
+    if ask "${txtylw}Symlink root dotfiles?${txtrst}" N; then
+        sudo stow root -t /
+    fi
 fi
 
 if ask "${txtylw}Setup/update mmutils?${txtrst}" N; then
