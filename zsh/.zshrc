@@ -247,6 +247,14 @@ chist() {
     sed 's#.*\(https*://\)#\1#' | xargs xdg-open
 }
 
+# scan the local network and list the connected devices
+lscan() {
+    local ipRange=$(ip addr | grep -oE "192.168.*.*/[1-9]{2}" | awk -F '.' '{print $3}')
+    local scanReport=$(nmap -sn "192.168.$ipRange.1-254/24" | egrep "scan report")
+    # echo "$scanReport\n" | sed -r 's#Nmap scan report for (.*) \((.*)\)#\1 \2#'
+    echo "$scanReport"
+}
+
 is_in_git_repo() {
     git rev-parse HEAD > /dev/null 2>&1
 }

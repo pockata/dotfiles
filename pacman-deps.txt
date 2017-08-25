@@ -73,4 +73,5 @@ fortune-mod
 nitrogen
 gnome-keyring
 diff-so-fancy
+udiskie
 jq

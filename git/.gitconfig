@@ -103,6 +103,8 @@
 	autocrlf = input
 [push]
 	default = current
+[pull]
+	rebase = true
 [diff]
 	mnemonicprefix = true
 	compactionHeuristic = true
@@ -110,6 +112,7 @@
 [merge]
 	stat = true
 	tool = diffconflicts
+    prompt = true
 [mergetool "diffconflicts"]
 	cmd = diffconflicts vim $BASE $LOCAL $REMOTE $MERGED
 	trustExitCode = true
@@ -117,5 +120,7 @@
     keepBackup = false
 [mergetool]
 	keepBackup = false
-; [pull]
-; 	rebase = true
+[mergetool "vimdiff"]
+  cmd = nvim -d $BASE $LOCAL $REMOTE $MERGED -c '$wincmd w' -c 'wincmd J'
+[url "git@github.com:"]
+	insteadOf = https://github.com/

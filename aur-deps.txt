@@ -9,3 +9,4 @@ toilet
 pup-git
 pulseaudio
 greenclip
+etcher

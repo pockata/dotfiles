@@ -53,14 +53,12 @@ urxvtd -q -f -o
 
 unclutter &
 
+udiskie -q &
+
 xautolock -detectsleep -notify 7 -notifier "pop \"locking screen...\"" -locker ~/bin/lock.sh -time 9 -killtime 10 -killer "systemctl suspend" -corners -000 &
 
 # set shell that sxhkd uses to execute commands:
 export SXHKD_SHELL=sh
-
-# TODO: test this
-export INFINALITY_FT_BRIGHTNESS="-10"
-export INFINALITY_FT_FILTER_PARAMS="0.00 0.35 0.35 0.35 0.00"
 
 redshift-gtk &
 
