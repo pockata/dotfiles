@@ -83,6 +83,10 @@ mod4 + BackSpace
 mod4 + button1
     xmmv $(pfw)
 
+# show battery level
+mod4 + b
+    notifier battery
+
 mod4 + @button1
     killall xmmv
 
