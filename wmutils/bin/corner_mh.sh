@@ -1,7 +1,7 @@
 #!/bin/dash
 
-GAP=15
-BAR=$((30 + GAP))
+GAP=${GAP:-15}
+BAR=${BAR:-30}
 
 CUR=${2:-$(pfw)}
 ANCHOR=${3:-$(pfw)}
@@ -32,16 +32,16 @@ Y="$SY"
 
 case $1 in
     tl) X=$((X + GAP))
-        Y=$((Y + BAR + GAP)) ;;
+        Y=$((Y + BAR + GAP*2)) ;;
     tr) X=$((SX + SW - W - BW*2 - GAP))
-        Y=$((Y + BAR + GAP)) ;;
+        Y=$((Y + BAR + GAP*2)) ;;
     bl) X=$((X + GAP))
         Y=$((SY + SH - H - BW*2 - GAP)) ;;
     br) X=$((SX + SW - W - BW*2 - GAP))
         Y=$((SY + SH - H - BW*2 - GAP)) ;;
     md) X=$((SX + SW/2 - W/2 - BW))
         Y=$((SY + SH/2 - H/2 - BW))
-        test "$Y" -lt $((BAR + GAP)) && Y=$((BAR + GAP))
+        test "$Y" -lt $((BAR + GAP*2)) && Y=$((BAR + GAP*2))
         ;;
 esac
 

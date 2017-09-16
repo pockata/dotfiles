@@ -21,6 +21,9 @@ NUM_PROVIDERS=$(xrandr --listproviders | head -1 | cut -d ":" -f3)
 xset +fp ~/.fonts
 xset fp rehash
 
+# load wmutils configs
+[[ -f ~/.wmrc ]] . ~/.wmrc
+
 groups.sh > /dev/null
 
 monitors=$(xrandr -q | grep -oE "^.* connected (primary )?[0-9]+")
@@ -42,6 +45,7 @@ compton --config ~/.compton.conf &
 
 dunst &
 
+# TODO: Use only notify-send
 notifyd &
 
 notifier batterywarn &

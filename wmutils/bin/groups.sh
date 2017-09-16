@@ -26,7 +26,7 @@ test $# -eq 0 && usage
 
 # I suggest it's under /tmp or somewhere that gets cleaned up at reboot or gets
 # cleaned up after X stops running
-FSDIR=${FSDIR:-/tmp/groups.sh}
+FSDIR=${GROOT:-/tmp/groups.sh}
 
 # define our functions
 

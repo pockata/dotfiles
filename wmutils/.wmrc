@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+# WMRC
+# Configuration for my wmutils based setup
+
+# main layout
+GAP=15
+BAR=30
+
+# border width
+BW=6
+# active border color
+ACTIVE=0x87404
+# inactive border color
+INACTIVE=-0x323232
+
+# groups
+GROOT=/tmp/groups.sh
+GNUMBER=5
+
+# For tiling
+MASTER_AREA=60 # in percent
+
+# TODO: Implement this
+# MASTER_AREA_MIN_WIDTH=400 # in pixels
+

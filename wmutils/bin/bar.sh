@@ -3,8 +3,8 @@
 # bar - lemonbar output
 #
 
-GROOT=/tmp/groups.sh
-GNUMBER=5
+GROOT=${GROOT:-"/tmp/groups.sh"}
+GNUMBER=${GNUMBER:-5}
 GAP=${GAP:-15}
 BAR=${BAR:-30}
 

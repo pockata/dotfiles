@@ -13,8 +13,7 @@ usage() {
 # exit if no argument given
 test -z "$1" && usage
 
-# TODO: set this globally
-GAP=15
+GAP=${GAP:-15}
 
 # should we draw over the bar or not?
 FSSIZE=${2:-"min"}
