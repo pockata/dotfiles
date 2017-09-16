@@ -1,6 +1,6 @@
 #!/bin/sh
 
-[ -z "$CUR_WINDOW" ] && CUR_WINDOW="$(pfw)"
+# [ -z "$CUR_WINDOW" ] && CUR_WINDOW="$(pfw)"
 
 while IFS=: read ev wid; do
 
@@ -13,10 +13,7 @@ while IFS=: read ev wid; do
         # window creation
         16)
             if ! wattr o $wid; then
-                ! wattr "$wid" || {
-                    CUR_WINDOW="$wid"
-                    corner_mh.sh md "$wid"
-                }
+                corner_mh.sh md "$wid"
             fi
             ;;
 
@@ -24,25 +21,19 @@ while IFS=: read ev wid; do
         19)
 
             if ! wattr o $wid; then
-                ! wattr "$wid" ||  {
-                    CUR_WINDOW="$wid"
                     vroum.sh "$wid"
-                }
             fi
             ;;
 
         17)
             fullscreen_mh.sh "$wid" "clear"
-            groups.sh -C > /dev/null
             ;;
 
-        # focus prev window when hiding(unmapping)/deleting focused window
+        # focus prev window when hiding(unmapping) focused window
         18)
-            #(wattr "$(pfw)" && ! wattr m "$(pfw)") || {
-            #wattr "$(pfw)" || {
-                #vroum.sh prev 2>/dev/null
-                wattr $(pfw) || vroum.sh "$(lsw | tail -1)" 2>/dev/null
-            #}
+            if ! wattr $(pfw); then
+                vroum.sh prev "nowarp" 2>/dev/null
+            fi
             groups.sh -C > /dev/null
             ;;
     esac

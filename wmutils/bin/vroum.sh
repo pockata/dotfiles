@@ -14,6 +14,8 @@ usage() {
     exit 1
 }
 
+WARPCURSOR=${2:-"warp"}
+
 setborder() {
     #ROOT=$(lsw -r)
 
@@ -38,10 +40,10 @@ setborder() {
 
 case $1 in
     next)
-        wid=$(lsw|grep -v "$CUR"|sed '1 p;d')
+        wid=$(lsw|grep -v ${CUR:-" "}|sed '1 p;d')
         ;;
     prev)
-        wid=$(lsw|grep -v "$CUR"|sed '$ p;d')
+        wid=$(lsw|grep -v ${CUR:-" "}|sed '$ p;d')
         ;;
     0x*) wattr $1 && wid=$1 ;;
     *) usage ;;
@@ -50,14 +52,19 @@ esac
 # exit if we can't find another window to focus
 test -z "$wid" && { echo "$(basename $0): no window to focus $1" >&2; exit 1; }
 
-# sometimes something fucks up,
-# and there are two windows with active borders
-# this "fixes" it
-lsw | grep -v "$wid" | xargs chwb -s $BW -c $INACTIVE
-#setborder inactive $CUR
-setborder active $wid   # activate the new window
-chwso -r $wid           # raise windows
-wtf $wid                # set focus on it
+if [ "$CUR" != "$wid" ]; then
+    setborder inactive $CUR
+    setborder active $wid   # activate the new window
 
-xdotool search --class "Dunst" windowraise
+    chwso -r $wid           # raise windows
+    wtf $wid                # set focus on it
+
+    xdotool search --class "Dunst" windowraise
+
+    # you might want to remove this for sloppy focus
+    if [ "$WARPCURSOR" != "nowarp" ]; then
+        wmp -a $(wattr xy $wid) # move the mouse cursor to
+        wmp -r $(wattr wh $wid | awk '{ print $1/2, $2/2; }') # .. its center
+    fi
+fi
 

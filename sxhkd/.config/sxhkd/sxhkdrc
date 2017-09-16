@@ -91,7 +91,7 @@ mod4 + @button1
     killall xmmv
 
 ~button1
-    ~/bin/vroum.sh $(~/bin/underneath.sh)
+    ~/bin/vroum.sh $(~/bin/underneath.sh) "nowarp"
 
 mod4 + c
     rofi -modi "clipboard:greenclip print" -show clipboard
