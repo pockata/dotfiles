@@ -1,5 +1,5 @@
 #!/usr/bin/bash
-h="Home"
+h="Home [eGPU]"
 w="Work"
 a="aRandR"
 
@@ -17,7 +17,7 @@ case $CMD in
     $w)
         ~/.screenlayout/work.sh ;;
     $h)
-        ~/.screenlayout/home.sh ;;
+        ~/.screenlayout/home-egpu.sh ;;
     $a)
         arandr ;;
     *)
