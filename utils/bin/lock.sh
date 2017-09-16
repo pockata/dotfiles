@@ -30,10 +30,5 @@ fi
 # dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Stop
 # i3lock  -I 10 -d -e -u -n -i /tmp/screen.png
 
-if [[ $1 == "now" ]]
-then
-    i3lock -b -d -I 10 -e -i /tmp/screen.png
-else
-    i3lock -b -I 10 -e -i /tmp/screen.png
-fi
+i3lock --nofork --beep --ignore-empty-password --path /tmp/screen.png
 
