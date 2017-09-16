@@ -17,12 +17,14 @@ battery() {
 }
 
 batterywarn() {
-    lvl=20
+    lvl=30
+    crit_lvl=10
     batp=$(sed 's/%//' /sys/class/power_supply/BAT0/capacity)
     bats=$(cat /sys/class/power_supply/BAT0/status)
     while :; do
         if [ "$bats" = "Discharging" ]; then
             [ "${batp}" -le "${lvl}" ] && pop " low battery!"
+            [ "${batp}" -le "${crit_lvl}" ] && systemctl suspend
         fi
         sleep 120
     done
