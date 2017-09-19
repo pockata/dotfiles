@@ -63,8 +63,8 @@ if [ "$CUR" != "$wid" ]; then
 
     # you might want to remove this for sloppy focus
     if [ "$WARPCURSOR" != "nowarp" ]; then
-        wmp -a $(wattr xy $wid) # move the mouse cursor to
-        wmp -r $(wattr wh $wid | awk '{ print $1/2, $2/2; }') # .. its center
+        # move the mouse cursor the center of the window
+        wmp -a $(wattr xywh $wid | awk '{ print $1+$3/2, $2+$4/2 }')
     fi
 fi
 
