@@ -1,9 +1,5 @@
 " vim: set foldmethod=marker foldlevel=0 nomodeline:
 
-" Vim 8 defaults
-unlet! skip_defaults_vim
-silent! source $VIMRUNTIME/defaults.vim
-
 " Disable built in stuff
 let g:loaded_vimballPlugin = 1
 let g:loaded_getscriptPlugin = 1
@@ -38,9 +34,6 @@ let g:plug_pwindow = 'vertical rightbelow new'
 " ============================================================================
 
 " syntax on
-
-" required for alt/meta mappings  https://github.com/tpope/vim-sensible/issues/69
-set encoding=utf-8
 
 " Sets 4 spaces as indent
 set tabstop=4
@@ -133,6 +126,9 @@ set showmatch
 
 " Makes search act like search in modern browsers
 set incsearch
+if has('nvim')
+    set inccommand=nosplit
+endif
 
 augroup diff_update
     au!
@@ -173,16 +169,16 @@ set noswapfile
 
 " Let's save undo info!
 set undofile                " Save undo's after file closes
-set undodir=~/.vim/undo//     " where to save undo histories
 set undolevels=500
 set undoreload=500
 
-if !isdirectory(&undodir)
-    call mkdir(&undodir, "", 0700)
+if !has('nvim')
+    set undodir=~/.vim/undo//     " where to save undo histories
+    if !isdirectory(&undodir)
+        call mkdir(&undodir, "", 0700)
+    endif
 endif
 
-set ai "Auto indent
-set ttyfast " faster reflow
 set shortmess+=Ic " No intro when starting Vim
 set smartindent " Smart... indent
 set gdefault " The substitute flag g is on
@@ -209,7 +205,7 @@ if exists('$TMUX')
 
     " use gui colors inside terminal
     set termguicolors
-endif 
+endif
 
 " set cursor in split window
 set splitright
@@ -500,10 +496,11 @@ Plug 'tpope/vim-fugitive'
 
 Plug 'yssl/QFEnter'
     " http://vi.stackexchange.com/questions/8534/make-cnext-and-cprevious-loop-back-to-the-begining
-    let g:qfenter_open_map = ['<CR>', '<2-LeftMouse>']
-    let g:qfenter_vopen_map = ['<C-v>']
-    let g:qfenter_hopen_map = ['<C-s>']
-    let g:qfenter_topen_map = ['<C-t>']
+    let g:qfenter_keymap = {}
+    let g:qfenter_keymap.open = ['<CR>', '<2-LeftMouse>']
+    let g:qfenter_keymap.vopen = ['<C-v>']
+    let g:qfenter_keymap.hopen = ['<C-s>']
+    let g:qfenter_keymap.topen = ['<C-t>']
 
 Plug 'junegunn/gv.vim', { 'on': 'GV' }
     function! s:gv_expand()
@@ -615,10 +612,10 @@ Plug 'ternjs/tern_for_vim', { 'do': 'npm install', 'for': 'javascript' }
 
 " extra language support
 Plug 'sheerun/vim-polyglot'
-Plug 'pangloss/vim-javascript', { 'for': 'javascript' }
-Plug 'mxw/vim-jsx', { 'for': 'jsx' }
-Plug 'StanAngeloff/php.vim', { 'for': 'php' }
 Plug 'shawncplus/phpcomplete.vim', {'for': 'php'}
+    let g:phpcomplete_complete_for_unknown_classes = 1
+    let g:phpcomplete_search_tags_for_variables = 1
+    let g:phpcomplete_enhance_jump_to_definition = 1
 
 Plug 'w0rp/ale'
     let g:ale_sign_warning = '◈'
@@ -716,7 +713,7 @@ Plug 'mbbill/undotree', { 'on': 'UndotreeToggle' }
 
     nnoremap <silent> <Leader>u :UndotreeToggle<CR>
 
-Plug 'tmux-plugins/vim-tmux-focus-events'
+" Plug 'tmux-plugins/vim-tmux-focus-events'
 
 Plug 'wesQ3/vim-windowswap'
     let g:windowswap_map_keys = 0 "prevent default bindings
@@ -810,7 +807,7 @@ augroup Filetypes
     autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
     autocmd FileType css,scss   setlocal omnifunc=csscomplete#CompleteCSS
     autocmd FileType xml        setlocal omnifunc=xmlcomplete#CompleteTags
-    autocmd FileType php        setlocal omnifunc=phpcomplete#CompletePHP
+    " autocmd FileType php        setlocal omnifunc=phpcomplete#CompletePHP
     autocmd FileType c          setlocal omnifunc=ccomplete#Complete
     autocmd FileType ruby,eruby setlocal omnifunc=rubycomplete#Complete
 
@@ -828,6 +825,15 @@ augroup Filetypes
                 \    if &omnifunc == "" |
                 \        setlocal omnifunc=syntaxcomplete#Complete |
                 \    endif
+
+    " When editing a file, always jump to the last known cursor position.
+    " Don't do it when the position is invalid, when inside an event handler
+    " (happens when dropping a file on gvim) and for a commit message (it's
+    " likely a different one than last time).
+    autocmd BufReadPost *
+                \ if line("'\"") >= 1 && line("'\"") <= line("$") && &ft !~# 'commit'
+                \ |   exe "normal! g`\""
+                \ | endif
 
     " TODO: Create a blacklist and trim everything else
     autocmd BufWrite *.py :call DeleteTrailingWS()
@@ -857,16 +863,6 @@ colorscheme seoul256
 
 " filetype plugin indent on
 
-" let g:syntastic_always_populate_loc_list = 1
-" let g:syntastic_auto_loc_list = 1
-" let g:syntastic_check_on_open = 1
-" let g:syntastic_check_on_wq = 1
-" let g:syntastic_enable_signs = 1
-" let g:syntastic_php_checkers=['php', 'phpcs', 'phpmd']
-" let g:syntastic_javascript_checkers = ['eslint', 'jshint']
-" let g:syntastic_javascript_eslint_exec = 'eslint_d'
-" "let g:syntastic_aggregate_errors = 1
-
 " CTRL-U in insert mode deletes a lot.  Use CTRL-G u to first break undo,
 " so that you can undo CTRL-U after inserting a line break.
 " Revert with ":iunmap <C-U>".
@@ -888,8 +884,8 @@ function! NextClosedFold(dir)
     endif
 endfunction
 
-" :h complete_CTRL-E
-inoremap <expr> <C-e> pumvisible() ? "\<Esc>$A" : "\<C-o>$"
+" " :h complete_CTRL-E
+" inoremap <expr> <C-e> pumvisible() ? "\<Esc>$A" : "\<C-o>$"
 
 " Close preview and quickfix windows.
 nnoremap <silent> <C-W>z :wincmd z<Bar>cclose<Bar>lclose<CR>
@@ -934,7 +930,6 @@ nnoremap g= gg=G``
 nnoremap ,t :tabc<CR>
 cabbrev t tabn
 cabbrev tc tabc
-
 
 " paste register content and escape it
 cnoremap <c-x> <c-r>=<SID>PasteEscaped()<cr>
@@ -1076,7 +1071,15 @@ fun! MyWincmdPrevious()
 endfun
 " Diff this window with the previous one.
 command! DiffThese diffthis | call MyWincmdPrevious() | diffthis | wincmd p
-command! DiffOrig leftabove vnew | set bt=nofile | r ++edit # | 0d_ | diffthis | wincmd p | diffthis
+
+" Convenient command to see the difference between the current buffer and the
+" file it was loaded from, thus the changes you made.
+" Only define it when not defined already.
+" Revert with: ":delcommand DiffOrig".
+if !exists(":DiffOrig")
+    command DiffOrig vert new | set bt=nofile | r ++edit # | 0d_ | diffthis
+            \ | wincmd p | diffthis
+endif
 
 nnoremap co<space> :set <C-R>=(&diffopt =~# 'iwhite') ? 'diffopt-=iwhite' : 'diffopt+=iwhite'<CR><CR>
 
@@ -1273,6 +1276,13 @@ endfunction
 
 autocmd vimrc BufHidden * silent! call <SID>CleanEmptyBuffers()
 
+if has('langmap') && exists('+langremap')
+  " Prevent that the langmap option applies to characters that result from a
+  " mapping.  If set (default), this may break plugins (but it's backward
+  " compatible).
+  set nolangremap
+endif
+
 " https://github.com/StanAngeloff/dotfiles/blob/master/.vimrc
 " TODO: handle jkl;
 set langmap+=чявертъуиопшщасдфгхйклзьцжбнмЧЯВЕРТЪУИОПШЩАСДФГХЙКЛЗѝЦЖБНМ;`qwertyuiop[]asdfghjklzxcvbnm~QWERTYUIOP{}ASDFGHJKLZXCVBNM,ю\\,Ю\|,
@@ -1333,6 +1343,8 @@ function! s:todo() abort
     endif
 endfunction
 command! Todo call s:todo()
+
+
 
 " Use <C-L> to clear the highlighting of :set hlsearch.
 nnoremap <silent> <Leader>l :nohlsearch<BAR><C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-L>
