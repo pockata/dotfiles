@@ -16,19 +16,19 @@ usage() {
 #    printf "%d %d %s\n", $1/2+$3, $2/2+$4, $5
 #}'
 next_east() {
-    lsw | xargs wattr xi | sort -nr | sed "0,/$CUR/d" | sed "1s/^[0-9]* //p;d"
+    lsw | xargs wattr xwi | awk '{ print $1+$2/2, $3 }' | sort -nr | sed "0,/$CUR/d" | sed "1s/^[0-9\.]* //p;d"
 }
 
 next_west() {
-    lsw | xargs wattr xi | sort -n | sed "0,/$CUR/d" | sed "1s/^[0-9]* //p;d"
+    lsw | xargs wattr xwi | awk '{ print $1+$2/2, $3 }' | sort -n | sed "0,/$CUR/d" | sed "1s/^[0-9\.]* //p;d"
 }
 
 next_north() {
-    lsw | xargs wattr yi | sort -nr | sed "0,/$CUR/d" | sed "1s/^[0-9]* //p;d"
+    lsw | xargs wattr yhi | awk '{ print $1+$2/2, $3 }' | sort -nr | sed "0,/$CUR/d" | sed "1s/^[0-9\.]* //p;d"
 }
 
 next_south() {
-    lsw | xargs wattr yi | sort -n | sed "0,/$CUR/d" | sed "1s/^[0-9]* //p;d"
+    lsw | xargs wattr yhi | awk '{ print $1+$2/2, $3 }' | sort -n | sed "0,/$CUR/d" | sed "1s/^[0-9\.]* //p;d"
 }
 
 case $1 in
