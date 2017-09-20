@@ -33,7 +33,7 @@ fi
 zplug load
 
 # ruby binaries
-PATH="$HOME/.gem/ruby/2.3.0/bin/:$PATH"
+PATH="$HOME/.gem/ruby/2.4.0/bin/:$PATH"
 
 export PATH="$HOME/bin:$PATH"
 
@@ -344,6 +344,16 @@ project-switcher() {
                 echo '\n\nCommits\n' && git -C $projects/{} l -10 | head -$LINES") || return
 
     cd $projects/$proj
+}
+
+# Interactive process killing with FZF:
+fkill() {
+  pid=$(ps -ux | sed 1d | fzf -m | awk '{print $2}')
+
+  if [ "x$pid" != "x" ]
+  then
+    kill -${1:-9} $pid
+  fi
 }
 
 widget-helper() {
