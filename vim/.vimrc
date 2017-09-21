@@ -57,7 +57,7 @@ set list
 set listchars=tab:→\ ,trail:·,extends:›,precedes:‹,nbsp:.
 
 " Sets how many lines of history VIM has to remember
-set history=700
+set history=10000
 
 " Set to auto read when a file is changed from the outside
 set autoread
@@ -224,7 +224,6 @@ set ttimeoutlen=0
 
 set autoindent
 set complete-=i
-set complete-=t
 
 set confirm
 
@@ -651,8 +650,6 @@ Plug 'shawncplus/phpcomplete.vim', {'for': 'php'}
     let g:phpcomplete_search_tags_for_variables = 1
     let g:phpcomplete_enhance_jump_to_definition = 1
 
-Plug 'metakirby5/codi.vim'
-
 Plug 'w0rp/ale'
     let g:ale_sign_warning = '◈'
     let g:ale_sign_error = '✖'
@@ -706,14 +703,6 @@ Plug 'vitalk/vim-simple-todo'  " Shortcuts to creating todo lists
         autocmd BufEnter   .scratch abbreviate <buffer> [ [ ]
         autocmd BufRead    .scratch setlocal foldlevel=0
     augroup END
-
-Plug 'maxbrunsfeld/vim-yankstack'  " Clipboard history by repeating <leader>p, was still remapping s key when I told it not to
-    let g:yankstack_map_keys = 0
-    " Remove S as a yank key, otherwise interferes with vim surround S in visual
-    let g:yankstack_yank_keys=['c', 'C', 'd', 'D', 'x', 'X', 'y', 'Y']
-    nmap <leader>p <Plug>yankstack_substitute_older_paste
-    nmap <leader>P <Plug>yankstack_substitute_newer_paste
-
 
 " " Automatically bookmark last files accessed by directory
 " augroup filemarks
