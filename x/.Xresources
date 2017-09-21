@@ -2,7 +2,7 @@
 ! Colors
 *background:   bg
 *foreground:   fg
-*cursorColor:  cyn
+*cursorColor:  wht
 
 *color0:      blk
 *color8:      bblk
