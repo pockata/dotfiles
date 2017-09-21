@@ -43,7 +43,9 @@ set expandtab
 set smarttab
 set shiftround
 
-set lazyredraw
+if !has('nvim')
+    set lazyredraw
+endif
 
 " for gitgutter_realtime
 set updatetime=250
@@ -185,6 +187,7 @@ set gdefault " The substitute flag g is on
 set hidden " Hide the buffer instead of closing when switching
 set synmaxcol=500 " Don't try to highlight long lines
 set virtualedit=onemore,block " Allow for cursor beyond last character
+set nostartofline
 "set foldmethod=indent
 "set foldlevel=8
 "set foldminlines=3
@@ -197,12 +200,14 @@ set switchbuf=useopen,usetab
 " set background=dark
 set t_ut=
 
-if exists('$TMUX')
+if exists('$TMUX') && !has('nvim')
     " when termguicolors renders black/white
     " :h xterm-true-color
     let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
     let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+endif 
 
+if has('termguicolors') && exists('$TMUX')
     " use gui colors inside terminal
     set termguicolors
 endif
@@ -296,6 +301,8 @@ Plug 'junegunn/seoul256.vim'
 
     augroup END
 
+Plug 'junegunn/rainbow_parentheses.vim'
+
 Plug 'mhinz/vim-startify', { 'on': 'Startify'}
 
     augroup StartifyConfig
@@ -319,14 +326,25 @@ Plug 'mhinz/vim-startify', { 'on': 'Startify'}
 Plug 'rlue/vim-getting-things-down'
 
 Plug 'kana/vim-operator-user'
-Plug 'haya14busa/vim-operator-flashy'
-    map y <Plug>(operator-flashy)
-    nmap Y <Plug>(operator-flashy)$
 
-    augroup FlashConfig
+if has('nvim')
+    Plug 'machakann/vim-highlightedyank'
+    let g:highlightedyank_highlight_duration = 200
+
+    augroup YankConfig
         autocmd!
-        autocmd ColorScheme * highlight Flashy guibg=purple guifg=white
+        autocmd ColorScheme * highlight HighlightedyankRegion guibg=purple guifg=white
     augroup END
+endif
+
+" Plug 'haya14busa/vim-operator-flashy'
+"     map y <Plug>(operator-flashy)
+"     nmap Y <Plug>(operator-flashy)$
+
+"     augroup FlashConfig
+"         autocmd!
+"         autocmd ColorScheme * highlight Flashy guibg=purple guifg=white
+"     augroup END
 
 " additional text objects
 Plug 'kana/vim-textobj-user'
@@ -344,6 +362,7 @@ Plug 'kana/vim-textobj-user'
     augroup END
 
 Plug 'kana/vim-textobj-function'
+Plug 'haya14busa/vim-textobj-function-syntax'
 Plug 'kana/vim-textobj-indent'
 Plug 'kana/vim-textobj-line'
 Plug 'kana/vim-textobj-entire'
@@ -422,6 +441,9 @@ Plug 'justinmk/vim-sneak' " GOLDEN
 Plug 'bkad/CamelCaseMotion'
     " camelcasemotion
     autocmd VimEnter * call camelcasemotion#CreateMotionMappings(',')
+
+    imap <silent> <M-Left> <C-o><Plug>CamelCaseMotion_b
+    imap <silent> <M-Right> <C-o><Plug>CamelCaseMotion_e
 
 Plug 'christoomey/vim-tmux-navigator'
     let g:tmux_navigator_no_mappings = 1
@@ -597,16 +619,28 @@ Plug 'justinmk/vim-dirvish'
 Plug 'justinmk/vim-ipmotion'
 
 " completion
-Plug 'lifepillar/vim-mucomplete'
-    let g:mucomplete#enable_auto_at_startup = 1
-    inoremap <expr> <c-e> mucomplete#popup_exit("\<c-e>")
-    inoremap <expr> <c-y> mucomplete#popup_exit("\<c-y>")
-    inoremap <expr>  <cr> mucomplete#popup_exit("\<cr>")
+Plug 'Shougo/echodoc.vim'
+    let g:echodoc#enable_at_startup = 1
 
-    inoremap <silent> <plug>(MUcompleteFwdKey) <right>
-    imap <right> <plug>(MUcompleteCycFwd)
-    inoremap <silent> <plug>(MUcompleteBwdKey) <left>
-    imap <left> <plug>(MUcompleteCycBwd)
+if has('nvim')
+    Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+        let g:deoplete#enable_at_startup = 1
+        inoremap <silent><expr> <S-TAB>
+                    \ pumvisible() ? "\<C-p>" : "\<S-Tab>"
+        inoremap <silent><expr> <TAB>
+                    \ pumvisible() ? "\<C-n>" : "\<Tab>"
+else
+    Plug 'lifepillar/vim-mucomplete'
+        let g:mucomplete#enable_auto_at_startup = 1
+        inoremap <expr> <c-e> mucomplete#popup_exit("\<c-e>")
+        inoremap <expr> <c-y> mucomplete#popup_exit("\<c-y>")
+        inoremap <expr>  <cr> mucomplete#popup_exit("\<cr>")
+
+        inoremap <silent> <plug>(MUcompleteFwdKey) <right>
+        imap <right> <plug>(MUcompleteCycFwd)
+        inoremap <silent> <plug>(MUcompleteBwdKey) <left>
+        imap <left> <plug>(MUcompleteCycBwd)
+endif
 
 Plug 'ternjs/tern_for_vim', { 'do': 'npm install', 'for': 'javascript' }
 
@@ -616,6 +650,8 @@ Plug 'shawncplus/phpcomplete.vim', {'for': 'php'}
     let g:phpcomplete_complete_for_unknown_classes = 1
     let g:phpcomplete_search_tags_for_variables = 1
     let g:phpcomplete_enhance_jump_to_definition = 1
+
+Plug 'metakirby5/codi.vim'
 
 Plug 'w0rp/ale'
     let g:ale_sign_warning = '◈'
@@ -647,7 +683,57 @@ Plug 'mattn/emmet-vim', { 'on': 'EmmetInstall' }
     augroup END
 
 " statusline
-"
+Plug 'drzel/vim-line-no-indicator'
+    " let g:line_no_indicator_chars = ['⎺', '⎻', '⎼', '⎽', '⎯']
+
+Plug 'vitalk/vim-simple-todo'  " Shortcuts to creating todo lists
+    let g:simple_todo_map_keys = 0
+    map gs :topleft split ~/.scratch<CR>
+    augroup simpletodo
+        autocmd!
+        autocmd BufEnter   .scratch nmap <buffer> [[ <Plug>(simple-todo-new-start-of-line)i
+        autocmd BufEnter   .scratch nmap <buffer> ,i <Plug>(simple-todo-new-start-of-line)i
+        autocmd BufEnter   .scratch nmap <buffer> ,o <Plug>(simple-todo-below)
+        autocmd BufEnter   .scratch nmap <buffer> x <Plug>(simple-todo-mark-switch)
+        autocmd BufEnter   .scratch nmap <buffer> X :%g/\[x\]/d<CR>
+        " autocmd BufEnter .scratch imap <buffer> [[ :norm o<CR><Plug>(simple-todo-new)i
+        " autocmd BufEnter .scratch imap <buffer> ,i :norm o<CR><Plug>(simple-todo-new)i
+        " autocmd BufEnter .scratch imap <buffer> ,o :norm o<CR><Plug>(simple-todo-new)i
+        autocmd BufEnter   .scratch imap <buffer> [[ <Plug>(simple-todo-new)
+        autocmd BufEnter   .scratch imap <buffer> ,i <Plug>(simple-todo-new)
+        autocmd BufEnter   .scratch imap <buffer> ,o <Plug>(simple-todo-new)
+        autocmd BufLeave   .scratch w
+        autocmd BufEnter   .scratch abbreviate <buffer> [ [ ]
+        autocmd BufRead    .scratch setlocal foldlevel=0
+    augroup END
+
+Plug 'maxbrunsfeld/vim-yankstack'  " Clipboard history by repeating <leader>p, was still remapping s key when I told it not to
+    let g:yankstack_map_keys = 0
+    " Remove S as a yank key, otherwise interferes with vim surround S in visual
+    let g:yankstack_yank_keys=['c', 'C', 'd', 'D', 'x', 'X', 'y', 'Y']
+    nmap <leader>p <Plug>yankstack_substitute_older_paste
+    nmap <leader>P <Plug>yankstack_substitute_newer_paste
+
+
+" " Automatically bookmark last files accessed by directory
+" augroup filemarks
+"     autocmd!
+"     autocmd BufEnter *.{js,jsx,coffee} normal! mJ
+"     autocmd BufEnter */parsers/*       normal! mP
+"     autocmd BufEnter */epics/*         normal! mE
+"     autocmd BufEnter */routes/*        normal! mR
+"     autocmd BufEnter */reducers/*      normal! mS
+"     autocmd BufEnter */components/*    normal! mC
+"     autocmd BufEnter */utils/*         normal! mU
+"     autocmd BufEnter */api/*           normal! mA
+"     autocmd BufEnter */api/*           normal! mA
+
+"     autocmd BufWinLeave */src/* normal! mQ
+"     autocmd InsertEnter */src/* normal! mI
+"     autocmd TextChanged	*/src/* normal! mO
+"     autocmd TextChangedI */src/* normal! mO
+" augroup END
+
 " TODO: Replace with custom statusline
 " https://gist.github.com/ericbn/f2956cd9ec7d6bff8940c2087247b132
 " https://superuser.com/a/477221
@@ -659,6 +745,7 @@ Plug 'vim-airline/vim-airline-themes'
     let g:airline#extensions#tabline#tabs_label = 'party hard'
     let g:airline_left_sep=''
     let g:airline_right_sep=''
+    let g:airline_section_z = '%{LineNoIndicator()} :%2c'
     let g:airline#extensions#tabline#enabled = 1
     let g:airline#extensions#tabline#show_splits = 0
     let g:airline#extensions#tabline#show_buffers = 0
@@ -795,7 +882,7 @@ augroup Filetypes
     autocmd FileType * setlocal sw=4 expandtab
 
     " make K look up the docs, not man
-    autocmd FileType vimrc setlocal keywordprg=:help
+    autocmd FileType vim setlocal keywordprg=:help
 
     " follow symlink and set working directory
     autocmd! BufReadPost * call FollowSymlink() | ProjectRootLCD
