@@ -10,9 +10,9 @@ BAR=30
 # border width
 BW=6
 # active border color
-ACTIVE=0x87404
+ACTIVE=0x87404f
 # inactive border color
-INACTIVE=-0x323232
+INACTIVE=0x323232
 
 # groups
 GROOT=/tmp/groups.sh
