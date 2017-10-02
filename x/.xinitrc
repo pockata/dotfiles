@@ -29,7 +29,8 @@ groups.sh > /dev/null
 monitors=$(xrandr -q | grep -oE "^.* connected (primary )?[0-9]+")
 
 if [[ "$monitors" == *"HDMI"* ]] && [[ "$monitors" == *"VGA"* ]]; then
-    ~/bin/monitors.sh Home
+    mattr "LVDS1" && xrandr --output LVDS1 --off
+    ~/bin/monitors.sh "Home [eGPU]"
 elif [[ "$monitors" == *"LVDS"* ]] && [[ "$monitors" == *"VGA"* ]]; then
     ~/bin/monitors.sh Work
 else
