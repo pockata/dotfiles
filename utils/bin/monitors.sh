@@ -9,16 +9,16 @@ else
     CMD=`echo -e "$h\n$w\n$a" | rofi -dmenu -i -p "Monitor Setup:"`
 fi
 
-if [ ! $CMD ]; then
+if [ ! "$CMD" ]; then
     exit
 fi
 
 case $CMD in
-    $w)
+    "$w")
         ~/.screenlayout/work.sh ;;
-    $h)
+    "$h")
         ~/.screenlayout/home-egpu.sh ;;
-    $a)
+    "$a")
         arandr ;;
     *)
         echo "Usage:" ;;
