@@ -10,3 +10,5 @@ pup-git
 pulseaudio
 greenclip
 etcher
+alacritty-git
+
