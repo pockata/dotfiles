@@ -233,6 +233,9 @@ set showcmd
 " Enable mouse mode
 set mouse=a
 
+set display+=uhex
+set matchpairs+=<:>,=:;
+
 set formatoptions+=r " Insert comment leader after hitting <Enter>
 set formatoptions+=o " Insert comment leader after hitting o or O in normal mode
 set formatoptions+=t " Auto-wrap text using textwidth
@@ -897,6 +900,9 @@ augroup Filetypes
     "https://www.reddit.com/r/vim/comments/3er2az/how_to_suppress_vims_warning_editing_a_read_only/
     autocmd BufEnter * set noro
 
+    autocmd FileType php
+        \ nnoremap <silent> <expr> K ":silent exec \"!xdg-open 'http://php.net/en/" . expand('<cword>') . "'\"<CR>"
+
     autocmd Filetype *
                 \    if &omnifunc == "" |
                 \        setlocal omnifunc=syntaxcomplete#Complete |
@@ -944,8 +950,8 @@ colorscheme seoul256
 " Revert with ":iunmap <C-U>".
 inoremap <C-U> <C-G>u<C-U>
 
-nnoremap <silent> zk :call NextClosedFold('j')<cr>
-nnoremap <silent> zl :call NextClosedFold('k')<cr>
+nnoremap <silent> ]z :call NextClosedFold('j')<cr>
+nnoremap <silent> [z :call NextClosedFold('k')<cr>
 function! NextClosedFold(dir)
     let cmd = 'norm!z' . a:dir
     let view = winsaveview()
@@ -1244,10 +1250,14 @@ endfunction
 autocmd vimrc VimEnter * call s:startup()
 
 " select pasted text
-nmap gp `[v`]
+nnoremap gp `[v`]
+
+" select inserted text
+" https://vimrcfu.com/snippet/145
+nnoremap gi `[v`]
 
 " Quickly edit/reload the vimrc file
-nmap <silent> <leader>ev :execute 'vsplit ' . resolve(expand($MYVIMRC))<CR>
+nmap <silent> <leader>ev :execute 'vsplit ' . resolve("~/.vimrc")<CR>
 nmap <silent> <leader>sv :so ~/.vimrc<CR>:AirlineRefresh<CR>
 
 " Open hosts file
@@ -1265,6 +1275,9 @@ xnoremap <silent> <expr> k (v:count == 0 ? 'gj' : 'j')
 noremap <silent> <expr> l (v:count == 0 ? 'gk' : 'k')
 xnoremap <silent> <expr> l (v:count == 0 ? 'gk' : 'k')
 noremap ; l
+
+nnoremap gk j
+nnoremap gl k
 
 noremap <C-w>j <C-w>h
 noremap <C-w>k <C-w>j
