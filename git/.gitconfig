@@ -80,9 +80,9 @@
 
     # https://github.com/git-tips/tips
     # changes made to the branch since forked from master
-    since-forked = "!git log-format --no-merges --stat ${1:-master}.."
+    since-forked = "!git log-format --no-merges ${1:-master}.."
     # changes made to the master since forked
-    after-forked = "!git log-format --no-merges --stat ..${1:-master}"
+    after-forked = "!git log-format --no-merges ..${1:-master}"
 [user]
     name = Rosen Stoyanov
     email = me@pockata.org
