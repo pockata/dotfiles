@@ -271,10 +271,20 @@ cselect() {
             grep -o "[a-f0-9]\{7,\}"
 }
 
+read_from_pipe() {}
+
 # gshow - git commit browser
 gshow() {
     is_in_git_repo || return
-    git l --graph --color=always "$@" |
+
+    if [ -t 0 ]; then
+        git_output="$(git l --graph --color=always "$@")"
+    else
+        # TODO: Figure out how to preserve git's color output
+        git_output="$(script -q /dev/null < /dev/stdin)"
+    fi
+
+    echo "$git_output" |
     fzf -d 100% --ansi --no-sort --reverse --tiebreak=index --bind=ctrl-s:toggle-sort \
         --header "Press CTRL-S to toggle sort" \
         --preview "echo {} | grep -o '[a-f0-9]\{7\}' | head -1 |
