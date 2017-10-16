@@ -34,8 +34,9 @@ zplug load
 
 # ruby binaries
 PATH="$HOME/.gem/ruby/2.4.0/bin/:$PATH"
+PATH="$HOME/.config/composer/vendor/bin:$PATH"
 
-export PATH="$HOME/bin:$PATH"
+PATH="$HOME/bin:$PATH"
 
 export EDITOR='nvim'
 
