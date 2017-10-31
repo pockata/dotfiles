@@ -271,8 +271,6 @@ cselect() {
             grep -o "[a-f0-9]\{7,\}"
 }
 
-read_from_pipe() {}
-
 # gshow - git commit browser
 gshow() {
     is_in_git_repo || return
@@ -281,7 +279,7 @@ gshow() {
         git_output="$(git l --graph --color=always "$@")"
     else
         # TODO: Figure out how to preserve git's color output
-        git_output="$(script -q /dev/null < /dev/stdin)"
+        git_output="$(cat - )"
     fi
 
     echo "$git_output" |
