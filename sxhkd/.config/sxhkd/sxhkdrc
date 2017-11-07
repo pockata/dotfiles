@@ -56,8 +56,11 @@ mod4 + shift + m
     ~/bin/monitors.sh
 
 # run urxvt
-mod4 + Return
+mod4 + shift + Return
     urxvtc -g 60x18
+
+mod4 + Return
+    alacritty
 
 # kill window
 mod4 + shift + q
