@@ -1242,7 +1242,11 @@ function! s:startup()
     endif
 
     let cnt = argc()
-    if (cnt == 0 || cnt == 1 && isdirectory(argv(0)))
+    if (cnt == 0 || cnt == 1)
+        if (cnt == 1 && isdirectory(argv(0)))
+            exe "cd " . argv(0)
+        endif
+
         Startify
     endif
 endfunction
