@@ -5,7 +5,7 @@
 #
 
 volcheck() {
-    pop " $(amixer get Master | awk -F "[][]" '/%/ { print $2 }' | head -1) volume"
+    pop " $(pamixer --get-volume --sink "$(pactl list sinks short | grep "RUNNING"| cut -d "	" -f2)")% volume"
 }
 volmute() {
     pop " volume $(amixer get Master | awk -F "[][]" '/%/ { print $6 }' | sed 's/off/muted/g;s/on/unmuted/g')"
