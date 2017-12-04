@@ -75,3 +75,9 @@ gnome-keyring
 diff-so-fancy
 udiskie
 jq
+pulseaudio
+pulseaudio-bluetooth
+pulseaudio-zeroconf
+pavucontrol
+paprefs
+pamixer
