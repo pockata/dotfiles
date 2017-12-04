@@ -104,10 +104,10 @@ Print
 
 # volume management
 XF86AudioRaiseVolume
-    pamixer --set-volume $(($(pamixer --get-volume) + 10)); notifier volume #increase sound volume
+    pamixer -i 10 --sink "$(pactl list sinks short | grep "RUNNING"| cut -d "	" -f2)"; notifier volume #increase sound volume
 
 XF86AudioLowerVolume
-    pamixer --set-volume $(($(pamixer --get-volume) - 10)); notifier volume #decrease sound volume
+    pamixer -d 10 --sink "$(pactl list sinks short | grep "RUNNING"| cut -d "	" -f2)"; notifier volume #decrease sound volume
 
 XF86AudioMute
     pamixer --toggle-mute; notifier volmute # mute sound
