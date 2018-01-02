@@ -28,7 +28,7 @@ case $CMD in
 esac
 
 # Always set the wallpaper after xrandr changes
-nitrogen --restore &
+xsetroot -bitmap ~/.config/tile.xbm -bg "$(xrdb -query | grep "*color8" | awk '{print $2}')" -fg "$(xrdb -query | grep "*color0" | awk '{print $2}')"
 
 # Restart the bar
 # TODO: Find a way to improve it
