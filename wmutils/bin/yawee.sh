@@ -10,6 +10,13 @@ while IFS=: read ev wid; do
 
     case $ev in
 
+        # click on window
+        4)
+            if ! wattr o $wid; then
+                wattr "$wid" && vroum.sh "$wid" "nowarp" &
+            fi
+            ;;
+
         # window creation
         16)
             if ! wattr o $wid; then
