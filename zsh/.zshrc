@@ -313,6 +313,15 @@ gf() {
     cut -c4- | tr '\n' ' '
 }
 
+gp() {
+    is_in_git_repo || return
+    git diff --color=always --name-status HEAD~1..HEAD |
+    fzf-tmux -m --ansi --nth 2..,.. \
+        --preview 'NAME="$(cut -c3- <<< {})" &&
+        (git diff --color=always "$NAME" | sed 1,4d; cat "$NAME") | head -'$LINES |
+    cut -c4- | tr '\n' ' '
+}
+
 # gco - checkout git branch/tag
 gco() {
 
@@ -388,6 +397,11 @@ git-changedfiles-widget() {
     widget-helper
 }
 
+git-prevCommit-widget() {
+    LBUFFER="${LBUFFER}$(gp)"
+    widget-helper
+}
+
 git-commitfinder-widget() {
     LBUFFER="${LBUFFER}$(cselect)"
     widget-helper
@@ -409,12 +423,14 @@ autoload -U edit-command-line
 zle -N edit-command-line
 zle -N git-branches-widget
 zle -N git-changedfiles-widget
+zle -N git-prevCommit-widget
 zle -N git-commitfinder-widget
 zle -N listdirectories-widget
 zle -N project-switcher-widget
 
 bindkey -r '^G'
 bindkey '^G^F' git-changedfiles-widget
+bindkey '^G^P' git-prevCommit-widget
 bindkey '^G^R' git-commitfinder-widget
 bindkey '^G^B' git-branches-widget
 bindkey '^X^E' edit-command-line
