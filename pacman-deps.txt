@@ -81,3 +81,4 @@ pulseaudio-zeroconf
 pavucontrol
 paprefs
 pamixer
+blueberry
