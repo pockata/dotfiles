@@ -95,12 +95,17 @@ export FZF_CTRL_R_OPTS="$FZF_DEFAULT_OPTS --preview 'echo {}' --preview-window d
 #export FZF_ALT_C_OPTS="$FZF_DEFAULT_OPTS"
 command -v tree > /dev/null && export FZF_ALT_C_OPTS="$FZF_DEFAULT_OPTS --preview 'tree -C {} | head -$LINES'"
 
-# Use ag instead of the default find command for listing candidates.
+# Use rg instead of the default find command for listing candidates.
 # - The first argument to the function is the base path to start traversal
-# - Note that ag only lists files not directories
+# - Note that rg only lists files not directories
 # - See the source code (completion.{bash,zsh}) for the details.
 _fzf_compgen_path() {
-    ag --hidden -g "" "$1"
+    rg --files "$1" | with-dir "$1"
+}
+
+# Use rg to generate the list for directory completion
+_fzf_compgen_dir() {
+    rg --files "$1" | only-dir "$1"
 }
 
 # colorize man pages
