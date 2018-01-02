@@ -86,12 +86,12 @@ mod4 + BackSpace
 mod4 + button1
     xmmv $(pfw)
 
+mod4 + @button1
+    killall xmmv
+
 # show battery level
 mod4 + b
     notifier battery
-
-mod4 + @button1
-    killall xmmv
 
 ~button1
     ~/bin/vroum.sh $(~/bin/underneath.sh) "nowarp"
@@ -138,10 +138,13 @@ super + shift + {Up, Down}
 
 # fn+{f11,f12} to change crightness
 XF86MonBrightness{Down,Up}
-    xbacklight {-,+}10% -time 0 -steps 1; notifier backlight
+    xbacklight {-,+}10 -time 1; notifier backlight
+
+super + button3
+    xmrs $(pfw)
 
 super + @button3
-    wrs -a $(wmp) $(pfw)
+    killall xmrs
 
 # exit X session
 super + alt + Escape
