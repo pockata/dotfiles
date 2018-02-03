@@ -5,8 +5,10 @@
 
 GROOT=${GROOT:-"/tmp/groups.sh"}
 GNUMBER=${GNUMBER:-5}
-GAP=${GAP:-15}
+PANEL=${PANEL:-45}
 BAR=${BAR:-30}
+
+offset=$((PANEL - BAR))
 
 monitors="$(lsm)"
 num_monitors=$(echo "$monitors" | wc -l)
@@ -43,7 +45,7 @@ barGeo() {
     mon_y="$(mattr y $1)"
     mon_w="$(mattr w $1)"
 
-    echo "${b_w}x${b_h}+$((mon_x + mon_w - b_w - GAP))+$((mon_y + GAP))"
+    echo "${b_w}x${b_h}+$((mon_x + mon_w - b_w - offset))+$((mon_y + offset))"
 }
 
 desktop() {

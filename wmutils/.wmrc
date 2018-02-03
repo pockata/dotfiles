@@ -7,7 +7,13 @@
 GAP=15
 BAR=30
 
-# border width
+# panel height
+#
+# the difference between $BAR and $PANEL will be used as an offset from the top
+# and right edges of the monitor
+PANEL=$((BAR + GAP))
+
+# window border width
 BW=6
 # active border color
 ACTIVE=0x87404f

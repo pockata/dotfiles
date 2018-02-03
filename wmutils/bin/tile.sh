@@ -10,7 +10,7 @@ BW=$(wattr b $PFW)
 # default values for gaps and master area
 BAR=${BAR:-30}
 GAP=${GAP:-15}
-PANEL=$((BAR + GAP))
+PANEL=${PANEL:-45}
 # occupy 60% of the screen width
 MASTER_AREA=${MASTER_AREA:-60}
 MASTER=${MASTER:-$(echo "$(mattr w $PFW) * $MASTER_AREA / 100" | bc)}
