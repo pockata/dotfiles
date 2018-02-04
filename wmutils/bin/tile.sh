@@ -7,6 +7,8 @@
 PFW=$(pfw)
 BW=$(wattr b $PFW)
 
+direction=${1:-"left"}
+
 # default values for gaps and master area
 BAR=${BAR:-30}
 GAP=${GAP:-15}
@@ -16,10 +18,9 @@ MASTER_AREA=${MASTER_AREA:-60}
 MASTER=${MASTER:-$(echo "$(mattr w $PFW) * $MASTER_AREA / 100" | bc)}
 
 # get current monitor's size
-SW=$(mattr w $PFW)
-SH=$(mattr h $PFW)
-SX=$(mattr x $PFW)
-SY=$(mattr y $PFW)
+read SW SH SX SY = <<-eof
+    $(mattr whxy $PFW)
+eof
 
 # get the windows in the current monitor
 # TODO: simplify this. lsw -m <monitor id>?
@@ -31,11 +32,25 @@ SW=$((SW - GAP - 2*BW))
 SH=$((SH - GAP - PANEL))
 
 Y=$((SY + GAP + PANEL))
+
+MASTER_WIDTH=$((MASTER - GAP - 2*BW))
+
+if [ $direction = "left" ]; then
+    MASTER_X=$((SX + GAP))
+else
+    MASTER_X=$((SX + SW - MASTER_WIDTH))
+fi
+
 # put current window in master area
-wtp $((SX + GAP)) $Y $((MASTER - GAP - 2*BW)) $((SH - GAP - 2*BW)) $PFW
+wtp $MASTER_X $Y $MASTER_WIDTH $((SH - GAP - 2*BW)) $PFW
 
 # and now, stack up all remaining windows on the right
-X=$((MASTER + GAP + SX))
+if [ $direction = "left" ]; then
+    X=$((MASTER + GAP + SX))
+else
+    X=$((SX + GAP))
+fi
+
 W=$((SW - MASTER - GAP))
 H=$((SH / MAX - GAP - 2*BW))
 
