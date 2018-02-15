@@ -34,7 +34,7 @@ if [[ "$monitors" == *"HDMI"* ]] && [[ "$monitors" == *"VGA"* ]]; then
 elif [[ "$monitors" == *"LVDS"* ]] && [[ "$monitors" == *"VGA"* ]]; then
     ~/bin/monitors.sh Work
 else
-    xsetroot -bitmap ~/.config/tile.xbm -bg "$(xrdb -query | grep "*color8" | awk '{print $2}')" -fg "$(xrdb -query | grep "*color0" | awk '{print $2}')"
+    nitrogen --restore &
     ~/bin/bar.sh &
 fi
 
