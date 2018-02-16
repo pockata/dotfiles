@@ -128,7 +128,7 @@ z() {
 # Aliases
 alias g="git"
 alias ga="g add \$(gf) && g st"
-alias gv='nvim +"let g:loaded_startify = 1" +GV +tabonly +"autocmd BufWipeout <buffer> qall"'
+alias gv='vim +"let g:loaded_startify = 1" +GV +tabonly +"autocmd BufWipeout <buffer> qall"'
 alias t="tmux -2"
 alias e="nvim"
 alias view="eog"
@@ -227,7 +227,7 @@ v() {
   files=$(grep '^>' ~/.viminfo | cut -c3- |
           while read line; do
             [ -f "${line/\~/$HOME}" ] && echo "$line"
-          done | fzf-tmux -d -m -q "$*" -1) && nvim ${files//\~/$HOME}
+          done | fzf-tmux -d -m -q "$*" -1) && vim ${files//\~/$HOME}
 }
 
 # christ?
@@ -292,15 +292,14 @@ gshow() {
         --preview "echo {} | grep -o '[a-f0-9]\{7\}' | head -1 |
             xargs -I % sh -c 'git show --color=always % | head -$LINES '" \
         --bind "enter:execute:echo {} | grep -o '[a-f0-9]\{7\}' | head -1 |
-            xargs -I % sh -c 'nvim fugitive://\$(git rev-parse --show-toplevel)/.git//% < /dev/tty'"
+            xargs -I % sh -c 'vim fugitive://\$(git rev-parse --show-toplevel)/.git//% < /dev/tty'"
 }
 
 gb() {
     is_in_git_repo || return
     git branch -a --color=always | grep -v '/HEAD\s' | sort | sed 's#remotes/##' |
     fzf-tmux --ansi --multi --tac --preview-window right:70% \
-        --preview 'git l $(sed s/^..// <<< {} | cut -d" " -f1) -- | head -'$LINES |
-    sed 's/^[\*\t ]*//;s/\(.*\)/"\1"/'
+        --preview 'git log --oneline --graph --color="always" --date=short --pretty="format:%C(auto)%cd %h%d %s" $(sed s/^..// <<< {} | cut -d" " -f1) -- | head -'$LINES
 }
 
 gf() {
