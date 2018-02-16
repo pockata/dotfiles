@@ -38,7 +38,7 @@ PATH="$HOME/.config/composer/vendor/bin:$PATH"
 
 PATH="$HOME/bin:$PATH"
 
-export EDITOR='nvim'
+export EDITOR='vim'
 
 # Map Ctrl-S to sth usefull other than XOFF (interrupt data flow).
 stty -ixon
@@ -130,7 +130,7 @@ alias g="git"
 alias ga="g add \$(gf) && g st"
 alias gv='vim +"let g:loaded_startify = 1" +GV +tabonly +"autocmd BufWipeout <buffer> qall"'
 alias t="tmux -2"
-alias e="nvim"
+alias e="vim"
 alias view="eog"
 alias aur="yaourt"
 alias myip="dig +short myip.opendns.com @resolver1.opendns.com"
