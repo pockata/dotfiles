@@ -3,6 +3,11 @@
 # bar - lemonbar output
 #
 
+# create status fifo
+FIFO_PATH="/tmp/status.fifo"
+test -e "$FIFO_PATH" && rm "$FIFO_PATH"
+mkfifo "$FIFO_PATH"
+
 GROOT=${GROOT:-"/tmp/groups.sh"}
 GNUMBER=${GNUMBER:-5}
 PANEL=${PANEL:-45}
@@ -48,37 +53,57 @@ barGeo() {
     echo "${b_w}x${b_h}+$((mon_x + mon_w - b_w - offset))+$((mon_y + offset))"
 }
 
-desktop() {
+showBar() {
+    lemonbar -B "$color_bg" -F "$color_fg" -d -f "$b_f" -f "$b_fi" -g "$1"
+}
+
+#TODO: Add on-demand refresh support, e.g. `bar.sh -u "date"`
+
+# clock
+while :; do
+    date=$(date "+%a %b %d %k:%M")
+    # printf 'C%s' " $date"
+    echo "C  $date"
+
+    sleep 30s
+done > "$FIFO_PATH" &
+
+# groups
+while :; do
+    groupstr=""
     for gid in $(seq 1 $GNUMBER); do
 
         c=$(color "$gid")
 
         if ! grep --quiet "$gid" "$GROOT/all"; then
-            echo -n "%{F#504945}□%{F-} "
+            groupstr="$groupstr%{F#504945}□%{F-} "
         else
             if grep --quiet "$gid" "$GROOT/active" 2>/dev/null; then
-                echo -n "%{F$c}■%{F-} "
+                groupstr="$groupstr%{F$c}■%{F-} "
             else
-                echo -n "%{F$c}□%{F-} "
+                groupstr="$groupstr%{F$c}□%{F-} "
             fi
         fi
     done
-}
 
-clock() {
-    date=$(date "+%a %b %d %k:%M")
-    printf '%s\n' " $date"
-}
+    echo "G   $groupstr"
 
-lemonize(){
-    buf=""
-    buf="${buf}$(desktop) $(clock)"
-    printf '%s\n' "%{c}$buf"
-    sleep 1
-}
+    sleep 3s
+done > "$FIFO_PATH" &
 
 mon1=$(echo "$monitors" | sed -n '1p')
 b_geo1="$(barGeo "$mon1")"
+
+parseFifo() {
+    line="$1"
+
+        case $line in
+            C*) clock="${line#?}" ;;
+            G*) groups="${line#?}" ;;
+        esac
+
+        echo "$groups $clock"
+}
 
 if [ "$num_monitors" -gt 2 ]; then
     mon2=$(echo "$monitors" | sed -n '2p')
@@ -86,25 +111,26 @@ if [ "$num_monitors" -gt 2 ]; then
     b_geo2="$(barGeo "$mon2")"
     b_geo3="$(barGeo "$mon3")"
 
-    while :; do
-        lemonize
+    cat "$FIFO_PATH" | while read -r line; do
+        parseFifo "$line"
     done |
-        tee >(lemonbar -B "$color_bg" -F "$color_fg" -d -f "$b_f" -f "$b_fi" -g "$b_geo1") |
-        tee >(lemonbar -B "$color_bg" -F "$color_fg" -d -f "$b_f" -f "$b_fi" -g "$b_geo2") |
-        lemonbar -B "$color_bg" -F "$color_fg" -d -f "$b_f" -f "$b_fi" -g "$b_geo3"
+        tee >(showBar "$b_geo1") |
+        tee >(showBar "$b_geo2") |
+        showBar "$b_geo3"
+
 elif [ "$num_monitors" -gt 1 ]; then
     mon2=$(echo "$monitors" | sed -n '2p')
     b_geo2="$(barGeo "$mon2")"
 
-    while :; do
-        lemonize
+    cat "$FIFO_PATH" | while read -r line; do
+        parseFifo "$line"
     done |
-        tee >(lemonbar -B "$color_bg" -F "$color_fg" -d -f "$b_f" -f "$b_fi" -g "$b_geo1") |
-        lemonbar -B "$color_bg" -F "$color_fg" -d -f "$b_f" -f "$b_fi" -g "$b_geo2"
+        tee >(showBar "$b_geo1") |
+        showBar "$b_geo2"
 else
-    while :; do
-        lemonize
+    cat "$FIFO_PATH" | while read -r line; do
+        parseFifo "$line"
     done |
-        lemonbar -B "$color_bg" -F "$color_fg" -d -f "$b_f" -f "$b_fi" -g "$b_geo1"
+        showBar "$b_geo1"
 fi
 
