@@ -15,18 +15,15 @@ PANEL=$((BAR + GAP))
 
 # window border width
 BW=6
-# active border color
+# active window border color
 ACTIVE=0x87404f
-# inactive border color
+# inactive window border color
 INACTIVE=0x323232
 
 # groups
 GROOT=/tmp/groups.sh
 GNUMBER=5
 
-# For tiling
+# tiling
 MASTER_AREA=60 # in percent
-
-# TODO: Implement this
-# MASTER_AREA_MIN_WIDTH=400 # in pixels
 

@@ -1,0 +1,86 @@
+# vim: ft=sxhkdrc
+
+#
+# wm independent hotkeys
+#
+
+
+# run urxvt
+mod4 + shift + Return
+    urxvtc -g 60x18
+
+mod4 + Return
+    alacritty
+
+# program launcher
+super + d
+    rofi -show drun
+
+# make sxhkd reload its configuration files:
+super + Escape
+    pkill -USR1 -x sxhkd
+
+# select monitor setup
+mod4 + shift + m
+    ~/bin/monitors.sh
+
+mod4 + shift + e
+    ~/bin/logout.sh
+
+Print
+    ~/bin/screenshot.sh
+
+super + b
+    notifier battery
+
+mod4 + c
+    rofi -modi "clipboard:greenclip print" -show clipboard
+
+# Thyme (pomodoro)
+alt + ctrl + d
+    thyme -d
+
+alt + ctrl + s
+    thyme -s
+
+alt + ctrl + b
+    thyme -d -b
+
+# volume management
+XF86AudioRaiseVolume
+    pamixer -i 10 --sink "$(pactl list sinks short | grep "RUNNING"| cut -d "	" -f2)"; notifier volume #increase sound volume
+
+XF86AudioLowerVolume
+    pamixer -d 10 --sink "$(pactl list sinks short | grep "RUNNING"| cut -d "	" -f2)"; notifier volume #decrease sound volume
+
+XF86AudioMute
+    pamixer --toggle-mute; notifier volmute # mute sound
+
+# media keys
+XF86AudioPlay
+    mpc toggle; notifier musictoggle
+
+XF86AudioStop
+    mpc stop; notifier musicstop
+
+XF86AudioNext
+    mpc next; notifier nextsong
+
+XF86AudioPrev
+    mpc prev; notifier prevsong
+
+# Power Button
+XF86PowerOff
+    ~/bin/logout.sh
+
+XF86Sleep
+    ~/bin/logout.sh
+
+# inc/dec opacity of current window
+super + shift + {Up, Down}
+    compton-trans -w $(pfw) -o {+10,-- -10}
+
+# fn+{f11,f12} to change crightness
+XF86MonBrightness{Down,Up}
+    xbacklight {-,+}10 -time 1; notifier backlight
+

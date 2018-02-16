@@ -1,0 +1,81 @@
+# vim: ft=sxhkdrc
+
+#
+# wmutils hotkeys
+#
+
+# move windows around
+mod4 + shift + {j,k,l,semicolon}
+    wmv {-40 0, 0 40, 0 -40, 40 0} $(pfw)
+
+# select windows using directions
+mod4 + {j,k,l,semicolon}
+    focus.sh {east, south, north, west} $(pfw)
+
+# move windows to corners
+mod4 + shift + {u,p,i,o,h}
+    corner_mh.sh {tl, tr, bl, br, md} $(pfw)
+
+# move windows to monitors
+mod4 + ctrl + {j,k,l,semicolon}
+    closest_mon.sh {left, down, up, right} $(pfw)
+
+# cycle throught windows
+mod4 + {Tab, shift + Tab}
+    vroum.sh {next, prev}
+
+# cycle throught windows with same class
+mod4 + {grave, shift + grave}
+    next_in_class.sh {next, prev}
+
+# set window fullscreen
+mod4 + f
+    fullscreen_mh.sh $(pfw)
+
+mod4 + shift + f
+    fullscreen_mh.sh $(pfw) max
+
+# resize window
+mod4 + r : {j,k,l,semicolon}
+    wrs {-40 0, 0 40, 0 -40, 40 0} $(pfw); pop "resizing"
+
+# kill window
+mod4 + shift + q
+    killwa $(pfw)
+
+# tile windows
+mod4 + {t,shift + t}
+    tile.sh {"","right"}
+
+# add window to a group
+mod4 + shift + {1,2,3,4,5,0}
+    groups.sh -s $(pfw) {1,2,3,4,5,0}; pop "Added to group"
+
+# toggle groups' visibility
+mod4 + {1,2,3,4,5,0}
+    groups.sh -T $(pfw) {1,2,3,4,5,0}
+
+# remove window from all groups
+mod4 + BackSpace
+    groups.sh -c $(pfw)
+
+# move windows with the mouse
+mod4 + button1
+    xmmv $(pfw)
+
+mod4 + @button1
+    killall xmmv
+
+~button1
+    ~/bin/vroum.sh $(~/bin/underneath.sh) "nowarp"
+
+super + button3
+    xmrs $(pfw)
+
+super + @button3
+    killall xmrs
+
+# exit X session
+super + alt + Escape
+    pkill xwait
+

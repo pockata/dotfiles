@@ -7,25 +7,34 @@ if [ -d /etc/X11/xinit/xinitrc.d ] ; then
     unset f
 fi
 
+# start gpg daemon
 if command -v gnome-keyring-daemon >> /dev/null; then
     eval "$(gnome-keyring-daemon --start --components=pkcs11,secrets,ssh)"
     export SSH_AUTH_SOCK
 fi
 
-# Set output provider when using eGPU
+# set output provider when using eGPU
 NUM_PROVIDERS=$(xrandr --listproviders | head -1 | cut -d ":" -f3)
 [ "$NUM_PROVIDERS" -gt 1 ] && xrandr --setprovideroutputsource 1 0
 
+# load Xresources
 [[ -f ~/.Xresources ]] && xrdb -load ~/.Xresources
 
-xset +fp ~/.fonts
-xset fp rehash
+# load fonts
+if [[ -d ~/.fonts ]]; then
+    xset +fp ~/.fonts
+    xset fp rehash
+fi
 
 # load wmutils configs
 [[ -f ~/.wmrc ]] && . ~/.wmrc
 
+# initialize groups script
 groups.sh > /dev/null
 
+# load predefined monitor layout 
+#
+# TODO: rewrite using mmutils
 monitors=$(xrandr -q | grep -oE "^.* connected (primary )?[0-9]+")
 
 if [[ "$monitors" == *"HDMI"* ]] && [[ "$monitors" == *"VGA"* ]]; then
@@ -38,11 +47,12 @@ else
     ~/bin/bar.sh &
 fi
 
+# set keyboard defaults
+#
+# TODO: Run as udev rule on keyboard connect/disconnect
 ~/bin/setkeyboard.sh
 
-sxhkd -m 1 &
-
-# compton --config ~/.compton.conf &
+compton --config /dev/null &
 
 dunst &
 
@@ -67,11 +77,30 @@ export SXHKD_SHELL=sh
 
 redshift-gtk &
 
-wew | yawee.sh &
-
 urxvtc -e zsh -c 'tmux has-session && tmux attach -d || tmux new -s main' &
 
 greenclip daemon &
 
-exec xwait
+session=${1:-wmutils}
+export WM_NAME="$session"
+
+case $session in
+    bspwm)
+        sxhkd -c ~/.config/sxhkd/sxhkdrc_general ~/.config/sxhkd/sxhkdrc_bspwm &
+
+        exec bspwm
+        ;;
+
+    wmutils)
+        wew | yawee.sh &
+        sxhkd -c ~/.config/sxhkd/sxhkdrc_general  ~/.config/sxhkd/sxhkdrc_wmutils &
+
+        exec xwait
+        ;;
+
+    # No known session, try to run it as command
+    *)
+        exec $1
+        ;;
+esac
 
