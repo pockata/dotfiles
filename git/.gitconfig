@@ -107,7 +107,7 @@
 	rebase = true
 [diff]
 	mnemonicprefix = true
-	compactionHeuristic = true
+	identheuristic = true
 	tool = vimdiff
 [merge]
 	stat = true
