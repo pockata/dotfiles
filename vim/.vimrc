@@ -259,9 +259,16 @@ nmap  <C-Semicolon>
 
 call plug#begin('~/.vim/plugged')
 
+Plug 'lilydjwg/colorizer', { 'on': '<Plug>Colorizer' }
+    let g:colorizer_startup = 0
+    nmap ,c <Plug>Colorizer
+
+Plug 'gerw/vim-HiLinkTrace', { 'on': 'HLT' }
+
 " colorschemes / start screen
 Plug 'AlessandroYorba/Alduin'
 Plug 'ronny/birds-of-paradise.vim'
+Plug 'nightsense/wonka'
 Plug 'junegunn/seoul256.vim'
     let g:seoul256_background = 236
     let g:seoul256_light_background = 255
@@ -293,13 +300,13 @@ Plug 'junegunn/seoul256.vim'
         endif
     augroup END
 
-Plug 'machakann/vim-highlightedyank'
-    let g:highlightedyank_highlight_duration = 200
-
-    augroup YankConfig
-        autocmd!
-        autocmd ColorScheme * highlight HighlightedyankRegion guibg=purple guifg=white
-    augroup END
+" Plug 'machakann/vim-highlightedyank'
+"     let g:highlightedyank_highlight_duration = 100
+"
+"     augroup YankConfig
+"         autocmd!
+"         autocmd ColorScheme * highlight HighlightedyankRegion guibg=purple guifg=white
+"     augroup END
 
 " additional text objects
 Plug 'kana/vim-textobj-user'
@@ -573,7 +580,6 @@ Plug 'rhysd/conflict-marker.vim'
 
 Plug 'ludovicchabant/vim-gutentags'
     let g:gutentags_cache_dir = '~/.vim/gutentags'
-    let g:gutentags_enabled = 0
 
 " code searching
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
@@ -618,13 +624,7 @@ Plug 'junegunn/fzf.vim'
 
 Plug 'brooth/far.vim'
 
-Plug 'henrik/vim-indexed-search'
-    " Call command from vim-slash
-    let g:indexed_search_mappings = 0
-
 Plug 'junegunn/vim-slash'
-    noremap <silent> <Plug>(slash-after) :<C-u>ShowSearchIndex<CR>
-    xunmap <Plug>(slash-after)
 
 " navigation
 Plug 'itchyny/vim-cursorword'
@@ -674,20 +674,124 @@ Plug 'justinmk/vim-ipmotion'
 Plug 'Shougo/echodoc.vim'
     let g:echodoc#enable_at_startup = 1
 
-Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'autozimu/LanguageClient-neovim', {
+    \ 'branch': 'next',
+    \ 'do': 'bash install.sh',
+    \ }
+
+" npm install -g vscode-css-languageserver-bin
+" npm install -g vscode-html-languageserver-bin
+    let g:LanguageClient_serverCommands = {
+        \ 'javascript': ['javascript-typescript-stdio'],
+        \ 'javascript.jsx': ['javascript-typescript-stdio'],
+        \ 'php': ['php', expand('~/.vim/plugged/php-language-server/bin/php-language-server.php')],
+        \ 'css': ['css-languageserver', '--stdio'],
+        \ 'scss': ['css-languageserver', '--stdio'],
+        \ 'html': ['html-languageserver', '--stdio'],
+        \ 'hbs': ['html-languageserver', '--stdio'],
+        \ }
+
+    nnoremap <silent> K :call LanguageClient_textDocument_hover()<CR>
+    nnoremap <silent> gd :call LanguageClient_textDocument_definition()<CR>
+
+Plug 'felixfbecker/php-language-server', {'do': 'composer install && composer run-script parse-stubs'}
+
+Plug 'Shougo/deoplete.nvim'
     let g:deoplete#enable_at_startup = 1
 
     inoremap <silent><expr> <S-TAB>
                 \ pumvisible() ? "\<C-p>" : "\<S-Tab>"
     inoremap <silent><expr> <TAB>
                 \ pumvisible() ? "\<C-n>" : "\<Tab>"
-    " inoremap <silent><expr> <CR>
-    "             \ pumvisible() ? "\<C-y>" : "\<CR>"
+    inoremap <silent><expr> <CR>
+                \ pumvisible() ? "\<C-y>" : "\<CR>"
+
+Plug 'roxma/nvim-yarp'
+Plug 'roxma/vim-hug-neovim-rpc'
+    " install python-neovim from pacman
+    set pyxversion=3
+
+" Plug 'prabirshrestha/asyncomplete.vim'
+"     inoremap <silent><expr> <S-TAB>
+"                 \ pumvisible() ? "\<C-p>" : "\<S-Tab>"
+"     inoremap <silent><expr> <TAB>
+"                 \ pumvisible() ? "\<C-n>" : "\<Tab>"
+"     inoremap <silent><expr> <CR>
+"                 \ pumvisible() ? "\<C-y>" : "\<CR>"
+"
+"     inoremap <c-space> <Plug>(asyncomplete_force_refresh)
+"
+" Plug 'prabirshrestha/asyncomplete-buffer.vim'
+"     autocmd User asyncomplete_setup call asyncomplete#register_source(asyncomplete#sources#buffer#get_source_options({
+"         \ 'name': 'buffer',
+"         \ 'whitelist': ['*'],
+"         \ 'blacklist': ['go'],
+"         \ 'completor': function('asyncomplete#sources#buffer#completor'),
+"         \ }))
+"
+" Plug 'prabirshrestha/asyncomplete-file.vim'
+"     autocmd User asyncomplete_setup call asyncomplete#register_source(asyncomplete#sources#file#get_source_options({
+"         \ 'name': 'file',
+"         \ 'whitelist': ['*'],
+"         \ 'priority': 10,
+"         \ 'completor': function('asyncomplete#sources#file#completor')
+"         \ }))
+"
+" Plug 'prabirshrestha/asyncomplete-ultisnips.vim'
+"     if has('python3')
+"         autocmd User asyncomplete_setup call asyncomplete#register_source(asyncomplete#sources#ultisnips#get_source_options({
+"             \ 'name': 'ultisnips',
+"             \ 'whitelist': ['*'],
+"             \ 'completor': function('asyncomplete#sources#ultisnips#completor'),
+"             \ }))
+"     endif
+"
+" Plug 'yami-beta/asyncomplete-omni.vim'
+"         autocmd User asyncomplete_setup call asyncomplete#register_source(asyncomplete#sources#omni#get_source_options({
+"             \ 'name': 'omni',
+"             \ 'whitelist': ['*'],
+"             \ 'blacklist': ['html'],
+"             \ 'completor': function('asyncomplete#sources#omni#completor')
+"             \  }))
+"
+" Plug 'prabirshrestha/async.vim'
+" Plug 'prabirshrestha/vim-lsp'
+"
+" Plug 'prabirshrestha/asyncomplete-lsp.vim'
+"
+" " Language servers form vim-lsp
+" Plug 'felixfbecker/php-language-server', {'do': 'composer install && composer run-script parse-stubs'}
+"     autocmd User lsp_setup call lsp#register_server({
+"             \ 'name': 'php-language-server',
+"             \ 'cmd': {server_info->['php', expand('~/.vim/plugged/php-language-server/bin/php-language-server.php')]},
+"             \ 'whitelist': ['php'],
+"             \ })
+"
+" " https://github.com/prabirshrestha/vim-lsp/wiki/Servers-Css
+" " npm install -g vscode-css-languageserver-bin
+" if executable('css-languageserver')
+"     autocmd User lsp_setup call lsp#register_server({
+"             \ 'name': 'css-languageserver',
+"             \ 'cmd': {server_info->[&shell, &shellcmdflag, 'css-languageserver --stdio']},
+"             \ 'whitelist': ['css', 'less', 'sass'],
+"             \ })
+" endif
+"
+" " https://github.com/prabirshrestha/vim-lsp/wiki/Servers-TypeScript
+" " npm install -g typescript typescript-language-server
+" if executable('typescript-language-server')
+"     au User lsp_setup call lsp#register_server({
+"       \ 'name': 'typescript-language-server',
+"       \ 'cmd': { server_info->[&shell, &shellcmdflag, 'typescript-language-server --stdio']},
+"       \ 'root_uri': { server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_directory(lsp#utils#get_buffer_path(), '.git/..'))},
+"       \ 'whitelist': ['typescript', 'javascript', 'javascript.jsx']
+"       \ })
+" endif
 
 Plug 'SirVer/ultisnips'
     let g:UltiSnipsExpandTrigger="<c-y>"
-    let g:UltiSnipsJumpForwardTrigger="<M-k>"
-    let g:UltiSnipsJumpBackwardTrigger="<M-l>"
+    let g:UltiSnipsJumpForwardTrigger="<Tab>"
+    let g:UltiSnipsJumpBackwardTrigger="<S-Tabs>"
 
 Plug 'honza/vim-snippets'
 
@@ -696,12 +800,7 @@ Plug 'sheerun/vim-polyglot'
     let php_html_load = 1
     let php_html_in_strings = 1
 
-" Plug 'lvht/phpcd.vim', { 'for': 'php', 'do': 'composer install' }
-"     let g:deoplete#ignore_sources = get(g:, 'deoplete#ignore_sources', {})
-"     let g:deoplete#ignore_sources.php = ['omni']
-
 Plug 'w0rp/ale'
-    let g:ale_enabled = 0
     let g:ale_sign_warning = '◈'
     let g:ale_sign_error = '✖'
     let g:ale_echo_msg_error_str = 'E'
@@ -714,6 +813,7 @@ Plug 'w0rp/ale'
 
     nmap <silent> [e <Plug>(ale_previous_wrap)
     nmap <silent> ]e <Plug>(ale_next_wrap)
+    nmap <leader>da ALEToggleBuffer
 
     augroup ALEConfig
         autocmd!
@@ -857,8 +957,6 @@ Plug 'thinca/vim-ref', { 'on': 'Ref' }
 
 call plug#end()
 
-colorscheme seoul256
-
 cabbrev rg lgrep
 
 if executable("rg")
@@ -927,7 +1025,7 @@ augroup Filetypes
     "https://www.reddit.com/r/vim/comments/3er2az/how_to_suppress_vims_warning_editing_a_read_only/
     autocmd BufEnter /etc/hosts set noro
 
-    autocmd FileType php nnoremap <silent> <buffer> <expr> K ":silent exec \"!xdg-open 'http://php.net/en/" . expand('<cword>') . "'\"<CR>"
+    autocmd FileType php nnoremap <silent> <buffer> <expr> K ":silent exec \"!xdg-open 'http://php.net/en/" . expand('<cword>') . "'\"<CR>:redraw!\<CR>"
 
     autocmd Filetype *
                 \    if &omnifunc == "" |
@@ -957,7 +1055,7 @@ augroup Filetypes
     " autocmd BufWrite *.c :call DeleteTrailingWS()
     " autocmd BufWrite *.cpp :call DeleteTrailingWS()
 
-    autocmd Filetype css,scss,html,htm setlocal iskeyword+=-
+    autocmd Filetype css,scss,html,htm,html.handlebars setlocal iskeyword+=-
 
     " Enhance `gf`, to use these file extensions
     " https://www.reddit.com/r/vim/comments/4kjgmz/weekly_vim_tips_and_tricks_thread_11/d3g6l8y
@@ -966,7 +1064,16 @@ augroup Filetypes
     autocmd BufWinEnter *.txt silent! if &buftype == 'help' | wincmd T | nnoremap <buffer> q :q<cr> | endif
 augroup END
 
-" filetype plugin indent on
+colorscheme earthsong
+
+augroup EarthsongConfig
+    autocmd!
+
+    autocmd ColorScheme earthsong-light highlight Normal guibg=#FFF2EB
+
+    " Dirvish
+    autocmd ColorScheme earthsong highlight link DirvishPathTail Question
+augroup END
 
 " CTRL-U in insert mode deletes a lot.  Use CTRL-G u to first break undo,
 " so that you can undo CTRL-U after inserting a line break.
@@ -989,14 +1096,14 @@ function! NextClosedFold(dir)
     endif
 endfunction
 
-" " :h complete_CTRL-E
-" inoremap <expr> <C-e> pumvisible() ? "\<Esc>$A" : "\<C-o>$"
+" :h complete_CTRL-E
+inoremap <expr> <C-e> pumvisible() ? "\<Esc>$A" : "\<C-o>$"
 
 " Close preview and quickfix windows.
 nnoremap <silent> <C-W>z :wincmd z<Bar>cclose<Bar>lclose<CR>
 
 " reformat html -> each tag on own row
-" nmap <leader><F3> :%s/<[^>]*>/\r&\r/g<cr>gg=G:g/^$/d<cr><leader>/
+command! FormatHTML :%s/<[^>]*>/\r&/
 
 " from unimpaired
 nnoremap <silent> [b :<C-U>bprevious<CR>
@@ -1083,8 +1190,11 @@ function! MergeTabs()
     execute "buffer " . bufferName
 endfunction
 
+" Move current window into tab on the left
 nmap <C-W>m :call MergeTabs()<CR>
 nnoremap <C-W>t <C-W>T
+
+" Split vertically the alternate file
 nnoremap <C-W>a <C-W>v<C-^>
 
 " Execute macro over visual lines
@@ -1095,43 +1205,35 @@ function! ExecuteMacroOverVisualRange()
     execute ":'<,'>normal @".nr2char(getchar())
 endfunction
 
-" TODO: Run a loop
-" Switch between tabs
+" Switch between tabs with `alt+{num}` in the terminal
 if !has('nvim')
     for nr in range(1, 9)
         execute "set <M-".nr.">=\e".nr
     endfor
 endif
 
-inoremap <M-1> <ESC>1gt
-inoremap <M-2> <ESC>2gt
-inoremap <M-3> <ESC>3gt
-inoremap <M-4> <ESC>4gt
-inoremap <M-5> <ESC>5gt
-inoremap <M-6> <ESC>6gt
-inoremap <M-7> <ESC>7gt
-inoremap <M-8> <ESC>8gt
-inoremap <M-9> <ESC>9gt
-
-nnoremap <M-1> 1gt
-nnoremap <M-2> 2gt
-nnoremap <M-3> 3gt
-nnoremap <M-4> 4gt
-nnoremap <M-5> 5gt
-nnoremap <M-6> 6gt
-nnoremap <M-7> 7gt
-nnoremap <M-8> 8gt
-nnoremap <M-9> 9gt
+for nr in range(1, 9)
+    " inoremap <M-1> <ESC>1gt
+    execute "inoremap <M-".nr."> <ESC>".nr."gt"
+    " nnoremap <M-1> 1gt
+    execute "nnoremap <M-".nr."> ".nr."gt"
+endfor
 
 " " ctrl (+ shift) + Tab
 " nnoremap <silent> } :tabNext<CR>
 " nnoremap <silent> { :tabnext<CR>
 
+" " move to prev/next window in tab
+" nnoremap <Tab> <C-w>w
+" nnoremap <S-Tab> <C-w>W
+
 " p: go to the previously open file.
 nnoremap <Leader>o <C-^>
 
+" cd to file/project
 nnoremap <silent> <Leader>cd :lcd %:h<CR>
 nnoremap <silent> <Leader>cp :ProjectRootLCD<CR>
+
 function! SearchVisualSelectionWithAg()
     execute 'Ag' s:getVisualSelection()
 endfunction
@@ -1426,12 +1528,35 @@ function! s:profile(bang)
 endfunction
 command! -bang Profile call s:profile(<bang>0)
 
-" " Use <C-L> to clear the highlighting of :set hlsearch.
-" nnoremap <silent> <Leader>l :nohlsearch<BAR><C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-L>
+" Use <C-L> to clear the highlighting of :set hlsearch.
+nnoremap <silent> <Leader>l :nohlsearch<BAR><C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-L>
 
 " un-join (split) the current line at the cursor position
 " TODO: Fix collision with splitjoin
 nnoremap g<CR> i<c-j><esc>k$
+
+" command! Plugs call fzf#run({
+"   \ 'source':  map(sort(keys(g:plugs)), 'g:plug_home."/".v:val'),
+"   \ 'options': '--delimiter / --nth -1',
+"   \ 'down':    '~40%',
+"   \ 'sink':    'Dirvish'})
+
+function! s:plugs_sink(line)
+    let dir = g:plugs[a:line].dir
+    for pat in ['doc/*.txt', 'README.md']
+        let match = get(split(globpath(dir, pat), "\n"), 0, '')
+        if len(match)
+            execute 'tabedit' match
+            return
+        endif
+    endfor
+    tabnew
+    execute 'Dirvish' dir
+endfunction
+
+command! Plugs call fzf#run(fzf#wrap({
+    \ 'source':  sort(keys(g:plugs)),
+    \ 'sink':    function('s:plugs_sink')}))
 
 " Edit the contents of a register.
 func! s:edit_reg() abort
@@ -1444,28 +1569,15 @@ nnoremap <silent> c" :call <SID>edit_reg()<CR>
 " https://www.reddit.com/r/vim/comments/7iy03o/you_aint_gonna_need_it_your_replacement_for/dr2qo4k/
 command! SC vnew | setlocal nobuflisted buftype=nofile bufhidden=wipe noswapfile
 
-
-" set diffexpr=MyDiff()
-" function! MyDiff()
-"     let opt = ""
-"     if &diffopt =~ "icase"
-"         let opt = opt . "-i "
-"     endif
-"     if &diffopt =~ "iwhite"
-"         let opt = opt . "-b "
-"     endif
-"     silent execute "!wdiff -a --binary " . opt . v:fname_in . " " . v:fname_new .
-"                 \  " > " . v:fname_out
-" endfunction
-"
-
-
 function! RenameFile() abort
     let old_name = expand('%')
-    let new_name = input('[Renaming File]New file: ', expand('%'), 'file')
+    let new_name = input('[Renaming File] New file: ', expand('%'), 'file')
     if new_name != '' && new_name != old_name
         exec ':saveas ' . new_name
         exec ':silent !rm ' . old_name
         redraw!
     endif
 endfunction
+
+command! Rename call RenameFile()
+
