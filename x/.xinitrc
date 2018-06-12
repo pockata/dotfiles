@@ -81,7 +81,7 @@ urxvtc -e zsh -c 'tmux has-session && tmux attach -d || tmux new -s main' &
 
 greenclip daemon &
 
-session=${1:-wmutils}
+session=${1:-bspwm}
 export WM_NAME="$session"
 
 case $session in
