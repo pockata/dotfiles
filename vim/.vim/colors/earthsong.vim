@@ -16,6 +16,7 @@ syntax reset
 
 hi Cursor      guibg=#cc4455  guifg=white     ctermbg=4 ctermfg=15
 hi link CursorIM Cursor
+hi Cursorline cterm=NONE gui=NONE
 hi Normal      guibg=#36312C  guifg=#EBD1B7    gui=none ctermbg=0 ctermfg=15
 hi NonText     guibg=bg  guifg=#EBD1B7   ctermbg=8 ctermfg=14
 hi Visual      guibg=#557799  guifg=white    gui=none ctermbg=9 ctermfg=15
@@ -36,14 +37,25 @@ hi link  MoreMsg     ModeMsg
 hi Question    guibg=bg guifg=#95CC5E   ctermbg=bg ctermfg=10
 hi link  WarningMsg  ErrorMsg
 
+highlight Pmenu             guifg=#767676  guibg=#EBD1B7 ctermfg=243 ctermbg=15
+highlight PmenuSel          guifg=#eeeeee  guibg=#334455 ctermfg=255 ctermbg=66
+highlight PmenuSbar         guifg=#EBD1B7  guibg=#EBD1B7 ctermfg=15 ctermbg=15
+highlight PmenuThumb        guifg=#EBD1B7  guibg=#EBD1B7 ctermfg=15 ctermbg=15 
+
 hi StatusLine     guibg=#ffeecc  guifg=black     ctermbg=14 ctermfg=0
 hi StatusLineNC   guibg=#cc4455  guifg=white    gui=none ctermbg=4  ctermfg=11
 hi VertSplit      guibg=#cc4455  guifg=white    gui=none ctermbg=4  ctermfg=11
 
-hi DiffAdd     guibg=#446688  guifg=fg    gui=none ctermbg=1 ctermfg=fg
-hi DiffChange  guibg=#558855  guifg=fg    gui=none ctermbg=2 ctermfg=fg
-hi DiffDelete  guibg=#884444  guifg=fg    gui=none ctermbg=4 ctermfg=fg
-hi DiffText    guibg=#884444  guifg=fg     ctermbg=4 ctermfg=fg
+hi DiffAdd     guifg=#95CC5E  guibg=bg    gui=none ctermbg=bg ctermfg=10
+hi DiffChange  guifg=#F8BB39  guibg=bg    gui=none ctermbg=bg ctermfg=14
+hi DiffDelete  guifg=#cc4455  guibg=bg    gui=none ctermbg=bg ctermfg=11
+hi DiffText    guifg=#cc4455  guibg=bg     ctermbg=bg ctermfg=11
+
+hi link diffAdded DiffAdd
+hi link diffChanged DiffChanged
+hi link diffRemoved DiffDelete
+hi link diffLine PreProc
+hi link diffSubname Comment
 
 " Colors for Syntax Highlighting.
 
@@ -97,6 +109,10 @@ hi link htmlH3 htmlH2
 hi link htmlH4 htmlH3
 hi link htmlH5 htmlH4
 hi link htmlH6 htmlH5
+
+" ALE
+hi ALEError cterm=underline guifg=red guibg=bg
+hi ALEErrorSign guibg=bg guifg=red
 
 " And finally.
 let g:colors_name = "Earthsong"
