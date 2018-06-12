@@ -34,7 +34,6 @@ let g:plug_pwindow = 'vertical rightbelow new'
 " syntax on
 
 " Sets 4 spaces as indent
-set tabstop=4
 set shiftwidth=4
 set softtabstop=4
 set expandtab
@@ -179,8 +178,6 @@ if !has('nvim')
 endif
 
 set shortmess+=Ic " No intro when starting Vim
-set smartindent " Smart... indent
-set gdefault " The substitute flag g is on
 set hidden " Hide the buffer instead of closing when switching
 set synmaxcol=500 " Don't try to highlight long lines
 set virtualedit=onemore,block " Allow for cursor beyond last character
@@ -522,9 +519,18 @@ Plug 'tpope/vim-fugitive'
         autocmd BufRead fugitive://* xnoremap <buffer> dp :diffput<CR>|xnoremap <buffer> do :diffget<CR>
 
         " Got to commit tree when you go deep while browsing a repo
-        autocmd User fugitive 
+        autocmd User Fugitive 
                     \ if fugitive#buffer().type() =~# '^\%(tree\|blob\)$' |
                     \   nnoremap <buffer> .. :edit %:h<CR> |
+                    \ endif
+
+        " Create [c / ]c mappings for patch diffs (GV) by jumping to the
+        " next match of /^@@
+        " :call search('^@@', 'sW')
+        autocmd User Fugitive
+                    \ if fugitive#buffer().type() == 'commit' |
+                    \   nnoremap <silent> <buffer> [c :call search('^@@', 'sWb')<CR>|
+                    \   nnoremap <silent> <buffer> ]c :call search('^@@', 'sW')<CR>|
                     \ endif
     augroup END
 
@@ -671,33 +677,39 @@ Plug 'justinmk/vim-dirvish'
 Plug 'justinmk/vim-ipmotion'
 
 " completion
-Plug 'Shougo/echodoc.vim'
-    let g:echodoc#enable_at_startup = 1
+" Plug 'Shougo/echodoc.vim'
+"     let g:echodoc#enable_at_startup = 1
 
 Plug 'autozimu/LanguageClient-neovim', {
     \ 'branch': 'next',
     \ 'do': 'bash install.sh',
     \ }
 
+    " Use LanguageClient's linter instead of ALE
+    let g:LanguageClient_diagnosticsEnable = 0
+    let g:LanguageClient_diagnosticsDisplay = {}
+
 " npm install -g vscode-css-languageserver-bin
 " npm install -g vscode-html-languageserver-bin
     let g:LanguageClient_serverCommands = {
         \ 'javascript': ['javascript-typescript-stdio'],
         \ 'javascript.jsx': ['javascript-typescript-stdio'],
-        \ 'php': ['php', expand('~/.vim/plugged/php-language-server/bin/php-language-server.php')],
         \ 'css': ['css-languageserver', '--stdio'],
         \ 'scss': ['css-languageserver', '--stdio'],
         \ 'html': ['html-languageserver', '--stdio'],
         \ 'hbs': ['html-languageserver', '--stdio'],
         \ }
 
+        " \ 'php': ['php', expand('~/.vim/plugged/php-language-server/bin/php-language-server.php')],
     nnoremap <silent> K :call LanguageClient_textDocument_hover()<CR>
     nnoremap <silent> gd :call LanguageClient_textDocument_definition()<CR>
 
-Plug 'felixfbecker/php-language-server', {'do': 'composer install && composer run-script parse-stubs'}
+" Plug 'felixfbecker/php-language-server', {'do': 'composer install && composer run-script parse-stubs'}
 
 Plug 'Shougo/deoplete.nvim'
     let g:deoplete#enable_at_startup = 1
+
+    autocmd VimEnter * call deoplete#custom#source('_', 'min_pattern_length', 3)
 
     inoremap <silent><expr> <S-TAB>
                 \ pumvisible() ? "\<C-p>" : "\<S-Tab>"
@@ -788,17 +800,11 @@ Plug 'roxma/vim-hug-neovim-rpc'
 "       \ })
 " endif
 
-Plug 'SirVer/ultisnips'
-    let g:UltiSnipsExpandTrigger="<c-y>"
-    let g:UltiSnipsJumpForwardTrigger="<Tab>"
-    let g:UltiSnipsJumpBackwardTrigger="<S-Tabs>"
-
-Plug 'honza/vim-snippets'
-
 " extra language support
 Plug 'sheerun/vim-polyglot'
-    let php_html_load = 1
-    let php_html_in_strings = 1
+    " " These cause intense lags on HTML inside heredoc in PHP
+    " let php_html_load = 1
+    " let php_html_in_strings = 1
 
 Plug 'w0rp/ale'
     let g:ale_sign_warning = '◈'
@@ -821,14 +827,14 @@ Plug 'w0rp/ale'
                                     \highlight clear ALEWarningSign
     augroup END
 
-Plug 'mattn/emmet-vim', { 'on': 'EmmetInstall' }
-    let g:user_emmet_install_global = 0
-    let g:user_emmet_leader_key='<C-M>'
-
-    augroup EmmetConfig
-        autocmd!
-        autocmd FileType html,css EmmetInstall
-    augroup END
+" Plug 'mattn/emmet-vim', { 'on': 'EmmetInstall' }
+"     let g:user_emmet_install_global = 0
+"     let g:user_emmet_leader_key='<C-M>'
+"
+"     augroup EmmetConfig
+"         autocmd!
+"         autocmd FileType html,css EmmetInstall
+"     augroup END
 
 " " Automatically bookmark last files accessed by directory
 " augroup filemarks
@@ -1580,4 +1586,10 @@ function! RenameFile() abort
 endfunction
 
 command! Rename call RenameFile()
+
+" re-highlight file
+nnoremap <silent><F6> <ESC>:execute 'colo' colors_name<cr>:syntax sync fromstart<cr>
+
+nnoremap got :call system('urxvt -cd '.getcwd().' &')<cr>
+nnoremap goT :call system('urxvt -cd '.expand("%:p:h").' &')<cr>
 
