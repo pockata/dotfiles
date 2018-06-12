@@ -26,7 +26,7 @@ sp=($(echo "$xrdb" | grep -P "(foreground|background):" | cut -f 2-))
 border="${color[8]}"
 bwidth=2
 
-bg="${sp[0]}"
+bg="${color[3]}"
 fg="${sp[1]}"
 
 fifo=/tmp/notify.fifo
