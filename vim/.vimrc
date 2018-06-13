@@ -578,6 +578,8 @@ Plug 'junegunn/gv.vim', { 'on': 'GV' }
     augroup GVConfig
         autocmd!
         autocmd FileType GV nnoremap <buffer> <silent> + :call <sid>gv_expand()<cr>
+        autocmd FileType GV unmap <buffer> <c-p>
+        autocmd FileType GV unmap <buffer> <c-n>
     augroup END
 
     nnoremap <leader>gv :GV<CR>
