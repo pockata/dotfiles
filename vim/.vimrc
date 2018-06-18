@@ -165,6 +165,8 @@ set statusline=\ %F%m%r%h\ %w\ \ CWD:\ %r%{getcwd()}%h\ \ \ Line:\ %l
 " Turn backup off, since most stuff is in SVN, git et.c anyway...
 set noswapfile
 
+set backupcopy=yes
+
 " Let's save undo info!
 set undofile                " Save undo's after file closes
 set undolevels=500
@@ -225,7 +227,7 @@ set showcmd
 set mouse=a
 
 set display+=uhex
-set matchpairs+=<:>
+" set matchpairs+=<:>
 
 set formatoptions+=r " Insert comment leader after hitting <Enter>
 set formatoptions+=o " Insert comment leader after hitting o or O in normal mode
@@ -534,6 +536,8 @@ Plug 'tpope/vim-fugitive'
                     \ endif
     augroup END
 
+Plug 'tommcdo/vim-fugitive-blame-ext'
+
 Plug 'rhysd/committia.vim'
 
     let g:committia_hooks = {}
@@ -588,7 +592,7 @@ Plug 'rhysd/conflict-marker.vim'
 
 Plug 'ludovicchabant/vim-gutentags'
     let g:gutentags_cache_dir = '~/.vim/gutentags'
-
+    let g:gutentags_enabled = 0
 " code searching
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
@@ -808,8 +812,15 @@ Plug 'sheerun/vim-polyglot'
     " let php_html_load = 1
     " let php_html_in_strings = 1
 
+Plug 'vim-scripts/nc.vim--Eno'
+Plug 'sirtaj/vim-openscad'
+
+" Plug 'lvht/phpcd.vim', { 'for': 'php', 'do': 'composer install' }
+"     let g:deoplete#ignore_sources = get(g:, 'deoplete#ignore_sources', {})
+"     let g:deoplete#ignore_sources.php = ['omni']
+
 Plug 'w0rp/ale'
-    let g:ale_sign_warning = '◈'
+    let g:ale_sign_warning = '!'
     let g:ale_sign_error = '✖'
     let g:ale_echo_msg_error_str = 'E'
     let g:ale_echo_msg_warning_str = 'W'
@@ -817,7 +828,7 @@ Plug 'w0rp/ale'
     let g:ale_lint_on_text_changed='never'
     let g:ale_scss_stylelint_options='--config=stylelint-config-recommended'
     let g:ale_linters = {'html': [], 'javascript': ['eslint']}
-
+    let g:ale_set_loclist = 0
 
     nmap <silent> [e <Plug>(ale_previous_wrap)
     nmap <silent> ]e <Plug>(ale_next_wrap)
@@ -826,7 +837,11 @@ Plug 'w0rp/ale'
     augroup ALEConfig
         autocmd!
         autocmd ColorScheme seoul256 highlight clear ALEErrorSign
-                                    \highlight clear ALEWarningSign
+                                    \|highlight clear ALEWarningSign
+
+        autocmd ColorScheme birds-of-paradise highlight ALEErrorSign guibg=#493a35 guifg=#ef5d32
+                                            \ |highlight ALEWarningSign guibg=#493a35 guifg=#efac32
+                                            \ |highlight ErrorMsg guibg=#ef5d32
     augroup END
 
 " Plug 'mattn/emmet-vim', { 'on': 'EmmetInstall' }
@@ -1072,7 +1087,7 @@ augroup Filetypes
     autocmd BufWinEnter *.txt silent! if &buftype == 'help' | wincmd T | nnoremap <buffer> q :q<cr> | endif
 augroup END
 
-colorscheme earthsong
+colorscheme birds-of-paradise
 
 augroup EarthsongConfig
     autocmd!
@@ -1543,12 +1558,6 @@ nnoremap <silent> <Leader>l :nohlsearch<BAR><C-R>=has('diff')?'<Bar>diffupdate':
 " TODO: Fix collision with splitjoin
 nnoremap g<CR> i<c-j><esc>k$
 
-" command! Plugs call fzf#run({
-"   \ 'source':  map(sort(keys(g:plugs)), 'g:plug_home."/".v:val'),
-"   \ 'options': '--delimiter / --nth -1',
-"   \ 'down':    '~40%',
-"   \ 'sink':    'Dirvish'})
-
 function! s:plugs_sink(line)
     let dir = g:plugs[a:line].dir
     for pat in ['doc/*.txt', 'README.md']
@@ -1565,6 +1574,12 @@ endfunction
 command! Plugs call fzf#run(fzf#wrap({
     \ 'source':  sort(keys(g:plugs)),
     \ 'sink':    function('s:plugs_sink')}))
+
+" command! Plugs call fzf#run({
+"   \ 'source':  map(sort(keys(g:plugs)), 'g:plug_home."/".v:val'),
+"   \ 'options': '--delimiter / --nth -1',
+"   \ 'down':    '~40%',
+"   \ 'sink':    'Dirvish'})
 
 " Edit the contents of a register.
 func! s:edit_reg() abort
