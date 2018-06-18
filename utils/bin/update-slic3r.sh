@@ -3,13 +3,18 @@
 set -e
 
 file="/tmp/batko.html"
+appimage="/tmp/slic3r.AppImage"
 
-curl -o "$file" https://dl.slic3r.org/dev/linux/
+curl -L -o "$file" https://github.com/prusa3d/Slic3r/releases
 
-link="https://dl.slic3r.org/dev/linux/$(cat "$file" | pup '#indexlist .indexcolname a attr{href}' | grep -i 'appimage' | head -1)"
+link="https://github.com/$(cat "$file" | pup '.release:first-child .release-body a attr{href}' | grep -i 'appimage' | head -1)"
 
-curl -o /tmp/slic3r.AppImage "$link"
+curl -L -o "$appimage" "$link"
 
-sudo mv /tmp/slic3r.AppImage /opt/slic3r.AppImage
+sudo mv "$appimage" /opt/slic3r.AppImage
 sudo chmod u+x /opt/slic3r.AppImage
+
+cd /tmp/
+rm -rf "$file"
+rm -rf "$appimage"
 
