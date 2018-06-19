@@ -1610,3 +1610,8 @@ nnoremap <silent><F6> <ESC>:execute 'colo' colors_name<cr>:syntax sync fromstart
 nnoremap got :call system('urxvt -cd '.getcwd().' &')<cr>
 nnoremap goT :call system('urxvt -cd '.expand("%:p:h").' &')<cr>
 
+" ----------------------------------------------------------------------------
+" :Count
+" ----------------------------------------------------------------------------
+command! Count execute printf('%%s/%s//gn', escape(<q-args>, '/')) | normal! ``
+
