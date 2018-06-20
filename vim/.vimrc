@@ -1253,6 +1253,18 @@ endfor
 " p: go to the previously open file.
 nnoremap <Leader>o <C-^>
 
+" Delete all hidden buffers
+nnoremap <silent> <Leader><BS> :call DeleteHiddenBuffers()<CR>
+function! DeleteHiddenBuffers()
+    let tpbl=[]
+
+    call map(range(1, tabpagenr('$')), 'extend(tpbl, tabpagebuflist(v:val))')
+
+    for buf in filter(range(1, bufnr('$')), 'bufexists(v:val) && index(tpbl, v:val)==-1')
+        silent execute 'bwipeout' buf
+    endfor
+endfunction
+
 " cd to file/project
 nnoremap <silent> <Leader>cd :lcd %:h<CR>
 nnoremap <silent> <Leader>cp :ProjectRootLCD<CR>
@@ -1475,9 +1487,17 @@ if has('langmap') && exists('+langremap')
   set nolangremap
 endif
 
-" https://github.com/StanAngeloff/dotfiles/blob/master/.vimrc
-" TODO: handle jkl;
-set langmap+=чявертъуиопшщасдфгхйклзьцжбнмЧЯВЕРТЪУИОПШЩАСДФГХЙКЛЗѝЦЖБНМ;`qwertyuiop[]asdfghjklzxcvbnm~QWERTYUIOP{}ASDFGHJKLZXCVBNM,ю\\,Ю\|,
+" ----------------------------------------------------------------------------
+" Switch to us layout
+" https://zenbro.github.io/2015/07/24/auto-change-keyboard-layout-in-vim.html
+" ----------------------------------------------------------------------------
+function! RestoreKeyboardLayout(key)
+    call system('xkb-switch -s us')
+    execute 'normal! ' . a:key
+endfunction
+nnoremap <silent> й :call RestoreKeyboardLayout('h')<CR>
+nnoremap <silent> к :call RestoreKeyboardLayout('j')<CR>
+nnoremap <silent> л :call RestoreKeyboardLayout('k')<CR>
 
 " follow symlinked file
 function! FollowSymlink()
