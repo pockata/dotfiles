@@ -38,7 +38,7 @@ PATH="$HOME/.config/composer/vendor/bin:$PATH"
 
 PATH="$HOME/bin:$PATH"
 
-export EDITOR='vim'
+export EDITOR='nvim'
 
 # Map Ctrl-S to sth usefull other than XOFF (interrupt data flow).
 stty -ixon
@@ -128,9 +128,9 @@ z() {
 # Aliases
 alias g="git"
 alias ga="g add \$(gf) && g st"
-alias gv='vim +"let g:loaded_startify = 1" +GV +tabonly +"autocmd BufWipeout <buffer> qall"'
+alias gv='nvim +"let g:loaded_startify = 1" +GV +tabonly +"autocmd BufWipeout <buffer> qall"'
 alias t="tmux -2"
-alias e="vim"
+alias e="nvim"
 alias view="eog"
 alias aur="yaourt"
 alias myip="dig +short myip.opendns.com @resolver1.opendns.com"
@@ -292,7 +292,7 @@ gshow() {
         --preview "echo {} | grep -o '[a-f0-9]\{7\}' | head -1 |
             xargs -I % sh -c 'git show --color=always % | head -$LINES '" \
         --bind "enter:execute:echo {} | grep -o '[a-f0-9]\{7\}' | head -1 |
-            xargs -I % sh -c 'vim fugitive://\$(git rev-parse --show-toplevel)/.git//% < /dev/tty'"
+            xargs -I % sh -c 'nvim fugitive://\$(git rev-parse --show-toplevel)/.git//% < /dev/tty'"
 }
 
 gb() {

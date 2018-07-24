@@ -85,15 +85,15 @@ set spelllang=en_us
 set ruler
 
 " Highlight current line
-set nocursorline
+set cursorline
 set relativenumber
 set number
 
-" augroup CursorLineOnlyInActiveWindow
-"     autocmd!
-"     autocmd WinEnter,BufEnter * if &diff != 1 | setlocal cursorline | endif
-"     autocmd WinLeave,BufLeave * setlocal nocursorline
-" augroup END
+augroup CursorLineOnlyInActiveWindow
+    autocmd!
+    autocmd WinEnter,BufEnter * if &diff != 1 | setlocal cursorline | endif
+    autocmd WinLeave,BufLeave * setlocal nocursorline
+augroup END
 
 " Configure backspace so it acts as it should act
 set backspace=eol,start,indent
@@ -299,13 +299,13 @@ Plug 'junegunn/seoul256.vim'
         endif
     augroup END
 
-" Plug 'machakann/vim-highlightedyank'
-"     let g:highlightedyank_highlight_duration = 100
-"
-"     augroup YankConfig
-"         autocmd!
-"         autocmd ColorScheme * highlight HighlightedyankRegion guibg=purple guifg=white
-"     augroup END
+Plug 'machakann/vim-highlightedyank'
+    let g:highlightedyank_highlight_duration = 100
+
+    augroup YankConfig
+        autocmd!
+        autocmd ColorScheme * highlight HighlightedyankRegion guibg=purple guifg=white
+    augroup END
 
 " additional text objects
 Plug 'kana/vim-textobj-user'
@@ -603,7 +603,7 @@ Plug 'junegunn/fzf.vim'
                 \ }
     " [Buffers] Jump to the existing window if possible
     let g:fzf_buffers_jump = 1
-    let g:fzf_prefer_tmux = 1
+    let g:fzf_prefer_tmux = 0
     let g:fzf_layout = { 'right': '~40%' }
 
     " TODO: replace this with a wrapper for the keybindings as
@@ -675,7 +675,7 @@ Plug 'justinmk/vim-dirvish'
 
         " Map `gh` to hide dot-prefixed files.  Press `R` to "toggle" (reload).
         autocmd FileType dirvish nnoremap <silent><buffer>
-                    \ gh :silent keeppatterns g@\v/\.[^\/]+/?$@d _<cr>
+                    \ gh :silent keeppatterns g@\v/\.[^\/]+/?$@d _<cr>:setl cole=3<cr>
     augroup END
 
 " alternative 
@@ -712,7 +712,16 @@ Plug 'autozimu/LanguageClient-neovim', {
 
 " Plug 'felixfbecker/php-language-server', {'do': 'composer install && composer run-script parse-stubs'}
 
-Plug 'Shougo/deoplete.nvim'
+if has('nvim')
+    Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+else
+    Plug 'Shougo/deoplete.nvim'
+    Plug 'roxma/nvim-yarp'
+    Plug 'roxma/vim-hug-neovim-rpc'
+        " install python-neovim from pacman
+        set pyxversion=3
+endif
+
     let g:deoplete#enable_at_startup = 1
 
     autocmd VimEnter * call deoplete#custom#source('_', 'min_pattern_length', 3)
@@ -723,11 +732,6 @@ Plug 'Shougo/deoplete.nvim'
                 \ pumvisible() ? "\<C-n>" : "\<Tab>"
     inoremap <silent><expr> <CR>
                 \ pumvisible() ? "\<C-y>" : "\<CR>"
-
-Plug 'roxma/nvim-yarp'
-Plug 'roxma/vim-hug-neovim-rpc'
-    " install python-neovim from pacman
-    set pyxversion=3
 
 " Plug 'prabirshrestha/asyncomplete.vim'
 "     inoremap <silent><expr> <S-TAB>
