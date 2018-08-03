@@ -369,10 +369,10 @@ Plug 'tkhren/vim-textobj-numeral'
 Plug 'coderifous/textobj-word-column.vim'
     let g:skip_default_textobj_word_column_mappings = 1
 
-    xnoremap <silent> aV :<C-u>call TextObjWordBasedColumn("aw")<cr>
-    onoremap <silent> aV :call TextObjWordBasedColumn("aw")<cr>
-    xnoremap <silent> iV :<C-u>call TextObjWordBasedColumn("iw")<cr>
-    onoremap <silent> iV :call TextObjWordBasedColumn("iw")<cr>
+    xnoremap <silent> aV :<C-u>call TextObjWordBasedColumn("iw")<cr>
+    onoremap <silent> aV :call TextObjWordBasedColumn("iw")<cr>
+    xnoremap <silent> iV :<C-u>call TextObjWordBasedColumn("")<cr>
+    onoremap <silent> iV :call TextObjWordBasedColumn("")<cr>
 
 Plug 'glts/vim-textobj-comment'
 " or thinca/vim-textobj-comment
