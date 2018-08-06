@@ -320,6 +320,15 @@ Plug 'kana/vim-textobj-user'
                     \     'select-i': 'iP',
                     \   },
                     \ })
+
+        " CSS prop text object
+        autocmd VimEnter * call textobj#user#plugin('cssprop', {
+                    \   'prop': {
+                    \     '*pattern*': ['\<[^[:blank:]]\+\>:\s*', ';'],
+                    \     'select-a': 'ar',
+                    \     'select-i': 'ir',
+                    \   },
+                    \})
     augroup END
 
 Plug 'kana/vim-textobj-function'
@@ -354,7 +363,6 @@ Plug 'PeterRincker/vim-argumentative'
 " " TODO: Send pull request for configurable splitter_map
 " Plug 'vimtaku/vim-textobj-keyvalue'
 
-Plug 'zandrmartin/vim-textobj-blanklines'
 Plug 'tkhren/vim-textobj-numeral'
     " textobj-numeral
     let g:textobj_numeral_no_default_key_mappings = 1
@@ -445,16 +453,8 @@ Plug 'AndrewRadev/inline_edit.vim'
 
 " Plug 'rhysd/vim-textobj-lastinserted'
 
-" TODO: Send issue report about not working in PHP
-Plug 'adriaanzon/vim-textobj-matchit'
-" If heredoc's are not covered by textobj-matchit,
-" try fourjay/vim-textobj-heredoc
+Plug 'fourjay/vim-textobj-heredoc'
 
-" for CSS
-" inotom/vim-textobj-cssprop
-
-" Collision with textobj-function?
-"
 " Create issue about properly adjusting visual selection
 " when surrounding a string multiple times, e.g.
 " value -> ['value']
@@ -538,31 +538,6 @@ Plug 'tpope/vim-fugitive'
 
 Plug 'tommcdo/vim-fugitive-blame-ext'
 
-Plug 'rhysd/committia.vim'
-
-    let g:committia_hooks = {}
-    function! g:committia_hooks.diff_open(info)
-        setlocal norelativenumber
-        setlocal nonumber
-        setlocal foldminlines=200
-    endfunction
-
-    function! g:committia_hooks.edit_open(info)
-        " Additional settings
-        setlocal spell
-
-        " If no commit message, start with insert mode
-        if a:info.vcs ==# 'git' && getline(1) ==# ''
-            startinsert
-        end
-
-        " Scroll the diff window from insert mode
-        " Map <C-n> and <C-p>
-        imap <buffer><C-n> <Plug>(committia-scroll-diff-down-half)
-        imap <buffer><C-p> <Plug>(committia-scroll-diff-up-half)
-
-    endfunction
-
 Plug 'yssl/QFEnter'
     " http://vi.stackexchange.com/questions/8534/make-cnext-and-cprevious-loop-back-to-the-begining
     let g:qfenter_keymap = {}
@@ -593,6 +568,7 @@ Plug 'rhysd/conflict-marker.vim'
 Plug 'ludovicchabant/vim-gutentags'
     let g:gutentags_cache_dir = '~/.vim/gutentags'
     let g:gutentags_enabled = 0
+
 " code searching
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
@@ -634,14 +610,13 @@ Plug 'junegunn/fzf.vim'
     nnoremap <c-p> :GitFiles<CR>
     nnoremap <c-t> :Files<CR>
 
-Plug 'brooth/far.vim'
-
 Plug 'junegunn/vim-slash'
 
 " navigation
 Plug 'itchyny/vim-cursorword'
 Plug 'kana/vim-smartword'
-" https://github.com/kana/vim-niceblock/
+Plug 'kana/vim-niceblock'
+
 Plug 'talek/obvious-resize'
     let g:obvious_resize_default = 5
     nnoremap <silent> <Up> :<C-U>ObviousResizeUp<CR>
@@ -683,8 +658,8 @@ Plug 'justinmk/vim-dirvish'
 Plug 'justinmk/vim-ipmotion'
 
 " completion
-" Plug 'Shougo/echodoc.vim'
-"     let g:echodoc#enable_at_startup = 1
+Plug 'Shougo/echodoc.vim'
+    let g:echodoc#enable_at_startup = 1
 
 Plug 'autozimu/LanguageClient-neovim', {
     \ 'branch': 'next',
@@ -695,8 +670,8 @@ Plug 'autozimu/LanguageClient-neovim', {
     let g:LanguageClient_diagnosticsEnable = 0
     let g:LanguageClient_diagnosticsDisplay = {}
 
-" npm install -g vscode-css-languageserver-bin
-" npm install -g vscode-html-languageserver-bin
+    " npm install -g vscode-css-languageserver-bin
+    " npm install -g vscode-html-languageserver-bin
     let g:LanguageClient_serverCommands = {
         \ 'javascript': ['javascript-typescript-stdio'],
         \ 'javascript.jsx': ['javascript-typescript-stdio'],
@@ -704,13 +679,12 @@ Plug 'autozimu/LanguageClient-neovim', {
         \ 'scss': ['css-languageserver', '--stdio'],
         \ 'html': ['html-languageserver', '--stdio'],
         \ 'hbs': ['html-languageserver', '--stdio'],
+        \ 'php': ['php', expand('~/.vim/plugged/php-language-server/bin/php-language-server.php')],
         \ }
-
-        " \ 'php': ['php', expand('~/.vim/plugged/php-language-server/bin/php-language-server.php')],
     nnoremap <silent> K :call LanguageClient_textDocument_hover()<CR>
     nnoremap <silent> gd :call LanguageClient_textDocument_definition()<CR>
 
-" Plug 'felixfbecker/php-language-server', {'do': 'composer install && composer run-script parse-stubs'}
+Plug 'felixfbecker/php-language-server', {'do': 'composer install && composer run-script parse-stubs'}
 
 if has('nvim')
     Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
@@ -724,7 +698,7 @@ endif
 
     let g:deoplete#enable_at_startup = 1
 
-    autocmd VimEnter * call deoplete#custom#source('_', 'min_pattern_length', 3)
+    autocmd VimEnter * call deoplete#custom#option('ignore_sources', {'_': ['tag']})
 
     inoremap <silent><expr> <S-TAB>
                 \ pumvisible() ? "\<C-p>" : "\<S-Tab>"
@@ -732,83 +706,6 @@ endif
                 \ pumvisible() ? "\<C-n>" : "\<Tab>"
     inoremap <silent><expr> <CR>
                 \ pumvisible() ? "\<C-y>" : "\<CR>"
-
-" Plug 'prabirshrestha/asyncomplete.vim'
-"     inoremap <silent><expr> <S-TAB>
-"                 \ pumvisible() ? "\<C-p>" : "\<S-Tab>"
-"     inoremap <silent><expr> <TAB>
-"                 \ pumvisible() ? "\<C-n>" : "\<Tab>"
-"     inoremap <silent><expr> <CR>
-"                 \ pumvisible() ? "\<C-y>" : "\<CR>"
-"
-"     inoremap <c-space> <Plug>(asyncomplete_force_refresh)
-"
-" Plug 'prabirshrestha/asyncomplete-buffer.vim'
-"     autocmd User asyncomplete_setup call asyncomplete#register_source(asyncomplete#sources#buffer#get_source_options({
-"         \ 'name': 'buffer',
-"         \ 'whitelist': ['*'],
-"         \ 'blacklist': ['go'],
-"         \ 'completor': function('asyncomplete#sources#buffer#completor'),
-"         \ }))
-"
-" Plug 'prabirshrestha/asyncomplete-file.vim'
-"     autocmd User asyncomplete_setup call asyncomplete#register_source(asyncomplete#sources#file#get_source_options({
-"         \ 'name': 'file',
-"         \ 'whitelist': ['*'],
-"         \ 'priority': 10,
-"         \ 'completor': function('asyncomplete#sources#file#completor')
-"         \ }))
-"
-" Plug 'prabirshrestha/asyncomplete-ultisnips.vim'
-"     if has('python3')
-"         autocmd User asyncomplete_setup call asyncomplete#register_source(asyncomplete#sources#ultisnips#get_source_options({
-"             \ 'name': 'ultisnips',
-"             \ 'whitelist': ['*'],
-"             \ 'completor': function('asyncomplete#sources#ultisnips#completor'),
-"             \ }))
-"     endif
-"
-" Plug 'yami-beta/asyncomplete-omni.vim'
-"         autocmd User asyncomplete_setup call asyncomplete#register_source(asyncomplete#sources#omni#get_source_options({
-"             \ 'name': 'omni',
-"             \ 'whitelist': ['*'],
-"             \ 'blacklist': ['html'],
-"             \ 'completor': function('asyncomplete#sources#omni#completor')
-"             \  }))
-"
-" Plug 'prabirshrestha/async.vim'
-" Plug 'prabirshrestha/vim-lsp'
-"
-" Plug 'prabirshrestha/asyncomplete-lsp.vim'
-"
-" " Language servers form vim-lsp
-" Plug 'felixfbecker/php-language-server', {'do': 'composer install && composer run-script parse-stubs'}
-"     autocmd User lsp_setup call lsp#register_server({
-"             \ 'name': 'php-language-server',
-"             \ 'cmd': {server_info->['php', expand('~/.vim/plugged/php-language-server/bin/php-language-server.php')]},
-"             \ 'whitelist': ['php'],
-"             \ })
-"
-" " https://github.com/prabirshrestha/vim-lsp/wiki/Servers-Css
-" " npm install -g vscode-css-languageserver-bin
-" if executable('css-languageserver')
-"     autocmd User lsp_setup call lsp#register_server({
-"             \ 'name': 'css-languageserver',
-"             \ 'cmd': {server_info->[&shell, &shellcmdflag, 'css-languageserver --stdio']},
-"             \ 'whitelist': ['css', 'less', 'sass'],
-"             \ })
-" endif
-"
-" " https://github.com/prabirshrestha/vim-lsp/wiki/Servers-TypeScript
-" " npm install -g typescript typescript-language-server
-" if executable('typescript-language-server')
-"     au User lsp_setup call lsp#register_server({
-"       \ 'name': 'typescript-language-server',
-"       \ 'cmd': { server_info->[&shell, &shellcmdflag, 'typescript-language-server --stdio']},
-"       \ 'root_uri': { server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_directory(lsp#utils#get_buffer_path(), '.git/..'))},
-"       \ 'whitelist': ['typescript', 'javascript', 'javascript.jsx']
-"       \ })
-" endif
 
 " extra language support
 Plug 'sheerun/vim-polyglot'
@@ -818,10 +715,6 @@ Plug 'sheerun/vim-polyglot'
 
 Plug 'vim-scripts/nc.vim--Eno'
 Plug 'sirtaj/vim-openscad'
-
-" Plug 'lvht/phpcd.vim', { 'for': 'php', 'do': 'composer install' }
-"     let g:deoplete#ignore_sources = get(g:, 'deoplete#ignore_sources', {})
-"     let g:deoplete#ignore_sources.php = ['omni']
 
 Plug 'w0rp/ale'
     let g:ale_sign_warning = '!'
@@ -847,15 +740,6 @@ Plug 'w0rp/ale'
                                             \ |highlight ALEWarningSign guibg=#493a35 guifg=#efac32
                                             \ |highlight ErrorMsg guibg=#ef5d32
     augroup END
-
-" Plug 'mattn/emmet-vim', { 'on': 'EmmetInstall' }
-"     let g:user_emmet_install_global = 0
-"     let g:user_emmet_leader_key='<C-M>'
-"
-"     augroup EmmetConfig
-"         autocmd!
-"         autocmd FileType html,css EmmetInstall
-"     augroup END
 
 " " Automatically bookmark last files accessed by directory
 " augroup filemarks
@@ -948,40 +832,6 @@ Plug 'wesQ3/vim-windowswap'
 
     nnoremap <silent> <C-W><C-W> :call WindowSwap#EasyWindowSwap()<CR>
 
-Plug 'AndrewRadev/undoquit.vim'
-    nnoremap <silent> <c-w>c :call undoquit#SaveWindowQuitHistory()<cr><c-w>c
-
-" TODO: Improve this to function like vim-ref
-" sunaku/vim-dasht
-
-Plug 'thinca/vim-ref', { 'on': 'Ref' }
-    let g:ref_open='vsplit'
-    let g:ref_phpmanual_path = '/tmp/php-chunked-xhtml/'
-    cabbrev man Ref man
-
-    let g:ref_source_webdict_sites = {
-                \   'je': {
-                \     'url': 'http://dictionary.infoseek.ne.jp/jeword/%s',
-                \   },
-                \   'ej': {
-                \     'url': 'http://dictionary.infoseek.ne.jp/ejword/%s',
-                \   },
-                \   'wiki': {
-                \     'url': 'http://en.wikipedia.org/wiki/%s',
-                \   },
-                \ }
-    let g:ref_source_webdict_sites.default = 'wiki'
-
-    function! g:ref_source_webdict_sites.wiki.filter(output)
-        return join(split(a:output, "\n")[17 :], "\n")
-    endfunction
-
-    augroup RefConfig
-        autocmd!
-        autocmd FileType ref-* setlocal number wrap
-        autocmd FileType ref-* nnoremap <buffer> <silent> q :<C-u>close<CR>
-    augroup END
-
 call plug#end()
 
 cabbrev rg lgrep
@@ -1033,17 +883,7 @@ augroup Filetypes
 
     autocmd FileType apache setlocal commentstring=#%s
 
-    autocmd FileType html       setlocal omnifunc=htmlcomplete#CompleteTags
-    autocmd FileType python     setlocal omnifunc=pythoncomplete#Complete
-    autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-    autocmd FileType css,scss   setlocal omnifunc=csscomplete#CompleteCSS
-    autocmd FileType xml        setlocal omnifunc=xmlcomplete#CompleteTags
-    " autocmd FileType php        setlocal omnifunc=phpcomplete#CompletePHP
-    autocmd FileType c          setlocal omnifunc=ccomplete#Complete
-    autocmd FileType ruby,eruby setlocal omnifunc=rubycomplete#Complete
-
     autocmd FileType markdown,gitcommit setlocal spell
-    "autocmd Filetype javascript setlocal omnifunc=tern#Complete
 
     " Jump to first file
     autocmd BufCreate .git/index :call feedkeys("\<C-n>")
@@ -1122,9 +962,6 @@ function! NextClosedFold(dir)
         call winrestview(view)
     endif
 endfunction
-
-" :h complete_CTRL-E
-inoremap <expr> <C-e> pumvisible() ? "\<Esc>$A" : "\<C-o>$"
 
 " Close preview and quickfix windows.
 nnoremap <silent> <C-W>z :wincmd z<Bar>cclose<Bar>lclose<CR>
@@ -1331,7 +1168,7 @@ inoremap <c-r><c-v> <c-r>=join(<sid>get_visual_selection_list(), " ")<cr>
 cnoremap <C-A> <Home>
 
 " Make Ctrl-a/e jump to the start/end of the current line in the insert mode
-inoremap <C-e> <C-o>$
+inoremap <expr> <C-e> pumvisible() ? "\<Esc>$A" : "\<C-o>$"
 inoremap <C-a> <C-o>^
 
 " Go to first character of line on first press
@@ -1367,7 +1204,6 @@ function! s:startup()
 endfunction
 
 autocmd vimrc VimEnter * call s:startup()
-" autocmd User Startified wincmd v | Gstatus | wincmd k
 
 " select pasted text
 nnoremap gp `[v`]
@@ -1639,3 +1475,15 @@ nnoremap goT :call system('urxvt -cd '.expand("%:p:h").' &')<cr>
 " ----------------------------------------------------------------------------
 command! Count execute printf('%%s/%s//gn', escape(<q-args>, '/')) | normal! ``
 
+" redirect the output of a Vim command into a scratch buffe
+" https://www.reddit.com/r/vim/comments/4kjgmz/weekly_vim_tips_and_tricks_thread_11/d3g3bda/
+function! Redir(cmd)
+    redir => output
+    execute a:cmd
+    redir END
+    vnew
+    setlocal nobuflisted buftype=nofile bufhidden=wipe noswapfile
+    call setline(1, split(output, "\n"))
+endfunction
+
+command! -nargs=1 Redir silent call Redir(<f-args>)
