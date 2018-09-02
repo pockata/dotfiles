@@ -77,7 +77,7 @@ export SXHKD_SHELL=sh
 
 redshift-gtk &
 
-urxvtc -e zsh -c 'tmux has-session && tmux attach -d || tmux new -s main' &
+alacritty -e zsh -c 'tmux has-session && tmux attach -d || tmux new -s main' &
 
 greenclip daemon &
 
