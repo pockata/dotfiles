@@ -81,7 +81,7 @@ alacritty -e zsh -c 'tmux has-session && tmux attach -d || tmux new -s main' &
 
 greenclip daemon &
 
-session=${1:-bspwm}
+session=${1:-dwm}
 export WM_NAME="$session"
 
 case $session in
@@ -94,6 +94,13 @@ case $session in
     wmutils)
         wew | yawee.sh &
         sxhkd -c ~/.config/sxhkd/sxhkdrc_general  ~/.config/sxhkd/sxhkdrc_wmutils &
+
+        exec xwait
+        ;;
+
+    dwm)
+        ~/Projects/dwm/dwm &
+        sxhkd -c ~/.config/sxhkd/sxhkdrc_general &
 
         exec xwait
         ;;
