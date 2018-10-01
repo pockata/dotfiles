@@ -28,6 +28,7 @@
 
     # Delete branches that have been merged into branch [master]
     bclean = "!f() { git branch --merged ${1-master} | grep -v " ${1-master}$" | xargs -r git branch -D; }; f"
+    whatdidipull = "!f() { git diff --patch-with-stat ${1-master}@{1} ${1-master}; }; f"
 
     # Show the diff between the latest commit and the current state
     d = !"git diff-index --quiet HEAD -- || clear; git diff --patch-with-stat"
