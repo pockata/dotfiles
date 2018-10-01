@@ -34,7 +34,7 @@
     d = !"git diff-index --quiet HEAD -- || clear; git diff --patch-with-stat"
 
     # List all commiters in the current branch
-    commiters = !"_() { git log --pretty=format:%an $@ | sort -u; }; _"
+    committers = !"_() { git log --pretty=format:%an $@ | sort -u; }; _"
 
     # List deleted files 
     deleted = !"_() { git log --diff-filter=D --summary | grep delete; }; _"
