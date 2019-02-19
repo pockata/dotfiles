@@ -862,7 +862,7 @@ augroup Colors
     autocmd ColorScheme * highlight ColorColumn guibg=#cc241d guifg=#fbf1c7 ctermbg=red ctermfg=white
 
     let colorcolumn_blacklist = ['Startify', 'htm', 'html', 'git', 'markdown', 'GV', 'fugitiveblame', '']
-    autocmd BufWinEnter * if index(colorcolumn_blacklist, &ft) < 0 |
+    autocmd BufWinEnter * if index(colorcolumn_blacklist, &ft) < 0 && &diff == 0 |
                 \ call clearmatches() |
                 \ call matchadd('ErrorMsg', '\s\+$', 100) |
                 \ call matchadd('ErrorMsg', '\%81v', 100)
@@ -1129,7 +1129,7 @@ fun! MyWincmdPrevious()
 endfun
 
 " Diff this window with the previous one.
-command! DiffThese diffthis | call MyWincmdPrevious() | diffthis | wincmd p
+command! DiffThese diffthis | call clearmatches() | call MyWincmdPrevious() | diffthis | call clearmatches() | wincmd p
 
 " Convenient command to see the difference between the current buffer and the
 " file it was loaded from, thus the changes you made.
@@ -1485,3 +1485,15 @@ function! Redir(cmd)
 endfunction
 
 command! -nargs=1 Redir silent call Redir(<f-args>)
+
+set diffexpr=AutoDiff()
+function! AutoDiff()
+    let opt = '-1 -d -B'
+
+    if &diffopt =~ "iwhite"
+        let opt .= ' -b '
+    endif
+
+    let cmd = join(['!autobahn', opt, v:fname_in, v:fname_new, '>', v:fname_out])
+    silent exe cmd | redraw!
+endfunction
