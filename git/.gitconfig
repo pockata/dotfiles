@@ -29,6 +29,10 @@
     # Delete branches that have been merged into branch [master]
     bclean = "!f() { git branch --merged ${1-master} | grep -v " ${1-master}$" | xargs -r git branch -D; }; f"
     whatdidipull = "!f() { git diff --patch-with-stat ${1-master}@{1} ${1-master}; }; f"
+    undelete = "!f() { git checkout $(git rev-list -n 1 HEAD -- \"$1\")~1 -- \"$1\"; }; f"
+
+    # Remove remote branches already merged into master
+    cleanremote = "!f() { git branch -r --merged | grep -v master | sed 's/origin\\///' | xargs -n 1 git push --delete origin; }; f"
 
     # Show the diff between the latest commit and the current state
     d = !"git diff-index --quiet HEAD -- || clear; git diff --patch-with-stat"
