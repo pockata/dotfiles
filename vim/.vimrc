@@ -522,7 +522,7 @@ Plug 'tpope/vim-fugitive'
 
         " Got to commit tree when you go deep while browsing a repo
         autocmd User Fugitive 
-                    \ if fugitive#buffer().type() =~# '^\%(tree\|blob\)$' |
+                    \ if exists('b:fugitive_type') && b:fugitive_type =~# '^\%(tree\|blob\)$' |
                     \   nnoremap <buffer> .. :edit %:h<CR> |
                     \ endif
 
@@ -530,13 +530,11 @@ Plug 'tpope/vim-fugitive'
         " next match of /^@@
         " :call search('^@@', 'sW')
         autocmd User Fugitive
-                    \ if fugitive#buffer().type() == 'commit' |
+                    \ if exists('b:fugitive_type') && b:fugitive_type == 'commit' |
                     \   nnoremap <silent> <buffer> [c :call search('^@@', 'sWb')<CR>|
                     \   nnoremap <silent> <buffer> ]c :call search('^@@', 'sW')<CR>|
                     \ endif
     augroup END
-
-Plug 'tommcdo/vim-fugitive-blame-ext'
 
 Plug 'yssl/QFEnter'
     " http://vi.stackexchange.com/questions/8534/make-cnext-and-cprevious-loop-back-to-the-begining
