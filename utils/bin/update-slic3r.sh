@@ -4,20 +4,21 @@ set -e
 
 file="/tmp/batko.html"
 appimage="/tmp/slic3r.AppImage"
+slicerPath="/usr/bin/slic3r"
 
 install_slicer() {
     appimage="$1"
     link="$2"
+    binPath="$3"
 
     curl -L -o "$appimage" "$link"
 
-    sudo mv "$appimage" /opt/slic3r.AppImage
-    sudo chmod u+x /opt/slic3r.AppImage
+    sudo mv "$appimage" "$binPath"
+    sudo chmod u+x "$binPath"
 
     cd /tmp/
     rm -rf "$file"
     rm -rf "$appimage"
-
 }
 
 echo ""
@@ -34,10 +35,13 @@ echo "$link"
 echo ""
 
 while true; do
-    read -p "Do you wish to install this release? " yn
+    echo "Current version:"
+    test -f "$slicerPath" && "$slicerPath" --version
+
+    read -p "Do you wish to install this release? [y/N] " yn
     echo ""
     case $yn in
-        [Yy]* ) install_slicer "$appimage" "$link"; break;;
+        [Yy]* ) install_slicer "$appimage" "$link" "$slicerPath"; break;;
         [Nn]* ) exit;;
         * ) echo "Please answer yes or no.";;
     esac
