@@ -26,6 +26,8 @@
     ec = config --global -e
     ce = !git ec
 
+    fp = fetch --prune
+
     # Delete branches that have been merged into branch [master]
     bclean = "!f() { git branch --merged ${1-master} | grep -v " ${1-master}$" | xargs -r git branch -D; }; f"
     whatdidipull = "!f() { git diff --patch-with-stat ${1-master}@{1} ${1-master}; }; f"
@@ -94,38 +96,38 @@
 [credential]
     helper = cache --timeout=3600
 [color]
-	branch = auto
-	diff = auto
-	status = auto
-	ui = auto
-	interactive = auto
+    branch = auto
+    diff = auto
+    status = auto
+    ui = auto
+    interactive = auto
 [apply]
     # Detect whitespace errors when applying a patch
     whitespace = nowarn
 [core]
-	editor = $EDITOR
-	pager = diff-so-fancy | less --tabs=4 -RFX
-	autocrlf = input
+    editor = $EDITOR
+    pager = diff-so-fancy | less --tabs=4 -RFX
+    autocrlf = input
 [push]
-	default = current
+    default = current
 [pull]
-	rebase = true
+    rebase = true
 [diff]
-	mnemonicprefix = true
-	identheuristic = true
-	tool = vimdiff
+    mnemonicprefix = true
+    identheuristic = true
+    tool = vimdiff
 [merge]
-	stat = true
-	tool = diffconflicts
+    stat = true
+    tool = diffconflicts
     prompt = true
 [mergetool "diffconflicts"]
-	cmd = diffconflicts vim $BASE $LOCAL $REMOTE $MERGED
-	trustExitCode = true
+    cmd = diffconflicts vim $BASE $LOCAL $REMOTE $MERGED
+    trustExitCode = true
     # Don't create .orig files
     keepBackup = false
 [mergetool]
-	keepBackup = false
+    keepBackup = false
 [mergetool "vimdiff"]
-  cmd = vim -d $BASE $LOCAL $REMOTE $MERGED -c '$wincmd w' -c 'wincmd J'
+    cmd = vim -d $BASE $LOCAL $REMOTE $MERGED -c '$wincmd w' -c 'wincmd J'
 [url "git@github.com:"]
-	insteadOf = https://github.com/
+    insteadOf = https://github.com/
