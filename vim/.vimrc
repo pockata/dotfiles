@@ -191,7 +191,7 @@ set foldminlines=3
 set nobomb
 set nojoinspaces " one space after J or gq
 
-set switchbuf=useopen,usetab
+set switchbuf=
 
 nnoremap ' `
 
@@ -236,9 +236,9 @@ set formatoptions+=c " Autowrap comments using textwidth
 set formatoptions+=j " Delete comment character when joining commented lines
 
 " No scratch (little box that shows a definition)
-set completeopt-=preview
+" set completeopt-=preview
 " set completeopt-=menu
-set completeopt+=menu,menuone,noinsert,noselect
+set completeopt=menuone,noinsert,noselect
 
 let mapleader="\<Space>"
 let g:mapleader="\<Space>"
@@ -298,6 +298,8 @@ Plug 'junegunn/seoul256.vim'
             autocmd ColorScheme seoul256 highlight LineNr guibg=312e39
         endif
     augroup END
+
+Plug 'junegunn/goyo.vim'
 
 Plug 'machakann/vim-highlightedyank'
     let g:highlightedyank_highlight_duration = 100
@@ -436,8 +438,6 @@ Plug 'christoomey/vim-tmux-navigator'
     noremap <silent> <C-l> :TmuxNavigateUp<CR>
     noremap <silent> <C-Semicolon> :TmuxNavigateRight<CR>
 
-Plug 'triglav/vim-visual-increment'
-
 " text manipulation / display
 " TODO: configure
 Plug 'jiangmiao/auto-pairs'
@@ -447,9 +447,23 @@ Plug 'FooSoft/vim-argwrap', { 'on': 'ArgWrap' }
 " TODO: configure
 Plug 'AndrewRadev/splitjoin.vim'
 Plug 'AndrewRadev/inline_edit.vim'
+    let g:inline_edit_autowrite = 1
+    " let g:inline_edit_html_like_filetypes = ['markdown', 'php']
+
+    " normal mode:
+    nnoremap <leader>e :InlineEdit<cr>
+
+    " visual mode:
+    xnoremap <leader>e :InlineEdit<cr>
+
 " Plug 'AndrewRadev/whitespaste.vim'
-" CONFIGURE THIS!
-" Plug 'AndrewRadev/switch.vim'
+Plug 'AndrewRadev/switch.vim'
+    augroup SWITCHConfig
+        autocmd FileType gitrebase let b:switch_custom_definitions =
+            \ [
+            \   [ 'pick', 'reword', 'edit', 'squash', 'fixup', 'exec' ]
+            \ ]
+    augroup END
 
 " Plug 'rhysd/vim-textobj-lastinserted'
 
@@ -508,11 +522,19 @@ Plug 'dbakker/vim-projectroot'
 Plug 'tpope/vim-fugitive'
     nnoremap <leader>gs :tabedit %<CR>:Gstatus<CR>
     nnoremap <leader>gw :Gwrite<CR>
-    nnoremap <leader>gc :Gcommit<CR>
+    nnoremap <leader>gc :Gcommit --verbose<CR>
     nnoremap <leader>gd :-tabedit %<CR>:Gdiff<CR>
     nnoremap <leader>ga :Gcommit --amend --reuse-message=HEAD
 
+    " Open current line in the browser
+    nnoremap <leader>gb :.Gbrowse<CR>
+    " Open visual selection in the browser
+    vnoremap <leader>gb :Gbrowse<CR>
     nnoremap <leader>do :diffoff \| windo if &diff \| hide \| endif<cr>
+
+    function! s:fug_hunk(bang)
+        echo search('^\(-\|+\)\s\+', a:bang ? 'sW' : 'sWb');
+    endfunction
 
     augroup FugitiveConfig
         autocmd!
@@ -531,10 +553,16 @@ Plug 'tpope/vim-fugitive'
         " :call search('^@@', 'sW')
         autocmd User Fugitive
                     \ if exists('b:fugitive_type') && b:fugitive_type == 'commit' |
-                    \   nnoremap <silent> <buffer> [c :call search('^@@', 'sWb')<CR>|
-                    \   nnoremap <silent> <buffer> ]c :call search('^@@', 'sW')<CR>|
+                    \   nnoremap <silent> <buffer> [C :call search('^@@', 'sWb')<CR>|
+                    \   nnoremap <silent> <buffer> ]C :call search('^@@', 'sW')<CR>|
+                    " TODO: Figure out why these work when called by the
+                    " command line and not when called via a mapping
+                    \   nnoremap <silent> <buffer> [c :call fug_hunk(0)<CR>|
+                    \   nnoremap <silent> <buffer> ]c :call fug_hunk(1)<CR>|
                     \ endif
     augroup END
+
+Plug 'shumphrey/fugitive-gitlab.vim'
 
 Plug 'yssl/QFEnter'
     " http://vi.stackexchange.com/questions/8534/make-cnext-and-cprevious-loop-back-to-the-begining
@@ -565,7 +593,7 @@ Plug 'rhysd/conflict-marker.vim'
 
 Plug 'ludovicchabant/vim-gutentags'
     let g:gutentags_cache_dir = '~/.vim/gutentags'
-    let g:gutentags_enabled = 0
+    let g:gutentags_enabled = 1
 
 " code searching
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
@@ -578,22 +606,7 @@ Plug 'junegunn/fzf.vim'
     " [Buffers] Jump to the existing window if possible
     let g:fzf_buffers_jump = 1
     let g:fzf_prefer_tmux = 0
-    let g:fzf_layout = { 'right': '~40%' }
-
-    " TODO: replace this with a wrapper for the keybindings as
-    " VimResized is unpredictable/inconsistent
-    func! s:fzf_change_layout() abort
-        if winwidth(0) < 139
-            let g:fzf_layout = { 'down': '~40%' }
-        else
-            let g:fzf_layout = { 'right': '~40%' }
-        endif
-    endf
-
-    augroup FZFConfig
-        autocmd!
-        autocmd VimEnter,VimResized * :call <SID>fzf_change_layout()
-    augroup END
+    let g:fzf_layout = { 'down': '~40%' }
 
     " <leader>h conflicts with GitGutter's hunk mappings
     nnoremap <Leader>h :History<CR>
@@ -611,7 +624,7 @@ Plug 'junegunn/fzf.vim'
 Plug 'junegunn/vim-slash'
 
 " navigation
-Plug 'itchyny/vim-cursorword'
+" Plug 'itchyny/vim-cursorword'
 Plug 'kana/vim-smartword'
 Plug 'kana/vim-niceblock'
 
@@ -656,9 +669,6 @@ Plug 'justinmk/vim-dirvish'
 Plug 'justinmk/vim-ipmotion'
 
 " completion
-Plug 'Shougo/echodoc.vim'
-    let g:echodoc#enable_at_startup = 1
-
 Plug 'autozimu/LanguageClient-neovim', {
     \ 'branch': 'next',
     \ 'do': 'bash install.sh',
@@ -679,8 +689,16 @@ Plug 'autozimu/LanguageClient-neovim', {
         \ 'hbs': ['html-languageserver', '--stdio'],
         \ 'php': ['php', expand('~/.vim/plugged/php-language-server/bin/php-language-server.php')],
         \ }
-    nnoremap <silent> K :call LanguageClient_textDocument_hover()<CR>
-    nnoremap <silent> gd :call LanguageClient_textDocument_definition()<CR>
+
+    function! LC_maps()
+        if has_key(g:LanguageClient_serverCommands, &filetype)
+            nnoremap <buffer> <silent> K :call LanguageClient#textDocument_hover()<cr>
+            nnoremap <buffer> <silent> gd :call LanguageClient#textDocument_definition()<CR>
+            nnoremap <buffer> <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
+        endif
+    endfunction
+
+    autocmd FileType * call LC_maps()
 
 Plug 'felixfbecker/php-language-server', {'do': 'composer install && composer run-script parse-stubs'}
 
@@ -711,6 +729,9 @@ Plug 'sheerun/vim-polyglot'
     " let php_html_load = 1
     " let php_html_in_strings = 1
 
+" set up path variable for different filetypes
+Plug 'tpope/vim-apathy'
+
 Plug 'vim-scripts/nc.vim--Eno'
 Plug 'sirtaj/vim-openscad'
 
@@ -720,7 +741,7 @@ Plug 'w0rp/ale'
     let g:ale_echo_msg_error_str = 'E'
     let g:ale_echo_msg_warning_str = 'W'
     let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
-    let g:ale_lint_on_text_changed='never'
+    let g:ale_lint_on_text_changed='always'
     let g:ale_scss_stylelint_options='--config=stylelint-config-recommended'
     let g:ale_linters = {'html': [], 'javascript': ['eslint']}
     let g:ale_set_loclist = 0
@@ -876,8 +897,8 @@ augroup Filetypes
     " make K look up the docs, not man
     autocmd FileType vim setlocal keywordprg=:help
 
-    " follow symlink and set working directory
-    autocmd! BufReadPost * call FollowSymlink() | ProjectRootLCD
+    " " follow symlink and set working directory
+    " autocmd! BufReadPost * call FollowSymlink() | ProjectRootLCD
 
     autocmd FileType apache setlocal commentstring=#%s
 
@@ -999,6 +1020,10 @@ nnoremap <leader>p p`[v`]=
 " Reformat whole file and move back to original position
 nnoremap g= gg=G``
 nnoremap ,t :tabc<CR>
+
+" Copy current buffer path to system clipboard
+" I picked 5 because it's also the '%' key.
+nnoremap <silent> <Leader>5 :let @+ = expand("%:p")<CR>:echom "copied: " . expand("%:p")<CR>
 
 " paste register content and escape it
 cnoremap <c-x> <c-r>=<SID>PasteEscaped()<cr>
@@ -1445,6 +1470,13 @@ func! s:edit_reg() abort
   call feedkeys(":let @".c."='".c."'\<C-F>")
 endfunc
 nnoremap <silent> c" :call <SID>edit_reg()<CR>
+function! ChangeReg() abort
+    let r = nr2char(getchar())
+    if r =~# '[a-zA-Z0-9"@\-:.%#=*"~_/]'
+        call feedkeys("q:ilet @" . r . " = \<C-r>\<C-r>=string(@" . r . ")\<CR>\<ESC>", 'n')
+    endif
+endfunction
+nnoremap <silent> c" :call ChangeReg()<CR>
 
 " Scratch file
 " https://www.reddit.com/r/vim/comments/7iy03o/you_aint_gonna_need_it_your_replacement_for/dr2qo4k/
@@ -1465,8 +1497,8 @@ command! Rename call RenameFile()
 " re-highlight file
 nnoremap <silent><F6> <ESC>:execute 'colo' colors_name<cr>:syntax sync fromstart<cr>
 
-nnoremap got :call system('urxvt -cd '.getcwd().' &')<cr>
-nnoremap goT :call system('urxvt -cd '.expand("%:p:h").' &')<cr>
+nnoremap goT :call system('urxvt -cd '.getcwd().' &')<cr>
+nnoremap got :call system('urxvt -cd '.expand("%:p:h").' &')<cr>
 
 " ----------------------------------------------------------------------------
 " :Count
@@ -1497,3 +1529,8 @@ function! AutoDiff()
     let cmd = join(['!autobahn', opt, v:fname_in, v:fname_new, '>', v:fname_out])
     silent exe cmd | redraw!
 endfunction
+
+" Pastebin
+" http://vpaste.net/YAFeQ
+command! -range=% Pastebin  silent execute <line1> . "," . <line2> . "w !curl -F 'sprunge=<-' http://sprunge.us | tr -d '\\n' | xsel --clipboard --input"
+
