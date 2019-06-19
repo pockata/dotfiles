@@ -268,6 +268,34 @@ Plug 'gerw/vim-HiLinkTrace', { 'on': 'HLT' }
 Plug 'AlessandroYorba/Alduin'
 Plug 'ronny/birds-of-paradise.vim'
 Plug 'nightsense/wonka'
+Plug 'drewtempelmeyer/palenight.vim'
+Plug 'Rigellute/shades-of-purple.vim'
+Plug 'sainnhe/vim-color-forest-night'
+    augroup ForestNightConfig
+        autocmd!
+
+        " make the ~ characters on empty lines 'invisible'
+        autocmd ColorScheme * highlight EndOfBuffer guifg=bg
+
+        " Don't highlight the numbers line (only the editor line)
+        autocmd ColorScheme forest-night highlight CursorLineNr guibg=#312e39
+        autocmd ColorScheme forest-night highlight LineNr guifg=fg
+
+        autocmd ColorScheme forest-night highlight clear SignColumn
+        autocmd ColorScheme forest-night highlight GitGutterAdd guibg=bg guifg=#5f8770
+        autocmd ColorScheme forest-night highlight GitGutterChange guibg=bg guifg=#5f87af
+        autocmd ColorScheme forest-night highlight GitGutterDelete guibg=bg guifg=#70495d
+        autocmd ColorScheme forest-night highlight GitGutterChangeDelete guibg=bg guifg=#536273
+
+        if has('nvim')
+            autocmd ColorScheme forest-night highlight Normal guibg=312e39
+            " Don't highlight the numbers line (only the editor line)
+            autocmd ColorScheme forest-night highlight CursorLineNr guibg=312e39
+            autocmd ColorScheme forest-night highlight LineNr guibg=312e39
+        endif
+    augroup END
+
+
 Plug 'junegunn/seoul256.vim'
     let g:seoul256_background = 236
     let g:seoul256_light_background = 255
@@ -307,6 +335,7 @@ Plug 'machakann/vim-highlightedyank'
     augroup YankConfig
         autocmd!
         autocmd ColorScheme * highlight HighlightedyankRegion guibg=purple guifg=white
+        autocmd ColorScheme forest-night highlight HighlightedyankRegion guibg=#fd8489
     augroup END
 
 " additional text objects
@@ -950,7 +979,7 @@ augroup Filetypes
     autocmd BufWinEnter *.txt silent! if &buftype == 'help' | wincmd T | nnoremap <buffer> q :q<cr> | endif
 augroup END
 
-colorscheme birds-of-paradise
+colorscheme forest-night
 
 augroup EarthsongConfig
     autocmd!
@@ -1465,11 +1494,6 @@ command! Plugs call fzf#run(fzf#wrap({
 "   \ 'sink':    'Dirvish'})
 
 " Edit the contents of a register.
-func! s:edit_reg() abort
-  let c = nr2char(getchar())
-  call feedkeys(":let @".c."='".c."'\<C-F>")
-endfunc
-nnoremap <silent> c" :call <SID>edit_reg()<CR>
 function! ChangeReg() abort
     let r = nr2char(getchar())
     if r =~# '[a-zA-Z0-9"@\-:.%#=*"~_/]'
