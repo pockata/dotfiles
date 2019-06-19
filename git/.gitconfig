@@ -116,6 +116,7 @@
     mnemonicprefix = true
     identheuristic = true
     tool = vimdiff
+    algorithm = patience
 [merge]
     stat = true
     tool = diffconflicts
