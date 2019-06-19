@@ -64,7 +64,7 @@ notifier batterywarn &
 # make the cursor point in the 'right' direction
 xsetroot -cursor_name left_ptr &
 
-urxvtd -q -f -o
+# urxvtd -q -f -o
 
 unclutter &
 
@@ -81,7 +81,7 @@ alacritty -e zsh -c 'tmux has-session && tmux attach -d || tmux new -s main' &
 
 greenclip daemon &
 
-session=${1:-dwm}
+session=${1:-wmutils}
 export WM_NAME="$session"
 
 case $session in
