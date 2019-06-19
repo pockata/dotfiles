@@ -730,27 +730,52 @@ Plug 'autozimu/LanguageClient-neovim', {
     autocmd FileType * call LC_maps()
 
 Plug 'felixfbecker/php-language-server', {'do': 'composer install && composer run-script parse-stubs'}
+Plug 'wellle/tmux-complete.vim'
 
-if has('nvim')
-    Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-else
-    Plug 'Shougo/deoplete.nvim'
-    Plug 'roxma/nvim-yarp'
-    Plug 'roxma/vim-hug-neovim-rpc'
-        " install python-neovim from pacman
-        set pyxversion=3
-endif
+Plug 'roxma/nvim-yarp'
+Plug 'ncm2/ncm2'
+    autocmd BufEnter * call ncm2#enable_for_buffer()
 
-    let g:deoplete#enable_at_startup = 1
-
-    autocmd VimEnter * call deoplete#custom#option('ignore_sources', {'_': ['tag']})
-
+    " Use <TAB> to select the popup menu:
     inoremap <silent><expr> <S-TAB>
                 \ pumvisible() ? "\<C-p>" : "\<S-Tab>"
     inoremap <silent><expr> <TAB>
                 \ pumvisible() ? "\<C-n>" : "\<Tab>"
     inoremap <silent><expr> <CR>
                 \ pumvisible() ? "\<C-y>" : "\<CR>"
+
+" NOTE: you need to install completion sources to get completions. Check
+" our wiki page for a list of sources: https://github.com/ncm2/ncm2/wiki
+Plug 'ncm2/ncm2-bufword'
+Plug 'ncm2/ncm2-path'
+Plug 'ncm2/ncm2-cssomni'
+Plug 'mhartington/nvim-typescript'
+Plug 'phpactor/ncm2-phpactor'
+Plug 'phpactor/phpactor' ,  {'do': 'composer install', 'for': 'php'}
+Plug 'ncm2/ncm2-html-subscope'
+Plug 'ncm2/ncm2-markdown-subscope'
+Plug 'ncm2/ncm2-rst-subscope'
+
+" if has('nvim')
+"     Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+" else
+"     Plug 'Shougo/deoplete.nvim'
+"     Plug 'roxma/nvim-yarp'
+"     Plug 'roxma/vim-hug-neovim-rpc'
+"         " install python-neovim from pacman
+"         set pyxversion=3
+" endif
+"
+"     let g:deoplete#enable_at_startup = 1
+"
+"     autocmd VimEnter * call deoplete#custom#option('ignore_sources', {'_': ['tag']})
+"
+"     inoremap <silent><expr> <S-TAB>
+"                 \ pumvisible() ? "\<C-p>" : "\<S-Tab>"
+"     inoremap <silent><expr> <TAB>
+"                 \ pumvisible() ? "\<C-n>" : "\<Tab>"
+"     inoremap <silent><expr> <CR>
+"                 \ pumvisible() ? "\<C-y>" : "\<CR>"
 
 " extra language support
 Plug 'sheerun/vim-polyglot'
