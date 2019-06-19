@@ -32,11 +32,9 @@ fi
 
 zplug load
 
-# ruby binaries
-PATH="$HOME/.gem/ruby/2.5.0/bin/:$PATH"
-PATH="$HOME/.config/composer/vendor/bin:$PATH"
-
 PATH="$HOME/bin:$PATH"
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
 
 export EDITOR='nvim'
 
@@ -206,6 +204,7 @@ export NPM_PACKAGES="${HOME}/.npm-packages"
 export NODE_PATH="$NPM_PACKAGES/lib/node_modules:$NODE_PATH"
 
 PATH="$NPM_PACKAGES/bin:$PATH"
+PATH="${HOME}/.gem/ruby/2.6.0/bin:$PATH"
 export PATH;
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
