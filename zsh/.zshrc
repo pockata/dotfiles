@@ -346,9 +346,7 @@ gco() {
 }
 
 listdirectories() {
-    # TODO: Ignore .git, node_modules, etc
-    find -L . -type d -print -o -type l -print -o \
-        \( -path '*/\.*' -o -fstype 'devfs' -o -fstype 'devtmpfs' -o -fstype 'proc' \) -prune \
+    rg --files . | only-dir . |\
         2> /dev/null | \
         grep -v '^.$' | \
         sed 's|\./||g' | \
@@ -433,6 +431,21 @@ fkill() {
   then
     kill -${1:-9} $pid
   fi
+}
+
+# Smart cd
+# cd /etc/fstab
+#
+# https://github.com/mika/zsh-pony#smart-cd
+cd () {
+    if [[ -f ${1} ]]
+    then
+        [[ ! -e ${1:h} ]] && return 1
+        print "Correcting ${1} to ${1:h}"
+        builtin cd ${1:h}
+    else
+        builtin cd ${1}
+    fi
 }
 
 widget-helper() {
