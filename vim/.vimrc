@@ -518,6 +518,9 @@ Plug 'machakann/vim-sandwich'
 Plug 'tpope/vim-repeat'
 Plug 'tomtom/tcomment_vim'
 
+" Better Git conflicts resolution
+Plug 'whiteinge/diffconflicts'
+
 " code/project management
 Plug 'airblade/vim-gitgutter'
     " Gitgutter

@@ -122,7 +122,7 @@
     tool = diffconflicts
     prompt = true
 [mergetool "diffconflicts"]
-    cmd = diffconflicts vim $BASE $LOCAL $REMOTE $MERGED
+    cmd = nvim -c DiffConflictsWithHistory \"$MERGED\" \"$BASE\" \"$LOCAL\" \"$REMOTE\"
     trustExitCode = true
     # Don't create .orig files
     keepBackup = false
