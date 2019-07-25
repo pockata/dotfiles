@@ -22,19 +22,24 @@ zplug "sindresorhus/pure", use:"pure.zsh", from:github, as:theme
 # defer:3 needed to load after compinit
 zplug "zsh-users/zsh-syntax-highlighting", defer:3
 
-# Install plugins if there are plugins that have not been installed
-if ! zplug check --verbose; then
-    printf "Install? [y/N]: "
-    if read -q; then
-        echo; zplug install
-    fi
-fi
+# # Install plugins if there are plugins that have not been installed
+# if ! zplug check --verbose; then
+#     printf "Install? [y/N]: "
+#     if read -q; then
+#         echo; zplug install
+#     fi
+# fi
 
 zplug load
 
 PATH="$HOME/bin:$PATH"
 export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
+
+nvm () {
+    echo "Lazy loading nvm..."
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
+    nvm "$@"
+}
 
 export EDITOR='nvim'
 
@@ -487,26 +492,6 @@ bindkey '^X^E' edit-command-line
 bindkey '^F' listdirectories-widget
 bindkey -r '^E'
 bindkey '^E^P' project-switcher-widget
-
-# Vi mode indicator
-# https://github.com/sindresorhus/pure/wiki
-VIM_PROMPT="❯"
-PROMPT='%(?.%F{magenta}.%F{red})${VIM_PROMPT}%f '
-
-prompt_pure_update_vim_prompt() {
-    zle || {
-    print "error: pure_update_vim_prompt must be called when zle is active"
-    return 1
-}
-VIM_PROMPT=${${KEYMAP/vicmd/❮}/(main|viins)/❯}
-    zle .reset-prompt
-}
-
-function zle-line-init zle-keymap-select {
-    prompt_pure_update_vim_prompt
-}
-zle -N zle-line-init
-zle -N zle-keymap-select
 
 # Complete word from history with menu
 # https://github.com/mika/zsh-pony
