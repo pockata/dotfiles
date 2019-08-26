@@ -11,9 +11,9 @@
     mt = mergetool --tool=diffconflicts
 
     # helper
-    log-format = log --decorate  --pretty=oneline --abbrev-commit --pretty=format:'%C(yellow)%h %Cred%d %Creset%s %C(green)(%cr) %C(blue)<%cn>' --date=format:'%d-%m-%Y'
+    log-format = log --decorate  --pretty=oneline --abbrev-commit --pretty=format:'%C(yellow)%h %Cred%d %Creset%s %C(green)(%cr) %C(blue)<%an>' --date=format:'%d-%m-%Y'
     l = !git log-format --graph
-    la = log --graph --decorate --pretty=oneline --abbrev-commit --all --pretty=format:'%C(yellow)%h %Cred%d %Creset%s %C(green)(%cr) %C(blue)<%cn>' --date=short
+    la = log --graph --decorate --pretty=oneline --abbrev-commit --all --pretty=format:'%C(yellow)%h %Cred%d %Creset%s %C(green)(%cr) %C(blue)<%an>' --date=short
 
     # show repo activity (branch, last commiter name + date)
     # https://www.alexkras.com/19-git-tips-for-everyday-use/#find-old-branches
