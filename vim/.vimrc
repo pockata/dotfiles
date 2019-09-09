@@ -545,10 +545,10 @@ Plug 'airblade/vim-gitgutter'
     xmap ih <Plug>GitGutterTextObjectInnerVisual
     xmap ah <Plug>GitGutterTextObjectOuterVisual
     " stage/unstage hunk
-    nmap <Leader>hs <Plug>GitGutterStageHunk
-    nmap <Leader>hu <Plug>GitGutterUndoHunk
+    nmap <Leader>hs <Plug>(GitGutterStageHunk)
+    nmap <Leader>hu <Plug>(GitGutterUndoHunk)
     " detailed preview of changes in hunk
-    nmap <Leader>hp <Plug>GitGutterPreviewHunk
+    nmap <Leader>hp <Plug>(GitGutterPreviewHunk)
 
 Plug 'dbakker/vim-projectroot'
 Plug 'tpope/vim-fugitive'
