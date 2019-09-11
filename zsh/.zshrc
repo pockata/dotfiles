@@ -286,8 +286,7 @@ gshow() {
     if [ -t 0 ]; then
         git_output="$(git l --graph --color=always "$@")"
     else
-        # TODO: Figure out how to preserve git's color output
-        git_output="$(cat - )"
+        git_output="$(cat -)"
     fi
 
     echo "$git_output" |
