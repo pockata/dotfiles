@@ -1306,22 +1306,13 @@ noremap j h
 
 " Move vertically by visual line unless preceded by a count. If a movement is
 " greater than 5 then automatically add to the jumplist.
-nnoremap <expr> k v:count ? (v:count > 5 ? "m'" . v:count : '') . 'j' : 'gj'
-xnoremap <expr> k v:count ? (v:count > 5 ? "m'" . v:count : '') . 'j' : 'gj'
-onoremap <expr> k v:count ? (v:count > 5 ? "m'" . v:count : '') . 'j' : 'gj'
-nnoremap <expr> l v:count ? (v:count > 5 ? "m'" . v:count : '') . 'k' : 'gk'
-xnoremap <expr> l v:count ? (v:count > 5 ? "m'" . v:count : '') . 'k' : 'gk'
-onoremap <expr> l v:count ? (v:count > 5 ? "m'" . v:count : '') . 'k' : 'gk'
+noremap <expr> k v:count ? (v:count > 5 ? "m'" . v:count : '') . 'j' : 'gj'
+noremap <expr> l v:count ? (v:count > 5 ? "m'" . v:count : '') . 'k' : 'gk'
 
 noremap ; l
 
 nnoremap gk j
 nnoremap gl k
-
-noremap <C-w>j <C-w>h
-noremap <C-w>k <C-w>j
-noremap <C-w>l <C-w>k
-noremap <C-w>; <C-w>l
 
 " Change shape of cursor in different modes
 if !has("gui_running") && !has("nvim")
