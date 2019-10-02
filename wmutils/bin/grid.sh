@@ -7,7 +7,7 @@ read MX MY MWIDTH MHEIGHT <<-eof
 eof
 
 # window dimensions
-read X Y WIDTH HEIGHT BW <<-eof
+read OX OY WIDTH HEIGHT BW <<-eof
     $(wattr xywhb "$CUR")
 eof
 
@@ -19,9 +19,20 @@ PHEIGHT=${PHEIGHT:-45}
 ACTION=${2:-"move"}
 DIRECTION=${3:-"right"}
 
+# TODO: Change to grid location and move grid size to ENV variable
 # grid size
 HGRID=${5:-10}
 VGRID=${4:-6}
+
+# set min/max boundaries
+HMIN="$((GAP))"
+HMAX="$((MWIDTH - WIDTH - GAP*2))"
+VMIN="$((PHEIGHT + GAP))"
+VMAX="$((MHEIGHT - HEIGHT - GAP*2))"
+
+# adjust coords to start from the top left corner of the current monitor
+X="$((OX - MX))"
+Y="$((OY - MY))"
 
 getQuotient() {
     WIN=$1
@@ -37,56 +48,61 @@ usage() {
     echo "WAT"
 }
 
+# available space
+HSPACE=$((MWIDTH - GAP*2 - BW*2))
+VSPACE=$((MHEIGHT - GAP*2 - BW*2))
+
+# column/row sizes
+HCOL=$((HSPACE / HGRID))
+VCOL=$((VSPACE / VGRID))
+
+NEW_X="$X"
+NEW_Y="$Y"
+
 case $ACTION in
     move)
-        # available space
-        HSPACE=$((MWIDTH - GAP*2 - BW*2))
-        VSPACE=$((MHEIGHT - GAP*2 - BW*2))
-
-        # column/row sizes
-        HCOL=$((HSPACE / HGRID))
-        VCOL=$((VSPACE / VGRID))
-
         case $DIRECTION in
             right)
                 HNEXT=$(($(getQuotient "$X" "$HCOL") + 1))
-                X="$((HNEXT * HCOL))"
-                Y=0
+                NEW_X="$((HNEXT * HCOL))"
                 ;;
 
             left)
                 HPREV=$(($(getQuotient "$X" "$HCOL") - 1))
-                X="$((HPREV * HCOL))"
-                Y=0
+                NEW_X="$((HPREV * HCOL))"
                 ;;
 
             top)
                 VPREV=$(($(getQuotient "$Y" "$VCOL") - 1))
-                X=0
-                Y="$((VPREV * VCOL))"
+                NEW_Y="$((VPREV * VCOL))"
                 ;;
 
             bottom)
                 VNEXT=$(($(getQuotient "$Y" "$VCOL") + 1))
-                X=0
-                Y="$((VNEXT * VCOL))"
+                NEW_Y="$((VNEXT * VCOL))"
                 ;;
             *) usage ;;
         esac
 
-        wmv "$X" "$Y" "$CUR"
+        # apply min/max boundaries to the new coordinates
+        NEW_X="$((NEW_X < HMIN ? HMIN : NEW_X))"
+        NEW_X="$((NEW_X > HMAX ? HMAX : NEW_X))"
+
+        NEW_Y="$((NEW_Y < VMIN ? VMIN : NEW_Y))"
+        NEW_Y="$((NEW_Y > VMAX ? VMAX : NEW_Y))"
+
+        echo "$HMIN $HMAX $VMIN $VMAX"
+        echo "$X $Y $WIDTH $HEIGHT"
+        echo "$HSPACE $VSPACE"
+        echo "$HCOL $VCOL"
+        echo "$NEW_X $NEW_Y"
+
+        # wmv takes relative coords so calculate the difference
+        wmv "$((NEW_X - X))" "$((NEW_Y - Y))" "$CUR"
 
         ;;
 
     resize)
-        # available space
-        HSPACE=$((MWIDTH - X - GAP - BW))
-        VSPACE=$((MHEIGHT - Y - GAP - BW))
-
-        # column/row sizes
-        HCOL=$((HSPACE / HGRID))
-        VCOL=$((VSPACE / VGRID))
-
         case $DIRECTION in
             right)
                 HNEXT=$(($(getQuotient "$WIDTH" "$HCOL") + 1))
