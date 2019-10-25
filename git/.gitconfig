@@ -9,6 +9,8 @@
     br = branch
     diff = diff --word-diff
     mt = mergetool --tool=diffconflicts
+    rhh = reset HEAD --hard
+    rbm = rebase master
 
     # helper
     log-format = log --color=always --decorate  --pretty=oneline --abbrev-commit --pretty=format:'%C(yellow)%h %Cred%d %Creset%s %C(green)(%cr) %C(blue)<%an>' --date=format:'%d-%m-%Y'
@@ -21,6 +23,10 @@
 
     # fetch pull requests from github so you can 'git checkout pull/123' and test them locally
     fetch-pull-requests = fetch origin '+refs/pull/*/head:refs/remotes/origin/pull/*'
+
+    # reset branch to it's tracking branch
+    # https://stackoverflow.com/a/33244119
+    reset-upstream = "!f(){ echo -n \"reset $(git symbolic-ref -q --short HEAD) to $(git for-each-ref --format='%(upstream:short)' $(git symbolic-ref -q HEAD))? (y/N) \"; read -r ans; if [ \"$ans\" = \"y\" -o \"$ans\" = \"Y\" ]; then git reset --hard $(git for-each-ref --format='%(upstream:short)' $(git symbolic-ref -q HEAD)); else echo \"catchup aborted\"; fi }; f"
 
     # edit global config in default editor
     ec = config --global -e
@@ -42,7 +48,7 @@
     # List all commiters in the current branch
     committers = !"_() { git log --pretty=format:%an $@ | sort -u; }; _"
 
-    # List deleted files 
+    # List deleted files
     deleted = !"_() { git log --diff-filter=D --summary | grep delete; }; _"
 
     # Show verbose output about tags, branches or remotes
