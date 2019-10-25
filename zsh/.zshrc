@@ -302,7 +302,7 @@ gb() {
     is_in_git_repo || return
     git branch -a --color=always | grep -v '/HEAD\s' | sort | sed 's#remotes/##' |
     fzf-tmux --ansi --multi --tac --preview-window right:70% \
-        --preview 'git log --oneline --graph --color="always" --date=short --pretty="format:%C(auto)%cd %h%d %s" $(sed s/^..// <<< {} | cut -d" " -f1) -- | head -'$LINES
+        --preview 'git log-format --graph $(sed s/^..// <<< {} | cut -d" " -f1) -- | head -'$LINES
 }
 
 gf() {
@@ -324,6 +324,7 @@ gp() {
 }
 
 # gco - checkout git branch/tag
+# TODO: Add support for `checkout -t` for remote branches
 gco() {
 
     is_in_git_repo || return
@@ -354,7 +355,7 @@ listdirectories() {
 }
 
 project-switcher() {
-    local projects proj 
+    local projects proj
 
     projects="$(realpath ~/Projects/)"
     proj=$(find -L "$projects" -maxdepth 1 -type d -printf "%f\n" -o -type l -printf "%f\n" -o -prune \
