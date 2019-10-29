@@ -93,6 +93,7 @@
 [user]
     name = Rosen Stoyanov
     email = me@pockata.org
+    signingkey = D01D67063DF187942BB4C9451805A1B84632D0EE
 [credential]
     helper = cache --timeout=3600
 [color]
@@ -132,3 +133,6 @@
     cmd = vim -d $BASE $LOCAL $REMOTE $MERGED -c '$wincmd w' -c 'wincmd J'
 [url "git@github.com:"]
     insteadOf = https://github.com/
+[commit]
+    gpgsign = true
+
