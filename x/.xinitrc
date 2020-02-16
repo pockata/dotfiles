@@ -39,12 +39,11 @@ monitors=$(xrandr -q | grep -oE "^.* connected (primary )?[0-9]+")
 
 if [[ "$monitors" == *"HDMI"* ]] && [[ "$monitors" == *"VGA"* ]]; then
     mattr "LVDS1" && xrandr --output LVDS1 --off
-    ~/bin/monitors.sh "Home [eGPU]"
+    ~/bin/monitors.sh "Home"
 elif [[ "$monitors" == *"LVDS"* ]] && [[ "$monitors" == *"VGA"* ]]; then
     ~/bin/monitors.sh Work
 else
-    nitrogen --restore &
-    ~/bin/bar.sh &
+    ~/bin/monitors.sh "Auto"
 fi
 
 # set keyboard defaults
