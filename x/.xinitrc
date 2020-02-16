@@ -33,10 +33,7 @@ fi
 groups.sh > /dev/null
 
 # load predefined monitor layout 
-#
-# TODO: rewrite using mmutils
-monitors=$(xrandr -q | grep -oE "^.* connected (primary )?[0-9]+")
-
+monitors="$(lsm -am)"
 if [[ "$monitors" == *"HDMI"* ]] && [[ "$monitors" == *"VGA"* ]]; then
     mattr "LVDS1" && xrandr --output LVDS1 --off
     ~/bin/monitors.sh "Home"
