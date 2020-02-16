@@ -23,6 +23,8 @@ case $CMD in
         ~/.screenlayout/home-egpu.sh ;;
     "$a")
         arandr ;;
+    "Auto")
+        xrandr --auto ;;
     *)
         echo "Usage:" ;;
 esac
