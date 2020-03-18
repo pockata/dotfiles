@@ -45,11 +45,9 @@ rxvt-unicode
 rofi
 firefox
 chromium
-compton
+picom
 docker
 docker-compose
-reptyr
-mariadb
 nginx
 feh
 dzen2
@@ -66,8 +64,6 @@ htop
 lsof
 lm_sensors
 dunst
-figlet
-doge
 cowsay
 fortune-mod
 nitrogen
@@ -82,3 +78,6 @@ pavucontrol
 paprefs
 pamixer
 blueberry
+alacritty
+cwm
+

@@ -5,10 +5,8 @@ xkb-switch-git
 sublime-text-dev
 redshift-gtk-git
 ttf-ms-fonts
-toilet
 pup-git
 pulseaudio
 greenclip
 etcher
-alacritty-git
 
