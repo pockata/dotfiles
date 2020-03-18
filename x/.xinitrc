@@ -48,8 +48,6 @@ fi
 # TODO: Run as udev rule on keyboard connect/disconnect
 ~/bin/setkeyboard.sh
 
-compton --config /dev/null &
-
 dunst &
 
 # TODO: Use only notify-send
@@ -77,7 +75,10 @@ alacritty -e zsh -c 'tmux has-session && tmux attach -d || tmux new -s main' &
 
 greenclip daemon &
 
-session=${1:-wmutils}
+# a successor to compton
+picom &
+
+session=${1:-cwm}
 export WM_NAME="$session"
 
 case $session in
@@ -97,6 +98,13 @@ case $session in
     dwm)
         ~/Projects/dwm/dwm &
         sxhkd -c ~/.config/sxhkd/sxhkdrc_general &
+
+        exec xwait
+        ;;
+
+    cwm)
+        cwm &
+        sxhkd -c ~/.config/sxhkd/sxhkdrc_general  ~/.config/sxhkd/sxhkdrc_cwm &
 
         exec xwait
         ;;

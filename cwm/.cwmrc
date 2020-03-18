@@ -1,0 +1,60 @@
+color	activeborder	"#915661"
+color	inactiveborder	"#484848"
+color	font		"#f2f3f4"
+color	selfont		"#f2f3f4"
+color	menubg		"#484848"
+color	menufg		"#915661"
+
+borderwidth	6
+gap		60 15 15 15
+
+sticky	yes
+
+ignore	lemonbar
+
+unbind-key	all
+
+bind-key	4S-r		restart
+bind-key	4-space		"rofi -show drun"
+bind-key	4-Return	alacritty
+bind-key	4S-Return	nautilus
+
+bind-key	4-1		group-only-1
+bind-key	4-2		group-only-2
+bind-key	4-3		group-only-3
+bind-key	4-4		group-only-4
+bind-key	4-5		group-only-5
+bind-key	4C-1		group-toggle-1
+bind-key	4C-2		group-toggle-2
+bind-key	4C-3		group-toggle-3
+bind-key	4C-4		group-toggle-4
+bind-key	4C-3		group-toggle-3
+bind-key	4S-1		window-movetogroup-1
+bind-key	4S-2		window-movetogroup-2
+bind-key	4S-3		window-movetogroup-3
+bind-key	4S-4		window-movetogroup-4
+bind-key	4S-5		window-movetogroup-5
+bind-key	4-period	group-cycle
+bind-key	4-comma		group-rcycle
+
+bind-key	4-w		"rofi -show window"
+bind-key	4S-q		window-delete
+bind-key	4-f		window-maximize
+bind-key	4-s		window-stick
+bind-key	4S-s		window-maximize
+bind-key	4-d		group-toggle-all
+// bind-key	4-h		window-snap-left
+// bind-key	4-j		window-snap-down
+// bind-key	4-k		window-snap-up
+// bind-key	4-l		window-snap-right
+// bind-key	4-y		window-snap-up-left
+// bind-key	4-u		window-snap-up-right
+// bind-key	4-b		window-snap-down-left
+// bind-key	4-n		window-snap-down-right
+bind-key	4-t		window-vtile
+bind-key	4-Tab		window-cycle
+bind-key	4S-Tab		window-rcycle
+
+bind-mouse	4-1		window-move
+bind-mouse	4-3		window-resize
+
