@@ -4,11 +4,6 @@
 # wm independent hotkeys
 #
 
-
-# run urxvt
-mod4 + shift + Return
-    urxvtc -g 60x18
-
 mod4 + Return
     alacritty
 
