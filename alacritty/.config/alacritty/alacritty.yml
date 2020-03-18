@@ -26,12 +26,12 @@ window:
   # Units are physical pixels; this is not DPI aware.
   # (change requires restart)
   padding:
-    x: 2
-    y: 2
+    x: 0
+    y: 0
 
-  # Window decorations
-  # Setting this to false will result in window without borders and title bar.
-  decorations: none
+  # # Window decorations
+  # # Setting this to false will result in window without borders and title bar.
+  # decorations: none
 
 # Display tabs using this many cells (changes require restart)
 tabspaces: 4
@@ -99,7 +99,8 @@ font:
   use_thin_strokes: true
 
 # Should display the render timer
-render_timer: false
+debug:
+    render_timer: false
 
 # Colors (Tomorrow Night Bright)
 colors:
