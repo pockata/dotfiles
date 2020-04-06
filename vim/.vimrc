@@ -703,85 +703,95 @@ Plug 'justinmk/vim-dirvish'
 " https://github.com/Konfekt/vim-smartbraces
 Plug 'justinmk/vim-ipmotion'
 
-" completion
-Plug 'autozimu/LanguageClient-neovim', {
-    \ 'branch': 'next',
-    \ 'do': 'bash install.sh',
-    \ }
+" TODO Mange coc.nvim extensions with vim-plug. Currently some of them are
+" managed by coc itself because they don't fully support loading via vim's
+" plugin manager.
 
-    " Use LanguageClient's linter instead of ALE
-    let g:LanguageClient_diagnosticsEnable = 0
-    let g:LanguageClient_diagnosticsDisplay = {}
+" Use release branch
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+    inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+    " inoremap <silent><expr> <TAB>
+    "             \ pumvisible() ? coc#_select_confirm() :
+    "             uu\ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
+    "             \ <SID>check_back_space() ? "\<TAB>" :
+    "             \ coc#refresh()
+    "
+    " function! s:check_back_space() abort
+    "     let col = col('.') - 1
+    "     return !col || getline('.')[col - 1]  =~# '\s'
+    " endfunction
+    "
+    " let g:coc_snippet_next = '<tab>'
 
-    " npm install -g vscode-css-languageserver-bin
-    " npm install -g vscode-html-languageserver-bin
-    let g:LanguageClient_serverCommands = {
-        \ 'javascript': ['javascript-typescript-stdio'],
-        \ 'javascript.jsx': ['javascript-typescript-stdio'],
-        \ 'css': ['css-languageserver', '--stdio'],
-        \ 'scss': ['css-languageserver', '--stdio'],
-        \ 'html': ['html-languageserver', '--stdio'],
-        \ 'hbs': ['html-languageserver', '--stdio'],
-        \ 'php': ['php', expand('~/.vim/plugged/php-language-server/bin/php-language-server.php')],
-        \ }
-
-    function! LC_maps()
-        if has_key(g:LanguageClient_serverCommands, &filetype)
-            nnoremap <buffer> <silent> K :call LanguageClient#textDocument_hover()<cr>
-            nnoremap <buffer> <silent> gd :call LanguageClient#textDocument_definition()<CR>
-            nnoremap <buffer> <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
+    inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+    inoremap <expr> <cr> pumvisible() ? coc#_select_confirm() : "\<C-g>u\<CR>"
+    function! s:show_documentation()
+        if (index(['vim','help'], &filetype) >= 0)
+            execute 'h '.expand('<cword>')
+        else
+            call CocAction('doHover')
         endif
     endfunction
 
-    autocmd FileType * call LC_maps()
+    " Use <c-space> to trigger completion.
+    inoremap <silent><expr> <c-space> coc#refresh()
 
-Plug 'felixfbecker/php-language-server', {'do': 'composer install && composer run-script parse-stubs'}
-Plug 'wellle/tmux-complete.vim'
+    " Remap for rename current word
+    nmap <leader>n <Plug>(coc-rename)
 
-Plug 'roxma/nvim-yarp'
-Plug 'ncm2/ncm2'
-    autocmd BufEnter * call ncm2#enable_for_buffer()
+    " Remap keys for gotos
+    nmap gd <Plug>(coc-definition)
+    nmap gy <Plug>(coc-type-definition)
+    nmap gi <Plug>(coc-implementation)
+    nmap gr <Plug>(coc-references)
 
-    " Use <TAB> to select the popup menu:
-    inoremap <silent><expr> <S-TAB>
-                \ pumvisible() ? "\<C-p>" : "\<S-Tab>"
-    inoremap <silent><expr> <TAB>
-                \ pumvisible() ? "\<C-n>" : "\<Tab>"
-    inoremap <silent><expr> <CR>
-                \ pumvisible() ? "\<C-y>" : "\<CR>"
+    " Remap for format selected region
+    xmap <leader>f  <Plug>(coc-format-selected)
+    nmap <leader>f  <Plug>(coc-format-selected)
 
-" NOTE: you need to install completion sources to get completions. Check
-" our wiki page for a list of sources: https://github.com/ncm2/ncm2/wiki
-Plug 'ncm2/ncm2-bufword'
-Plug 'ncm2/ncm2-path'
-Plug 'ncm2/ncm2-cssomni'
-Plug 'mhartington/nvim-typescript'
-Plug 'phpactor/ncm2-phpactor'
-Plug 'phpactor/phpactor' ,  {'do': 'composer install', 'for': 'php'}
-Plug 'ncm2/ncm2-html-subscope'
-Plug 'ncm2/ncm2-markdown-subscope'
-Plug 'ncm2/ncm2-rst-subscope'
+    " Use K to show documentation in preview window
+    nnoremap <silent> K :call <SID>show_documentation()<CR>
 
-" if has('nvim')
-"     Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-" else
-"     Plug 'Shougo/deoplete.nvim'
-"     Plug 'roxma/nvim-yarp'
-"     Plug 'roxma/vim-hug-neovim-rpc'
-"         " install python-neovim from pacman
-"         set pyxversion=3
-" endif
+    augroup CoC
+        autocmd!
+        " Update signature help on jump placeholder.
+        autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+    augroup end
+
+    " Using CocList
+    " Show all diagnostics
+    nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
+    " Manage extensions
+    nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
+    " Show commands
+    nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
+    " Find symbol of current document
+    nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
+    " Search workspace symbols
+    nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
+    " Resume latest coc list
+    nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
+
+Plug 'neoclide/coc-tsserver', {'do': 'yarn install --frozen-lockfile'}
+Plug 'neoclide/coc-json', {'do': 'yarn install --frozen-lockfile'}
+" Plug 'neoclide/coc-tag', {'do': 'yarn install --frozen-lockfile'}
+Plug 'neoclide/coc-html', {'do': 'yarn install --frozen-lockfile'}
+Plug 'neoclide/coc-css', {'do': 'yarn install --frozen-lockfile'}
+" Plug 'neoclide/coc-emmet', {'do': 'yarn install --frozen-lockfile'}
+" Plug 'neoclide/coc-snippets', {'do': 'yarn install --frozen-lockfile'}
+"     " Use <C-l> for trigger snippet expand.
+"     imap <C-l> <Plug>(coc-snippets-expand)
 "
-"     let g:deoplete#enable_at_startup = 1
+"     " Use <C-j> for select text for visual placeholder of snippet.
+"     vmap <C-j> <Plug>(coc-snippets-select)
 "
-"     autocmd VimEnter * call deoplete#custom#option('ignore_sources', {'_': ['tag']})
+"     " Use <C-j> for jump to next placeholder, it's default of coc.nvim
+"     let g:coc_snippet_next = '<c-j>'
 "
-"     inoremap <silent><expr> <S-TAB>
-"                 \ pumvisible() ? "\<C-p>" : "\<S-Tab>"
-"     inoremap <silent><expr> <TAB>
-"                 \ pumvisible() ? "\<C-n>" : "\<Tab>"
-"     inoremap <silent><expr> <CR>
-"                 \ pumvisible() ? "\<C-y>" : "\<CR>"
+"     " Use <C-k> for jump to previous placeholder, it's default of coc.nvim
+"     let g:coc_snippet_prev = '<c-k>'
+
+Plug 'honza/vim-snippets'
 
 " extra language support
 Plug 'sheerun/vim-polyglot'
@@ -795,30 +805,30 @@ Plug 'tpope/vim-apathy'
 Plug 'vim-scripts/nc.vim--Eno'
 Plug 'sirtaj/vim-openscad'
 
-Plug 'w0rp/ale'
-    let g:ale_sign_warning = '!'
-    let g:ale_sign_error = '✖'
-    let g:ale_echo_msg_error_str = 'E'
-    let g:ale_echo_msg_warning_str = 'W'
-    let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
-    let g:ale_lint_on_text_changed='always'
-    let g:ale_scss_stylelint_options='--config=stylelint-config-recommended'
-    let g:ale_linters = {'html': [], 'javascript': ['eslint']}
-    let g:ale_set_loclist = 0
-
-    nmap <silent> [e <Plug>(ale_previous_wrap)
-    nmap <silent> ]e <Plug>(ale_next_wrap)
-    nmap <leader>da ALEToggleBuffer
-
-    augroup ALEConfig
-        autocmd!
-        autocmd ColorScheme seoul256 highlight clear ALEErrorSign
-                                    \|highlight clear ALEWarningSign
-
-        autocmd ColorScheme birds-of-paradise highlight ALEErrorSign guibg=#493a35 guifg=#ef5d32
-                                            \ |highlight ALEWarningSign guibg=#493a35 guifg=#efac32
-                                            \ |highlight ErrorMsg guibg=#ef5d32
-    augroup END
+" Plug 'w0rp/ale'
+"     let g:ale_sign_warning = '!'
+"     let g:ale_sign_error = 'â'
+"     let g:ale_echo_msg_error_str = 'E'
+"     let g:ale_echo_msg_warning_str = 'W'
+"     let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
+"     let g:ale_lint_on_text_changed='always'
+"     let g:ale_scss_stylelint_options='--config=stylelint-config-recommended'
+"     let g:ale_linters = {'html': [], 'javascript': ['eslint']}
+"     let g:ale_set_loclist = 0
+"
+"     nmap <silent> [e <Plug>(ale_previous_wrap)
+"     nmap <silent> ]e <Plug>(ale_next_wrap)
+"     nmap <leader>da ALEToggleBuffer
+"
+"     augroup ALEConfig
+"         autocmd!
+"         autocmd ColorScheme seoul256 highlight clear ALEErrorSign
+"                                     \|highlight clear ALEWarningSign
+"
+"         autocmd ColorScheme birds-of-paradise highlight ALEErrorSign guibg=#493a35 guifg=#ef5d32
+"                                             \ |highlight ALEWarningSign guibg=#493a35 guifg=#efac32
+"                                             \ |highlight ErrorMsg guibg=#ef5d32
+"     augroup END
 
 " " Automatically bookmark last files accessed by directory
 " augroup filemarks
