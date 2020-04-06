@@ -5,6 +5,9 @@ let g:loaded_rrhelper = 1
 let g:did_install_default_menus = 1
 let g:loaded_netrwPlugin = 1
 
+" Disable man plugin maps
+let g:no_plugin_maps = 1
+
 set background=dark
 
 " ============================================================================
@@ -45,11 +48,17 @@ set lazyredraw
 set updatetime=250
 
 " Show whitespace characters
-set showbreak=↪\ 
+set showbreak='↪\ '
 set breakindent
 set list
-set listchars=tab:→\ ,trail:·,extends:›,precedes:‹,nbsp:.
+" set listchars='tab:→\ ,trail:·,extends:›,precedes:‹,nbsp:.'
 
+set listchars=
+set listchars+=nbsp:.
+set listchars+=tab:→\ " Note the literal space
+set listchars+=trail:·
+set listchars+=extends:›
+set listchars+=precedes:‹
 " Sets how many lines of history VIM has to remember
 set history=10000
 
@@ -150,9 +159,6 @@ set novisualbell
 set t_vb=
 set tm=500
 
-" Remember info about open buffers on close
-set viminfo^=%
-
 " Always show the status line
 set laststatus=2
 
@@ -169,8 +175,8 @@ set backupcopy=yes
 
 " Let's save undo info!
 set undofile                " Save undo's after file closes
-set undolevels=500
-set undoreload=500
+
+augroup BufWritePre /tmp/* setlocal noundofile
 
 if !has('nvim')
     set undodir=~/.vim/undo//     " where to save undo histories
@@ -258,11 +264,8 @@ nmap  <C-Semicolon>
 
 call plug#begin('~/.vim/plugged')
 
-Plug 'lilydjwg/colorizer', { 'on': '<Plug>Colorizer' }
-    let g:colorizer_startup = 0
-    nmap ,c <Plug>Colorizer
-
-Plug 'gerw/vim-HiLinkTrace', { 'on': 'HLT' }
+" Respect .editorconfig files
+Plug 'editorconfig/editorconfig-vim'
 
 " colorschemes / start screen
 Plug 'AlessandroYorba/Alduin'
@@ -277,15 +280,15 @@ Plug 'sainnhe/vim-color-forest-night'
         " make the ~ characters on empty lines 'invisible'
         autocmd ColorScheme * highlight EndOfBuffer guifg=bg
 
-        " Don't highlight the numbers line (only the editor line)
-        autocmd ColorScheme forest-night highlight CursorLineNr guibg=#312e39
-        autocmd ColorScheme forest-night highlight LineNr guifg=fg
+        " " Don't highlight the numbers line (only the editor line)
+        " autocmd ColorScheme forest-night highlight CursorLineNr guibg=#312e39
+        " autocmd ColorScheme forest-night highlight LineNr guifg=fg
 
         autocmd ColorScheme forest-night highlight clear SignColumn
-        autocmd ColorScheme forest-night highlight GitGutterAdd guibg=bg guifg=#5f8770
-        autocmd ColorScheme forest-night highlight GitGutterChange guibg=bg guifg=#5f87af
-        autocmd ColorScheme forest-night highlight GitGutterDelete guibg=bg guifg=#70495d
-        autocmd ColorScheme forest-night highlight GitGutterChangeDelete guibg=bg guifg=#536273
+        autocmd ColorScheme forest-night highlight GitGutterAdd guibg=bg
+        autocmd ColorScheme forest-night highlight GitGutterChange guibg=bg
+        autocmd ColorScheme forest-night highlight GitGutterDelete guibg=bg
+        autocmd ColorScheme forest-night highlight GitGutterChangeDelete guibg=bg
 
         if has('nvim')
             autocmd ColorScheme forest-night highlight Normal guibg=312e39
@@ -328,6 +331,16 @@ Plug 'junegunn/seoul256.vim'
     augroup END
 
 Plug 'junegunn/goyo.vim'
+    function! s:goyo_enter()
+        :GitGutterEnable
+        set number relativenumber
+    endfunction
+
+    function! s:goyo_leave()
+    endfunction
+
+    autocmd! User GoyoEnter nested call <SID>goyo_enter()
+    autocmd! User GoyoLeave nested call <SID>goyo_leave()
 
 Plug 'machakann/vim-highlightedyank'
     let g:highlightedyank_highlight_duration = 100
@@ -552,7 +565,7 @@ Plug 'airblade/vim-gitgutter'
 
 Plug 'dbakker/vim-projectroot'
 Plug 'tpope/vim-fugitive'
-    nnoremap <leader>gs :tabedit %<CR>:Gstatus<CR>
+    nnoremap <leader>gs :-tabedit %<CR>:Gstatus<CR>:only<CR>
     nnoremap <leader>gw :Gwrite<CR>
     nnoremap <leader>gc :Gcommit --verbose<CR>
     nnoremap <leader>gd :-tabedit %<CR>:Gdiff<CR>
@@ -565,7 +578,7 @@ Plug 'tpope/vim-fugitive'
     nnoremap <leader>do :diffoff \| windo if &diff \| hide \| endif<cr>
 
     function! s:fug_hunk(bang)
-        echo search('^\(-\|+\)\s\+', a:bang ? 'sW' : 'sWb');
+        call search('^\(-\|+\)\s\+', a:bang ? 'sW' : 'sWb');
     endfunction
 
     augroup FugitiveConfig
@@ -575,23 +588,26 @@ Plug 'tpope/vim-fugitive'
         autocmd BufRead fugitive://* xnoremap <buffer> dp :diffput<CR>|xnoremap <buffer> do :diffget<CR>
 
         " Got to commit tree when you go deep while browsing a repo
-        autocmd User Fugitive 
+        autocmd User Fugitive
                     \ if exists('b:fugitive_type') && b:fugitive_type =~# '^\%(tree\|blob\)$' |
                     \   nnoremap <buffer> .. :edit %:h<CR> |
                     \ endif
 
-        " Create [c / ]c mappings for patch diffs (GV) by jumping to the
-        " next match of /^@@
-        " :call search('^@@', 'sW')
-        autocmd User Fugitive
-                    \ if exists('b:fugitive_type') && b:fugitive_type == 'commit' |
-                    \   nnoremap <silent> <buffer> [C :call search('^@@', 'sWb')<CR>|
-                    \   nnoremap <silent> <buffer> ]C :call search('^@@', 'sW')<CR>|
-                    " TODO: Figure out why these work when called by the
-                    " command line and not when called via a mapping
-                    \   nnoremap <silent> <buffer> [c :call fug_hunk(0)<CR>|
-                    \   nnoremap <silent> <buffer> ]c :call fug_hunk(1)<CR>|
-                    \ endif
+        " " TODO: Rewrite this to go to each hunk in a diff (+/-). Fugitive
+        " " already offers [c / ]c
+        "
+        " " Create [c / ]c mappings for patch diffs (GV) by jumping to the
+        " " next match of /^@@
+        " " :call search('^@@', 'sW')
+        " autocmd User Fugitive
+        "             \ if exists('b:fugitive_type') && b:fugitive_type == 'commit' |
+        "             \   nnoremap <silent> <buffer> [C :call search('^@@', 'sWb')<CR>|
+        "             \   nnoremap <silent> <buffer> ]C :call search('^@@', 'sW')<CR>|
+        "             " TODO: Figure out why these work when called by the
+        "             " command line and not when called via a mapping
+        "             \   nnoremap <silent> <buffer> [c :call <SID>fug_hunk(0)<CR>|
+        "             \   nnoremap <silent> <buffer> ]c :call <SID>fug_hunk(1)<CR>|
+        "             \ endif
     augroup END
 
 Plug 'shumphrey/fugitive-gitlab.vim'
@@ -625,7 +641,7 @@ Plug 'rhysd/conflict-marker.vim'
 
 Plug 'ludovicchabant/vim-gutentags'
     let g:gutentags_cache_dir = '~/.vim/gutentags'
-    let g:gutentags_enabled = 1
+    let g:gutentags_enabled = 0
 
 " code searching
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
@@ -659,7 +675,7 @@ Plug 'junegunn/fzf.vim'
 Plug 'junegunn/vim-slash'
 
 " navigation
-" Plug 'itchyny/vim-cursorword'
+Plug 'itchyny/vim-cursorword'
 Plug 'kana/vim-smartword'
 Plug 'kana/vim-niceblock'
 
@@ -686,6 +702,7 @@ Plug 'justinmk/vim-dirvish'
     augroup DirvishConfig
         autocmd!
         autocmd FileType dirvish
+                    \ call FugitiveDetect(expand("%")) |
                     \  nnoremap <silent> <buffer> <C-t> :call dirvish#open('tabedit', 0)<CR>
                     \ |xnoremap <silent> <buffer> <C-t> :call dirvish#open('tabedit', 0)<CR>
                     \ |noremap <silent> <buffer> <C-v> :call dirvish#open('vsplit', 0)<CR>
@@ -699,7 +716,13 @@ Plug 'justinmk/vim-dirvish'
                     \ gh :silent keeppatterns g@\v/\.[^\/]+/?$@d _<cr>:setl cole=3<cr>
     augroup END
 
-" alternative 
+    command! -nargs=? -complete=dir Explore Dirvish <args>
+    command! -nargs=? -complete=dir Sexplore belowright split | silent Dirvish <args>
+    command! -nargs=? -complete=dir Vexplore topleft 33 vsplit | silent Dirvish <args>
+
+    nmap <silent> <Leader>kb :Vexplore %<CR>
+
+" alternative
 " https://github.com/Konfekt/vim-smartbraces
 Plug 'justinmk/vim-ipmotion'
 
@@ -952,7 +975,7 @@ augroup Colors
     " highlight long lines (but only one column)
     autocmd ColorScheme * highlight ColorColumn guibg=#cc241d guifg=#fbf1c7 ctermbg=red ctermfg=white
 
-    let colorcolumn_blacklist = ['Startify', 'htm', 'html', 'git', 'markdown', 'GV', 'fugitiveblame', '']
+    let colorcolumn_blacklist = ['Startify', 'htm', 'html', 'git', 'markdown', 'GV', 'fugitiveblame', 'qf', '']
     autocmd BufWinEnter * if index(colorcolumn_blacklist, &ft) < 0 && &diff == 0 |
                 \ call clearmatches() |
                 \ call matchadd('ErrorMsg', '\s\+$', 100) |
@@ -967,6 +990,7 @@ augroup Filetypes
     " make K look up the docs, not man
     autocmd FileType vim setlocal keywordprg=:help
 
+    " " TODO: Add blacklist (GV/fugitive, etc.)
     " " follow symlink and set working directory
     " autocmd! BufReadPost * call FollowSymlink() | ProjectRootLCD
 
@@ -980,8 +1004,6 @@ augroup Filetypes
 
     "https://www.reddit.com/r/vim/comments/3er2az/how_to_suppress_vims_warning_editing_a_read_only/
     autocmd BufEnter /etc/hosts set noro
-
-    autocmd FileType php nnoremap <silent> <buffer> <expr> K ":silent exec \"!xdg-open 'http://php.net/en/" . expand('<cword>') . "'\"<CR>:redraw!\<CR>"
 
     autocmd Filetype *
                 \    if &omnifunc == "" |
@@ -998,18 +1020,7 @@ augroup Filetypes
                 \ | endif
 
     " TODO: Create a blacklist and trim everything else
-    autocmd BufWrite *.py :call DeleteTrailingWS()
-    autocmd BufWrite *.coffee :call DeleteTrailingWS()
-    autocmd BufWrite *.js :call DeleteTrailingWS()
-    autocmd BufWrite *.jsx :call DeleteTrailingWS()
-    autocmd BufWrite *.scss :call DeleteTrailingWS()
-    autocmd BufWrite *.html :call DeleteTrailingWS()
-    autocmd BufWrite *.css :call DeleteTrailingWS()
-    autocmd BufWrite *.php :call DeleteTrailingWS()
-    autocmd BufWrite *.json :call DeleteTrailingWS()
-    autocmd BufWrite *.sh :call DeleteTrailingWS()
-    " autocmd BufWrite *.c :call DeleteTrailingWS()
-    " autocmd BufWrite *.cpp :call DeleteTrailingWS()
+    autocmd BufWrite * :call DeleteTrailingWS()
 
     autocmd Filetype css,scss,html,htm,html.handlebars setlocal iskeyword+=-
 
@@ -1124,8 +1135,8 @@ inoreabbrev lorem Lorem ipsum dolor sit amet, consectetur adipiscing elit.
             \ risus tincidunt enim, id pretium leo risus ac lectus. Ut eget nisl nunc.
             \ Vivamus vestibulum semper aliquam. Mauris rutrum convallis malesuada.
 
-" Execute macro in q
-map Q @q
+" Execute the last macro
+nnoremap Q @@
 
 " Merge a tab into a split in the previous window
 function! MergeTabs()
@@ -1287,6 +1298,24 @@ function! s:startup()
     endif
 
     let cnt = argc()
+    " For NERDTree
+    " if (cnt == 0)
+    "     call FugitiveDetect(expand('%'))
+    "     NERDTreeToggle
+    "     wincmd w
+    " elseif (cnt == 1 && isdirectory(argv(0)))
+    "     exe "cd " . argv(0)
+    "     call FugitiveDetect(expand('%'))
+    "     NERDTreeToggle
+    "     wincmd w
+    " endif
+
+    " if (cnt == 1 && isdirectory(argv(0)))
+    "     exe "cd " . argv(0)
+    " endif
+    " Dirvish
+    " call FugitiveDetect(expand("%"))
+    " CmdSplit Gstatus
 
     if (cnt == 0)
         Dirvish
@@ -1300,6 +1329,9 @@ autocmd vimrc VimEnter * call s:startup()
 
 " select pasted text
 nnoremap gp `[v`]
+
+" paste without yanking in visual mode with `P`
+xnoremap <expr> P '"_d"'.v:register.'P'
 
 " select inserted text
 " https://vimrcfu.com/snippet/145
@@ -1326,6 +1358,15 @@ noremap ; l
 
 nnoremap gk j
 nnoremap gl k
+
+" limit scope of search to visual selection
+" https://www.reddit.com/r/vim/comments/df852s/tip_use_v_to_limit_scope_of_search_to_visual/
+" TODO: Add mappings for replace (:s/)
+xnoremap / <Esc>`</\%V\v
+xnoremap ? <Esc>`>?%V\v
+
+" https://www.reddit.com/r/vim/comments/dgbr9l/mappings_i_would_change_for_more_consistent_vim/
+nnoremap Y y$
 
 " Change shape of cursor in different modes
 if !has("gui_running") && !has("nvim")
@@ -1410,7 +1451,7 @@ endfunction
 " http://stackoverflow.com/a/10102604
 " ----------------------------------------------------------------------------
 function! s:CleanEmptyBuffers()
-    let buffers = filter(range(0, bufnr('$')), 'buflisted(v:val) && empty(bufname(v:val)) && bufwinnr(v:val)<0')
+    let buffers = filter(range(0, bufnr('$')), 'buflisted(v:val) && empty(bufname(v:val)) && bufwinnr(v:val)<0 && !getbufvar(v:val, "&mod")')
     if !empty(buffers)
         silent! exe 'bw '.join(buffers, ' ')
     endif
@@ -1588,6 +1629,30 @@ endfunction
 
 command! -nargs=1 Redir silent call Redir(<f-args>)
 
+function! CommitList()
+    if get(b:, 'fugitive_type', '') == 'commit'
+        let buffer = FugitiveParse()[0]
+        call fzf#run(fzf#wrap({
+                    \'source': 'git diff --name-status '. shellescape(buffer) .' '. shellescape(buffer) .'^',
+                    \'sink': s:Fasd('e')
+                    \}))
+    endif
+endfunction
+
+function! s:Fasd(cmd)
+  let cmd = a:cmd
+  function! Sink(line) closure
+    execute(cmd . ' ' . split(a:line)[-1])
+  endfunction
+  return funcref('Sink')
+endfunction
+
+" https://superuser.com/questions/558743/vim-execute-bash-commands-make-in-the-same-window
+command! -nargs=+ Run call setqflist(map(systemlist('<args>'), '{"filename": v:val}')) | copen
+
+" TODO: Create a command Tableify
+":%s/\t/</kb\/td>,tkbkb<td>/ggg0viVI<td>viV$A</td>gg0viVI<tr>viV$A</tr>
+
 set diffexpr=AutoDiff()
 function! AutoDiff()
     let opt = '-1 -d -B'
@@ -1601,6 +1666,25 @@ function! AutoDiff()
 endfunction
 
 " Pastebin
-" http://vpaste.net/YAFeQ
+" https://gist.github.com/romainl/1cad2606f7b00088dda3bb511af50d53
 command! -range=% Pastebin  silent execute <line1> . "," . <line2> . "w !curl -F 'sprunge=<-' http://sprunge.us | tr -d '\\n' | xsel --clipboard --input"
+
+" Load a list of changed fiels in the quickfix list
+" https://vi.stackexchange.com/questions/13433/how-to-load-list-of-files-in-commit-into-quickfix
+command! -nargs=? -bar Gshow call setqflist(map(systemlist("git show --pretty='' --name-only <args>"), '{"filename": v:val, "lnum": 1}')) | copen
+
+" Create dir on file save
+"
+" http://travisjeffery.com/b/2011/11/saving-files-in-nonexistent-directories-with-vim/
+augroup vimrc-auto-mkdir
+    autocmd!
+    autocmd BufWritePre * call s:auto_mkdir(expand('<afile>:p:h'), v:cmdbang)
+    function! s:auto_mkdir(dir, force)
+        if !isdirectory(a:dir)
+                    \   && (a:force
+                    \       || input("'" . a:dir . "' does not exist. Create? [y/N]") =~? '^y\%[es]$')
+            call mkdir(iconv(a:dir, &encoding, &termencoding), 'p')
+        endif
+    endfunction
+augroup END
 
