@@ -41,6 +41,9 @@ alt + ctrl + s
 alt + ctrl + b
     thyme -d -b
 
+alt + ctrl + v
+    ~/bin/vim-everywhere.sh
+
 # volume management
 XF86AudioRaiseVolume
     pamixer -i 10 --sink "$(pactl list sinks short | grep "RUNNING"| cut -d "	" -f2)"; notifier volume #increase sound volume
