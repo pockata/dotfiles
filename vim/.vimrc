@@ -530,20 +530,20 @@ Plug 'airblade/vim-gitgutter'
     let g:gitgutter_eager = 1
     let g:gitgutter_override_sign_column_highlight = 1
 
-    let g:gitgutter_sign_added = '▌'
-    let g:gitgutter_sign_modified = '▐'
-    let g:gitgutter_sign_removed = '▖'
-    let g:gitgutter_sign_removed_first_line = '▘'
-    let g:gitgutter_sign_modified_removed = '▞'
+    let g:gitgutter_sign_added = "▌"
+    let g:gitgutter_sign_modified = "▐"
+    let g:gitgutter_sign_removed = "▖"
+    let g:gitgutter_sign_removed_first_line = "▘"
+    let g:gitgutter_sign_modified_removed = "▞"
 
     " jump between changed areas (hunks)
-    nmap <silent> ]h :GitGutterNextHunk<CR>
-    nmap <silent> [h :GitGutterPrevHunk<CR>
+    nmap ]h <Plug>(GitGutterNextHunk)
+    nmap [h <Plug>(GitGutterPrevHunk)
     " text objects for hunks
-    omap ih <Plug>GitGutterTextObjectInnerPending
-    omap ah <Plug>GitGutterTextObjectOuterPending
-    xmap ih <Plug>GitGutterTextObjectInnerVisual
-    xmap ah <Plug>GitGutterTextObjectOuterVisual
+    omap ih <Plug>(GitGutterTextObjectInnerPending)
+    omap ah <Plug>(GitGutterTextObjectOuterPending)
+    xmap ih <Plug>(GitGutterTextObjectInnerVisual)
+    xmap ah <Plug>(GitGutterTextObjectOuterVisual)
     " stage/unstage hunk
     nmap <Leader>hs <Plug>(GitGutterStageHunk)
     nmap <Leader>hu <Plug>(GitGutterUndoHunk)
