@@ -640,6 +640,9 @@ Plug 'junegunn/fzf.vim'
     let g:fzf_prefer_tmux = 0
     let g:fzf_layout = { 'down': '~40%' }
 
+    let $FZF_DEFAULT_OPTS='--layout=reverse --preview-window noborder'
+    let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6 } }
+
     " <leader>h conflicts with GitGutter's hunk mappings
     nnoremap <Leader>h :History<CR>
     nnoremap <Leader>j :Lines<CR>
