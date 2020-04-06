@@ -92,10 +92,10 @@ export FZF_DEFAULT_OPTS='--multi --bind=ctrl-k:down,ctrl-l:up'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_CTRL_T_OPTS="$FZF_DEFAULT_OPTS"
 export FZF_CTRL_R_COMMAND="$FZF_DEFAULT_COMMAND"
-export FZF_CTRL_R_OPTS="$FZF_DEFAULT_OPTS --preview 'echo {}' --preview-window down:3:hidden:wrap --bind '?:toggle-preview' --bind 'ctrl-y:execute-silent(echo -n {2..} | xsel --clipboard --input)+abort' --header 'Press CTRL-Y to copy command into clipboard' --border"
+export FZF_CTRL_R_OPTS="$FZF_DEFAULT_OPTS --preview 'echo {}' --preview-window down:3:hidden:wrap:noborder --bind '?:toggle-preview' --bind 'ctrl-y:execute-silent(echo -n {2..} | xsel --clipboard --input)+abort' --header 'Press CTRL-Y to copy command into clipboard' --border"
 #export FZF_ALT_C_COMMAND="$FZF_DEFAULT_COMMAND"
 #export FZF_ALT_C_OPTS="$FZF_DEFAULT_OPTS"
-command -v tree > /dev/null && export FZF_ALT_C_OPTS="$FZF_DEFAULT_OPTS --preview 'tree -C {} | head -$LINES'"
+command -v tree > /dev/null && export FZF_ALT_C_OPTS="$FZF_DEFAULT_OPTS --preview 'tree -C {} | head -$LINES' --preview-window 'noborder'"
 
 # Use rg instead of the default find command for listing candidates.
 # - The first argument to the function is the base path to start traversal
@@ -301,7 +301,7 @@ gshow() {
 gb() {
     is_in_git_repo || return
     git branch -a --color=always | grep -v '/HEAD\s' | sort | sed 's#remotes/##' |
-    fzf-tmux --ansi --multi --tac --preview-window right:70% \
+    fzf-tmux --ansi --multi --tac --preview-window right:70%:noborder \
         --preview 'git log-format --graph $(sed s/^..// <<< {} | cut -d" " -f1) -- | head -'$LINES
 }
 
@@ -309,6 +309,7 @@ gf() {
     is_in_git_repo || return
     git -c color.status=always status --short |
     fzf-tmux -m --ansi --nth 2..,.. \
+        --preview-window right:50%:noborder \
         --preview 'NAME="$(cut -c4- <<< {})" &&
         (git diff --color=always "$NAME" | sed 1,4d; cat "$NAME") | head -'$LINES |
     cut -c4- | tr '\n' ' '
@@ -318,6 +319,7 @@ gp() {
     is_in_git_repo || return
     git diff --color=always --name-status HEAD~1..HEAD |
     fzf-tmux -m --ansi --nth 2..,.. \
+        --preview-window right:50%:noborder \
         --preview 'NAME="$(cut -c3- <<< {})" &&
         (git diff --color=always "$NAME" | sed 1,4d; cat "$NAME") | head -'$LINES |
     cut -c4- | tr '\n' ' '
@@ -350,7 +352,7 @@ listdirectories() {
         2> /dev/null | \
         grep -v '^.$' | \
         sed 's|\./||g' | \
-        fzf-tmux --ansi --multi --tac --preview-window right:50% \
+        fzf-tmux --ansi --multi --tac --preview-window right:50%:noborder \
             --preview 'tree -C {} | head -$LINES'
 }
 
@@ -362,7 +364,7 @@ project-switcher() {
         2> /dev/null | \
         grep -v '^.$' | \
         sed 's|\./||g' | \
-        fzf-tmux --ansi --multi --tac --preview-window right:50% \
+        fzf-tmux --ansi --multi --tac --preview-window right:50%:noborder \
             --preview "echo 'Branches\n' && git -C $projects/{} rev-parse HEAD > /dev/null 2>&1 &&
                 git -C $projects/{} branch -vv --color=always &&
                 echo '\n\nCommits\n' && git -C $projects/{} l -10 | head -$LINES") || return
