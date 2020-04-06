@@ -1339,6 +1339,20 @@ if has('nvim')
     set guicursor=n-v-c:block-Cursor/lCursor-blinkon0,i-ci:ver25-Cursor/lCursor,r-cr:hor20-Cursor/lCursor
 endif
 
+" I only use gvim for vim-everywhere, so we set some specific options
+if has('gui_running')
+    set textwidth=72
+    set wrap
+    set spell
+
+    " set window size
+    set lines=40
+    set columns=90
+
+    " Remove Gvim toolbar and menus
+    set guioptions=
+endif
+
 " Delete trailing white space on save, useful for Python and CoffeeScript ;)
 func! DeleteTrailingWS()
     exe "normal mz"
