@@ -8,8 +8,8 @@ usage() {
     exit 1
 }
 
-PFW=$(pfw)
-MON=$(mattr n $PFW)
+PFW=${2:-$(pfw)}
+MON=${3:-$(mattr n $PFW)}
 GAP=${GAP:-15}
 BAR=${BAR:-30}
 
@@ -42,6 +42,7 @@ case $1 in
     j|s|south|down) move_to_mon $(next y "") 2>/dev/null ;;
     k|w|north|up)   move_to_mon $(next y r)  2>/dev/null ;;
     l|d|west|right) move_to_mon $(next x "") 2>/dev/null ;;
+    specific) move_to_mon $3 2>/dev/null ;;
     *) usage ;;
 esac
 
