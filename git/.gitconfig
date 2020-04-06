@@ -1,7 +1,7 @@
 [alias]
     co = checkout
     cob = checkout -b
-    c = commit
+    c = commit --verbose
     cm = commit -m
     ca = commit --amend
     cA = commit --amend --reuse-message=HEAD
