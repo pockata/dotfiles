@@ -39,9 +39,9 @@ mod4 + ctrl + {j,k,l,semicolon}
 mod4 + r : {j,k,l,semicolon}
     wrs {-40 0, 0 40, 0 -40, 40 0} $(pfw); pop "resizing"
 
-# kill window
-mod4 + shift + q
-    killwa $(pfw)
+# # kill window
+# mod4 + shift + q
+#     killwa $(pfw)
 
 # tile windows
 mod4 + {t,shift + t}

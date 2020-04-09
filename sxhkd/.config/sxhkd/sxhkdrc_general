@@ -15,6 +15,9 @@ super + d
 super + Escape
     pkill -USR1 -x sxhkd
 
+super + p
+    for win in $(lsw -a); do if grep -qi "bar" <<< $(wname $win); then chwso -r $win; fi ; done
+
 # select monitor setup
 mod4 + shift + m
     ~/bin/monitors.sh
