@@ -6,7 +6,7 @@
 
 # move windows around
 mod4 + shift + {j,k,l,semicolon}
-    wmv {-40 0, 0 40, 0 -40, 40 0} $(pfw)
+    coords="{-40 0, 0 40, 0 -40, 40 0}"; wmv $coords $(pfw) && wmp -r -- $coords
 
 # select windows using directions
 mod4 + {j,k,l,semicolon}
@@ -37,7 +37,8 @@ mod4 + ctrl + {j,k,l,semicolon}
 
 # resize window
 mod4 + r : {j,k,l,semicolon}
-    wrs {-40 0, 0 40, 0 -40, 40 0} $(pfw); pop "resizing"
+    wid=$(pfw); wrs {-40 0, 0 40, 0 -40, 40 0} $wid; \
+    wmp -a $(wattr xywh $wid | awk '\{ print $1+$3/2, $2+$4/2 \}'); pop "resizing"
 
 # # kill window
 # mod4 + shift + q
