@@ -47,3 +47,6 @@ esac
 
 wtp $X $Y $W $H $CUR
 
+# Move the pointer to the center of the window
+wmp -a $(wattr xywh $CUR | awk '{ print $1+$3/2, $2+$4/2 }')
+
