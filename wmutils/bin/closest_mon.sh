@@ -18,20 +18,23 @@ next() {
 }
 
 move_to_mon() {
-
     test -z $1 && return
 
-    corner_mh.sh md $PFW $1
+    mon="$1"
+
+    # Move the window to the center of the monitor
+    corner_mh.sh md $PFW $mon
 
     w=$(wattr w $PFW)
     h=$(wattr h $PFW)
 
-    mw=$(mattr w $1)
-    mh=$(mattr w $1)
+    mw=$(mattr w $mon)
+    mh=$(mattr h $mon)
 
-    vert_space=$((mw - BAR - GAP*3))
-    horiz_space=$((mh - GAP*2))
+    vert_space=$((mh - BAR - GAP*3))
+    horiz_space=$((mw - GAP*2))
 
+    # If the window is bigger than the screen, maximize the window
     if [ "$w" -gt "$horiz_space" ] || [ "$h" -gt "$vert_space" ]; then
         fullscreen_mh.sh $PFW max
     fi
