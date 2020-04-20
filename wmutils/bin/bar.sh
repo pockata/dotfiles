@@ -8,7 +8,6 @@ FIFO_PATH="/tmp/status.fifo"
 test -e "$FIFO_PATH" && rm "$FIFO_PATH"
 mkfifo "$FIFO_PATH"
 
-GROOT=${GROOT:-"/tmp/groups.sh"}
 GNUMBER=${GNUMBER:-5}
 PANEL=${PANEL:-45}
 BAR=${BAR:-30}
@@ -69,30 +68,49 @@ while :; do
 done > "$FIFO_PATH" &
 
 # groups
-while :; do
-    groupstr=""
-    for gid in $(seq 1 $GNUMBER); do
+xprop -spy -root -notype \
+-f _NET_ACTIVE_WINDOW '32x' '=$0\n' \
+-f _NET_CURRENT_DESKTOP '32i' '=$0\n' \
+-f _NET_CLIENT_LIST '32x' '=$0+\n' \
+_NET_ACTIVE_WINDOW _NET_CURRENT_DESKTOP _NET_CLIENT_LIST | \
+while read LINE; do
+    case ${LINE} in
+        _NET_CURRENT_DESKTOP*)
+            _NET_CURRENT_DESKTOP=${LINE//*=/}
+            ;;
+        _NET_ACTIVE_WINDOW*)
+            ;;
+        _NET_CLIENT_LIST*)
+            client_desktop_list=""
+            _NET_CLIENT_LIST=${LINE//*=/}
+            for client in ${_NET_CLIENT_LIST//,/}; do
+                _NET_WM_DESKTOP=$(xprop -f _NET_WM_DESKTOP '32i' '=$0' -id ${client} -notype _NET_WM_DESKTOP)
+                if [[ ${client_desktop_list} != *${_NET_WM_DESKTOP}* ]]; then
+                    client_desktop_list="${client_desktop_list} ${_NET_WM_DESKTOP//*=/}"
+                fi
+            done
+            ;;
+    esac
 
-        c=$(color "$gid")
+    # Output desktop information
+    output="G "
 
-        if ! grep --quiet "$gid" "$GROOT/all"; then
-            groupstr="$groupstr%{F#504945}□%{F-} "
+    for (( desktop=1; desktop <= $GNUMBER; desktop++ ))
+    do
+        c=$(color "$desktop")
+        if (( desktop == _NET_CURRENT_DESKTOP )); then
+            # current desktop
+            output="${output}%{F$c}■%{F-} "
         else
-            if grep --quiet "$gid" "$GROOT/active" 2>/dev/null; then
-                groupstr="$groupstr%{F$c}■%{F-} "
+            if [[ ${client_desktop_list} =~ ${desktop} ]]; then
+                output="${output}%{F$c}□%{F-} "
             else
-                groupstr="$groupstr%{F$c}□%{F-} "
+                output="${output}%{F#504945}□%{F-} "
             fi
         fi
     done
-
-    echo "G   $groupstr"
-
-    sleep 3s
+    echo -e "${output}"
 done > "$FIFO_PATH" &
-
-mon1=$(echo "$monitors" | sed -n '1p')
-b_geo1="$(barGeo "$mon1")"
 
 parseFifo() {
     line="$1"
@@ -104,6 +122,9 @@ parseFifo() {
 
         echo "$groups $clock"
 }
+
+mon1=$(echo "$monitors" | sed -n '1p')
+b_geo1="$(barGeo "$mon1")"
 
 if [ "$num_monitors" -gt 2 ]; then
     mon2=$(echo "$monitors" | sed -n '2p')
