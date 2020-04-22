@@ -39,7 +39,7 @@ bind-key	4-comma		group-rcycle
 
 bind-key	4-w		"rofi -show window"
 bind-key	4S-q		window-delete
-bind-key	4-f		window-maximize
+bind-key	4-f		"maximize.sh"
 bind-key	4S-f		window-fullscreen
 bind-key	4-s		window-stick
 bind-key	4-Tab		window-cycle
