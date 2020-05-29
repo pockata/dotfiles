@@ -13,6 +13,11 @@ MON=${3:-$(mattr n $PFW)}
 GAP=${GAP:-15}
 BAR=${BAR:-30}
 
+# Don't move the window if it's un fullscreen state
+if xprop -notype -id $PFW _NET_WM_STATE | grep -iq fullscreen; then
+    return
+fi
+
 next() {
     lsm | xargs mattr i"$1" | uniq -f1 -u | sort -k2 -n"$2" | awk '{ print $2, $1; }' | sed "0,/$MON/d" | sed "1s/^[0-9]* //p;d"
 }
