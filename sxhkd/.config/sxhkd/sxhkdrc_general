@@ -49,13 +49,13 @@ alt + ctrl + v
 
 # volume management
 XF86AudioRaiseVolume
-    pamixer -i 10 --sink "$(pactl list sinks short | grep "RUNNING"| cut -d "	" -f2)"; notifier volume #increase sound volume
+    pactl set-sink-volume @DEFAULT_SINK@ +5%; notifier volume #increase sound volume
 
 XF86AudioLowerVolume
-    pamixer -d 10 --sink "$(pactl list sinks short | grep "RUNNING"| cut -d "	" -f2)"; notifier volume #decrease sound volume
+    pactl set-sink-volume @DEFAULT_SINK@ -5%; notifier volume #decrease sound volume
 
 XF86AudioMute
-    pamixer --toggle-mute; notifier volmute # mute sound
+    pactl set-sink-mute @DEFAULT_SINK@ toggle; notifier volmute # mute sound
 
 # media keys
 XF86AudioPlay
