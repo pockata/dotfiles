@@ -102,6 +102,10 @@ case $session in
         exec xwait
         ;;
 
+    awesome)
+        exec awesome
+        ;;
+
     cwm)
         cwm &
         sxhkd -c ~/.config/sxhkd/sxhkdrc_general  ~/.config/sxhkd/sxhkdrc_cwm &
