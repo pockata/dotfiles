@@ -32,13 +32,11 @@ fi
 # initialize groups script
 groups.sh > /dev/null
 
-# load predefined monitor layout 
+# load predefined monitor layout
 monitors="$(lsm -am)"
-if [[ "$monitors" == *"HDMI"* ]] && [[ "$monitors" == *"VGA"* ]]; then
+if [[ "$monitors" == *"HDMI"* ]]; then
     mattr "LVDS1" && xrandr --output LVDS1 --off
     ~/bin/monitors.sh "Home"
-elif [[ "$monitors" == *"LVDS"* ]] && [[ "$monitors" == *"VGA"* ]]; then
-    ~/bin/monitors.sh Work
 else
     ~/bin/monitors.sh "Auto"
 fi
@@ -78,7 +76,7 @@ greenclip daemon &
 # a successor to compton
 picom &
 
-session=${1:-cwm}
+session=${1:-awesome}
 export WM_NAME="$session"
 
 case $session in
