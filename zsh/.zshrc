@@ -5,6 +5,9 @@ unset ZPLUG_CACHE_FILE
 
 source ~/.zplug/init.zsh
 
+# Enable emacs mode
+bindkey -e
+
 # Let zplug manage itself
 zplug "zplug/zplug"
 
@@ -47,10 +50,10 @@ export EDITOR='nvim'
 stty -ixon
 setopt noflowcontrol
 
-# Vi mode
-bindkey -v
-# Remove the 0.4s delay switching vi modes
-export KEYTIMEOUT=1 # reduces to 0.1
+# # Vi mode
+# bindkey -v
+# # Remove the 0.4s delay switching vi modes
+# export KEYTIMEOUT=1 # reduces to 0.1
 
 zstyle ':completion:*' menu select
 zstyle ':completion:*' matcher-list	'' 'm:{[:lower:][:upper:]}={[:upper:][:lower:]}' '+l:|=* r:|=*'
