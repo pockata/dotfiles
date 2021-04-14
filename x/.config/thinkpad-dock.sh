@@ -37,7 +37,8 @@ function switch_to_local {
         --output HDMI2 --off \
         --output HDMI3 --off \
         --output VGA1  --off \
-        --output eDP1  --auto \
+        --output eDP2  --off \
+        --output DP2  --off \
         --output LVDS1 --auto
 
 }
