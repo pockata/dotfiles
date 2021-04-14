@@ -164,6 +164,8 @@ alias dcu='docker-compose up -d'
 alias dcl='docker-compose logs'
 alias dcr='docker-compose run --rm'
 
+alias gi='grep -i'
+
 # Create a new directory and enter it
 function mkd() {
     mkdir -p "$@" && cd "$_";
