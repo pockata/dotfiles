@@ -13,7 +13,7 @@ local themes_path = gfs.get_themes_dir()
 
 local theme = {}
 
-local font = "Meslo LG M DZ for Powerline"
+local font = "JetBrains Mono Medium"
 
 -- theme.font          = "sans 8"
 theme.font          = font .. " 9"

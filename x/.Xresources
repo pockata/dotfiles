@@ -47,10 +47,10 @@ URxvt.iso14755: false
 URxvt.iso14755_52: false
 
 URxvt.keysym.C-Tab: \033{
-URxvt.keysym.Control-Shift-ISO_Left_Tab: \033} 
+URxvt.keysym.Control-Shift-ISO_Left_Tab: \033}
 
 URxvt*allow_bold: true
-URxvt*font:xft:Meslo LG M DZ for Powerline:style=regular:pixelsize=13
+URxvt*font:xft:JetBrains Mono Medium:style=regular:pixelsize=13
 
 ! Enables ctrl+; binding in Vim
 URxvt.keysym.C-semicolon: 
@@ -79,7 +79,7 @@ rofi.fixed-num-lines: true
 rofi.width: 500
 rofi.lines: 10
 rofi.fuzzy: true
-rofi.font: Meslo LG M DZ for Powerline 12
+rofi.font: JetBrains Mono Medium 12
 rofi.o: 100
 rofi.bw: 2
 rofi.hide-scrollbar: true

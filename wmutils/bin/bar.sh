@@ -22,7 +22,7 @@ b_w=240
 b_h="$BAR"
 
 # bar fonts
-b_f="Meslo LG M DZ for Powerline:style=regular:size=9"
+b_f="JetBrains Mono Medium:style=regular:size=9"
 b_fi="Font Awesome:style=regular:size=11"
 
 xrdb="$(xrdb -query)"

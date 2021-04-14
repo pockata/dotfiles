@@ -3,7 +3,7 @@
 # notifyd - notification daemon thing
 #
 
-font="Meslo LG M DZ for Powerline:style=regular:size=9"
+font="JetBrains Mono Medium:style=regular:size=9"
 icofont="Font Awesome:style=regular:size=11"
 
 echo=$@
