@@ -35,6 +35,9 @@ zplug "zsh-users/zsh-syntax-highlighting", defer:3
 
 zplug load
 
+# Show git stash status
+zstyle :prompt:pure:git:stash show yes
+
 PATH="$HOME/bin:$PATH"
 export NVM_DIR="$HOME/.nvm"
 
