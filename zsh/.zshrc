@@ -465,6 +465,15 @@ widget-helper() {
     return $ret
 }
 
+alias git_diff_commit='git diff-tree --no-commit-id --name-only -r HEAD'
+alias gdc=git_diff_commit
+
+# https://github.com/sirupsen/dotfiles/blob/8d232bab79c0032af1b827ad523d77f0f8959037/home/.bash/04_aliases.bash#L59
+review-latest-commit() {
+  nvim -c "let g:gitgutter_diff_base = 'HEAD~1'" -c ":e!" $(git_diff_commit)
+}
+alias rlc='review-latest-commit'
+
 git-branches-widget() {
     LBUFFER="${LBUFFER}$(gb)"
     widget-helper
