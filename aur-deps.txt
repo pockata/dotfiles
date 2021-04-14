@@ -9,4 +9,6 @@ pup-git
 pulseaudio
 greenclip
 etcher
+betaflight-configurator-bin
+blheli-configurator-bin
 
