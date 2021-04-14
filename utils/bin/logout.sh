@@ -14,7 +14,7 @@ case $CMD in
     Reboot)
         systemctl reboot ;;
     Suspend)
-        systemctl suspend ;;
+        sleep 1 && systemctl suspend ;;
     Hibernate)
         systemctl hibernate ;;
 esac
