@@ -15,6 +15,8 @@ env:
   TERM: xterm-256color
 
 window:
+  dynamic_title: true
+
   # Window dimensions in character columns and lines
   # Falls back to size specified by window manager if set to 0x0.
   # (changes require restart)
@@ -33,8 +35,8 @@ window:
   # # Setting this to false will result in window without borders and title bar.
   # decorations: none
 
-# Display tabs using this many cells (changes require restart)
-tabspaces: 4
+# # Display tabs using this many cells (changes require restart)
+# tabspaces: 4
 
 # When true, bold text is drawn using the bright variant of colors.
 draw_bold_text_with_bright_colors: true
@@ -123,6 +125,7 @@ colors:
     text: '0x000000'
     cursor: '0xffffff'
 
+  # Use converter https://github.com/MuntashirAkon/dotfiles/blob/master/.local/bin/alacritty_xr_color_scheme
   # Normal colors
   normal:
     black:   '0x33303b'
@@ -178,7 +181,7 @@ colors:
 #
 # To completely disable the visual bell, set its duration to 0.
 #
-visual_bell:
+bell:
   animation: EaseOutExpo
   duration: 0
 
@@ -226,8 +229,6 @@ mouse:
 
 selection:
   semantic_escape_chars: ",│`|:\"' ()[]{}<>"
-
-dynamic_title: true
 
 # Style of the cursor
 #
@@ -301,7 +302,7 @@ key_bindings:
   - { key: Insert,   mods: Shift,   action: PasteSelection               }
   - { key: Key0,     mods: Control, action: ResetFontSize                }
   - { key: Equals,   mods: Control, action: IncreaseFontSize             }
-  - { key: Subtract, mods: Control, action: DecreaseFontSize             }
+  - { key: Minus,    mods: Control, action: DecreaseFontSize             }
   - { key: Home,                    chars: "\x1bOH",   mode: AppCursor   }
   - { key: Home,                    chars: "\x1b[H",   mode: ~AppCursor  }
   - { key: End,                     chars: "\x1bOF",   mode: AppCursor   }
