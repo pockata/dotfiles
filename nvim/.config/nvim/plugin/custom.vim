@@ -87,7 +87,8 @@ augroup Filetypes
 	autocmd FileType javascriptreact,javascript,jsx,javascript.jsx setlocal suffixesadd=.js,.jsx,.json,.html
 	autocmd FileType javascriptreact,javascript,jsx,javascript.jsx setlocal path=.,src,node_nodules
 
-	autocmd BufWinEnter *.txt silent! if &buftype == 'help' | wincmd T | nnoremap <buffer> q :q<cr> | endif
+	" " Make help files open up in a new tab
+	" autocmd BufWinEnter *.txt silent! if &buftype == 'help' | wincmd T | nnoremap <buffer> q :q<cr> | endif
 augroup END
 
 augroup EarthsongConfig
@@ -197,16 +198,16 @@ function! DeleteHiddenBuffers()
 	endfor
 endfunction
 
-function! SearchVisualSelectionWithAg()
-	execute 'Ag' s:getVisualSelection()
+function! SearchVisualSelectionWithRg()
+	execute 'Rg' s:getVisualSelection()
 endfunction
 
-function! SearchWordWithAg()
-	execute 'Ag' expand('<cword>')
+function! SearchWordWithRg()
+	execute 'Rg' expand('<cword>')
 endfunction
 
-nnoremap <silent> H :call SearchWordWithAg()<CR>
-vnoremap <silent> H :call SearchVisualSelectionWithAg()<CR>
+nnoremap <silent> H :call SearchWordWithRg()<CR>
+vnoremap <silent> H :call SearchVisualSelectionWithRg()<CR>
 
 " "wincmd p" might not work initially, although there are two windows.
 fun! MyWincmdPrevious()
