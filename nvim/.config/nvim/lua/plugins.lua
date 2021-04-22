@@ -115,6 +115,7 @@ return require('packer').startup(function(use)
 	-- Theming
 	use { 'challenger-deep-theme/vim', as = 'challenger-deep' }
 	use { 'morhetz/gruvbox', config = [[require('config.gruvbox')]] }
+	use { 'ajmwagar/vim-deus' }
 	use { 'folke/tokyonight.nvim' }
 	use {
 		'glepnir/galaxyline.nvim', branch = 'main',
@@ -186,6 +187,7 @@ return require('packer').startup(function(use)
 			'nvim-lua/plenary.nvim'
 		},
 		config = [[require('config.gitsigns')]],
+		after = 'gruvbox'
 	}
 
 	-- cd to file/project
