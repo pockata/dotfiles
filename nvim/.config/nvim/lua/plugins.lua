@@ -63,7 +63,13 @@ return require('packer').startup(function(use)
 		config = [[require('config.treesitter')]]
 	}
 
-	-- use { 'rrethy/vim-hexokinase', run = 'make hexokinase' } -- preview hex colors
+	-- preview hex colors
+	use {
+		'rrethy/vim-hexokinase',
+		run = 'make hexokinase',
+		cmd = 'HexokinaseToggle',
+		config = [[vim.g.Hexokinase_highlighters = {'virtual'}]],
+	}
 
 	-- Autocomplete & Linters
 	use { 'neovim/nvim-lspconfig',
