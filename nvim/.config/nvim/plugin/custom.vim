@@ -408,14 +408,19 @@ autocmd vimrc BufHidden * silent! call <SID>CleanEmptyBuffers()
 " ----------------------------------------------------------------------------
 function! RestoreKeyboardLayout(key)
 	call system('xkb-switch -s us')
-	execute 'normal! ' . a:key
+	if (a:key == 'a' || a:key == 'i')
+		startinsert
+	else
+		execute 'normal! ' . a:key
+	endif
 endfunction
 nnoremap <silent> в :call RestoreKeyboardLayout('w')<CR>
 nnoremap <silent> с :call RestoreKeyboardLayout('s')<CR>
 nnoremap <silent> д :call RestoreKeyboardLayout('d')<CR>
-" TODO: a & i don't work as expected (they leave insert mode immediately)
+
 nnoremap <silent> а :call RestoreKeyboardLayout('a')<CR>
 nnoremap <silent> и :call RestoreKeyboardLayout('i')<CR>
+nnoremap <silent> о :call RestoreKeyboardLayout('o')<CR>
 
 nnoremap <silent> й :call RestoreKeyboardLayout('h')<CR>
 nnoremap <silent> к :call RestoreKeyboardLayout('j')<CR>
@@ -556,7 +561,7 @@ endfunction
 command! -nargs=+ Run call setqflist(map(systemlist('<args>'), '{"filename": v:val}')) | copen
 
 " TODO: Create a command Tableify
-":%s/\t/</kb\/td>,tkbkb<td>/ggg0viVI<td>viV$A</td>gg0viVI<tr>viV$A</tr>
+":%s/\t/</kb\/td>,tkbkb<td>/ggg0viVI<td>viV$A</td>gg0viVI<tr>viV$A</tr>
 
 " set diffexpr=AutoDiff()
 " function! AutoDiff()
