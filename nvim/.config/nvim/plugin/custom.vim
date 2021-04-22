@@ -26,14 +26,14 @@ augroup Colors
 	" make the precedes & extends characters red
 	autocmd ColorScheme * highlight NonText guifg=red
 
-	" update the matched search background to not obscure the cursor
-	autocmd ColorScheme * highlight Search guibg=purple guifg=white
+	" " update the matched search background to not obscure the cursor
+	" autocmd ColorScheme * highlight Search guibg=purple guifg=white
 
 	" Highlight spelling errors
 	autocmd ColorScheme * highlight SpellBad guifg=red
 
-	" highlight long lines (but only one column)
-	autocmd ColorScheme * highlight ColorColumn guibg=#cc241d guifg=#fbf1c7 ctermbg=red ctermfg=white
+	" " highlight long lines (but only one column)
+	" autocmd ColorScheme * highlight ColorColumn guibg=#cc241d guifg=#fbf1c7 ctermbg=red ctermfg=white
 
 	let colorcolumn_blacklist = ['Startify', 'htm', 'html', 'git', 'markdown', 'GV', 'fugitiveblame', 'dirvish', 'qf', '']
 	autocmd BufWinEnter * if index(colorcolumn_blacklist, &ft) < 0 && &diff == 0 |
@@ -89,9 +89,6 @@ augroup Filetypes
 
 	autocmd BufWinEnter *.txt silent! if &buftype == 'help' | wincmd T | nnoremap <buffer> q :q<cr> | endif
 augroup END
-
-" colorscheme palenight
-colorscheme challenger_deep
 
 augroup EarthsongConfig
 	autocmd!
