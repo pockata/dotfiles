@@ -75,9 +75,13 @@ return require('packer').startup(function(use)
 	use { 'neovim/nvim-lspconfig',
 		config = [[require('config.lspconfig')]],
 	}
-	-- use 'nvim-lua/lsp-status.nvim'
-	-- use 'glepnir/lspsaga.nvim'
-	-- use 'onsails/lspkind-nvim'
+
+	-- Better LSP diagnostics display
+	use {
+		"folke/lsp-trouble.nvim",
+		requires = "kyazdani42/nvim-web-devicons",
+		config = [[require('config.lsp-trouble')]]
+	}
 
 	use { 'kosayoda/nvim-lightbulb', config = [[require('config.lightbulb')]] }
 
