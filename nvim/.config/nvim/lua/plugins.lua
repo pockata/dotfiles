@@ -124,9 +124,9 @@ return require('packer').startup(function(use)
 	use { 'ajmwagar/vim-deus' }
 	use { 'folke/tokyonight.nvim' }
 	use {
-		'glepnir/galaxyline.nvim', branch = 'main',
+		'famiu/feline.nvim',
 		requires = {'kyazdani42/nvim-web-devicons'},
-		config = [[require('config.galaxyline')]]
+		config = [[require('config.feline')]],
 	}
 
 	use 'antoinemadec/FixCursorHold.nvim' -- Fix CursorHold Performance
