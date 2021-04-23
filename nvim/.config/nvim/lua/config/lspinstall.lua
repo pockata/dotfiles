@@ -38,9 +38,18 @@ end
 
 local function setup_servers()
 	require'lspinstall'.setup()
+
 	local servers = require'lspinstall'.installed_servers()
 	for _, server in pairs(servers) do
-		require'lspconfig'[server].setup{ on_attach = on_attach }
+		local conf = {
+			on_attach = on_attach,
+			-- settings = { documentFormatting = false }
+		}
+
+		-- load config/lsp/{server}.lua and pass the default config file
+		pcall(function() conf = require('config.lsp.' .. server)(conf) end)
+
+		require'lspconfig'[server].setup(conf)
 	end
 end
 
