@@ -2,6 +2,11 @@ local lsp = require('feline.providers.lsp')
 local vi_mode_utils = require('feline.providers.vi_mode')
 local providers = require('feline.providers')
 
+-- re-highlight on colorscheme change
+create_augroup('FelineConfig', {
+	'ColorScheme * lua require("feline").reset_highlights()'
+})
+
 local properties = {
 	force_inactive = {
 		filetypes = {},
@@ -322,6 +327,10 @@ components.right.active[4] = {
 
 -- file name
 components.left.inactive[1] = components.left.active[2]
+components.left.inactive[1].left_sep = {
+	str = ' ',
+	hl = components.left.active[2].hl
+}
 
 -- fileType
 components.right.inactive[1] = {
