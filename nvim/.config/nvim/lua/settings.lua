@@ -32,6 +32,11 @@ o.scrolloff = 7
 o.sidescrolloff = 7
 o.scrolljump = 7
 
+
+-- Allows splits to be squashed to one line (for ZoomToggle)
+o.winminheight = 0
+o.winminwidth = 0
+
 -- diff options
 o.diffopt = o.diffopt .. ",vertical"
 

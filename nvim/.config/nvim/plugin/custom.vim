@@ -364,8 +364,8 @@ endfunction
 
 command! ZoomToggle call s:ZoomToggle()
 " TODO: find a plugin
-nnoremap <silent> <C-w>z :ZoomToggle<CR>
-nnoremap <silent> <C-w><C-z> :ZoomToggle<CR>
+nnoremap <silent> <C-w>o :ZoomToggle<CR>
+nnoremap <silent> <C-w><C-o> :ZoomToggle<CR>
 
 " ----------------------------------------------------------------------------
 " Get Visual Selection helper function
