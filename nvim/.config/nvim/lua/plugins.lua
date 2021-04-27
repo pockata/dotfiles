@@ -114,7 +114,7 @@ return require('packer').startup({function(use)
 	-- Respect .editorconfig files
 	use { 'editorconfig/editorconfig-vim',
 		config = function()
-			vim.g.EditorConfig_exclude_patterns = "['fugitive://.*']"
+			vim.g.EditorConfig_exclude_patterns = {'fugitive://.*'}
 			create_augroup(
 				'DisableEditorConfig',
 				'FileType gitcommit let b:EditorConfig_disable = 1'
