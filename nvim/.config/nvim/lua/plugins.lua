@@ -31,7 +31,7 @@ if not packer_exists then
 	return
 end
 
-return require('packer').startup(function(use)
+return require('packer').startup({function(use)
 	-- Packer can manage itself
 	use 'wbthomason/packer.nvim'
 
@@ -251,5 +251,11 @@ return require('packer').startup(function(use)
 	-- use { 'glacambre/firenvim', run = function() vim.fn['firenvim#install'](0) end }
 
 	-- use 'pechorin/any-jump.vim' -- Document outline
-end)
+end, config = {
+	display = {
+		keybindings = {
+			diff = 'o',
+		}
+	}
+}})
 
