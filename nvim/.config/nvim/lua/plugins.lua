@@ -230,6 +230,7 @@ return require('packer').startup({function(use)
 
 	use {
 		'kkoomen/vim-doge', config = [[require('config.doge')]],
+		run = function() vim.fn['doge#install']() end,
 		cmd = { 'DogeGenerate', 'DogeCreateDocStandard' }
 	}
 
