@@ -58,7 +58,7 @@ o.smartcase = true
 o.inccommand = "nosplit"
 
 -- save undo history
-bo.undofile = true
+o.undofile = true
 
 -- TODO: Get alternative or implement with Lua
 -- augroup BufWritePre /tmp/* setlocal noundofile
