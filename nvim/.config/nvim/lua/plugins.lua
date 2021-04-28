@@ -219,9 +219,9 @@ return require('packer').startup({function(use)
 
 	use 'junegunn/vim-slash'
 
-	-- TODO: Check this lua alternative
-	-- https://github.com/RRethy/vim-illuminate
-	use 'itchyny/vim-cursorword'
+	-- use 'itchyny/vim-cursorword'
+	use { 'RRethy/vim-illuminate', config = [[require('config.illuminate')]]}
+
 	-- use 'kana/vim-smartword'
 
 	use { 'talek/obvious-resize', config = [[require('config.obvious-resize')]] }
