@@ -95,7 +95,8 @@ return require('packer').startup({function(use)
 	use {
 		'hrsh7th/nvim-compe', config = [[require('config.compe')]]
 	}
-	use { 'andersevenrud/compe-tmux', after = 'nvim-compe' }
+	use { 'wellle/tmux-complete.vim' }
+	-- use { 'andersevenrud/compe-tmux' }
 	-- use 'jiangmiao/auto-pairs'
 	-- use 'windwp/nvim-autopairs'
 
