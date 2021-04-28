@@ -39,10 +39,14 @@ end
 local function setup_servers()
 	require'lspinstall'.setup()
 
+	local capabilities = vim.lsp.protocol.make_client_capabilities()
+	capabilities.textDocument.completion.completionItem.snippetSupport = true
+
 	local servers = require'lspinstall'.installed_servers()
 	for _, server in pairs(servers) do
 		local conf = {
 			on_attach = on_attach,
+			capabilities = capabilities,
 			-- settings = { documentFormatting = false }
 		}
 
