@@ -41,9 +41,6 @@ return require('packer').startup({function(use)
 		config = [[require('config.tmux-navigator')]]
 	}
 
-	-- -- Load on an autocommand event
-	-- use {'andymass/vim-matchup', event = 'VimEnter'}
-
 	-- -- Plugins can have dependencies on other plugins
 	-- use {
 	--     'haorenW1025/completion-nvim',
@@ -103,6 +100,13 @@ return require('packer').startup({function(use)
 	use { 'kabouzeid/nvim-lspinstall',
 		config = [[require('config.lspinstall')]],
 		after = 'nvim-lspconfig'
+
+	use { "andymass/vim-matchup",
+		config = function ()
+			-- don't highlight matching keywords (e.g. function/end in Lua).
+			-- It conflicts with vim-illuminate
+			vim.g.matchup_matchparen_enabled = 0
+		end
 	}
 
 	-- use {
