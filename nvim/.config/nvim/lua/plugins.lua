@@ -102,14 +102,9 @@ return require('packer').startup({function(use)
 	use { 'kabouzeid/nvim-lspinstall',
 		config = [[require('config.lspinstall')]],
 		after = 'nvim-lspconfig'
-
-	use { "andymass/vim-matchup",
-		config = function ()
-			-- don't highlight matching keywords (e.g. function/end in Lua).
-			-- It conflicts with vim-illuminate
-			vim.g.matchup_matchparen_enabled = 0
-		end
 	}
+
+	use { "andymass/vim-matchup" }
 
 	-- use {
 	-- 	'kyazdani42/nvim-tree.lua',
