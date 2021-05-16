@@ -181,12 +181,12 @@ return require('packer').startup({function(use)
 	-- set up path variable for different filetypes
 	use 'tpope/vim-apathy'
 
-	-- use {
-	--     'nvim-telescope/telescope.nvim', config = [[require('config.telescope')]],
-	--     requires = {{'nvim-lua/popup.nvim'}, {'nvim-lua/plenary.nvim'}}
-	-- }
+	use {
+		'nvim-telescope/telescope.nvim', config = [[require('config.telescope')]],
+		requires = {{'nvim-lua/popup.nvim'}, {'nvim-lua/plenary.nvim'}}
+	}
+	use {'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
 
-	use { 'junegunn/fzf.vim', config = [[require('config.fzf')]] }
 
 	-- TODO: open issue for adjusting visual selection (gv) after surrounding
 	use { 'machakann/vim-sandwich', config = [[require('config.sandwich')]] }
