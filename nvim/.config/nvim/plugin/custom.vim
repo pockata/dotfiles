@@ -440,39 +440,6 @@ function! FollowSymlink()
 	end
 endfunction
 
-" ----------------------------------------------------------------------------
-" Todo
-" ----------------------------------------------------------------------------
-
-" TODO: Add bang! option to use regex without semicolon
-function! s:todo() abort
-	let entries = []
-	for cmd in ['ag --vimgrep --hidden "(TODO|FIXME|XXX|NOTE|OPTIMIZE|HACK|BUG):" 2> /dev/null']
-
-		let lines = split(system(cmd), '\n')
-		if v:shell_error != 0 | continue | endif
-
-		for line in lines
-			let lst = matchlist(line, '^\([^:]*\):\([^:]*\):\(.*\)')
-			if len(lst) < 1 | continue | endif
-
-			let [fname, lno, text] = lst[1:3]
-
-			" grab text after todo/fixme/xxx tag
-			let mt = matchlist(text, '\(TODO\|FIXME\|XXX\|NOTE\|OPTIMIZE\|HACK\|BUG\):\(.*\)')[1:2]
-
-			call add(entries, { 'filename': fname, 'lnum': lno, 'text': join(mt, ':') })
-		endfor
-		break
-	endfor
-
-	if !empty(entries)
-		call setqflist(entries)
-		copen
-	endif
-endfunction
-command! Todo call s:todo()
-
 " un-join (split) the current line at the cursor position
 " TODO: Fix collision with splitjoin
 nnoremap g<CR> i<c-j><esc>k$

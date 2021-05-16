@@ -97,6 +97,8 @@ return require('packer').startup({function(use)
 	-- use 'jiangmiao/auto-pairs'
 	-- use 'windwp/nvim-autopairs'
 
+	use { "folke/todo-comments.nvim", config = [[require('config.todo')]] }
+
 	use { 'kabouzeid/nvim-lspinstall',
 		config = [[require('config.lspinstall')]],
 		after = 'nvim-lspconfig'
