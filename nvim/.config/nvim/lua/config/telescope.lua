@@ -13,11 +13,13 @@ require('telescope').setup{
 			'--smart-case',
 			'--hidden', -- include hidden files, but respect .gitignore
 		},
-		prompt_position = "top",
 		prompt_prefix = "❯ ",
+		layout_config = {
+			prompt_position = "top"
+		},
 		selection_caret = "❯ ",
 		sorting_strategy = "ascending",
-		shorten_path = true,
+		path_display = {"absolute"},
 		winblend = 15,
 		-- scroll_strategy = "limit",
 		-- better than the default one, but not as good as fzf
@@ -96,7 +98,9 @@ function _G.TelescopeCurrentBuffer()
 		border = true,
 		previewer = false,
 		shorten_path = false,
-		results_height = 25,
+		layout_config = {
+			height = 25,
+		}
 	}
 	tele.current_buffer_fuzzy_find(opts)
 end
@@ -106,7 +110,9 @@ local FZFDropdown = require('telescope.themes').get_dropdown {
 	border = true,
 	previewer = false,
 	shorten_path = false,
-	results_height = 25,
+	layout_config = {
+		height = 25,
+	}
 }
 
 -- General keybindings
