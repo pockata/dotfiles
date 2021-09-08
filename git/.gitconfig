@@ -123,7 +123,7 @@
     mnemonicprefix = true
     identheuristic = true
     tool = vimdiff
-    algorithm = patience
+    algorithm = minimal
 [merge]
     stat = true
     tool = diffconflicts
