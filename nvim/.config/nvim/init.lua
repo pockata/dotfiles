@@ -9,6 +9,7 @@ local disabled_built_ins = {
 for i = 1, 11 do g['loaded_' .. disabled_built_ins[i]] = 1 end
 
 require('utils')
+require('functions')
 require('settings')
 require('keymaps')
 require('plugins')

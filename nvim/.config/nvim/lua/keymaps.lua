@@ -145,3 +145,7 @@ noremap(';', "l")
 -- nmap('gk', "j")
 -- nmap('gl', "k")
 
+-- Navigate folds
+nnoremap("]z", "<silent>", ":call NextClosedFold('j')<cr>")
+nnoremap("[z", "<silent>", ":call NextClosedFold('k')<cr>")
+
