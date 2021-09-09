@@ -256,7 +256,14 @@ components.mid.active[5] = {
 
 -- fileType
 components.right.active[1] = {
-	provider = function() return providers.file_type():lower() end,
+	provider = function()
+		local ft = providers.file_type():lower()
+		local overrides = {
+			javascript = "js"
+		}
+
+		return overrides[ft] ~= nil and overrides[ft] or ft
+	end,
 	hl = function()
 		local val = {}
 		local filename = vim.fn.expand('%:t')
@@ -274,9 +281,17 @@ components.right.active[1] = {
 	right_sep = ' '
 }
 
+-- show filetype/encoding only if it's not utf-8 & unix encoded
+function checkEncoding()
+	local enc = providers.file_encoding():lower()
+	local format = vim.bo.fileformat:lower()
+	return enc ~= "utf-8" or format ~= 'unix'
+end
+
 -- fileEncode
 components.right.active[2] = {
 	provider = function() return ' ' .. providers.file_encoding():lower() .. '' end,
+	enabled = checkEncoding,
 	hl = {
 		fg = '#1d2021',
 		bg = colors.magenta,
@@ -288,6 +303,7 @@ components.right.active[2] = {
 -- fileFormat
 components.right.active[3] = {
 	provider = function() return ' [' .. vim.bo.fileformat:lower() .. '] ' end,
+	enabled = checkEncoding,
 	hl = {
 		fg = '#1d2021',
 		bg = colors.magenta,
