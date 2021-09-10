@@ -9,16 +9,20 @@ create_augroup('FelineConfig', {
 
 local properties = {
 	force_inactive = {
-		filetypes = {},
-		buftypes = {},
+		filetypes = {
+			'NvimTree',
+			'dbui',
+			'packer',
+			'startify',
+			'fugitive',
+			'fugitiveblame',
+		},
+		buftypes = {
+			'terminal',
+			'dirvish'
+		},
 		bufnames = {}
 	}
-}
-
-local components = {
-	left = {active = {}, inactive = {}},
-	mid = {active = {}, inactive = {}},
-	right = {active = {}, inactive = {}}
 }
 
 local colors = {
@@ -86,24 +90,31 @@ local checkwidth = function()
 	return false
 end
 
-properties.force_inactive.filetypes = {
-	'NvimTree',
-	'dbui',
-	'packer',
-	'startify',
-	'fugitive',
-	'fugitiveblame',
+-- show filetype/encoding only if it's not utf-8 & unix encoded
+local checkEncoding = function()
+	local enc = providers.file_encoding():lower()
+	local format = vim.bo.fileformat:lower()
+	return enc ~= "utf-8" or format ~= 'unix'
+end
+
+-- Initialize the components table
+local components = {
+	active = {},
+	inactive = {}
 }
 
-properties.force_inactive.buftypes = {
-	'terminal',
-	'dirvish'
-}
+-- Insert three sections (left, mid and right) for the active statusline
+table.insert(components.active, {})
+table.insert(components.active, {})
+table.insert(components.active, {})
+
+-- Insert two sections (left and right) for the inactive statusline
+table.insert(components.inactive, {})
+table.insert(components.inactive, {})
 
 -- LEFT
-
 -- vi-mode
-components.left.active[1] = {
+table.insert(components.active[1], {
 	provider = function()
 		local mode = vi_mode_text[vi_mode_utils.get_vim_mode()]
 		return ' ' .. mode .. ' '
@@ -117,11 +128,11 @@ components.left.active[1] = {
 
 		return val
 	end,
-	right_sep = ' '
-}
+	right_sep = ''
+})
 
 -- -- vi-symbol
--- components.left.active[2] = {
+-- {
 -- 	provider = function()
 -- 		return vi_mode_text[vi_mode_utils.get_vim_mode()]
 -- 	end,
@@ -133,10 +144,10 @@ components.left.active[1] = {
 -- 		return val
 -- 	end,
 -- 	right_sep = ' '
--- }
+-- },
 
 -- filename
-components.left.active[2] = {
+table.insert(components.active[1], {
 	provider = function()
 		local file = vim.fn.expand("%:F")
 		local function file_readonly()
@@ -160,102 +171,110 @@ components.left.active[2] = {
 		bg = 'bg',
 		style = 'bold'
 	},
-	right_sep = ''
-}
+	right_sep = ' '
+})
 
 -- gitBranch
-components.left.active[3] = {
+table.insert(components.active[1], {
 	provider = 'git_branch',
 	hl = {
 		fg = 'yellow',
 		bg = 'bg',
 		style = 'bold'
 	}
-}
+})
 
 -- diffAdd
-components.left.active[4] = {
+table.insert(components.active[1], {
 	provider = 'git_diff_added',
 	hl = {
 		fg = 'green',
 		bg = 'bg',
 		style = 'bold'
 	}
-}
+})
 
 -- diffModfified
-components.left.active[5] = {
+table.insert(components.active[1], {
 	provider = 'git_diff_changed',
 	hl = {
 		fg = 'orange',
 		bg = 'bg',
 		style = 'bold'
 	}
-}
+})
 
 -- diffRemove
-components.left.active[6] = {
+table.insert(components.active[1], {
 	provider = 'git_diff_removed',
 	hl = {
 		fg = 'red',
 		bg = 'bg',
 		style = 'bold'
 	}
-}
+})
+-- })
 
 -- MID
-
 -- LspName
-components.mid.active[1] = {
-	provider = 'lsp_client_names',
+table.insert(components.active[2], {
+	-- provider = 'lsp_client_names',
+	provider = function ()
+		local lsp_name, icon = providers.lsp_client_names({});
+		local new_icon = string.len(lsp_name) > 0 and icon or ''
+		return lsp_name:gsub("typescript", "ts"), new_icon
+	end,
 	hl = {
 		fg = 'yellow',
 		bg = 'bg',
 		style = 'bold'
 	},
 	right_sep = ' '
-}
+})
+
 -- diagnosticErrors
-components.mid.active[2] = {
+table.insert(components.active[2], {
 	provider = 'diagnostic_errors',
 	enabled = function() return lsp.diagnostics_exist('Error') end,
 	hl = {
 		fg = 'red',
 		style = 'bold'
 	}
-}
+})
+
 -- diagnosticWarn
-components.mid.active[3] = {
+table.insert(components.active[2], {
 	provider = 'diagnostic_warnings',
 	enabled = function() return lsp.diagnostics_exist('Warning') end,
 	hl = {
 		fg = 'yellow',
 		style = 'bold'
 	}
-}
+})
+
 -- diagnosticHint
-components.mid.active[4] = {
+table.insert(components.active[2], {
 	provider = 'diagnostic_hints',
 	enabled = function() return lsp.diagnostics_exist('Hint') end,
 	hl = {
 		fg = 'cyan',
 		style = 'bold'
 	}
-}
+})
+
 -- diagnosticInfo
-components.mid.active[5] = {
+table.insert(components.active[2], {
 	provider = 'diagnostic_info',
 	enabled = function() return lsp.diagnostics_exist('Information') end,
 	hl = {
 		fg = 'skyblue',
 		style = 'bold'
 	}
-}
+})
 
 -- RIGHT
-
 -- fileType
-components.right.active[1] = {
+table.insert(components.active[3], {
 	provider = function()
 		local ft = providers.file_type():lower()
 		local overrides = {
@@ -279,17 +298,10 @@ components.right.active[1] = {
 		return val
 	end,
 	right_sep = ' '
-}
-
--- show filetype/encoding only if it's not utf-8 & unix encoded
-function checkEncoding()
-	local enc = providers.file_encoding():lower()
-	local format = vim.bo.fileformat:lower()
-	return enc ~= "utf-8" or format ~= 'unix'
-end
+})
 
 -- fileEncode
-components.right.active[2] = {
+table.insert(components.active[3], {
 	provider = function() return ' ' .. providers.file_encoding():lower() .. '' end,
 	enabled = checkEncoding,
 	hl = {
@@ -298,10 +310,10 @@ components.right.active[2] = {
 		style = 'bold'
 	},
 	-- right_sep = ' '
-}
+})
 
 -- fileFormat
-components.right.active[3] = {
+table.insert(components.active[3], {
 	provider = function() return ' [' .. vim.bo.fileformat:lower() .. '] ' end,
 	enabled = checkEncoding,
 	hl = {
@@ -310,10 +322,10 @@ components.right.active[3] = {
 		style = 'bold'
 	},
 	-- right_sep = ' '
-}
+})
 
 -- lineInfo
-components.right.active[4] = {
+table.insert(components.active[3], {
 	provider = function()
 		local curLine = vim.fn.line('.')
 		local curColumn = vim.fn.col('.')
@@ -333,23 +345,24 @@ components.right.active[4] = {
 		style = 'bold'
 	},
 	right_sep = ''
-}
+})
 
 -- INACTIVE
 
--- components.left.inactive = components.left.active
--- -- components.middle.inactive = components.middle.active
--- components.right.inactive = components.right.active
-
--- file name
-components.left.inactive[1] = components.left.active[2]
-components.left.inactive[1].left_sep = {
+local fname = components.active[1][2];
+fname.left_sep = {
 	str = ' ',
-	hl = components.left.active[2].hl
+	hl = fname.hl
 }
 
--- fileType
-components.right.inactive[1] = {
+table.insert(components.inactive[1],
+	-- file name
+	-- components.left.inactive[1] = components.left.active[2]
+	fname
+)
+
+table.insert(components.inactive[2], {
+	-- fileType
 	provider = function() return providers.file_type():lower() end,
 	hl = {
 		fg = 'black',
@@ -373,7 +386,8 @@ components.right.inactive[1] = {
 		},
 		' '
 	}
-}
+	,
+})
 
 require('feline').setup({
 	colors = colors,
