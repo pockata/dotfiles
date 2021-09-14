@@ -7,22 +7,20 @@ create_augroup('FelineConfig', {
 	'ColorScheme * lua require("feline").reset_highlights()'
 })
 
-local properties = {
-	force_inactive = {
-		filetypes = {
-			'NvimTree',
-			'dbui',
-			'packer',
-			'startify',
-			'fugitive',
-			'fugitiveblame',
-		},
-		buftypes = {
-			'terminal',
-			'dirvish'
-		},
-		bufnames = {}
-	}
+local force_inactive = {
+	filetypes = {
+		'NvimTree',
+		'dbui',
+		'packer',
+		'startify',
+		'fugitive',
+		'fugitiveblame',
+	},
+	buftypes = {
+		'terminal',
+		'dirvish'
+	},
+	bufnames = {}
 }
 
 local colors = {
@@ -395,6 +393,6 @@ require('feline').setup({
 	default_fg = fg,
 	vi_mode_colors = vi_mode_colors,
 	components = components,
-	properties = properties,
+	force_inactive = force_inactive,
 })
 
