@@ -95,6 +95,26 @@ local checkEncoding = function()
 	return enc ~= "utf-8" or format ~= 'unix'
 end
 
+local filenameFunc = function(_, winid)
+	local file = vim.api.nvim_buf_get_name(vim.api.nvim_win_get_buf(winid))
+	file = vim.fn.fnamemodify(file, ":~:.")
+	local function file_readonly()
+		if vim.bo.filetype == 'help' then return '' end
+		if vim.bo.readonly == true then return '  ' end
+		return ''
+	end
+	local ro = file_readonly()
+
+	if vim.fn.empty(file) == 1 then return '' end
+
+	if string.len(ro) ~= 0 then return file .. ro end
+	if vim.bo.modifiable then
+		if vim.bo.modified then return file .. ' [+]' end
+	end
+
+	return file
+end
+
 -- Initialize the components table
 local components = {
 	active = {},
@@ -114,7 +134,7 @@ table.insert(components.inactive, {})
 -- vi-mode
 table.insert(components.active[1], {
 	provider = function()
-		local mode = vi_mode_text[vi_mode_utils.get_vim_mode()]
+		local mode = vi_mode_text[vi_mode_utils.get_vim_mode()] or '?'
 		return ' ' .. mode .. ' '
 	end,
 	hl = function()
@@ -146,30 +166,14 @@ table.insert(components.active[1], {
 
 -- filename
 table.insert(components.active[1], {
-	provider = function()
-		local file = vim.fn.expand("%:F")
-		local function file_readonly()
-			if vim.bo.filetype == 'help' then return '' end
-			if vim.bo.readonly == true then return '  ' end
-			return ''
-		end
-		local ro = file_readonly()
-
-		if vim.fn.empty(file) == 1 then return '' end
-
-		if string.len(ro) ~= 0 then return file .. ro end
-		if vim.bo.modifiable then
-			if vim.bo.modified then return file .. ' [+]' end
-		end
-
-		return file
-	end,
+	provider = filenameFunc,
 	hl = {
 		fg = 'white',
 		bg = 'bg',
 		style = 'bold'
 	},
-	right_sep = ' '
+	right_sep = ' ',
+	left_sep = ' ',
 })
 
 -- gitBranch
@@ -346,18 +350,18 @@ table.insert(components.active[3], {
 })
 
 -- INACTIVE
-
-local fname = components.active[1][2];
-fname.left_sep = {
-	str = ' ',
-	hl = fname.hl
-}
-
-table.insert(components.inactive[1],
-	-- file name
-	-- components.left.inactive[1] = components.left.active[2]
-	fname
-)
+table.insert(components.inactive[1], {
+	provider = filenameFunc,
+	hl = {
+		fg = 'white',
+		bg = 'bg',
+		style = 'bold'
+	},
+	right_sep = ' ',
+	left_sep = {
+		str = ' ',
+	}
+})
 
 table.insert(components.inactive[2], {
 	-- fileType
