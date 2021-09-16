@@ -178,7 +178,19 @@ table.insert(components.active[1], {
 
 -- gitBranch
 table.insert(components.active[1], {
-	provider = 'git_branch',
+	provider = function ()
+		local branch, icon = providers.git_branch({});
+		local subs = {
+			["feature/"] = "f/",
+			["hotfix/"] = "hf/",
+		}
+
+		for k, v in pairs(subs) do
+			branch = branch:gsub(k, v)
+		end
+
+		return branch, icon
+	end,
 	hl = {
 		fg = 'yellow',
 		bg = 'bg',
