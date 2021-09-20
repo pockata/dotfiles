@@ -80,14 +80,6 @@ local buffer_not_empty = function()
 	return false
 end
 
-local checkwidth = function()
-	local squeeze_width  = vim.fn.winwidth(0) / 2
-	if squeeze_width > 40 then
-		return true
-	end
-	return false
-end
-
 -- show filetype/encoding only if it's not utf-8 & unix encoded
 local checkEncoding = function()
 	local enc = providers.file_encoding():lower()
@@ -232,6 +224,9 @@ table.insert(components.active[1], {
 -- MID
 -- LspName
 table.insert(components.active[2], {
+	enabled = function(winid)
+		return vim.api.nvim_win_get_width(winid) > 90
+	end,
 	-- provider = 'lsp_client_names',
 	provider = function ()
 		local lsp_name, icon = providers.lsp_client_names({});
@@ -243,6 +238,7 @@ table.insert(components.active[2], {
 		bg = 'bg',
 		style = 'bold'
 	},
+	left_sep = ' ',
 	right_sep = ' '
 })
 
@@ -289,6 +285,9 @@ table.insert(components.active[2], {
 -- RIGHT
 -- fileType
 table.insert(components.active[3], {
+	enabled = function(winid)
+		return vim.api.nvim_win_get_width(winid) > 90
+	end,
 	provider = function()
 		local ft = providers.file_type():lower()
 		local overrides = {
@@ -358,6 +357,16 @@ table.insert(components.active[3], {
 		bg = 'skyblue',
 		style = 'bold'
 	},
+	-- left_sep = ' ',
+	left_sep = function()
+		if vim.api.nvim_win_get_width(0) < 91 then
+			return {
+				str = ' '
+			}
+		else
+			return ''
+		end
+	end,
 	right_sep = ''
 })
 
