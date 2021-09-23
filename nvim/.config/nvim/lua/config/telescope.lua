@@ -31,6 +31,7 @@ require('telescope').setup{
 				-- use c-s for horizontal splitting
 				["<c-x>"] = false,
 				["<c-s>"] = actions.select_horizontal,
+				["<c-q>"] = actions.send_selected_to_qflist + actions.open_qflist,
 				-- exit with Esc from insert mode (I don't need normal mode here)
 				["<esc>"] = actions.close,
 
@@ -88,6 +89,7 @@ end
 
 function _G.EditInstalledPlugins()
 	tele.find_files {
+		prompt_title = "~ nvim plugins ~",
 		cwd = vim.fn.stdpath('data') .. '/site/pack/packer/start/'
 	}
 end
@@ -137,7 +139,7 @@ noremap("<c-t>", "<silent>", "<cmd>Telescope find_files<CR>");
 -- TODO: Send a PR for using a visual selection
 noremap("H", "<silent>", "<cmd>Telescope grep_string<CR>");
 
--- Emulate FZF's commands which I use rare and don't have them bound to a key
+-- Emulate FZF's commands which I use rarely and don't have them bound to a key
 function _G.SelectColorScheme() tele.colorscheme(FZFDropdown) end
 function _G.SelectFiletype() tele.filetypes(FZFDropdown) end
 
