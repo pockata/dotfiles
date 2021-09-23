@@ -56,9 +56,8 @@ vim.api.nvim_set_keymap("s", "<Tab>", "v:lua.tab_complete()", {expr = true})
 vim.api.nvim_set_keymap("i", "<S-Tab>", "v:lua.s_tab_complete()", {expr = true})
 vim.api.nvim_set_keymap("s", "<S-Tab>", "v:lua.s_tab_complete()", {expr = true})
 
--- compatibility with lexima
 inoremap('<C-Space>', '<silent><expr>', "compe#complete()")
-imap('<CR>', '<silent><expr>',   [[vsnip#available(1) ? '<Plug>(vsnip-expand)' : compe#confirm({ 'keys': "\<Plug>delimitMateCR", 'mode': '' })]])
+imap('<CR>', '<silent><expr>',   [[vsnip#available(1) ? '<Plug>(vsnip-expand)' : compe#confirm(luaeval("require 'nvim-autopairs'.autopairs_cr()"))]])
 -- inoremap('<C-e>', '<silent><expr>',     "compe#close('<C-e>')")
 
 inoremap('<C-f>', '<silent><expr>',     "compe#scroll({ 'delta': +4 })")

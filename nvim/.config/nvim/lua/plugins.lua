@@ -101,7 +101,10 @@ return require('packer').startup({function(use)
 	}
 
 	-- automatch quotes and brackets
-	use { 'steelsojka/pears.nvim', config = [[require('config.pears')]] }
+	use {
+		'windwp/nvim-autopairs',
+		config = [[require('config.autopairs')]]
+	}
 	use {
 		'hrsh7th/nvim-compe', config = [[require('config.compe')]]
 	}
