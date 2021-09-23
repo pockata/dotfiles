@@ -98,7 +98,7 @@ nmap('zj', "30zh")
 nnoremap('gp', "`[v`]")
 
 -- paste without yanking in visual mode with `P`
-xnoremap('<expr>', "P '\"_d\"'.v:register.'P'")
+xnoremap("P", '<expr>', "'\"_d\"'.v:register.'P'")
 
 -- select inserted text
 -- https://vimrcfu.com/snippet/145
@@ -121,12 +121,12 @@ xnoremap('?', [[<Esc>`>?%V\v]])
 nnoremap('Y', "y$")
 
 -- Quickly edit/reload the vimrc file
-nmap('<leader>ev', '<silent>', ":execute 'vsplit ' . resolve('~/.config/nvim/init.lua')<CR>")
+-- nmap('<leader>ev', '<silent>', ":execute 'vsplit ' . resolve('~/.config/nvim/init.lua')<CR>")
 nmap('<leader>eo', '<silent>', ":execute 'vsplit ' . resolve('~/dotfiles/vim/vim-nvim-compat.vim')<CR>")
 -- nmap('<leader>sv', '<silent>', ':so ~/.vimrc<CR>:AirlineRefresh<CR>')
 
 -- Use <C-L> to clear the highlighting of :set hlsearch.
-nmap('<Leader>l', '<silent>', ":nohlsearch<BAR><C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-L>")
+nnoremap('<Leader>l', '<silent>', ":nohlsearch<BAR><C-R>=&diff?'<Bar>diffupdate':''<CR><CR><C-L>")
 
 nmap('goT', ":call system('urxvt -cd '.getcwd().' &')<CR>")
 nmap('got', ":call system('urxvt -cd '.expand(\"%:p:h\").' &')<CR>")
