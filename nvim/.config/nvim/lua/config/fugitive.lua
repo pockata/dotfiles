@@ -1,4 +1,4 @@
-nnoremap("<leader>gs", "<cmd>-tabedit %<CR>:Gstatus<CR>:only<CR>");
+nnoremap("<leader>gs", "<cmd>-tabedit %<CR>:Git<CR>:only<CR>");
 nnoremap("<leader>gw", "<cmd>Gwrite<CR>");
 nnoremap("<leader>gc", "<cmd>Git commit --verbose<CR>");
 nnoremap("<leader>gd", "<cmd>-tabedit %<CR>:Gdiff<CR>");
