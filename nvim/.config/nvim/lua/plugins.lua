@@ -27,6 +27,7 @@ if not packer_exists then
 
 	-- Compile the updates
 	-- vim.cmd(":PackerSync")
+	require('packer').sync()
 
 	return
 end
@@ -36,6 +37,7 @@ return require('packer').startup({function(use)
 	use 'wbthomason/packer.nvim'
 
 	-- TODO: Test lua rewrite - numToStr/Navigator.nvim
+	-- TODO: Test lua rewrite - nathom/tmux.nvim
 	use {
 		'christoomey/vim-tmux-navigator',
 		config = [[require('config.tmux-navigator')]]
@@ -80,24 +82,40 @@ return require('packer').startup({function(use)
 		config = [[require('config.lsp-trouble')]]
 	}
 
-	use { 'kosayoda/nvim-lightbulb', config = [[require('config.lightbulb')]] }
+	-- use { 'kosayoda/nvim-lightbulb', config = [[require('config.lightbulb')]] }
 
 	-- snippets
 	use "rafamadriz/friendly-snippets"
 	use { 'hrsh7th/vim-vsnip', config = [[require('config.vsnip')]] }
 	use 'hrsh7th/vim-vsnip-integ'
+	use 'xabikos/vscode-javascript'
+	use { 'xianghongai/vscode-javascript-comment',
+		config = function()
+			-- os.execute(
+			-- 	string.format(
+			-- 		'cd %s/site/pack/packer/start/vscode-javascript-comment/ && npm install && node ./merge.js',
+			-- 		vim.fn.stdpath('data')
+			-- 	)
+			-- )
+		end
+	}
 
 	-- automatch quotes and brackets
-	use 'Raimondi/delimitMate'
+	use { 'steelsojka/pears.nvim', config = [[require('config.pears')]] }
 	use {
 		'hrsh7th/nvim-compe', config = [[require('config.compe')]]
 	}
 	use { 'wellle/tmux-complete.vim' }
 	-- use { 'andersevenrud/compe-tmux' }
-	-- use 'jiangmiao/auto-pairs'
-	-- use 'windwp/nvim-autopairs'
+
+	use { 'ms-jpq/coq.artifacts', branch= 'artifacts'} -- 9000+ Snippets
+
+--	use { 'ray-x/lsp_signature.nvim' }
 
 	use { "folke/todo-comments.nvim", config = [[require('config.todo')]] }
+	use { "folke/zen-mode.nvim", config = [[require('config.zen-mode')]] }
+
+	-- use 'famiu/bufdelete.nvim'
 
 	use { 'kabouzeid/nvim-lspinstall',
 		config = [[require('config.lspinstall')]],
@@ -112,6 +130,7 @@ return require('packer').startup({function(use)
 	-- }
 
 	use { 'justinmk/vim-dirvish', config = [[require('config.dirvish')]] }
+	use 'kristijanhusak/vim-dirvish-git'
 
 	-- Respect .editorconfig files
 	use { 'editorconfig/editorconfig-vim',
@@ -125,15 +144,22 @@ return require('packer').startup({function(use)
 	}
 
 	-- Theming
-	use { 'challenger-deep-theme/vim', as = 'challenger-deep' }
+	use { 'challenger-deep-theme/vim', as = 'challenger-deep',
+		config = [[require('config.challenger-deep')]]
+	}
 	use { 'morhetz/gruvbox', config = [[require('config.gruvbox')]] }
 	use { 'ajmwagar/vim-deus' }
 	use { 'folke/tokyonight.nvim' }
+	use { 'mhartington/oceanic-next' }
+	use { 'haystackandroid/wonka' }
 	use {
 		'famiu/feline.nvim',
 		requires = {'kyazdani42/nvim-web-devicons'},
 		config = [[require('config.feline')]],
 	}
+	use 'folke/lsp-colors.nvim'
+
+	-- https://github.com/mkitt/tabline.vim/blob/master/plugin/tabline.vim
 
 	use 'antoinemadec/FixCursorHold.nvim' -- Fix CursorHold Performance
 
@@ -167,8 +193,56 @@ return require('packer').startup({function(use)
 		config = function()
 			create_augroup(
 				'gitrebase',
-				"FileType gitrebase let b:switch_custom_definitions = [[ 'pick', 'reword', 'edit', 'squash', 'fixup', 'exec' ]]"
+				"FileType gitrebase let b:switch_custom_definitions = [[ 'pick', 'reword', 'edit', 'squash', 'fixup', 'exec' ], [ 'TODO', 'DONE', 'XXX', 'FIXME' ],[ '[ ]', '[✔]', '[✘]', '[✔✘]', '[?]' ],['let ', 'const '],]"
 			)
+      -- \{
+      --    \'const\s\(\k\+\)\s=\s(\(\k\+\))\s=>': 'function \1(\2)',
+      --    \'(\(\k\+\))': '(!\1)',
+      --    \'(!\(\k\+\))': '(\1)',
+      --    \'{\(\k\+\)}': '{ \1 }',
+      -- \}
+  -- autocmd FileType javascript let b:switch_custom_definitions =
+  --   \ [
+  --   \   {
+  --   \     'function(\([^)]\{-}\))': '(\1) =>',
+  --   \     '(\([^)]\{-}\)) =>': 'function(\1)'
+  --   \   },
+  --   \   ['var', 'let', 'const'],
+  --   \   {
+  --   \     '\(\k\+\)\[''\(\k\+\)''\]': '\1.\2',
+  --   \     '\(\k\+\)\.\(\k\+\)\>': '\1[''\2'']'
+  --   \   }
+  --   \ ]
+
+  -- " - [ ] → - [x] → - [-] → loops back to - [ ]
+  -- " + [ ] → + [x] → + [-] → loops back to + [ ]
+  -- " * [ ] → * [x] → * [-] → loops back to * [ ]
+  -- " 1. [ ] → 1. [x] → 1. [-] → loops back to 1. [ ]
+  -- autocmd FileType markdown let b:switch_custom_definitions =
+  --   \ [
+  --   \   { '\v^(\s*[*+-] )?\[ \]': '\1[x]',
+  --   \     '\v^(\s*[*+-] )?\[x\]': '\1[-]',
+  --   \     '\v^(\s*[*+-] )?\[-\]': '\1[ ]',
+  --   \   },
+  --   \   { '\v^(\s*\d+\. )?\[ \]': '\1[x]',
+  --   \     '\v^(\s*\d+\. )?\[x\]': '\1[-]',
+  --   \     '\v^(\s*\d+\. )?\[-\]': '\1[ ]',
+  --   \   },
+  --   \ ]
+
+-- autocmd FileType javascript let b:switch_custom_definitions =
+--         \  [
+--         \    {
+--         \     '="\(.\{-}\)"':                    '={`\1`}',
+--         \     '={`\(.\{-}\)`}':                  '="\1"',
+--         \    },
+--         \    {
+--         \     '\%(=\)\@!''\(.\{-}\)''':          '"\1"',
+--         \     '\%(=\)\@!"\(.\{-}\)"':            '`\1`',
+--         \     '\%(=\)\@!`\%(\$\)\@!\(.\{-}\)`':  '`${\1}`',
+--         \     '\%(=\)\@!`${\(.\{-}\)}`':         '''\1''',
+--         \    }
+--         \  ]
 		end
 	}
 
@@ -182,13 +256,14 @@ return require('packer').startup({function(use)
 	}
 	use {'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
 
+	use { 'junegunn/fzf.vim' }
 
 	-- TODO: open issue for adjusting visual selection (gv) after surrounding
 	use { 'machakann/vim-sandwich', config = [[require('config.sandwich')]] }
 	-- use 'tpope/vim-surround'
 
 	-- TODO: Configure
-	-- use 'AndrewRadev/splitjoin.vim'
+	use 'AndrewRadev/splitjoin.vim'
 
 	-- Better Git conflicts resolution
 	use 'whiteinge/diffconflicts'
@@ -239,6 +314,7 @@ return require('packer').startup({function(use)
 	-- extra language support
 	use { 'fatih/vim-go', config = [[require('config.go')]] }
 	use 'tbastos/vim-lua'
+	use 'pantharshit00/vim-prisma'
 	-- use 'evanleck/vim-svelte'
 
 	use {
@@ -249,6 +325,8 @@ return require('packer').startup({function(use)
 
 
 	use { 'wesQ3/vim-windowswap', config = [[require('config.windowswap')]] }
+
+	use { 'famiu/nvim-reload', cmd = { 'Reload', 'Restart' } }
 
 	-- -- Post-install/update hook with call of vimscript function with argument
 	-- use { 'glacambre/firenvim', run = function() vim.fn['firenvim#install'](0) end }
