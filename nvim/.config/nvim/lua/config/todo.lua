@@ -1,4 +1,5 @@
 require("todo-comments").setup {
+	signs = false,
 	-- highlight only the keyword
 	highlight = {
 		keyword = "bg",
