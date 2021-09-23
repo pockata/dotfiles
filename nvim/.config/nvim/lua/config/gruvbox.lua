@@ -6,6 +6,7 @@ create_augroup('GruvboxMods', {
 	'ColorScheme gruvbox highlight SignColumn guibg=#282828',
 	'ColorScheme gruvbox highlight GruvboxGreenSign guibg=#282828',
 	'ColorScheme gruvbox highlight LspDiagnosticsDefaultHint guifg=orange',
+	'ColorScheme gruvbox highlight LspDiagnosticsDefaultError guifg=red',
 	'ColorScheme gruvbox highlight Whitespace guifg=#504945',
 })
 
