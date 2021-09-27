@@ -88,7 +88,9 @@ local checkEncoding = function()
 end
 
 local filenameFunc = function(_, winid)
-	local file = vim.api.nvim_buf_get_name(vim.api.nvim_win_get_buf(winid))
+    local bufnr = vim.api.nvim_win_get_buf(winid)
+	local file = vim.api.nvim_buf_get_name(bufnr)
+
 	file = vim.fn.fnamemodify(file, ":~:.")
 	local function file_readonly()
 		if vim.bo.filetype == 'help' then return '' end
@@ -100,8 +102,8 @@ local filenameFunc = function(_, winid)
 	if vim.fn.empty(file) == 1 then return '' end
 
 	if string.len(ro) ~= 0 then return file .. ro end
-	if vim.bo.modifiable then
-		if vim.bo.modified then return file .. ' [+]' end
+	if vim.bo[bufnr].modifiable then
+		if vim.bo[bufnr].modified then return file .. ' [+]' end
 	end
 
 	return file
