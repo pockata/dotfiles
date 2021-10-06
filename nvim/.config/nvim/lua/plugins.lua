@@ -249,7 +249,10 @@ return require('packer').startup({function(use)
 		end
 	}
 
-	use { 'b3nj5m1n/kommentary', config = [[require('config.kommentary')]] }
+	use 'tpope/vim-commentary'
+	-- syntax-aware commentstring (via treesitter)
+	use 'JoosepAlviste/nvim-ts-context-commentstring'
+
 	-- set up path variable for different filetypes
 	use 'tpope/vim-apathy'
 
