@@ -13,9 +13,13 @@ require('telescope').setup{
 			'--smart-case',
 			'--hidden', -- include hidden files, but respect .gitignore
 		},
+		layout_strategy = 'flex',
 		prompt_prefix = "❯ ",
 		layout_config = {
-			prompt_position = "top"
+			mirror = true,
+			flex = {
+				flip_columns = 150
+			},
 		},
 		selection_caret = "❯ ",
 		sorting_strategy = "ascending",
