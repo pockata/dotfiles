@@ -39,8 +39,8 @@ end
 local function setup_servers()
 	require'lspinstall'.setup()
 
-	local capabilities = vim.lsp.protocol.make_client_capabilities()
-	capabilities.textDocument.completion.completionItem.snippetSupport = true
+	local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
+	-- capabilities.textDocument.completion.completionItem.snippetSupport = true
 
 	local servers = require'lspinstall'.installed_servers()
 	for _, server in pairs(servers) do

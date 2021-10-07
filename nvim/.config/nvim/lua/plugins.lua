@@ -86,9 +86,10 @@ return require('packer').startup({function(use)
 
 	-- snippets
 	use "rafamadriz/friendly-snippets"
+	use 'hrsh7th/cmp-vsnip'
 	use { 'hrsh7th/vim-vsnip', config = [[require('config.vsnip')]] }
-	use 'hrsh7th/vim-vsnip-integ'
 	use 'xabikos/vscode-javascript'
+	-- TODO: Check this one out if it's not superceded by LSP
 	use { 'xianghongai/vscode-javascript-comment',
 		config = function()
 			-- os.execute(
@@ -105,10 +106,14 @@ return require('packer').startup({function(use)
 		'windwp/nvim-autopairs',
 		config = [[require('config.autopairs')]]
 	}
-	use {
-		'hrsh7th/nvim-compe', config = [[require('config.compe')]]
-	}
-	use { 'wellle/tmux-complete.vim' }
+
+	use { 'hrsh7th/nvim-cmp', config = [[require('config.cmp')]] }
+	use 'onsails/lspkind-nvim' -- for icons/types in inscompletion
+	use 'hrsh7th/cmp-nvim-lsp'
+	use 'hrsh7th/cmp-buffer'
+	use 'hrsh7th/cmp-path'
+	use { 'andersevenrud/compe-tmux', branch = 'cmp' }
+
 	-- use { 'andersevenrud/compe-tmux' }
 
 	use { 'ms-jpq/coq.artifacts', branch= 'artifacts'} -- 9000+ Snippets
