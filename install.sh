@@ -82,8 +82,10 @@ if ask "${txtylw}Install packages?${txtrst}" Y; then
     # Install pacman packages
     sudo pacman -Syu --noconfirm --needed $(< pacman-deps.txt)
 
-    # Install AUR packages
-    yaourt -Syua --noconfirm --needed $(< aur-deps.txt)
+    # Install yay for AUR packages
+	(cd /tmp && git clone --depth 1 https://aur.archlinux.org/yay.git && cd yay && makepkg -si)
+
+    yay -Sya --noconfirm --needed $(< aur-deps.txt)
 
     # Install VimPlug
     curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.github.com/junegunn/vim-plug/master/plug.vim

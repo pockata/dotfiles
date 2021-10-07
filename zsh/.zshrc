@@ -141,7 +141,7 @@ alias gv='nvim +"let g:loaded_startify = 1" +GV +tabonly +"autocmd BufWipeout <b
 alias t="tmux -2"
 alias e="nvim"
 alias view="eog"
-alias aur="yaourt"
+alias aur="yay"
 alias myip="dig +short myip.opendns.com @resolver1.opendns.com"
 alias ips="ip a | grep 'inet ' | sed -e 's/^.*inet //g' -e 's/\/.*//g' | grep -v '127.0.0.1'"
 alias ls='LC_COLLATE=C ls -A --color -h --group-directories-first'
