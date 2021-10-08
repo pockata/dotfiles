@@ -1,3 +1,5 @@
+local root_markers = { ".git/", ".eslintrc.js", ".eslintrc" }
+
 local eslint = {
 	lintCommand = "eslint_d -f unix --stdin --stdin-filename ${INPUT}",
 	lintStdin = true,
@@ -9,6 +11,7 @@ local eslint = {
 
 return function(conf)
 	conf.settings = {
+		rootMarkers = root_markers,
 		languages = {
 			javascript = {eslint},
 			javascriptreact = {eslint},
@@ -19,14 +22,7 @@ return function(conf)
 		}
 	}
 
-	conf.filetypes = {
-		"javascript",
-		"javascriptreact",
-		"javascript.jsx",
-		"typescript",
-		"typescript.tsx",
-		"typescriptreact"
-	}
+	conf.filetypes = vim.tbl_keys(conf.settings.languages)
 
 	return conf
 end
