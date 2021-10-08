@@ -17,22 +17,14 @@ cmp.setup({
 		format = require("lspkind").cmp_format({with_text = true, menu = ({
 			buffer = "[Buffer]",
 			nvim_lsp = "[LSP]",
-			luasnip = "[LuaSnip]",
-			nvim_lua = "[Lua]",
-			latex_symbols = "[Latex]",
-			tmux = "[TMUX]",
+			vsnip = "[Vsnip]",
+			tmux = "[tmux]",
+			path = "[path]"
 		})}),
 	},
 	snippet = {
 		expand = function(args)
-			-- For `vsnip` user.
-			vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` user.
-
-			-- For `luasnip` user.
-			-- require('luasnip').lsp_expand(args.body)
-
-			-- For `ultisnips` user.
-			-- vim.fn["UltiSnips#Anon"](args.body)
+			vim.fn["vsnip#anonymous"](args.body)
 		end,
 	},
 	mapping = {
@@ -42,8 +34,8 @@ cmp.setup({
 		['<CR>'] = cmp.mapping.confirm({ select = true }),
 
 		["<Tab>"] = cmp.mapping(function(fallback)
-			if vim.fn.pumvisible() == 1 then
-				feedkey("<C-n>", "n")
+			if cmp.visible() then
+				cmp.select_next_item()
 			elseif vim.fn["vsnip#available"]() == 1 then
 				feedkey("<Plug>(vsnip-expand-or-jump)", "")
 			elseif has_words_before() then
@@ -54,8 +46,8 @@ cmp.setup({
 		end, { "i", "s" }),
 
 		["<S-Tab>"] = cmp.mapping(function()
-			if vim.fn.pumvisible() == 1 then
-				feedkey("<C-p>", "n")
+			if cmp.visible() then
+				cmp.select_prev_item()
 			elseif vim.fn["vsnip#jumpable"](-1) == 1 then
 				feedkey("<Plug>(vsnip-jump-prev)", "")
 			end
@@ -63,15 +55,16 @@ cmp.setup({
 	},
 	sources = {
 		{ name = 'nvim_lsp' },
+		{ name = 'vsnip' },
 		{ name = 'path' },
+		{ name = 'buffer' },
 		{
 			name = 'tmux',
+			max_item_count = 10,
 			opts = {
 				all_panes = true,
 			}
 		},
-		{ name = 'vsnip' },
-		{ name = 'buffer' },
 	}
 })
 
