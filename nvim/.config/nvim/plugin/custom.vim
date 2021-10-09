@@ -289,7 +289,7 @@ function! s:startup()
 	" CmdSplit Gstatus
 
 	if (cnt == 0)
-		" exe "normal! `0"
+		exe "normal! `0"
 		Dirvish
 	elseif (cnt == 1 && isdirectory(argv(0)))
 		exe "cd " . argv(0)
