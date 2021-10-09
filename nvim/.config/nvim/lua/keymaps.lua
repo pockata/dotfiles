@@ -128,9 +128,8 @@ nmap('<leader>eo', '<silent>', ":execute 'vsplit ' . resolve('~/dotfiles/vim/vim
 -- Use <C-L> to clear the highlighting of :set hlsearch.
 nnoremap('<Leader>l', '<silent>', ":nohlsearch<BAR><C-R>=&diff?'<Bar>diffupdate':''<CR><CR><C-L>")
 
-nmap('goT', ":call system('urxvt -cd '.getcwd().' &')<CR>")
-nmap('got', ":call system('urxvt -cd '.expand(\"%:p:h\").' &')<CR>")
-
+nmap('goT', ":call system('alacritty --working-directory '.getcwd().' &')<CR>")
+nmap('got', ":call system('alacritty --working-directory '.expand(\"%:p:h\").' &')<CR>")
 
 -- The keybinds that can get me thrown into jail
 noremap('j', "h")
