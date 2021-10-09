@@ -123,6 +123,7 @@ o.ttimeoutlen = 0
 bo.bomb = false -- don't write a BOM mark at the start of the file
 
 vim.g.mapleader = " "
+vim.g.maplocalleader = ","
 
 create_augroup('YankHighlight',
 	{'TextYankPost * silent! lua vim.highlight.on_yank()'}
