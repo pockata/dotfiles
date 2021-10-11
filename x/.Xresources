@@ -30,45 +30,6 @@ Xft.hinting:    1
 Xft.lcdfilter:  lcddefault
 Xft.hintstyle:  hintfull
 
-URxvt*letterSpace: -1
-
-URxvt*scrollBar: false
-URxvt*internalBorder: 0
-
-URxvt.secondaryScreen: 1
-URxvt.secondaryScroll: 0
-
-URxvt*scrollTtyOutput:  false
-URxvt*scrollWithBuffer:  true
-URxvt*scrollTtyKeypress:  true
-
-! Enables copy/paste
-URxvt.iso14755: false
-URxvt.iso14755_52: false
-
-URxvt.keysym.C-Tab: \033{
-URxvt.keysym.Control-Shift-ISO_Left_Tab: \033}
-
-URxvt*allow_bold: true
-URxvt*font:xft:JetBrains Mono Medium:style=regular:pixelsize=13
-
-! Enables ctrl+; binding in Vim
-URxvt.keysym.C-semicolon: 
-
-!URxvt.keysym.C-semicolon: \033[1;5C
-!URxvt*transparent: true
-!URxvt*shading: 30
-!URxvt*inheritPixmap: true
-
-URxvt.perl-ext: default,url-select
-URxvt.keysym.M-u: perl:url-select:select_next
-URxvt.url-select.launcher: /usr/bin/xdg-open
-URxvt.url-select.underline: true
-
-URxvt.perl-ext-common: default,clipboard
-URxvt.keysym.Shift-Control-C: perl:clipboard:copy
-URxvt.keysym.Shift-Control-V: perl:clipboard:paste
-
 ! Rofi
 rofi.color-enabled: true
 rofi.color-window: #2b303b, #c0c5ce, #c0c5ce
