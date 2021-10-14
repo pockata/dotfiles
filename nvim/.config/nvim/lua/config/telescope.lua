@@ -1,4 +1,5 @@
 local actions = require('telescope.actions')
+local action_set = require "telescope.actions.set"
 local tele = require('telescope.builtin')
 
 require('telescope').setup{
@@ -16,10 +17,18 @@ require('telescope').setup{
 		layout_strategy = 'flex',
 		prompt_prefix = "❯ ",
 		layout_config = {
-			mirror = true,
 			flex = {
 				flip_columns = 150
 			},
+			vertical = {
+				prompt_position = "bottom",
+				-- TODO: Send PR to support this.
+				-- sorting_strategy = "descending",
+				mirror = true,
+			},
+			horizontal = {
+				prompt_position = "top",
+			}
 		},
 		selection_caret = "❯ ",
 		sorting_strategy = "ascending",
@@ -63,7 +72,6 @@ create_augroup('TelescopeConfig',
 function _G.EditNvim()
 	tele.find_files {
 		prompt_title = "~ nvim config ~",
-		layout_strategy = 'flex',
 		cwd = '~/dotfiles/nvim/.config/nvim',
 	}
 end
@@ -71,10 +79,31 @@ end
 function _G.EditDotfiles()
 	tele.find_files {
 		prompt_title = "~ dotfiles ~",
-		layout_strategy = 'flex',
 		cwd = '~/dotfiles/',
 		hidden = true,
 	}
+end
+
+function _G.OpenProjects()
+	tele.find_files(require('telescope.themes').get_dropdown({
+		prompt_title = "~ Projects ~",
+		cwd = '~/Projects',
+		find_command = {'ls'},
+		previewer = false,
+		layout_config = {
+			height = 30,
+		},
+		attach_mappings = function()
+			action_set.select:enhance {
+				post = function()
+					-- lcd to the project folder
+					vim.cmd [[ ProjectRootLCD ]]
+				end,
+			}
+
+			return true
+		end
+	}))
 end
 
 -- Show git_files if in a git repo, find_files otherwise
@@ -134,6 +163,7 @@ nnoremap("<Leader>gf", "<silent>", "<cmd>Telescope git_status<CR>");
 nmap('<leader>fi', '<silent>', "<cmd>lua EditInstalledPlugins()<CR>")
 nmap('<leader>ev', '<silent>', "<cmd>lua EditNvim()<CR>")
 nmap('<leader>ed', '<silent>', "<cmd>lua EditDotfiles()<CR>")
+nmap('<leader>ep', '<silent>', "<cmd>lua OpenProjects()<CR>")
 
 -- Project navigation
 noremap("<c-p>", "<silent>", "<cmd>lua SmartProjectFiles()<CR>");

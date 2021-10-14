@@ -301,8 +301,8 @@ autocmd vimrc VimEnter * call s:startup()
 
 " Open hosts file
 nmap <silent> <leader>eh :vsplit /etc/hosts<CR>
-nmap <silent> <leader>ed :tabe ~/dotfiles<CR>
-nmap <silent> <leader>ep :tabe ~/Projects<CR>
+" nmap <silent> <leader>ed :tabe ~/dotfiles<CR>
+" nmap <silent> <leader>ep :tabe ~/Projects<CR>
 
 " " Change shape of cursor in different modes
 " if !has("gui_running") && !has("nvim")
@@ -443,29 +443,6 @@ endfunction
 " un-join (split) the current line at the cursor position
 " TODO: Fix collision with splitjoin
 nnoremap g<CR> i<c-j><esc>k$
-
-function! s:plugs_sink(line)
-	let dir = g:plugs[a:line].dir
-	for pat in ['doc/*.txt', 'README.md']
-		let match = get(split(globpath(dir, pat), "\n"), 0, '')
-		if len(match)
-			execute 'tabedit' match
-			return
-		endif
-	endfor
-	tabnew
-	execute 'Dirvish' dir
-endfunction
-
-command! Plugs call fzf#run(fzf#wrap({
-			\ 'source':  sort(keys(g:plugs)),
-			\ 'sink':    function('s:plugs_sink')}))
-
-" command! Plugs call fzf#run({
-"   \ 'source':  map(sort(keys(g:plugs)), 'g:plug_home."/".v:val'),
-"   \ 'options': '--delimiter / --nth -1',
-"   \ 'down':    '~40%',
-"   \ 'sink':    'Dirvish'})
 
 " Edit the contents of a register.
 function! ChangeReg() abort
