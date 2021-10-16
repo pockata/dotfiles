@@ -297,11 +297,14 @@ gshow() {
         git_output="$(cat -)"
     fi
 
+    # switch preview position on narrow screens
+    PREVIEW_SIDE="$([[ "$(tput cols)" -gt 150 ]] && echo "right" || echo "up")"
     echo "$git_output" |
     fzf -d 100% --ansi --no-sort --reverse --tiebreak=index --bind=ctrl-s:toggle-sort \
         --header "Press CTRL-S to toggle sort" \
         --preview "echo {} | grep -o '[a-f0-9]\{7\}' | head -1 |
             xargs -I % sh -c 'git show --color=always % | head -$LINES '" \
+        --preview-window "${PREVIEW_SIDE}" \
         --bind "enter:execute:echo {} | grep -o '[a-f0-9]\{7\}' | head -1 |
             xargs -I % sh -c 'nvim fugitive://\$(git rev-parse --show-toplevel)/.git//\$(git rev-parse --verify %) < /dev/tty'"
 }
