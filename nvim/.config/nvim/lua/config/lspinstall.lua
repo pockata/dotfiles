@@ -37,13 +37,12 @@ local on_attach = function(client, bufnr)
 end
 
 local function setup_servers()
-	require'lspinstall'.setup()
-
 	local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
 	-- capabilities.textDocument.completion.completionItem.snippetSupport = true
 
-	local servers = require'lspinstall'.installed_servers()
-	for _, server in pairs(servers) do
+	local lsp_installer = require("nvim-lsp-installer")
+
+	lsp_installer.on_server_ready(function(server)
 		local conf = {
 			on_attach = on_attach,
 			capabilities = capabilities,
@@ -51,10 +50,12 @@ local function setup_servers()
 		}
 
 		-- load config/lsp/{server}.lua and pass the default config file
-		pcall(function() conf = require('config.lsp.' .. server)(conf) end)
+		pcall(function() conf = require('config.lsp.' .. server.name)(conf) end)
 
-		require'lspconfig'[server].setup(conf)
-	end
+		-- This setup() function is exactly the same as lspconfig's setup function (:help lspconfig-quickstart)
+		server:setup(conf)
+		vim.cmd [[ do User LspAttachBuffers ]]
+	end)
 end
 
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
@@ -68,10 +69,4 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
 )
 
 setup_servers()
-
--- Automatically reload after `:LspInstall <server>` so we don't have to restart neovim
-require'lspinstall'.post_install_hook = function ()
-	setup_servers() -- reload installed servers
-	vim.cmd("bufdo e") -- this triggers the FileType autocmd that starts the server
-end
 

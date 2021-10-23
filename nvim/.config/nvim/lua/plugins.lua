@@ -125,7 +125,7 @@ return require('packer').startup({function(use)
 
 	-- use 'famiu/bufdelete.nvim'
 
-	use { 'kabouzeid/nvim-lspinstall',
+	use { 'williamboman/nvim-lsp-installer',
 		config = [[require('config.lspinstall')]],
 		after = 'nvim-lspconfig'
 	}
