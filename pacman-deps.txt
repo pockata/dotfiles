@@ -80,4 +80,5 @@ pamixer
 blueberry
 alacritty
 cwm
+prusa-slicer
 
