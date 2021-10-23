@@ -1,5 +1,5 @@
 vim.cmd [[
-function! s:gv_expand()
+function! GVexpand()
 	let line = getline('.')
 	GV --name-status
 	call search('\V'.line, 'c')
@@ -8,7 +8,7 @@ endfunction
 ]]
 
 create_augroup('GVConfig', {
-	'FileType GV nnoremap <buffer> <silent> + <cmd>call <sid>gv_expand()<cr>',
+	'FileType GV nnoremap <buffer> <silent> + <cmd>call GVexpand()<cr>',
 	'FileType GV unmap <buffer> <c-p>',
 	'FileType GV unmap <buffer> <c-n>',
 })
