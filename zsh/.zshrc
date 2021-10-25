@@ -337,7 +337,6 @@ gp() {
 }
 
 # gco - checkout git branch/tag
-# TODO: Add support for `checkout -t` for remote branches
 gco() {
 
     is_in_git_repo || return
