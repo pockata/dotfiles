@@ -298,7 +298,7 @@ gshow() {
     fi
 
     # switch preview position on narrow screens
-    PREVIEW_SIDE="$([[ "$(tput cols)" -gt 150 ]] && echo "right" || echo "up")"
+    PREVIEW_SIDE="$([[ "$(tput cols)" -gt 145 ]] && echo "right" || echo "up")"
     echo "$git_output" |
     fzf -d 100% --ansi --no-sort --reverse --tiebreak=index --bind=ctrl-s:toggle-sort \
         --header "Press CTRL-S to toggle sort" \
