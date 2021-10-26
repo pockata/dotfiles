@@ -13,6 +13,9 @@ require('telescope').setup{
 			'--column',
 			'--smart-case',
 			'--hidden', -- include hidden files, but respect .gitignore
+			--hidden includes .git folders. providing --ignore-vcs does nothing
+			'--glob',
+			'!{node_modules/*,.git/*}',
 		},
 		layout_strategy = 'flex',
 		prompt_prefix = "❯ ",
@@ -83,7 +86,14 @@ function _G.EditDotfiles()
 	tele.find_files {
 		prompt_title = "~ dotfiles ~",
 		cwd = '~/dotfiles/',
-		hidden = true,
+		find_command = {
+			'rg',
+			'--files',
+			'--hidden',
+			--hidden includes .git folders. providing --ignore-vcs does nothing
+			'--glob',
+			'!{node_modules/*,.git/*}',
+		}
 	}
 end
 
