@@ -50,6 +50,9 @@ require('telescope').setup{
 
 				["<c-k>"] = actions.move_selection_next,
 				["<c-l>"] = actions.move_selection_previous,
+
+				["<s-up>"] = actions.preview_scrolling_up,
+				["<s-down>"] = actions.preview_scrolling_down,
 			}
 		}
 	},
