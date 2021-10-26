@@ -136,7 +136,7 @@ end
 function _G.EditInstalledPlugins()
 	tele.find_files {
 		prompt_title = "~ nvim plugins ~",
-		cwd = vim.fn.stdpath('data') .. '/site/pack/packer/start/'
+		cwd = vim.fn.stdpath('data') .. '/site/pack/packer/'
 	}
 end
 
