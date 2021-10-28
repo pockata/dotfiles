@@ -28,12 +28,13 @@ cmp.setup({
 		end,
 	},
 	mapping = {
-		['<C-d>'] = cmp.mapping.scroll_docs(-4),
-		['<C-f>'] = cmp.mapping.scroll_docs(4),
-		['<C-Space>'] = cmp.mapping.complete(),
-		['<CR>'] = cmp.mapping.confirm({ select = true }),
+		['<C-d>'] = cmp.mapping(cmp.mapping.scroll_docs(-4)),
+		['<C-f>'] = cmp.mapping(cmp.mapping.scroll_docs(4)),
+		['<C-Space>'] = cmp.mapping(cmp.mapping.complete()),
+		['<CR>'] = cmp.mapping(cmp.mapping.confirm({ select = false })),
+		['<C-e>'] = cmp.config.disable,
 
-		["<Tab>"] = cmp.mapping(function(fallback)
+		["<Tab>"] = cmp.mapping(cmp.mapping(function(fallback)
 			if cmp.visible() then
 				cmp.select_next_item()
 			elseif vim.fn.pumvisible() == 1 then
@@ -45,9 +46,9 @@ cmp.setup({
 			else
 				fallback() -- The fallback function sends a already mapped key. In this case, it's probably `<Tab>`.
 			end
-		end, { "i", "s" }),
+		end, { "i", "s" })),
 
-		["<S-Tab>"] = cmp.mapping(function()
+		["<S-Tab>"] = cmp.mapping(cmp.mapping(function()
 			if cmp.visible() then
 				cmp.select_prev_item()
 			elseif vim.fn.pumvisible() == 1 then
@@ -55,9 +56,9 @@ cmp.setup({
 			elseif vim.fn["vsnip#jumpable"](-1) == 1 then
 				feedkey("<Plug>(vsnip-jump-prev)", "")
 			end
-		end, { "i", "s" }),
+		end, { "i", "s" })),
 	},
-	sources = {
+	sources = cmp.config.sources({
 		{ name = 'nvim_lsp' },
 		{ name = 'vsnip' },
 		{ name = 'path' },
@@ -80,6 +81,6 @@ cmp.setup({
 				all_panes = true,
 			}
 		},
-	}
+	}),
 })
 
