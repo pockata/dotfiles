@@ -535,7 +535,9 @@ augroup vimrc-auto-mkdir
 	autocmd BufWritePre * call s:auto_mkdir(expand('<afile>:p:h'), v:cmdbang)
 	" autocmd BufWritePre * if !exists('b:fugitive_type') || b:fugitive_type =~# '^\%(tree\|blob\)$' | call s:auto_mkdir(expand('<afile>:p:h'), v:cmdbang)
 	function! s:auto_mkdir(dir, force)
-		if !isdirectory(a:dir)
+		" Is it a remote protocol (scp, ftp, etc)?
+		let isProtocol = stridx(expand('%:p:h'), "://") >= 0
+		if !isProtocol && !isdirectory(a:dir)
 					\   && (a:force
 					\       || input("'" . a:dir . "' does not exist. Create? [y/N]") =~? '^y\%[es]$')
 			call mkdir(iconv(a:dir, &encoding, &termencoding), 'p')
