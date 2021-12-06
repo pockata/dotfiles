@@ -297,7 +297,12 @@ function! s:startup()
 	endif
 endfunction
 
-autocmd vimrc VimEnter * call s:startup()
+augroup Startup
+	autocmd VimEnter * silent! autocmd! FileExplorer *
+	" au BufEnter * if s:isdir(expand('%')) | bd | exe 'Dirvish' | endif
+
+	autocmd vimrc VimEnter * call s:startup()
+augroup END
 
 " Open hosts file
 nmap <silent> <leader>eh :vsplit /etc/hosts<CR>
