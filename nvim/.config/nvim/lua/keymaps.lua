@@ -117,8 +117,9 @@ xnoremap('gs', ":s//g<Left><Left>")
 xnoremap('/', [[<Esc>`</\%V\v]])
 xnoremap('?', [[<Esc>`>?%V\v]])
 
--- https://www.reddit.com/r/vim/comments/dgbr9l/mappings_i_would_change_for_more_consistent_vim/
-nnoremap('Y', "y$")
+-- default in nvim 0.6
+-- -- https://www.reddit.com/r/vim/comments/dgbr9l/mappings_i_would_change_for_more_consistent_vim/
+-- nnoremap('Y', "y$")
 
 -- Quickly edit/reload the vimrc file
 -- nmap('<leader>ev', '<silent>', ":execute 'vsplit ' . resolve('~/.config/nvim/init.lua')<CR>")

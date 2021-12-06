@@ -55,7 +55,8 @@ o.showmode = false
 -- search & replace
 o.ignorecase = true
 o.smartcase = true
-o.inccommand = "nosplit"
+-- default in nvim 0.6
+-- o.inccommand = "nosplit"
 
 -- save undo history
 o.undofile = true
