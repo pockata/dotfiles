@@ -1,6 +1,7 @@
 local lsp = require('feline.providers.lsp')
 local vi_mode_utils = require('feline.providers.vi_mode')
 local providers = require('feline.providers')
+local lsp_severity = vim.diagnostic.severity
 
 -- re-highlight on colorscheme change
 create_augroup('FelineConfig', {
@@ -247,7 +248,7 @@ table.insert(components.active[2], {
 -- diagnosticErrors
 table.insert(components.active[2], {
 	provider = 'diagnostic_errors',
-	enabled = function() return lsp.diagnostics_exist('Error') end,
+	enabled = function() return lsp.diagnostics_exist(lsp_severity.ERROR) end,
 	hl = {
 		fg = 'red',
 		style = 'bold'
@@ -257,7 +258,7 @@ table.insert(components.active[2], {
 -- diagnosticWarn
 table.insert(components.active[2], {
 	provider = 'diagnostic_warnings',
-	enabled = function() return lsp.diagnostics_exist('Warning') end,
+	enabled = function() return lsp.diagnostics_exist(lsp_severity.WARN) end,
 	hl = {
 		fg = 'yellow',
 		style = 'bold'
@@ -267,7 +268,7 @@ table.insert(components.active[2], {
 -- diagnosticHint
 table.insert(components.active[2], {
 	provider = 'diagnostic_hints',
-	enabled = function() return lsp.diagnostics_exist('Hint') end,
+	enabled = function() return lsp.diagnostics_exist(lsp_severity.HINT) end,
 	hl = {
 		fg = 'cyan',
 		style = 'bold'
@@ -277,7 +278,7 @@ table.insert(components.active[2], {
 -- diagnosticInfo
 table.insert(components.active[2], {
 	provider = 'diagnostic_info',
-	enabled = function() return lsp.diagnostics_exist('Information') end,
+	enabled = function() return lsp.diagnostics_exist(lsp_severity.INFO) end,
 	hl = {
 		fg = 'skyblue',
 		style = 'bold'
