@@ -16,8 +16,8 @@ require('gitsigns').setup {
 		noremap = true,
 		buffer = true,
 
-		['n ]c'] = { expr = true, "&diff ? ']c' : '<cmd>lua require\"gitsigns\".next_hunk()<CR>'"},
-		['n [c'] = { expr = true, "&diff ? '[c' : '<cmd>lua require\"gitsigns\".prev_hunk()<CR>'"},
+		['n ]c'] = { expr = true, "&diff ? ']czz' : '<cmd>lua require\"gitsigns\".next_hunk()<CR>zz'"},
+		['n [c'] = { expr = true, "&diff ? '[czz' : '<cmd>lua require\"gitsigns\".prev_hunk()<CR>zz'"},
 
 		['n <leader>hs'] = '<cmd>lua require"gitsigns".stage_hunk()<CR>',
 		['v <leader>hs'] = '<cmd>lua require"gitsigns".stage_hunk({vim.fn.line("."), vim.fn.line("v")})<CR>',
