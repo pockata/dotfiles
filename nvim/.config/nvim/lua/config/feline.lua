@@ -88,8 +88,8 @@ local checkEncoding = function()
 	return enc ~= "utf-8" or format ~= 'unix'
 end
 
-local filenameFunc = function(winid)
-	local bufnr = vim.api.nvim_win_get_buf(winid)
+local filenameFunc = function()
+	local bufnr = vim.api.nvim_win_get_buf(0)
 	local file = vim.api.nvim_buf_get_name(bufnr)
 
 	file = vim.fn.fnamemodify(file, ":~:.")
@@ -161,9 +161,7 @@ table.insert(components.active[1], {
 
 -- filename
 table.insert(components.active[1], {
-	provider = function (winid)
-		return filenameFunc(winid)
-	end,
+	provider = filenameFunc,
 	hl = {
 		fg = 'white',
 		bg = 'bg',
@@ -229,8 +227,8 @@ table.insert(components.active[1], {
 -- MID
 -- LspName
 table.insert(components.active[2], {
-	enabled = function(winid)
-		return vim.api.nvim_win_get_width(winid) > 90
+	enabled = function()
+		return vim.api.nvim_win_get_width(0) > 90
 	end,
 	-- provider = 'lsp_client_names',
 	provider = function ()
@@ -290,8 +288,8 @@ table.insert(components.active[2], {
 -- RIGHT
 -- fileType
 table.insert(components.active[3], {
-	enabled = function(winid)
-		return vim.api.nvim_win_get_width(winid) > 90
+	enabled = function()
+		return vim.api.nvim_win_get_width(0) > 90
 	end,
 	provider = function()
 		local ft = providers.file_type():lower()
@@ -377,9 +375,7 @@ table.insert(components.active[3], {
 
 -- INACTIVE
 table.insert(components.inactive[1], {
-	provider = function (winid)
-		return filenameFunc(winid)
-	end,
+	provider = filenameFunc,
 	hl = {
 		fg = 'white',
 		bg = 'bg',
