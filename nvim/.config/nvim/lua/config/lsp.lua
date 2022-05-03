@@ -1,3 +1,23 @@
+local lspconfig = require("lspconfig")
+local lsp_installer = require("nvim-lsp-installer")
+
+vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
+	vim.lsp.diagnostic.on_publish_diagnostics,
+	{
+		underline = false,
+		virtual_text = true,
+		signs = true,
+		update_in_insert = false,
+	}
+)
+
+vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
+	vim.lsp.handlers.hover, {
+		border = "rounded",
+		width = 80,
+	}
+)
+
 local on_attach = function(client, bufnr)
 	local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
 	local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
@@ -44,10 +64,10 @@ local on_attach = function(client, bufnr)
 	-- buf_set_keymap('n', '<leader>q', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
 
 	-- Set some keybinds conditional on server capabilities
-	if client.resolved_capabilities.document_formatting then
+	if client.server_capabilities.document_formatting then
 		buf_set_keymap("n", "g=", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
 	end
-	if client.resolved_capabilities.document_range_formatting then
+	if client.server_capabilities.document_range_formatting then
 		buf_set_keymap("v", "g=", "<cmd>lua vim.lsp.buf.range_formatting()<CR>", opts)
 	end
 end
@@ -61,9 +81,10 @@ local function setup_servers()
 		properties = { "documentation", "detail", "additionalTextEdits" },
 	}
 
-	local lsp_installer = require("nvim-lsp-installer")
+	require("nvim-lsp-installer").setup {}
 
-	lsp_installer.on_server_ready(function(server)
+	local servers = lsp_installer.get_installed_servers()
+	for _, server in ipairs(servers) do
 		local conf = {
 			on_attach = on_attach,
 			capabilities = capabilities,
@@ -77,27 +98,10 @@ local function setup_servers()
 		pcall(function() conf = require('config.lsp.' .. server.name)(conf) end)
 
 		-- This setup() function is exactly the same as lspconfig's setup function (:help lspconfig-quickstart)
-		server:setup(conf)
+		lspconfig[server.name].setup(conf)
 		vim.cmd [[ do User LspAttachBuffers ]]
-	end)
+	end
 end
-
-vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
-	vim.lsp.diagnostic.on_publish_diagnostics,
-	{
-		underline = false,
-		virtual_text = true,
-		signs = true,
-		update_in_insert = false,
-	}
-)
-
-vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
-	vim.lsp.handlers.hover, {
-		border = "rounded",
-		width = 80,
-	}
-)
 
 setup_servers()
 
