@@ -1733,7 +1733,7 @@ endfunction
 command! -nargs=+ Run call setqflist(map(systemlist('<args>'), '{"filename": v:val}')) | copen
 
 " TODO: Create a command Tableify
-":%s/\t/</kb\/td>,tkbkb<td>/ggg0viVI<td>viV$A</td>gg0viVI<tr>viV$A</tr>
+":%s/\t/</kb\/td>,tkbkb<td>/ggg0viVI<td>viV$A</td>gg0viVI<tr>viV$A</tr>
 
 " set diffexpr=AutoDiff()
 " function! AutoDiff()

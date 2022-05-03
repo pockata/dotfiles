@@ -15,9 +15,14 @@ nmap('[l', '<silent>', ':<C-U>lprevious<CR>')
 nmap(']l', '<silent>', ':<C-U>lnext<CR>')
 nmap('[q', '<silent>', ':<C-U>cprevious<CR>')
 nmap(']q', '<silent>', ':<C-U>cnext<CR>')
-nmap('[t', '<silent>', ':<C-U>tprevious<CR>')
-nmap(']t', '<silent>', ':<C-U>tnext<CR>')
+nmap('[t', '<silent>', ':<C-U>tabprevious<CR>')
+nmap(']t', '<silent>', ':<C-U>tabnext<CR>')
 
+-- quick tab moving
+nnoremap('<t', ':tabmove -1<CR>')
+nnoremap('>t', ':tabmove +1<CR>')
+
+-- Superceded by Treesitter textobjects
 -- -- if your '{' or '}' are not on the first column
 -- -- :help [[
 -- -- TODO: test this
@@ -97,6 +102,21 @@ nmap('zj', "30zh")
 -- select pasted text
 nnoremap('gp', "`[v`]")
 
+-- Thanks Prime. Set an Undo break point
+inoremap(',', ',<c-g>u')
+inoremap('.', '.<c-g>u')
+inoremap('/', '/<c-g>u')
+
+-- -- Move lines around without using `ddp`
+-- vnoremap('<a-k>', ":m '>+1<CR>gv=gv")
+-- vnoremap('<a-l>', ":m '<-2<CR>gv=gv")
+-- nnoremap('<a-k>', ":m .+1<CR>==")
+-- nnoremap('<a-l>', ":m .-2<CR>==")
+
+-- Keep visual mode indenting
+xnoremap("<", "<silent>", "<gv")
+xnoremap(">", "<silent>", ">gv")
+
 -- paste without yanking in visual mode with `P`
 xnoremap("P", '<expr>', "'\"_d\"'.v:register.'P'")
 
@@ -132,6 +152,9 @@ nnoremap('<Leader>l', '<silent>', ":nohlsearch<BAR><C-R>=&diff?'<Bar>diffupdate'
 nmap('goT', ":call system('alacritty --working-directory '.getcwd().' &')<CR>")
 nmap('got', ":call system('alacritty --working-directory '.expand(\"%:p:h\").' &')<CR>")
 
+-- Disable buffer maps set in man.vim
+vim.g.no_man_maps=1
+
 -- The keybinds that can get me thrown into jail
 noremap('j', "h")
 
@@ -148,4 +171,10 @@ noremap(';', "l")
 -- Navigate folds
 nnoremap("]z", "<silent>", ":call NextClosedFold('j')<cr>")
 nnoremap("[z", "<silent>", ":call NextClosedFold('k')<cr>")
+
+-- View highlight groups under cursor
+nnoremap("<leader>sI", "<silent>", ":TSHighlightCapturesUnderCursor<cr>")
+
+-- Shrug ¯\_(ツ)_/¯
+inoremap("#shrug", [[¯\_(ツ)_/¯]])
 

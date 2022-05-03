@@ -28,10 +28,13 @@ wo.list = true
 vim.o.listchars = 'tab:  ,lead:·,trail:·,extends:›,precedes:‹,nbsp:␣'
 
 -- always keep this much lines/chars visible around the cursor
+-- TODO: Autocmd to set scrolloff to 20 on tall screens so `zt` and `zb`
+-- is reasonable
 o.scrolloff = 7
 o.sidescrolloff = 7
 o.scrolljump = 7
 
+o.gdefault = true
 
 -- Allows splits to be squashed to one line (for ZoomToggle)
 o.winminheight = 0
@@ -105,8 +108,8 @@ bo.formatoptions = bo.formatoptions .. "j"
 -- break long lines in insert mode
 bo.formatoptions = bo.formatoptions .. "l"
 
--- o.completeopt = "menuone,noinsert,noselect"
-o.completeopt = "menuone,noselect"
+o.completeopt = "menuone,noinsert,noselect"
+-- o.completeopt = "menuone,noselect"
 
 -- Folding
 wo.foldmethod = 'manual'

@@ -1,4 +1,5 @@
 local actions = require('telescope.actions')
+local layout = require('telescope.actions.layout')
 local action_set = require "telescope.actions.set"
 local tele = require('telescope.builtin')
 
@@ -47,7 +48,6 @@ require('telescope').setup{
 				-- use c-s for horizontal splitting
 				["<c-x>"] = false,
 				["<c-s>"] = actions.select_horizontal,
-				["<c-q>"] = actions.send_selected_to_qflist + actions.open_qflist,
 				-- exit with Esc from insert mode (I don't need normal mode here)
 				["<esc>"] = actions.close,
 
@@ -56,6 +56,8 @@ require('telescope').setup{
 
 				["<s-up>"] = actions.preview_scrolling_up,
 				["<s-down>"] = actions.preview_scrolling_down,
+
+				["<a-p>"] = layout.toggle_preview,
 			}
 		}
 	},

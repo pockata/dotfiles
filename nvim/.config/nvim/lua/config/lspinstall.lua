@@ -4,6 +4,22 @@ local on_attach = function(client, bufnr)
 
 	buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
 
+	-- show LSP signatures while typing function arguments
+	require('lsp_signature').on_attach({
+		-- Floating window borders
+		bind = true, -- This is mandatory, otherwise border config won't get registered.
+		hint_enable = false,
+		-- hint_prefix = "LEK > ",
+		-- sometime show signature on new line or in middle of parameter can be confusing, set it to false for #58
+		handler_opts = {
+			border = "rounded"
+		},
+		floating_window = true,
+		hi_parameter = "IncSearch",
+		always_trigger = false,
+		-- extra_trigger_chars = {"("}, -- Array of extra characters that will trigger signature completion, e.g., {"(", ","}
+	}, bufnr)
+
 	-- Mappings
 	local opts = { noremap=true, silent=true }
 
@@ -23,22 +39,27 @@ local on_attach = function(client, bufnr)
 	buf_set_keymap('n', '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
 	buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
 	-- buf_set_keymap('n', '<leader>e', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
-	buf_set_keymap('n', '[e', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>zz', opts)
-	buf_set_keymap('n', ']e', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>zz', opts)
+	buf_set_keymap('n', '[e', '<cmd>lua vim.lsp.diagnostic.goto_prev({ float = { border = "rounded" }})<CR>zz', opts)
+	buf_set_keymap('n', ']e', '<cmd>lua vim.lsp.diagnostic.goto_next({ float = { border = "rounded" }})<CR>zz', opts)
 	-- buf_set_keymap('n', '<leader>q', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
 
 	-- Set some keybinds conditional on server capabilities
 	if client.resolved_capabilities.document_formatting then
-		buf_set_keymap("n", "<space>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
+		buf_set_keymap("n", "g=", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
 	end
 	if client.resolved_capabilities.document_range_formatting then
-		buf_set_keymap("v", "<space>f", "<cmd>lua vim.lsp.buf.range_formatting()<CR>", opts)
+		buf_set_keymap("v", "g=", "<cmd>lua vim.lsp.buf.range_formatting()<CR>", opts)
 	end
 end
 
 local function setup_servers()
 	local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
-	-- capabilities.textDocument.completion.completionItem.snippetSupport = true
+	capabilities.textDocument.completion.completionItem.snippetSupport = true
+
+	-- from https://github.com/ray-x/lsp_signature.nvim/blob/master/tests/init_paq.lua
+	capabilities.textDocument.completion.completionItem.resolveSupport = {
+		properties = { "documentation", "detail", "additionalTextEdits" },
+	}
 
 	local lsp_installer = require("nvim-lsp-installer")
 
@@ -48,6 +69,9 @@ local function setup_servers()
 			capabilities = capabilities,
 			-- settings = { documentFormatting = false }
 		}
+
+		-- TODO: Check out json/yaml schema configs
+		-- https://github.com/Allaman/nvim/blob/main/lua/config/lsp.lua
 
 		-- load config/lsp/{server}.lua and pass the default config file
 		pcall(function() conf = require('config.lsp.' .. server.name)(conf) end)
@@ -65,6 +89,13 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
 		virtual_text = true,
 		signs = true,
 		update_in_insert = false,
+	}
+)
+
+vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
+	vim.lsp.handlers.hover, {
+		border = "rounded",
+		width = 80,
 	}
 )
 

@@ -30,7 +30,7 @@ augroup Colors
 	" autocmd ColorScheme * highlight Search guibg=purple guifg=white
 
 	" Highlight spelling errors
-	autocmd ColorScheme * highlight SpellBad guifg=red
+	autocmd ColorScheme * highlight SpellBad guifg=red gui=underline
 
 	" " highlight long lines (but only one column)
 	" autocmd ColorScheme * highlight ColorColumn guibg=#cc241d guifg=#fbf1c7 ctermbg=red ctermfg=white
@@ -48,9 +48,9 @@ augroup Filetypes
 	" make K look up the docs, not man
 	autocmd FileType vim setlocal keywordprg=:help
 
-	" " TODO: Add blacklist (GV/fugitive, etc.)
-	" " follow symlink and set working directory
-	" autocmd! BufReadPost * call FollowSymlink() | ProjectRootLCD
+	" TODO: Add blacklist (GV/fugitive, etc.)
+	" follow symlink and set working directory
+	autocmd! BufReadPost * call FollowSymlink() | ProjectRootLCD
 
 	autocmd FileType apache setlocal commentstring=#%s
 
@@ -84,6 +84,7 @@ augroup Filetypes
 
 	" Enhance `gf`, to use these file extensions
 	" https://www.reddit.com/r/vim/comments/4kjgmz/weekly_vim_tips_and_tricks_thread_11/d3g6l8y
+	" NOTE: Superseded by vim-apathy & LSP?
 	autocmd FileType javascriptreact,javascript,jsx,javascript.jsx setlocal suffixesadd=.js,.jsx,.json,.html
 	autocmd FileType javascriptreact,javascript,jsx,javascript.jsx setlocal path=.,src,node_nodules
 
@@ -196,6 +197,8 @@ function! DeleteHiddenBuffers()
 	for buf in filter(range(1, bufnr('$')), 'bufexists(v:val) && index(tpbl, v:val)==-1')
 		silent execute 'bwipeout' buf
 	endfor
+
+	echom "Removed hidden buffers!"
 endfunction
 
 function! SearchVisualSelectionWithRg()
@@ -530,7 +533,7 @@ command! -range=% Pastebin  silent execute <line1> . "," . <line2> . "w !curl -F
 
 " Load a list of changed fiels in the quickfix list
 " https://vi.stackexchange.com/questions/13433/how-to-load-list-of-files-in-commit-into-quickfix
-command! -nargs=? -bar Gshow call setqflist(map(systemlist("git show --pretty='' --name-only <args>"), '{"filename": v:val, "lnum": 1}')) | copen
+command! -nargs=? -bar Gshow call setqflist(map(systemlist("git show --pretty='' --name-only <args>"), '{"filename": v:val}')) | copen
 
 " Create dir on file save
 "

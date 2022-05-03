@@ -1,15 +1,13 @@
 require('hop').setup({})
 
-nmap('s', '<silent>', '<cmd>HopChar2<CR>')
-nmap('S', '<silent>', '<cmd>HopWord<CR>')
+nmap('S', '<silent>', '<cmd>HopChar2<CR>')
+nmap('s', '<silent>', '<cmd>HopWord<CR>')
 
-nnoremap('f', '<silent>', '<cmd>call WrapHop("f")<CR>')
-xnoremap('f', '<silent>', '<cmd>call WrapHop("f")<CR>')
-onoremap('f', '<silent>', '<cmd>call WrapHop("f")<CR>')
+-- noremap('f', '<silent>', '<cmd>call WrapHop("f")<CR>')
+-- noremap('t', '<silent>', '<cmd>call WrapHop("t")<CR>')
 
-nnoremap('t', '<silent>', '<cmd>call WrapHop("t")<CR>')
-xnoremap('t', '<silent>', '<cmd>call WrapHop("t")<CR>')
-onoremap('t', '<silent>', '<cmd>call WrapHop("t")<CR>')
+-- noremap('f', '<silent>', '<cmd>HopChar1<CR>')
+-- noremap('t', '<silent>', '<cmd>HopChar1<CR>')
 
 -- remove the underline from highlighted characters
 create_augroup('HopConfig', {

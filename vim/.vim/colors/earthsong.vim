@@ -16,12 +16,14 @@ syntax reset
 
 hi Cursor      guibg=#cc4455  guifg=white     ctermbg=4 ctermfg=15
 hi link CursorIM Cursor
-hi Cursorline cterm=NONE gui=NONE
 hi Normal      guibg=#36312C  guifg=#EBD1B7    gui=none ctermbg=0 ctermfg=15
 hi NonText     guibg=bg  guifg=#EBD1B7   ctermbg=8 ctermfg=14
 hi Visual      guibg=#557799  guifg=white    gui=none ctermbg=9 ctermfg=15
 
-hi Linenr      guibg=bg       guifg=#aaaaaa  gui=none ctermbg=bg ctermfg=7
+hi LineNr      guibg=bg       guifg=#aaaaaa  gui=none ctermbg=bg ctermfg=7
+
+hi! link SignColumn LineNr
+hi link Cursorline LineNr
 
 hi Directory   guibg=bg       guifg=#337700  gui=none ctermbg=bg ctermfg=10
 
@@ -40,7 +42,7 @@ hi link  WarningMsg  ErrorMsg
 highlight Pmenu             guifg=#767676  guibg=#EBD1B7 ctermfg=243 ctermbg=15
 highlight PmenuSel          guifg=#eeeeee  guibg=#334455 ctermfg=255 ctermbg=66
 highlight PmenuSbar         guifg=#EBD1B7  guibg=#EBD1B7 ctermfg=15 ctermbg=15
-highlight PmenuThumb        guifg=#EBD1B7  guibg=#EBD1B7 ctermfg=15 ctermbg=15 
+highlight PmenuThumb        guifg=#EBD1B7  guibg=#EBD1B7 ctermfg=15 ctermbg=15
 
 hi StatusLine     guibg=#ffeecc  guifg=black     ctermbg=14 ctermfg=0
 hi StatusLineNC   guibg=#cc4455  guifg=white    gui=none ctermbg=4  ctermfg=11

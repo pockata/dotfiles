@@ -1,3 +1,4 @@
+-- TODO: Make GVexpand respect current GV filters (GV master..branch_name)
 vim.cmd [[
 function! GVexpand()
 	let line = getline('.')

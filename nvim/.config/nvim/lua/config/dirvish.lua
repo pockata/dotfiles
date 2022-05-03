@@ -1,4 +1,13 @@
 vim.g.dirvish_mode = ":sort ,^.*[\\/],"
+vim.g.dirvish_git_indicators = {
+	Modified = '!',
+	Staged = '+',
+	Untracked = 'u',
+	Renamed = '>',
+	Unmerged = '=',
+	Ignored = 'i',
+	Unknown = '?'
+}
 
 -- Move these to after/dirvish.vim
 create_augroup('DirvishConfig', {

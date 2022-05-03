@@ -45,6 +45,7 @@ local vi_mode_colors = {
 	OP = 'green',
 	INSERT = 'red',
 	VISUAL = 'skyblue',
+	LINES = 'skyblue',
 	BLOCK = 'skyblue',
 	REPLACE = 'violet',
 	['V-REPLACE'] = 'violet',
@@ -62,6 +63,7 @@ local vi_mode_text = {
 	OP = 'OP',
 	INSERT = 'I',
 	VISUAL = 'V',
+	LINES = 'V-L',
 	BLOCK = 'V-B',
 	REPLACE = 'R',
 	['V-REPLACE'] = 'V-R',
@@ -226,27 +228,28 @@ table.insert(components.active[1], {
 
 -- MID
 -- LspName
-table.insert(components.active[2], {
-	enabled = function()
-		return vim.api.nvim_win_get_width(0) > 90
-	end,
-	-- provider = 'lsp_client_names',
-	provider = function ()
-		local lsp_name, icon = providers.lsp_client_names({});
-		local new_icon = string.len(lsp_name) > 0 and icon or ''
-		return lsp_name:gsub("typescript", "ts"), new_icon
-	end,
-	hl = {
-		fg = 'yellow',
-		bg = 'bg',
-		style = 'bold'
-	},
-	left_sep = ' ',
-	right_sep = ' '
-})
+-- table.insert(components.active[2], {
+-- 	enabled = function()
+-- 		return vim.api.nvim_win_get_width(0) > 90
+-- 	end,
+-- 	-- provider = 'lsp_client_names',
+-- 	provider = function ()
+-- 		local lsp_name, icon = providers.lsp_client_names({});
+-- 		local new_icon = string.len(lsp_name) > 0 and icon or ''
+-- 		-- TODO: gsub("sumneko_lua", "lua")
+-- 		return lsp_name:gsub("tsserver", "ts"), new_icon
+-- 	end,
+-- 	hl = {
+-- 		fg = 'yellow',
+-- 		bg = 'bg',
+-- 		style = 'bold'
+-- 	},
+-- 	left_sep = ' ',
+-- 	right_sep = ' '
+-- })
 
 -- diagnosticErrors
-table.insert(components.active[2], {
+table.insert(components.active[1], {
 	provider = 'diagnostic_errors',
 	enabled = function() return lsp.diagnostics_exist(lsp_severity.ERROR) end,
 	hl = {
@@ -256,7 +259,7 @@ table.insert(components.active[2], {
 })
 
 -- diagnosticWarn
-table.insert(components.active[2], {
+table.insert(components.active[1], {
 	provider = 'diagnostic_warnings',
 	enabled = function() return lsp.diagnostics_exist(lsp_severity.WARN) end,
 	hl = {
@@ -266,7 +269,7 @@ table.insert(components.active[2], {
 })
 
 -- diagnosticHint
-table.insert(components.active[2], {
+table.insert(components.active[1], {
 	provider = 'diagnostic_hints',
 	enabled = function() return lsp.diagnostics_exist(lsp_severity.HINT) end,
 	hl = {
@@ -276,7 +279,7 @@ table.insert(components.active[2], {
 })
 
 -- diagnosticInfo
-table.insert(components.active[2], {
+table.insert(components.active[1], {
 	provider = 'diagnostic_info',
 	enabled = function() return lsp.diagnostics_exist(lsp_severity.INFO) end,
 	hl = {
@@ -292,7 +295,7 @@ table.insert(components.active[3], {
 		return vim.api.nvim_win_get_width(0) > 90
 	end,
 	provider = function()
-		local ft = providers.file_type():lower()
+		local ft = providers.file_type({}, {}):lower()
 		local overrides = {
 			javascript = "js"
 		}
@@ -389,7 +392,7 @@ table.insert(components.inactive[1], {
 
 table.insert(components.inactive[2], {
 	-- fileType
-	provider = function() return providers.file_type():lower() end,
+	provider = function() return providers.file_type({}, {}):lower() end,
 	hl = {
 		fg = 'black',
 		bg = 'cyan',

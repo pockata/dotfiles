@@ -2,6 +2,8 @@
 local packer_exists = pcall(vim.cmd, [[packadd packer.nvim]])
 
 vim.cmd [[cabbrev ps PackerSync]]
+vim.cmd [[cabbrev pc PackerCompile]]
+vim.cmd [[cabbrev pi PackerInstall]]
 
 if not packer_exists then
 	-- TODO: Maybe handle windows better?
@@ -17,7 +19,7 @@ if not packer_exists then
 	vim.fn.mkdir(directory, 'p')
 
 	local out = vim.fn.system(string.format(
-		'git clone %s %s',
+		'git clone --depth 1 %s %s',
 		'https://github.com/wbthomason/packer.nvim',
 		directory .. '/packer.nvim'
 	))
@@ -36,6 +38,9 @@ return require('packer').startup({function(use)
 	-- Packer can manage itself
 	use 'wbthomason/packer.nvim'
 
+	-- filedetect drop-in-placement
+	use 'nathom/filetype.nvim'
+
 	-- TODO: Test lua rewrite - numToStr/Navigator.nvim
 	-- TODO: Test lua rewrite - nathom/tmux.nvim
 	use {
@@ -43,12 +48,12 @@ return require('packer').startup({function(use)
 		config = [[require('config.tmux-navigator')]]
 	}
 
-	-- -- Plugins can have dependencies on other plugins
-	-- use {
-	--     'haorenW1025/completion-nvim',
-	--     opt = true,
-	--     requires = {{'hrsh7th/vim-vsnip', opt = true}, {'hrsh7th/vim-vsnip-integ', opt = true}}
-	-- }
+	-- Alternative: https://github.com/jpalardy/vim-slime
+	use {
+		'christoomey/vim-tmux-runner', config = function ()
+			nnoremap("<leader>v-", ':VtrOpenRunner { "orientation": "v", "percentage": 30 }<cr>');
+		end
+	}
 
 	use {
 		'nvim-treesitter/nvim-treesitter', run = ':TSUpdate',
@@ -58,6 +63,8 @@ return require('packer').startup({function(use)
 			--
 			-- TODO: Define a key/value textobject
 			'nvim-treesitter/nvim-treesitter-textobjects'
+			-- Check it out
+			-- 'mfussenegger/nvim-ts-hint-textobject'
 		},
 		config = [[require('config.treesitter')]]
 	}
@@ -75,12 +82,12 @@ return require('packer').startup({function(use)
 		config = [[require('config.lspconfig')]],
 	}
 
-	-- Better LSP diagnostics display
-	use {
-		"folke/lsp-trouble.nvim",
-		requires = "kyazdani42/nvim-web-devicons",
-		config = [[require('config.lsp-trouble')]]
-	}
+	-- -- Better LSP diagnostics display
+	-- use {
+	-- 	"folke/lsp-trouble.nvim",
+	-- 	requires = "kyazdani42/nvim-web-devicons",
+	-- 	config = [[require('config.lsp-trouble')]]
+	-- }
 
 	-- use { 'kosayoda/nvim-lightbulb', config = [[require('config.lightbulb')]] }
 
@@ -90,16 +97,16 @@ return require('packer').startup({function(use)
 	use { 'hrsh7th/vim-vsnip', config = [[require('config.vsnip')]] }
 	use 'xabikos/vscode-javascript'
 	-- TODO: Check this one out if it's not superceded by LSP
-	use { 'xianghongai/vscode-javascript-comment',
-		config = function()
-			-- os.execute(
-			-- 	string.format(
-			-- 		'cd %s/site/pack/packer/start/vscode-javascript-comment/ && npm install && node ./merge.js',
-			-- 		vim.fn.stdpath('data')
-			-- 	)
-			-- )
-		end
-	}
+	-- use { 'xianghongai/vscode-javascript-comment',
+	-- 	config = function()
+	-- 		-- os.execute(
+	-- 		-- 	string.format(
+	-- 		-- 		'cd %s/site/pack/packer/start/vscode-javascript-comment/ && npm install && node ./merge.js',
+	-- 		-- 		vim.fn.stdpath('data')
+	-- 		-- 	)
+	-- 		-- )
+	-- 	end
+	-- }
 
 	-- automatch quotes and brackets
 	use {
@@ -112,13 +119,26 @@ return require('packer').startup({function(use)
 	use 'hrsh7th/cmp-nvim-lsp'
 	use 'hrsh7th/cmp-buffer'
 	use 'hrsh7th/cmp-path'
-	use { 'andersevenrud/compe-tmux', branch = 'cmp' }
+	use { 'andersevenrud/compe-tmux' }
+	-- use 'petertriho/cmp-git'
 
-	-- use { 'andersevenrud/compe-tmux' }
+	-- Plenary.nvim doesn't seem to work ¯\_(ツ)_/¯
+	vim.api.nvim_set_keymap(
+		"i",
+		"<C-x><C-d>",
+		[[<c-r>=luaeval("require('complextras').complete_line_from_cwd()")<CR>]],
+		{ noremap = true }
+	)
+	vim.api.nvim_set_keymap(
+		"i",
+		"<C-x><C-m>",
+		[[<c-r>=luaeval("require('complextras').complete_matching_line()")<CR>]],
+		{ noremap = true }
+	)
+	use { 'tjdevries/complextras.nvim' }
 
-	use { 'ms-jpq/coq.artifacts', branch= 'artifacts'} -- 9000+ Snippets
-
---	use { 'ray-x/lsp_signature.nvim' }
+	use { 'ray-x/lsp_signature.nvim' }
+	-- use 'hrsh7th/cmp-nvim-lsp-signature-help'
 
 	use { "folke/todo-comments.nvim", config = [[require('config.todo')]] }
 	use { "folke/zen-mode.nvim", config = [[require('config.zen-mode')]] }
@@ -130,6 +150,7 @@ return require('packer').startup({function(use)
 		after = 'nvim-lspconfig'
 	}
 
+	vim.cmd[[  nmap <silent> <F7> <plug>(matchup-hi-surround) ]]
 	use { "andymass/vim-matchup" }
 
 	-- use {
@@ -139,6 +160,9 @@ return require('packer').startup({function(use)
 
 	use { 'justinmk/vim-dirvish', config = [[require('config.dirvish')]] }
 	use 'kristijanhusak/vim-dirvish-git'
+
+	use 'roginfarrer/vim-dirvish-dovish'
+	use 'bounceme/remote-viewer'
 
 	-- Respect .editorconfig files
 	use { 'editorconfig/editorconfig-vim',
@@ -157,8 +181,18 @@ return require('packer').startup({function(use)
 	}
 	use { 'morhetz/gruvbox', config = [[require('config.gruvbox')]] }
 	use { 'ajmwagar/vim-deus' }
-	use { 'folke/tokyonight.nvim' }
+	use { 'folke/tokyonight.nvim' } -- remove colors/tokyonight
+	use { 'matsuuu/pinkmare' }
+	use {
+		'marko-cerovac/material.nvim',
+		config = [[require('config.theme-material')]]
+	}
+	use { 'rktjmp/lush.nvim' }
+	use { 'CodeGradox/onehalf-lush' }
+	use { 'rakr/vim-one' }
+	use { "rebelot/kanagawa.nvim" }
 	use { 'mhartington/oceanic-next' }
+	use { 'savq/melange' }
 	use { 'haystackandroid/wonka' }
 	use {
 		'famiu/feline.nvim',
@@ -167,9 +201,17 @@ return require('packer').startup({function(use)
 	}
 	use 'folke/lsp-colors.nvim'
 
+	use {
+		"~/Projects/refactoring.nvim",
+		config = [[require('config.refactoring')]],
+		requires = {
+			{ "nvim-lua/plenary.nvim" },
+			{ "nvim-treesitter/nvim-treesitter" }
+		}
+	}
 	-- https://github.com/mkitt/tabline.vim/blob/master/plugin/tabline.vim
 
-	use 'antoinemadec/FixCursorHold.nvim' -- Fix CursorHold Performance
+	use 'antoinemadec/FixCursorHold.nvim' -- Needed while issue https://github.com/neovim/neovim/issues/12587 is still open
 
 	-- Make |v_b_I| and |v_b_A| available in all kinds of Visual mode
 	use { 'kana/vim-niceblock', config = [[require('config.niceblock')]] }
@@ -178,10 +220,39 @@ return require('packer').startup({function(use)
 	use 'kana/vim-textobj-user'
 	use 'kana/vim-textobj-indent'
 	use 'kana/vim-textobj-line'
-	use 'kana/vim-textobj-entire'
+
+	vim.g.textobj_entire_no_default_key_mappings = 1
+	use {
+		'kana/vim-textobj-entire',
+		config = function()
+			vim.cmd [[
+				call textobj#user#map('entire', {
+				\   '-': {
+				\     'select-a': 'aE',
+				\     'select-i': 'iE',
+				\   }
+				\ })
+			]]
+		end
+	}
+
 	use 'inside/vim-textobj-jsxattr'
 	-- use 'whatyouhide/vim-textobj-xmlattr'
 	use 'wellle/targets.vim'
+
+	-- or thinca/vim-textobj-comment
+	use 'glts/vim-textobj-comment'
+
+	vim.g.textobj_numeral_no_default_key_mappings = 1
+	use {
+		'tkhren/vim-textobj-numeral',
+		config = function ()
+			vmap("an", "<Plug>(textobj-numeral-float-a)")
+			omap("an", "<Plug>(textobj-numeral-float-a)")
+			vmap("in", "<Plug>(textobj-numeral-float-i)")
+			omap("in", "<Plug>(textobj-numeral-float-i)")
+		end
+	}
 
 	use { 'phaazon/hop.nvim', config = [[require('config.hop')]] }
 
@@ -191,70 +262,22 @@ return require('packer').startup({function(use)
 
 	use 'tpope/vim-repeat'
 
+	-- replace with treesitter-textobjects once I start playing with TS queries
+	vim.g.argumentative_no_mappings = 1
+	use {
+		'PeterRincker/vim-argumentative',
+		config = [[require('config.argumentative')]]
+	}
+
 	use { 'FooSoft/vim-argwrap',  --cmd = 'ArgWrap',
 		config = function()
 			nnoremap("<leader>aw", "<silent>", "<cmd>ArgWrap<CR>")
 		end
 	}
 
-	use { 'AndrewRadev/switch.vim',
-		config = function()
-			create_augroup(
-				'gitrebase',
-				"FileType gitrebase let b:switch_custom_definitions = [[ 'pick', 'reword', 'edit', 'squash', 'fixup', 'exec' ], [ 'TODO', 'DONE', 'XXX', 'FIXME' ],[ '[ ]', '[✔]', '[✘]', '[✔✘]', '[?]' ],['let ', 'const '],]"
-			)
-      -- \{
-      --    \'const\s\(\k\+\)\s=\s(\(\k\+\))\s=>': 'function \1(\2)',
-      --    \'(\(\k\+\))': '(!\1)',
-      --    \'(!\(\k\+\))': '(\1)',
-      --    \'{\(\k\+\)}': '{ \1 }',
-      -- \}
-  -- autocmd FileType javascript let b:switch_custom_definitions =
-  --   \ [
-  --   \   {
-  --   \     'function(\([^)]\{-}\))': '(\1) =>',
-  --   \     '(\([^)]\{-}\)) =>': 'function(\1)'
-  --   \   },
-  --   \   ['var', 'let', 'const'],
-  --   \   {
-  --   \     '\(\k\+\)\[''\(\k\+\)''\]': '\1.\2',
-  --   \     '\(\k\+\)\.\(\k\+\)\>': '\1[''\2'']'
-  --   \   }
-  --   \ ]
+	use { 'AndrewRadev/switch.vim', config = [[require('config.switch')]] }
 
-  -- " - [ ] → - [x] → - [-] → loops back to - [ ]
-  -- " + [ ] → + [x] → + [-] → loops back to + [ ]
-  -- " * [ ] → * [x] → * [-] → loops back to * [ ]
-  -- " 1. [ ] → 1. [x] → 1. [-] → loops back to 1. [ ]
-  -- autocmd FileType markdown let b:switch_custom_definitions =
-  --   \ [
-  --   \   { '\v^(\s*[*+-] )?\[ \]': '\1[x]',
-  --   \     '\v^(\s*[*+-] )?\[x\]': '\1[-]',
-  --   \     '\v^(\s*[*+-] )?\[-\]': '\1[ ]',
-  --   \   },
-  --   \   { '\v^(\s*\d+\. )?\[ \]': '\1[x]',
-  --   \     '\v^(\s*\d+\. )?\[x\]': '\1[-]',
-  --   \     '\v^(\s*\d+\. )?\[-\]': '\1[ ]',
-  --   \   },
-  --   \ ]
-
--- autocmd FileType javascript let b:switch_custom_definitions =
---         \  [
---         \    {
---         \     '="\(.\{-}\)"':                    '={`\1`}',
---         \     '={`\(.\{-}\)`}':                  '="\1"',
---         \    },
---         \    {
---         \     '\%(=\)\@!''\(.\{-}\)''':          '"\1"',
---         \     '\%(=\)\@!"\(.\{-}\)"':            '`\1`',
---         \     '\%(=\)\@!`\%(\$\)\@!\(.\{-}\)`':  '`${\1}`',
---         \     '\%(=\)\@!`${\(.\{-}\)}`':         '''\1''',
---         \    }
---         \  ]
-		end
-	}
-
-	use 'tpope/vim-commentary'
+	use { 'numToStr/Comment.nvim', config = [[require('config.comment')]] }
 	-- syntax-aware commentstring (via treesitter)
 	use 'JoosepAlviste/nvim-ts-context-commentstring'
 
@@ -267,7 +290,12 @@ return require('packer').startup({function(use)
 	}
 	use {'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
 
-	use { 'junegunn/fzf.vim' }
+	use {
+		'romainl/vim-devdocs',
+		config = function ()
+			nmap("<localleader>k", "<cmd>DD<CR>")
+		end
+	}
 
 	-- TODO: open issue for adjusting visual selection (gv) after surrounding
 	use { 'machakann/vim-sandwich', config = [[require('config.sandwich')]] }
@@ -291,6 +319,12 @@ return require('packer').startup({function(use)
 	-- cd to file/project
 	use { 'dbakker/vim-projectroot', config = [[require('config.projectroot')]] }
 
+	use {
+		'ThePrimeagen/harpoon',
+		requires = {'nvim-lua/plenary.nvim'},
+		config = [[require('config.harpoon')]],
+	}
+
 	-- Quickfix
 	use { 'yssl/QFEnter', config = [[require('config.qfenter')]] }
 
@@ -302,7 +336,8 @@ return require('packer').startup({function(use)
 
 	use { 'junegunn/gv.vim', cmd = 'GV', config = [[require('config.gv')]] }
 	nnoremap('<leader>gv', '<cmd>GV<CR>')
-	-- use 'rhysd/conflict-marker.vim'
+
+	use 'rhysd/conflict-marker.vim'
 
 	use 'junegunn/vim-slash'
 
@@ -316,16 +351,15 @@ return require('packer').startup({function(use)
 	-- improve the "{" and "}" motion in normal / visual mode
 	use 'justinmk/vim-ipmotion'
 
-	use {
-		'kkoomen/vim-doge', config = [[require('config.doge')]],
-		run = function() vim.fn['doge#install']() end,
-		cmd = { 'DogeGenerate', 'DogeCreateDocStandard' }
-	}
-
 	-- extra language support
+	-- Check out https://github.com/ray-x/go.nvim
 	use { 'fatih/vim-go', config = [[require('config.go')]] }
 	use 'tbastos/vim-lua'
 	use 'pantharshit00/vim-prisma'
+	use {
+		'iamcco/markdown-preview.nvim', run = 'cd app && yarn install',
+		cmd = 'MarkdownPreview'
+	}
 	-- use 'evanleck/vim-svelte'
 
 	use {
@@ -337,11 +371,10 @@ return require('packer').startup({function(use)
 
 	use { 'wesQ3/vim-windowswap', config = [[require('config.windowswap')]] }
 
-	use { 'famiu/nvim-reload', cmd = { 'Reload', 'Restart' } }
-
 	-- -- Post-install/update hook with call of vimscript function with argument
 	-- use { 'glacambre/firenvim', run = function() vim.fn['firenvim#install'](0) end }
 
+	use 'ciaranm/detectindent'
 	-- use 'pechorin/any-jump.vim' -- Document outline
 end, config = {
 	display = {

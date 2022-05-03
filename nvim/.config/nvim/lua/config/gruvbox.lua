@@ -10,6 +10,6 @@ create_augroup('GruvboxMods', {
 	'ColorScheme gruvbox highlight Whitespace guifg=#504945',
 })
 
--- If I set it in theme.lua funny things start to happen
-vim.cmd [[colorscheme gruvbox]]
+-- -- If I set it in theme.lua funny things start to happen
+-- vim.cmd [[colorscheme gruvbox]]
 

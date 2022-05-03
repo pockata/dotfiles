@@ -1,4 +1,5 @@
 local cmp = require('cmp')
+-- local cmp_buffer = require('cmp_buffer')
 
 local has_words_before = function()
 	if vim.api.nvim_buf_get_option(0, "buftype") == "prompt" then
@@ -14,13 +15,16 @@ end
 
 cmp.setup({
 	formatting = {
-		format = require("lspkind").cmp_format({with_text = true, menu = ({
-			buffer = "[Buffer]",
-			nvim_lsp = "[LSP]",
-			vsnip = "[Vsnip]",
-			tmux = "[tmux]",
-			path = "[path]"
-		})}),
+		format = require("lspkind").cmp_format({
+			with_text = true,
+			menu = ({
+				buffer = "[Buffer]",
+				nvim_lsp = "[LSP]",
+				vsnip = "[Vsnip]",
+				tmux = "[tmux]",
+				path = "[path]"
+			})
+		}),
 	},
 	snippet = {
 		expand = function(args)
@@ -30,7 +34,7 @@ cmp.setup({
 	mapping = {
 		['<C-d>'] = cmp.mapping(cmp.mapping.scroll_docs(-4)),
 		['<C-f>'] = cmp.mapping(cmp.mapping.scroll_docs(4)),
-		['<C-Space>'] = cmp.mapping(cmp.mapping.complete()),
+		['<C-Space>'] = cmp.mapping(cmp.mapping.complete(), { 'i', 'c' }),
 		['<CR>'] = cmp.mapping(cmp.mapping.confirm({ select = false })),
 		['<C-e>'] = cmp.config.disable,
 
@@ -59,28 +63,48 @@ cmp.setup({
 		end, { "i", "s" })),
 	},
 	sources = cmp.config.sources({
-		{ name = 'nvim_lsp' },
+		{
+			name = 'nvim_lsp',
+			sorting = {
+				priority_weight = 2,
+			},
+		},
 		{ name = 'vsnip' },
 		{ name = 'path' },
+		-- { name = 'nvim_lsp_signature_help' },
 		{
 			name = 'buffer',
-			opts = {
+			max_item_count = 10,
+			option = {
+				keyword_length = 4,
 				get_bufnrs = function()
-					local bufs = {}
-					for _, win in ipairs(vim.api.nvim_list_wins()) do
-						bufs[vim.api.nvim_win_get_buf(win)] = true
-					end
-					return vim.tbl_keys(bufs)
+					return vim.api.nvim_list_bufs()
 				end
 			}
 		},
 		{
 			name = 'tmux',
 			max_item_count = 10,
-			opts = {
+			option = {
 				all_panes = true,
+				sorting= {
+					priority_weight = 5,
+				}
 			}
 		},
 	}),
+	-- sorting = {
+	-- 	comparators = {
+	-- 		-- https://github.com/hrsh7th/cmp-buffer#locality-bonus-comparator-distance-based-sorting
+	-- 		function(...) return cmp_buffer:compare_locality(...) end,
+	-- 	}
+	-- },
 })
+
+-- Disable cmp inside Telescope prompt
+-- It's handled internally in cmp, but it doesn't seem to work for me so we do
+-- it explicitly
+vim.cmd [[
+	autocmd FileType TelescopePrompt * lua require('cmp').setup.buffer { enabled = false }
+]]
 
