@@ -22,15 +22,16 @@
 *color15:     wht
 
 !-- Xft settings -- !
-Xft.dpi:        96
-Xft.antialias:  true
+Xft.dpi:        102
+Xft.antialias:  1
 Xft.rgba:       rgb
 Xft.autohint:   0
 Xft.hinting:    1
 Xft.lcdfilter:  lcddefault
-Xft.hintstyle:  hintfull
+Xft.hintstyle:  hintslight
 
 ! Rofi
+! TODO: Rofi dropped support for Xresources. Migrate theme to new format (Rasi)
 rofi.color-enabled: true
 rofi.color-window: #2b303b, #c0c5ce, #c0c5ce
 rofi.color-normal: #2b303b, #c0c5ce, #2b303b, #4f5b66, #eee8d5
