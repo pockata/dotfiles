@@ -16,6 +16,7 @@ env:
 
 window:
   dynamic_title: true
+  opacity: 1
 
   # Window dimensions in character columns and lines
   # Falls back to size specified by window manager if set to 0x0.
@@ -106,58 +107,58 @@ debug:
 
 # Colors (Tomorrow Night Bright)
 colors:
-  # Default colors
-  primary:
-    background: '0x312e39'
-    foreground: '0xB5A287'
-
-    # (Optional) Bright and Dim foreground colors
-    #
-    # The dimmed foreground color is calculated automatically if it is not present.
-    # If the bright foreground color is not set, or `draw_bold_text_with_bright_colors`
-    # is `false`, the normal foreground color will be used.
-    #
-    # dim_foreground: '0x9a9a9a'
-    # bright_foreground: '0xffffff'
-
-  # Colors the cursor will use if `custom_cursor_colors` is true
-  cursor:
-    text: '0x000000'
-    cursor: '0xffffff'
-
-  # Use converter https://github.com/MuntashirAkon/dotfiles/blob/master/.local/bin/alacritty_xr_color_scheme
-  # Normal colors
-  normal:
-    black:   '0x33303b'
-    red:     '0x87404f'
-    green:   '0x4c9882'
-    yellow:  '0x71949a'
-    blue:    '0x615772'
-    magenta: '0x783e57'
-    cyan:    '0x554757'
-    white:   '0xc0a79a'
-
-  # Bright colors
-  bright:
-    black:   '0x4f4b58'
-    red:     '0x87404f'
-    green:   '0x4c9882'
-    yellow:  '0x71949a'
-    blue:    '0x615772'
-    magenta: '0x783e57'
-    cyan:    '0x554757'
-    white:   '0xc0a79a'
-
-  # Dim colors (Optional)
-  dim:
-    black:   '0x333333'
-    red:     '0xf2777a'
-    green:   '0x99cc99'
-    yellow:  '0xffcc66'
-    blue:    '0x6699cc'
-    magenta: '0xcc99cc'
-    cyan:    '0x66cccc'
-    white:   '0xdddddd'
+  # # Default colors
+  # primary:
+  #   background: '0x312e39'
+  #   foreground: '0xB5A287'
+  #
+  #   # (Optional) Bright and Dim foreground colors
+  #   #
+  #   # The dimmed foreground color is calculated automatically if it is not present.
+  #   # If the bright foreground color is not set, or `draw_bold_text_with_bright_colors`
+  #   # is `false`, the normal foreground color will be used.
+  #   #
+  #   # dim_foreground: '0x9a9a9a'
+  #   # bright_foreground: '0xffffff'
+  #
+  # # Colors the cursor will use if `custom_cursor_colors` is true
+  # cursor:
+  #   text: '0x000000'
+  #   cursor: '0xffffff'
+  #
+  # # Use converter https://github.com/MuntashirAkon/dotfiles/blob/master/.local/bin/alacritty_xr_color_scheme
+  # # Normal colors
+  # normal:
+  #   black:   '0x33303b'
+  #   red:     '0x87404f'
+  #   green:   '0x4c9882'
+  #   yellow:  '0x71949a'
+  #   blue:    '0x615772'
+  #   magenta: '0x783e57'
+  #   cyan:    '0x554757'
+  #   white:   '0xc0a79a'
+  #
+  # # Bright colors
+  # bright:
+  #   black:   '0x4f4b58'
+  #   red:     '0x87404f'
+  #   green:   '0x4c9882'
+  #   yellow:  '0x71949a'
+  #   blue:    '0x615772'
+  #   magenta: '0x783e57'
+  #   cyan:    '0x554757'
+  #   white:   '0xc0a79a'
+  #
+  # # Dim colors (Optional)
+  # dim:
+  #   black:   '0x333333'
+  #   red:     '0xf2777a'
+  #   green:   '0x99cc99'
+  #   yellow:  '0xffcc66'
+  #   blue:    '0x6699cc'
+  #   magenta: '0xcc99cc'
+  #   cyan:    '0x66cccc'
+  #   white:   '0xdddddd'
 
 schemes:
   tokyoNightStorm: &tokyoNightStorm
@@ -220,8 +221,63 @@ schemes:
       magenta: '0xA578EA'
       cyan:    '0x73FBF1'
       white:   '0xFEFEF8'
+  melange: &melange
+    primary:
+      foreground: '#ECE1D7'
+      background: '#2A2520'
+    normal:
+      black:   '#352F2A'
+      red:     '#B65C60'
+      green:   '#78997A'
+      yellow:  '#EBC06D'
+      blue:    '#9AACCE'
+      magenta: '#B380B0'
+      cyan:    '#86A3A3'
+      white:   '#A38D78'
+    bright:
+      black:   '#4D453E'
+      red:     '#F17C64'
+      green:   '#99D59D'
+      yellow:  '#EBC06D'
+      blue:    '#9AACCE'
+      magenta: '#CE9BCB'
+      cyan:    '#88B3B2'
+      white:   '#C1A78E'
 
-colors: *argonaut
+  kanagawa: &kanagawa
+    primary:
+      background: '0x1f1f28'
+      foreground: '0xdcd7ba'
+
+    normal:
+      black:   '0x090618'
+      red:     '0xc34043'
+      green:   '0x76946a'
+      yellow:  '0xc0a36e'
+      blue:    '0x7e9cd8'
+      magenta: '0x957fb8'
+      cyan:    '0x6a9589'
+      white:   '0xc8c093'
+
+    bright:
+      black:   '0x727169'
+      red:     '0xe82424'
+      green:   '0x98bb6c'
+      yellow:  '0xe6c384'
+      blue:    '0x7fb4ca'
+      magenta: '0x938aa9'
+      cyan:    '0x7aa89f'
+      white:   '0xdcd7ba'
+
+    selection:
+      background: '0x2d4f67'
+      foreground: '0xc8c093'
+
+    indexed_colors:
+      - { index: 16, color: '0xffa066' }
+      - { index: 17, color: '0xff5d62' }
+
+colors: *kanagawa
 
 # Visual Bell
 #
@@ -248,9 +304,6 @@ colors: *argonaut
 bell:
   animation: EaseOutExpo
   duration: 0
-
-# Background opacity
-background_opacity: 1.0
 
 # Mouse bindings
 #
