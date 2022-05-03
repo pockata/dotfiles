@@ -81,4 +81,5 @@ blueberry
 alacritty
 cwm
 prusa-slicer
+git-delta
 

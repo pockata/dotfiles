@@ -102,6 +102,8 @@
     signingkey = D01D67063DF187942BB4C9451805A1B84632D0EE
 [credential]
     helper = cache --timeout=3600
+[interactive]
+    diffFilter = delta --color-only --diff-so-fancy
 [color]
     branch = auto
     diff = auto
@@ -113,7 +115,7 @@
     whitespace = nowarn
 [core]
     editor = $EDITOR
-    pager = diff-so-fancy | less --tabs=4 -RFX
+	pager = delta --wrap-max-lines 0 --diff-so-fancy --file-decoration-style ul --hunk-header-decoration-style ul
     autocrlf = input
 [push]
     default = current
@@ -124,10 +126,12 @@
     identheuristic = true
     tool = vimdiff
     algorithm = minimal
+    colorMoved = default
 [merge]
     stat = true
     tool = diffconflicts
     prompt = true
+    conflictstyle = diff3
 [mergetool "diffconflicts"]
     cmd = nvim -c DiffConflictsWithHistory \"$MERGED\" \"$BASE\" \"$LOCAL\" \"$REMOTE\"
     trustExitCode = true
@@ -142,3 +146,7 @@
 [commit]
     gpgsign = true
 
+[init]
+	defaultBranch = main
+[delta]
+    navigate = true  # use n and N to move between diff sections
