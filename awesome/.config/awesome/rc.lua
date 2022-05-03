@@ -25,6 +25,9 @@ local volumearc_widget = require("awesome-wm-widgets.volumearc-widget.volumearc"
 
 -- https://github.com/lcpz/lain
 local lain = require("lain")
+-- local quake = lain.util.quake({
+-- 	app = "spotify"
+-- })
 
 -- screen_width = awful.screen.focused().geometry.width
 -- screen_height = awful.screen.focused().geometry.height
@@ -66,7 +69,7 @@ end
 beautiful.init(gears.filesystem.get_configuration_dir() .. "theme.lua")
 
 -- This is used later as the default terminal and editor to run.
-local terminal = "alacritty"
+local terminal = "alacritty -e 'zsh' -c 'tmux new-session'"
 -- local editor = os.getenv("EDITOR") or "nano"
 -- local editor_cmd = terminal .. " -e " .. editor
 
@@ -280,8 +283,21 @@ awful.screen.connect_for_each_screen(function(s)
 end)
 -- }}}
 
+function VLOG(text)
+	naughty.notify({ title="lek", text = text })
+end
+
+function LOG(text)
+	local file = io.open("/tmp/awesome-log", "a")
+	file:write(text)
+	file:close()
+end
+
 -- {{{ Key bindings
 local globalkeys = gears.table.join(
+
+	awful.key({ modkey }, "o", function() awful.client.movetoscreen() end, { description = "Change screen", group = "client" }),
+	-- awful.key({ modkey, }, "z", function () quake:toggle() end),
 	awful.key(
 		{ modkey, "Shift" }, "/", hotkeys_popup.show_help,
 		{ description="show help", group="awesome" }
@@ -430,6 +446,7 @@ local globalkeys = gears.table.join(
 	awful.key(
 		{ modkey }, "d",
 		function () awful.spawn("rofi -show drun") end,
+		-- function () awful.spawn("rofi -show drun -window-command '{window}' -kb-accept-entry '' -kb-accept-alt 'Return'") end,
 		{ description = "run prompt", group = "launcher" }
 	),
 
@@ -560,6 +577,7 @@ local clientkeys = gears.table.join(
 	awful.key({ modkey, "Shift" }, "Return", function (c) c:swap(awful.client.getmaster()) end,
 			  {description = "move to master", group = "client"}),
 
+	awful.key({ modkey,           }, "s",      function (c) c.sticky = not c.sticky  end),
 	awful.key({ modkey,			  }, "t",	   function (c) c.ontop = not c.ontop			 end,
 			  {description = "toggle keep on top", group = "client"}),
 	-- awful.key({ modkey,			 }, "n",
@@ -575,13 +593,13 @@ local clientkeys = gears.table.join(
 			c:raise()
 		end ,
 		{description = "(un)maximize", group = "client"}),
-	awful.key({ modkey, "Control" }, "m",
+	awful.key({ modkey, "Shift" }, "m",
 		function (c)
 			c.maximized_vertical = not c.maximized_vertical
 			c:raise()
 		end ,
 		{description = "(un)maximize vertically", group = "client"}),
-	awful.key({ modkey, "Shift"   }, "m",
+	awful.key({ modkey, "Control" }, "m",
 		function (c)
 			c.maximized_horizontal = not c.maximized_horizontal
 			c:raise()
@@ -643,6 +661,11 @@ for i, _ in ipairs(navigation_keys) do
 
 				if screen then
 					c:move_to_screen(screen.index)
+					awful.placement.centered(c)
+					awful.placement.no_offscreen(c, {
+						honor_workarea = true,
+						honor_padding = true
+					})
 					c:raise()
 				end
 			end,
@@ -871,6 +894,17 @@ end)
 client.connect_signal('manage', function(c)
 	if awful.layout.get(mouse.screen) == awful.layout.suit.floating then
 		awful.client.property.set(c, 'floating_geometry', c:geometry())
+	end
+end)
+
+-- Set mouse in the middle of the window when switching with Rofi
+-- TODO: Compare mouse/window coords to fix same-screen switching
+client.connect_signal('focus', function (c)
+	if not (mouse.screen.index == c.screen.index) then
+		mouse.coords({
+			x = c.x + c.width / 2,
+			y = c.y + c.height / 2,
+		})
 	end
 end)
 
