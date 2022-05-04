@@ -9,12 +9,12 @@ xmap("as", "<Plug>(textobj-sandwich-query-a)")
 omap("is", "<Plug>(textobj-sandwich-query-i)")
 omap("as", "<Plug>(textobj-sandwich-query-a)")
 
--- -- select the nearest surrounded text automatically
--- -- default is iss, but use isb for consistency with built-in vib/vab
--- xmap("isb", "<Plug>(textobj-sandwich-auto-i)")
--- xmap("asb", "<Plug>(textobj-sandwich-auto-a)")
--- omap("isb", "<Plug>(textobj-sandwich-auto-i)")
--- omap("asb", "<Plug>(textobj-sandwich-auto-a)")
+-- select the nearest surrounded text automatically
+-- default is iss, but use isb for consistency with built-in vib/vab
+xmap("isb", "<Plug>(textobj-sandwich-auto-i)")
+xmap("asb", "<Plug>(textobj-sandwich-auto-a)")
+omap("isb", "<Plug>(textobj-sandwich-auto-i)")
+omap("asb", "<Plug>(textobj-sandwich-auto-a)")
 
 -- -- Textobjects to select a text surrounded by same characters user input
 -- xmap("im", "<Plug>(textobj-sandwich-literal-query-i)")
@@ -41,7 +41,10 @@ vim.cmd [[
 -- https://github.com/machakann/vim-sandwich/wiki/Magic-characters#function-surroundings
 vim.cmd [[
 	function! SetCustomRecipes()
-		let g:sandwich#recipes = deepcopy(g:sandwich#default_recipes)
+		" the docs state we should extend g:sandwich#default_recipes, but when
+		" using surround.vim keymaps (see below), we have to extend
+		" g:sandwich#recipes
+		let g:sandwich#recipes = deepcopy(g:sandwich#recipes)
 		let g:sandwich#recipes += [
 		\   {
 		\     'buns': ['(', ')'],
