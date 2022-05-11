@@ -437,6 +437,9 @@ key_bindings:
   # Pass Ctrl + F12 when hitting Ctrl + ; because some programs have a hard
   # time dealing with Ctrl + ;
   - { key: Semicolon,mods: Control, chars: "\x1b[24;5~"                  }
+  # Sends byte sequence expected by vim to enable <C-Enter> and <S-Enter>
+  - { key: Return,   mods: Shift,   chars: "\x1b[13;2u"                  }
+  - { key: Return,   mods: Control, chars: "\x1b[13;5u"                  }
   - { key: Delete,                  chars: "\x1b[3~"                     }
   - { key: Left,     mods: Shift,   chars: "\x1b[1;2D"                   }
   - { key: Left,     mods: Control, chars: "\x1b[1;5D"                   }
