@@ -300,7 +300,9 @@ table.insert(components.active[3], {
 			javascript = "js"
 		}
 
-		return overrides[ft] ~= nil and overrides[ft] or ft
+		local lsp_name = providers.lsp_client_names({});
+		local lspIcon = string.len(lsp_name) > 0 and '+' or ''
+		return (overrides[ft] ~= nil and overrides[ft] or ft) .. lspIcon
 	end,
 	hl = function()
 		local val = {}
