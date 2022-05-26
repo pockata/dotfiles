@@ -57,7 +57,7 @@ augroup Filetypes
 	autocmd FileType markdown,gitcommit setlocal spell
 
 	" Jump to first file
-	autocmd BufCreate .git/index :call feedkeys(")")
+	autocmd User FugitiveIndex :call feedkeys("gU")
 	autocmd BufEnter COMMIT_EDITMSG call setpos('.', [0, 1, 1, 0])
 
 	"https://www.reddit.com/r/vim/comments/3er2az/how_to_suppress_vims_warning_editing_a_read_only/
