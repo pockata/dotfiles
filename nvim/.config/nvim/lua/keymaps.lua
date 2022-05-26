@@ -107,11 +107,11 @@ inoremap(',', ',<c-g>u')
 inoremap('.', '.<c-g>u')
 inoremap('/', '/<c-g>u')
 
--- -- Move lines around without using `ddp`
--- vnoremap('<a-k>', ":m '>+1<CR>gv=gv")
--- vnoremap('<a-l>', ":m '<-2<CR>gv=gv")
--- nnoremap('<a-k>', ":m .+1<CR>==")
--- nnoremap('<a-l>', ":m .-2<CR>==")
+-- Move lines around without using `ddp`
+vnoremap('<a-k>', ":m '>+1<CR>gv=gv")
+vnoremap('<a-l>', ":m '<-2<CR>gv=gv")
+nnoremap('<a-k>', ":m .+1<CR>==")
+nnoremap('<a-l>', ":m .-2<CR>==")
 
 -- Keep visual mode indenting
 xnoremap("<", "<silent>", "<gv")
@@ -124,18 +124,14 @@ xnoremap("P", '<expr>', "'\"_d\"'.v:register.'P'")
 -- https://vimrcfu.com/snippet/145
 nnoremap('gi', "`[v`]")
 
--- go substitute because the default map for sleeping is silly
--- https://vimrcfu.com/snippet/191
---
--- TODO: Conflicts with Switch.vim
-nnoremap('gs', ":%s//g<Left><Left>")
-xnoremap('gs', ":s//g<Left><Left>")
-
 -- limit scope of search to visual selection
 -- https://www.reddit.com/r/vim/comments/df852s/tip_use_v_to_limit_scope_of_search_to_visual/
--- TODO: Add mappings for replace (:s/)
 xnoremap('/', [[<Esc>`</\%V\v]])
 xnoremap('?', [[<Esc>`>?%V\v]])
+xnoremap('s', [[<Esc>:'<,'>s/\%V]])
+
+-- replace current word under cursor
+nnoremap("<leader>s", ":%s/\\<<C-r><C-w>\\>/<C-r><C-w>/I<Left><Left><Left>")
 
 -- default in nvim 0.6
 -- -- https://www.reddit.com/r/vim/comments/dgbr9l/mappings_i_would_change_for_more_consistent_vim/
@@ -160,21 +156,49 @@ noremap('j', "h")
 
 -- Move vertically by visual line unless preceded by a count. If a movement is
 -- greater than 5 then automatically add to the jumplist.
-noremap('k', '<expr>', "v:count ? (v:count > 5 ? \"m'\" . v:count : '') . 'j' : 'gj'")
-noremap('l', '<expr>', "v:count ? (v:count > 5 ? \"m'\" . v:count : '') . 'k' : 'gk'")
+noremap('k', '<expr>', "v:count ? (v:count > 3 ? \"m'\" . v:count : '') . 'j' : 'gj'")
+noremap('l', '<expr>', "v:count ? (v:count > 3 ? \"m'\" . v:count : '') . 'k' : 'gk'")
 
 noremap(';', "l")
 
--- nmap('gk', "j")
--- nmap('gl', "k")
+nmap('gk', "j")
+nmap('gl', "k")
 
 -- Navigate folds
 nnoremap("]z", "<silent>", ":call NextClosedFold('j')<cr>")
 nnoremap("[z", "<silent>", ":call NextClosedFold('k')<cr>")
 
--- View highlight groups under cursor
-nnoremap("<leader>sI", "<silent>", ":TSHighlightCapturesUnderCursor<cr>")
+-- -- View highlight groups under cursor
+-- nnoremap("<leader>sI", "<silent>", ":TSHighlightCapturesUnderCursor<cr>")
 
--- Shrug ¯\_(ツ)_/¯
-inoremap("#shrug", [[¯\_(ツ)_/¯]])
+-- -- Shrug ¯\_(ツ)_/¯
+-- inoremap("#shrug", [[¯\_(ツ)_/¯]])
+
+-- nnoremap <leader>gll :let g:_search_term = expand("%")<CR><bar>:Gclog -- %<CR>:call search(g:_search_term)<CR>
+-- nnoremap <leader>gln :cnext<CR>:call search(_search_term)<CR>
+-- nnoremap <leader>glp :cprev<CR>:call search(_search_term)<CR>
+
+-- delete without copying
+nnoremap("<leader>d", '"_d')
+vnoremap("<leader>d", '"_d')
+
+-- add empty lines before/after the cursor. from unimpaired.vim
+vim.cmd [[
+function! BlankUp(count) abort
+  put!=repeat(nr2char(10), a:count)
+  ']+1
+  silent! call repeat#set("\<Plug>unimpairedBlankUp", a:count)
+endfunction
+
+function! BlankDown(count) abort
+  put =repeat(nr2char(10), a:count)
+  '[-1
+  silent! call repeat#set("\<Plug>unimpairedBlankDown", a:count)
+endfunction
+
+nnoremap <silent> <S-Enter>   :<C-U>call BlankUp(v:count1)<CR>
+nnoremap <silent> <A-o> :<C-U>call BlankDown(v:count1)<CR>
+inoremap <silent> <S-Enter>   <ESC>:call BlankDown(v:count1)<CR>i
+]]
+
 
