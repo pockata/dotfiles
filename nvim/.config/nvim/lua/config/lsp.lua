@@ -4,22 +4,23 @@ local lsp_installer = require("nvim-lsp-installer")
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
 	vim.lsp.diagnostic.on_publish_diagnostics,
 	{
-		underline = false,
-		virtual_text = true,
-		signs = true,
-		update_in_insert = false,
-	}
+	underline = false,
+	virtual_text = true,
+	signs = true,
+	update_in_insert = false,
+}
 )
 
 vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
 	vim.lsp.handlers.hover, {
-		border = "rounded",
-		width = 80,
-	}
+	border = "rounded",
+	width = 80,
+}
 )
 
 local on_attach = function(client, bufnr)
 	local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
+
 	local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
 
 	buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
@@ -41,7 +42,7 @@ local on_attach = function(client, bufnr)
 	}, bufnr)
 
 	-- Mappings
-	local opts = { noremap=true, silent=true }
+	local opts = { noremap = true, silent = true }
 
 	-- TODO: These are attached on a per-buffer basis. Offer an alternative for
 	-- non-lsp buffers like a built-in fallback (K, gd) or show a warning that
@@ -70,16 +71,21 @@ local on_attach = function(client, bufnr)
 	if client.server_capabilities.document_range_formatting then
 		buf_set_keymap("v", "g=", "<cmd>lua vim.lsp.buf.range_formatting()<CR>", opts)
 	end
+
+	if client.server_capabilities.document_formatting then
+		vim.cmd("autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_sync()")
+	end
 end
 
 local function setup_servers()
-	local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
-	capabilities.textDocument.completion.completionItem.snippetSupport = true
+	local capabilities = vim.lsp.protocol.make_client_capabilities()
+	capabilities = require('cmp_nvim_lsp').update_capabilities(capabilities)
+	-- capabilities.textDocument.completion.completionItem.snippetSupport = true
 
-	-- from https://github.com/ray-x/lsp_signature.nvim/blob/master/tests/init_paq.lua
-	capabilities.textDocument.completion.completionItem.resolveSupport = {
-		properties = { "documentation", "detail", "additionalTextEdits" },
-	}
+	-- -- from https://github.com/ray-x/lsp_signature.nvim/blob/master/tests/init_paq.lua
+	-- capabilities.textDocument.completion.completionItem.resolveSupport = {
+	-- 	properties = { "documentation", "detail", "additionalTextEdits" },
+	-- }
 
 	require("nvim-lsp-installer").setup {}
 
@@ -88,7 +94,6 @@ local function setup_servers()
 		local conf = {
 			on_attach = on_attach,
 			capabilities = capabilities,
-			-- settings = { documentFormatting = false }
 		}
 
 		-- TODO: Check out json/yaml schema configs
@@ -99,9 +104,8 @@ local function setup_servers()
 
 		-- This setup() function is exactly the same as lspconfig's setup function (:help lspconfig-quickstart)
 		lspconfig[server.name].setup(conf)
-		vim.cmd [[ do User LspAttachBuffers ]]
+		-- vim.cmd [[ do User LspAttachBuffers ]]
 	end
 end
 
 setup_servers()
-
