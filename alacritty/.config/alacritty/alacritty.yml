@@ -106,7 +106,7 @@ debug:
     render_timer: false
 
 # Colors (Tomorrow Night Bright)
-colors:
+# colors:
   # # Default colors
   # primary:
   #   background: '0x312e39'
@@ -245,6 +245,9 @@ schemes:
       white:   '#C1A78E'
 
   kanagawa: &kanagawa
+    cursor:
+      text: '0x000000'
+      cursor: '0xffffff'
     primary:
       background: '0x1f1f28'
       foreground: '0xdcd7ba'
