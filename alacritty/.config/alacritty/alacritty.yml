@@ -435,6 +435,7 @@ key_bindings:
   - { key: PageDown,                chars: "\x1b[6~"                     }
   - { key: Tab,      mods: Shift,   chars: "\x1b[Z"                      }
   - { key: Back,                    chars: "\x7f"                        }
+  - { key: Back,     mods: Control, chars: "\u0017"						 }
   - { key: Back,     mods: Alt,     chars: "\x1b\x7f"                    }
   - { key: Insert,                  chars: "\x1b[2~"                     }
   # Pass Ctrl + F12 when hitting Ctrl + ; because some programs have a hard
