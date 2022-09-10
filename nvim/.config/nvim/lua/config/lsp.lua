@@ -4,18 +4,18 @@ local lsp_installer = require("nvim-lsp-installer")
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
 	vim.lsp.diagnostic.on_publish_diagnostics,
 	{
-	underline = false,
-	virtual_text = true,
-	signs = true,
-	update_in_insert = false,
-}
+		underline = false,
+		virtual_text = true,
+		signs = true,
+		update_in_insert = false,
+	}
 )
 
 vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
 	vim.lsp.handlers.hover, {
-	border = "rounded",
-	width = 80,
-}
+		border = "rounded",
+		width = 80,
+	}
 )
 
 local on_attach = function(client, bufnr)
