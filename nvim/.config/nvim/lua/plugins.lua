@@ -165,16 +165,16 @@ return require('packer').startup({function(use)
 	use 'roginfarrer/vim-dirvish-dovish'
 	use 'bounceme/remote-viewer'
 
-	-- Respect .editorconfig files
-	use { 'editorconfig/editorconfig-vim',
-		config = function()
-			vim.g.EditorConfig_exclude_patterns = {'fugitive://.*'}
-			create_augroup(
-				'DisableEditorConfig',
-				'FileType gitcommit let b:EditorConfig_disable = 1'
-			)
-		end
-	}
+	-- -- Respect .editorconfig files
+	-- use { 'editorconfig/editorconfig-vim',
+	-- 	config = function()
+	-- 		vim.g.EditorConfig_exclude_patterns = {'fugitive://.*'}
+	-- 		create_augroup(
+	-- 			'DisableEditorConfig',
+	-- 			'FileType gitcommit let b:EditorConfig_disable = 1'
+	-- 		)
+	-- 	end
+	-- }
 
 	-- Theming
 	use { 'challenger-deep-theme/vim', as = 'challenger-deep',
@@ -203,13 +203,14 @@ return require('packer').startup({function(use)
 	use 'folke/lsp-colors.nvim'
 
 	use {
-		"~/Projects/refactoring.nvim",
+		"theprimeagen/refactoring.nvim",
 		config = [[require('config.refactoring')]],
 		requires = {
 			{ "nvim-lua/plenary.nvim" },
 			{ "nvim-treesitter/nvim-treesitter" }
 		}
 	}
+
 	-- https://github.com/mkitt/tabline.vim/blob/master/plugin/tabline.vim
 
 	use 'antoinemadec/FixCursorHold.nvim' -- Needed while issue https://github.com/neovim/neovim/issues/12587 is still open
@@ -255,7 +256,11 @@ return require('packer').startup({function(use)
 		end
 	}
 
-	use { 'phaazon/hop.nvim', config = [[require('config.hop')]] }
+	use {
+		'phaazon/hop.nvim',
+		branch = 'v2',
+		config = [[require('config.hop')]]
+	}
 
 	-- Make WORD motions support camelCase & friends
 	vim.g.wordmotion_prefix = ','
@@ -361,6 +366,11 @@ return require('packer').startup({function(use)
 		'iamcco/markdown-preview.nvim', run = 'cd app && yarn install',
 		cmd = 'MarkdownPreview'
 	}
+
+	use {
+		'jose-elias-alvarez/typescript.nvim',
+		config = function() require("typescript").setup() end
+	}
 	-- use 'evanleck/vim-svelte'
 
 	use {
@@ -375,7 +385,16 @@ return require('packer').startup({function(use)
 	-- -- Post-install/update hook with call of vimscript function with argument
 	-- use { 'glacambre/firenvim', run = function() vim.fn['firenvim#install'](0) end }
 
-	use 'ciaranm/detectindent'
+	use {
+		'NMAC427/guess-indent.nvim',
+		config = function() require('guess-indent').setup({}) end,
+	}
+
+	use {
+		'danymat/neogen',
+		config = function() require('neogen').setup({}) end
+	}
+
 	-- use 'pechorin/any-jump.vim' -- Document outline
 end, config = {
 	display = {
