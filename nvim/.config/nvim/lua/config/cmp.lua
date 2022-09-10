@@ -16,6 +16,7 @@ end
 cmp.setup({
 	formatting = {
 		format = require("lspkind").cmp_format({
+			maxwidth = 50,
 			with_text = true,
 			menu = ({
 				buffer = "[Buffer]",
@@ -69,14 +70,17 @@ cmp.setup({
 				priority_weight = 2,
 			},
 		},
-		{ name = 'vsnip' },
+		{
+			name = 'vsnip',
+			keyword_length = 2,
+		},
 		{ name = 'path' },
 		-- { name = 'nvim_lsp_signature_help' },
 		{
 			name = 'buffer',
 			max_item_count = 10,
+			keyword_length = 4,
 			option = {
-				keyword_length = 4,
 				get_bufnrs = function()
 					return vim.api.nvim_list_bufs()
 				end
