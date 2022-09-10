@@ -17,6 +17,8 @@ create_augroup('set_iskeyword', {
 -- don't draw every frame when doing macros
 o.lazyredraw = true
 
+o.spell = true
+
 -- for git status in beside the line numbers
 o.updatetime = 250
 wo.signcolumn = "yes"
