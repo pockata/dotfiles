@@ -4,6 +4,7 @@ create_augroup('GlobalColorConfig', {
 	'ColorScheme * highlight EndOfBuffer guifg=bg',
 
 	'ColorScheme * highlight SignColumn guibg=bg',
+	'ColorScheme * highlight link HarpoonCurrentFile String',
 	-- 'ColorScheme * highlight GitSignsAdd guibg=bg',
 	-- 'ColorScheme * highlight GitSignsChange guibg=bg',
 	-- 'ColorScheme * highlight GitSignsDelete guibg=bg',
