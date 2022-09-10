@@ -74,7 +74,7 @@ require('telescope').setup{
 require('telescope').load_extension('fzf')
 
 create_augroup('TelescopeConfig',
-	'User TelescopePreviewerLoaded setlocal shiftwidth=4'
+	'User TelescopePreviewerLoaded setlocal shiftwidth=2 tabstop=2 expandtab'
 )
 
 function _G.EditNvim()
@@ -171,7 +171,7 @@ nnoremap("<Leader>j", "<silent>", "<cmd>Telescope live_grep<CR>");
 nnoremap("<Leader>r", "<silent>", ":lua TelescopeCurrentBuffer()<CR>");
 nnoremap("<Leader>w", "<silent>", "<cmd>Telescope builtin<CR>");
 nnoremap("<Leader>b", "<silent>", "<cmd>Telescope buffers<CR>");
-nnoremap("<Leader>c", "<silent>", "<cmd>Telescope commands<CR>");
+-- nnoremap("<Leader>c", "<silent>", "<cmd>Telescope commands<CR>");
 nnoremap("<Leader>gf", "<silent>", "<cmd>Telescope git_status<CR>");
 
 -- Special files
