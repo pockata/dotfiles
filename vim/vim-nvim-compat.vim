@@ -1575,9 +1575,9 @@ function! FollowSymlink()
 endfunction
 
 " a little more informative version of the above
-nmap <Leader>sI :call <SID>SynStack()<CR>
+nmap <Leader><leader>I :call SynStack()<CR>
 
-function! <SID>SynStack()
+function! SynStack()
     if !exists("*synstack")
         return
     endif

@@ -108,10 +108,8 @@ inoremap('.', '.<c-g>u')
 inoremap('/', '/<c-g>u')
 
 -- Move lines around without using `ddp`
-vnoremap('<a-k>', ":m '>+1<CR>gv=gv")
-vnoremap('<a-l>', ":m '<-2<CR>gv=gv")
-nnoremap('<a-k>', ":m .+1<CR>==")
-nnoremap('<a-l>', ":m .-2<CR>==")
+vnoremap('K', ":m '>+1<CR>gv=gv")
+vnoremap('L', ":m '<-2<CR>gv=gv")
 
 -- Keep visual mode indenting
 xnoremap("<", "<silent>", "<gv")
@@ -131,7 +129,7 @@ xnoremap('?', [[<Esc>`>?%V\v]])
 xnoremap('s', [[<Esc>:'<,'>s/\%V]])
 
 -- replace current word under cursor
-nnoremap("<leader>s", ":%s/\\<<C-r><C-w>\\>/<C-r><C-w>/I<Left><Left><Left>")
+nnoremap("<leader>s", ":%s/\\<<C-r><C-w>\\>/<C-r><C-w>/I<Left><Left>")
 
 -- default in nvim 0.6
 -- -- https://www.reddit.com/r/vim/comments/dgbr9l/mappings_i_would_change_for_more_consistent_vim/
@@ -179,8 +177,11 @@ nnoremap("[z", "<silent>", ":call NextClosedFold('k')<cr>")
 -- nnoremap <leader>glp :cprev<CR>:call search(_search_term)<CR>
 
 -- delete without copying
-nnoremap("<leader>d", '"_d')
-vnoremap("<leader>d", '"_d')
+nnoremap("<Leader>d", '"_d')
+vnoremap("<Leader>d", '"_d')
+
+nnoremap("<Leader>c", '"_c')
+vnoremap("<Leader>c", '"_c')
 
 -- add empty lines before/after the cursor. from unimpaired.vim
 vim.cmd [[

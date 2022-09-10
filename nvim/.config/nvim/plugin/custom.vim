@@ -261,6 +261,7 @@ function! ToggleHomeZero()
 endfunction
 
 nnoremap <silent> 0 :call ToggleHomeZero()<CR>
+onoremap <silent> 0 ^
 
 " move horizontally
 nnoremap z; 30zl
