@@ -1,19 +1,44 @@
 ;; Reference
 ;; http://tree-sitter.github.io/tree-sitter/using-parsers#pattern-matching-with-queries
 
-;; Matched patterns
-;;
+;; Variable assignments
 ;; api:= http.Server
 ;; var build = "develop"
 ;; { Handler: apiMux }
 
-;; keys
-(short_var_declaration right:(expression_list) @p.assign.value)
-(var_declaration (var_spec value:(expression_list) @p.assign.value))
-(keyed_element . (literal_element (identifier)) (_) @p.assign.value)
+(short_var_declaration
+	left:(expression_list) @p.assign.key
+	right:(expression_list) @p.assign.value
+)
+(var_declaration
+	(var_spec
+		name:(_) @p.assign.key
+		value:(expression_list) @p.assign.value
+))
 
-;; values
-(short_var_declaration left:(expression_list) @p.assign.key)
-(var_declaration (var_spec name:(_) @p.assign.key))
-(keyed_element . (literal_element (identifier) @p.assign.key))
+(keyed_element
+	.
+	(literal_element) @p.assign.key
+	(_) @p.assign.value
+)
+
+(assignment_statement
+	left: (expression_list) @p.assign.key
+	right: (_) @p.assign.value
+)
+
+;; Block scopes if/else, for
+(if_statement
+	consequence: (block) @p.scope
+	alternative: (
+		(if_statement
+		  consequence: (block) @p.scope
+		  )?
+		(block)? @p.scope
+	)
+)
+
+(for_statement
+	body: (block) @p.scope
+)
 
