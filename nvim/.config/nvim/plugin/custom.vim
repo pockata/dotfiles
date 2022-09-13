@@ -360,23 +360,6 @@ func! DeleteTrailingWS()
 	exe "normal `z"
 endfunc
 
-function! s:ZoomToggle() abort
-	if exists('t:zoomed') && t:zoomed
-		exec t:zoom_winrestcmd
-		let t:zoomed = 0
-	else
-		let t:zoom_winrestcmd = winrestcmd()
-		resize
-		vertical resize
-		let t:zoomed = 1
-	endif
-endfunction
-
-command! ZoomToggle call s:ZoomToggle()
-" TODO: find a plugin
-nnoremap <silent> <C-w>o :ZoomToggle<CR>
-nnoremap <silent> <C-w><C-o> :ZoomToggle<CR>
-
 " ----------------------------------------------------------------------------
 " Get Visual Selection helper function
 " ----------------------------------------------------------------------------
