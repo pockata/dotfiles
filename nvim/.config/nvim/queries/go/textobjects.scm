@@ -1,3 +1,4 @@
+;; vim: ft=query
 ;; Reference
 ;; http://tree-sitter.github.io/tree-sitter/using-parsers#pattern-matching-with-queries
 
