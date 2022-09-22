@@ -34,7 +34,7 @@ if not packer_exists then
 	return
 end
 
-return require('packer').startup({function(use)
+return require('packer').startup({ function(use)
 	-- Packer can manage itself
 	use 'wbthomason/packer.nvim'
 
@@ -50,7 +50,7 @@ return require('packer').startup({function(use)
 
 	-- Alternative: https://github.com/jpalardy/vim-slime
 	use {
-		'christoomey/vim-tmux-runner', config = function ()
+		'christoomey/vim-tmux-runner', config = function()
 			nnoremap("<leader>v-", ':VtrOpenRunner { "orientation": "v", "percentage": 30 }<cr>');
 		end
 	}
@@ -68,6 +68,8 @@ return require('packer').startup({function(use)
 		},
 		config = [[require('config.treesitter')]]
 	}
+
+	use 'nvim-treesitter/nvim-treesitter-context'
 
 	-- preview hex colors
 	use {
@@ -248,7 +250,7 @@ return require('packer').startup({function(use)
 	vim.g.textobj_numeral_no_default_key_mappings = 1
 	use {
 		'tkhren/vim-textobj-numeral',
-		config = function ()
+		config = function()
 			vmap("an", "<Plug>(textobj-numeral-float-a)")
 			omap("an", "<Plug>(textobj-numeral-float-a)")
 			vmap("in", "<Plug>(textobj-numeral-float-i)")
@@ -292,13 +294,13 @@ return require('packer').startup({function(use)
 
 	use {
 		'nvim-telescope/telescope.nvim', config = [[require('config.telescope')]],
-		requires = {{'nvim-lua/popup.nvim'}, {'nvim-lua/plenary.nvim'}}
+		requires = { { 'nvim-lua/popup.nvim' }, { 'nvim-lua/plenary.nvim' } }
 	}
-	use {'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
+	use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
 
 	use {
 		'romainl/vim-devdocs',
-		config = function ()
+		config = function()
 			nmap("<localleader>k", "<cmd>DD<CR>")
 		end
 	}
@@ -327,7 +329,7 @@ return require('packer').startup({function(use)
 
 	use {
 		'ThePrimeagen/harpoon',
-		requires = {'nvim-lua/plenary.nvim'},
+		requires = { 'nvim-lua/plenary.nvim' },
 		config = [[require('config.harpoon')]],
 	}
 
@@ -402,5 +404,4 @@ end, config = {
 			diff = 'o',
 		}
 	}
-}})
-
+} })
