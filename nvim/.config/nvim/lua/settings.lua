@@ -20,7 +20,7 @@ o.lazyredraw = true
 o.spell = true
 
 -- for git status in beside the line numbers
-o.updatetime = 250
+o.updatetime = 50
 wo.signcolumn = "yes"
 
 wo.breakindent = true
@@ -86,10 +86,11 @@ o.termguicolors = true -- use true colors in TUI
 o.splitright = true
 o.splitbelow = true
 
-o.guicursor = "n-v-c:block,i-ci-ve:ver25,r-cr:hor20,o:hor50"
+-- o.guicursor = "n-v-c:block,i-ci-ve:ver25,r-cr:hor20,o:hor50"
+o.guicursor = ""
 
 -- Editing
-o.virtualedit = "onemore,block" -- allow for cursor beyond last character
+o.virtualedit = "block" -- allow for cursor beyond last character
 o.joinspaces = false -- one space after J or gq
 o.switchbuf = "uselast"
 o.confirm = true -- show confirmation for actions that abort immediately
@@ -132,6 +133,5 @@ vim.g.mapleader = " "
 vim.g.maplocalleader = ","
 
 create_augroup('YankHighlight',
-	{'TextYankPost * silent! lua vim.highlight.on_yank()'}
+	{ 'TextYankPost * silent! lua vim.highlight.on_yank()' }
 )
-
