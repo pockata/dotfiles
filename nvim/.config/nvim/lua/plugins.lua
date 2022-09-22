@@ -153,7 +153,7 @@ return require('packer').startup({ function(use)
 		config = [[require('config.lsp')]],
 	}
 
-	vim.cmd[[  nmap <silent> <F7> <plug>(matchup-hi-surround) ]]
+	vim.g.matchup_matchparen_offscreen = {}
 	use { "andymass/vim-matchup" }
 
 	-- use {
@@ -277,7 +277,9 @@ return require('packer').startup({ function(use)
 		config = [[require('config.argumentative')]]
 	}
 
-	use { 'FooSoft/vim-argwrap',  --cmd = 'ArgWrap',
+	vim.g.argwrap_tail_comma = 1
+	vim.g.argwrap_padded_braces = 1
+	use { 'FooSoft/vim-argwrap', --cmd = 'ArgWrap',
 		config = function()
 			nnoremap("<leader>aw", "<silent>", "<cmd>ArgWrap<CR>")
 		end
