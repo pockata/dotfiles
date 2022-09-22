@@ -199,7 +199,7 @@ return require('packer').startup({ function(use)
 	use { 'haystackandroid/wonka' }
 	use {
 		'famiu/feline.nvim',
-		requires = {'kyazdani42/nvim-web-devicons'},
+		requires = { 'kyazdani42/nvim-web-devicons' },
 		config = [[require('config.feline')]],
 	}
 	use 'folke/lsp-colors.nvim'
@@ -299,6 +299,7 @@ return require('packer').startup({ function(use)
 		requires = { { 'nvim-lua/popup.nvim' }, { 'nvim-lua/plenary.nvim' } }
 	}
 	use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
+	use { "smartpde/telescope-recent-files" }
 
 	use {
 		'romainl/vim-devdocs',

@@ -50,6 +50,7 @@ require('telescope').setup{
 				["<c-s>"] = actions.select_horizontal,
 				-- exit with Esc from insert mode (I don't need normal mode here)
 				["<esc>"] = actions.close,
+				["<c-a>"] = actions.select_all,
 
 				["<c-k>"] = actions.move_selection_next,
 				["<c-l>"] = actions.move_selection_previous,
@@ -58,6 +59,8 @@ require('telescope').setup{
 				["<s-down>"] = actions.preview_scrolling_down,
 
 				["<a-p>"] = layout.toggle_preview,
+				-- use native <c-u> mapping
+				["<C-u>"] = false,
 			}
 		}
 	},
@@ -72,6 +75,7 @@ require('telescope').setup{
 }
 
 require('telescope').load_extension('fzf')
+require("telescope").load_extension("recent_files")
 
 create_augroup('TelescopeConfig',
 	'User TelescopePreviewerLoaded setlocal shiftwidth=2 tabstop=2 expandtab'
@@ -172,7 +176,7 @@ local FZFDropdown = require('telescope.themes').get_dropdown {
 }
 
 -- General keybindings
-nnoremap("<Leader>fo", "<silent>", "<cmd>Telescope oldfiles<CR>");
+nnoremap("<Leader>fo", "<silent>", "<cmd>lua require('telescope').extensions.recent_files.pick()<CR>");
 nnoremap("<Leader>j", "<silent>", "<cmd>Telescope live_grep<CR>");
 nnoremap("<Leader>r", "<silent>", ":lua TelescopeCurrentBuffer()<CR>");
 nnoremap("<Leader>w", "<silent>", "<cmd>Telescope builtin<CR>");
