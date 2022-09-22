@@ -36,7 +36,14 @@ require('telescope').setup{
 		},
 		selection_caret = "❯ ",
 		sorting_strategy = "ascending",
-		path_display = {"absolute"},
+		-- truncate paths based on your cwd
+		path_display = function(_, path)
+			-- transform /home/user/Projects/Name/sub-folder/... to ./sub-folder/...
+			path = path:gsub("^" .. vim.fn.getcwd() .. "/", "./")
+			-- transform /home/user/... to ~/...
+			path = path:gsub("^" .. vim.fn.getenv("HOME") .. "/", "~/")
+			return path
+		end,
 		winblend = 15,
 		-- scroll_strategy = "limit",
 		-- better than the default one, but not as good as fzf
