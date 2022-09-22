@@ -162,12 +162,15 @@ noremap(';', "l")
 nmap('gk', "j")
 nmap('gl', "k")
 
+-- ; is useful with f/t so remap it to '
+nnoremap("'", ";")
+
 -- Navigate folds
 nnoremap("]z", "<silent>", ":call NextClosedFold('j')<cr>")
 nnoremap("[z", "<silent>", ":call NextClosedFold('k')<cr>")
 
--- -- View highlight groups under cursor
--- nnoremap("<leader>sI", "<silent>", ":TSHighlightCapturesUnderCursor<cr>")
+-- View highlight groups under cursor
+nnoremap("<leader>sI", "<silent>", ":TSHighlightCapturesUnderCursor<cr>")
 
 -- -- Shrug ¯\_(ツ)_/¯
 -- inoremap("#shrug", [[¯\_(ツ)_/¯]])
@@ -197,8 +200,8 @@ function! BlankDown(count) abort
   silent! call repeat#set("\<Plug>unimpairedBlankDown", a:count)
 endfunction
 
-nnoremap <silent> <S-Enter>   :<C-U>call BlankUp(v:count1)<CR>
-nnoremap <silent> <A-o> :<C-U>call BlankDown(v:count1)<CR>
+nnoremap <silent> [<space>   :<C-U>call BlankUp(v:count1)<CR>
+nnoremap <silent> ]<space> :<C-U>call BlankDown(v:count1)<CR>
 inoremap <silent> <S-Enter>   <ESC>:call BlankDown(v:count1)<CR>i
 ]]
 
