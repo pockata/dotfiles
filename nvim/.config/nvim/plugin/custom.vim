@@ -50,7 +50,7 @@ augroup Filetypes
 
 	" TODO: Add blacklist (GV/fugitive, etc.)
 	" follow symlink and set working directory
-	autocmd! BufReadPost * call FollowSymlink() | ProjectRootLCD
+	autocmd! BufReadPost * call FollowSymlink()
 
 	autocmd FileType apache setlocal commentstring=#%s
 
