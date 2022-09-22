@@ -103,7 +103,13 @@ function _G.OpenProjects()
 	tele.find_files(require('telescope.themes').get_dropdown({
 		prompt_title = "~ Projects ~",
 		cwd = '~/Projects',
-		find_command = {'ls'},
+		find_command = {
+			'find',
+			'-maxdepth', '2',
+			'-mindepth', '2',
+			'-type', 'd',
+			'-printf', '%P\n',
+		},
 		previewer = false,
 		layout_config = {
 			height = 30,
