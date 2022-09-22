@@ -3,4 +3,5 @@ silent! unmap <buffer> <c-p>
 
 " Go to project root
 nnoremap <silent><buffer> gr :execute 'edit ' . projectroot#guess()<CR>
+setl nospell
 
