@@ -196,9 +196,6 @@ function tre() {
     tree -aC -I '.git|node_modules|bower_components' --dirsfirst "$@" | less -FRNX;
 }
 
-# ctrl-r starts searching history backward
-bindkey '^r' history-incremental-search-backward
-
 # Add bindings to the vicmd keymap
 bindkey -a j backward-char
 bindkey -a ';' forward-char
