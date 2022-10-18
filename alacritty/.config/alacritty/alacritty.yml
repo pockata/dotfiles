@@ -161,6 +161,7 @@ debug:
   #   white:   '0xdddddd'
 
 schemes:
+
   tokyoNightStorm: &tokyoNightStorm
     # Default colors
     primary:
@@ -195,10 +196,10 @@ schemes:
       background: '0x292C3E'
       foreground: '0xEBEBEB'
 
-    # Cursor colors
-    cursor:
-      text: '0xFF261E'
-      cursor: '0xEBEBEB'
+    # # Cursor colors
+    # cursor:
+    #   text: '0xFF261E'
+    #   cursor: '0xEBEBEB'
 
     # Normal colors
     normal:
@@ -247,7 +248,8 @@ schemes:
   kanagawa: &kanagawa
     cursor:
       text: '0x000000'
-      cursor: '0xffffff'
+      # cursor: '0xffffff'
+      cursor: '0xc0a36e'
     primary:
       background: '0x1f1f28'
       foreground: '0xdcd7ba'
@@ -280,7 +282,7 @@ schemes:
       - { index: 16, color: '0xffa066' }
       - { index: 17, color: '0xff5d62' }
 
-colors: *kanagawa
+colors: *argonaut
 
 # Visual Bell
 #
