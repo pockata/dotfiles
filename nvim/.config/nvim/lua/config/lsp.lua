@@ -1,6 +1,8 @@
 local lspconfig = require("lspconfig")
 local lsp_installer = require("nvim-lsp-installer")
 
+-- Checkout handlers from here
+-- https://github.com/tjdevries/config_manager/blob/master/xdg_config/nvim/lua/tj/lsp/handlers.lua
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
 	vim.lsp.diagnostic.on_publish_diagnostics,
 	{
@@ -12,7 +14,8 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
 )
 
 vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
-	vim.lsp.handlers.hover, {
+	vim.lsp.handlers.hover,
+	{
 		border = "rounded",
 		width = 80,
 	}
@@ -58,10 +61,12 @@ local on_attach = function(client, bufnr)
 	buf_set_keymap('n', '<leader>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
 	buf_set_keymap('n', '<leader>gn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
 	buf_set_keymap('n', '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
-	buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
+	buf_set_keymap('n', 'gR', '<cmd>lua vim.lsp.buf.references({ includeDeclaration = false })<CR>', opts)
+	buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.incoming_calls()<CR>', opts)
 	-- buf_set_keymap('n', '<leader>e', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
 	buf_set_keymap('n', '[e', '<cmd>lua vim.diagnostic.goto_prev({ float = { border = "rounded" }})<CR>zz', opts)
 	buf_set_keymap('n', ']e', '<cmd>lua vim.diagnostic.goto_next({ float = { border = "rounded" }})<CR>zz', opts)
+	buf_set_keymap('i', '<c-h>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
 	-- buf_set_keymap('n', '<leader>q', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
 
 	-- Set some keybinds conditional on server capabilities
@@ -100,8 +105,15 @@ local function setup_servers()
 		-- load config/lsp/{server}.lua and pass the default config file
 		pcall(function() conf = require('config.lsp.' .. server.name)(conf) end)
 
-		-- This setup() function is exactly the same as lspconfig's setup function (:help lspconfig-quickstart)
-		lspconfig[server.name].setup(conf)
+		if server.name == "tsserver" then
+			require("typescript").setup({
+				server = conf,
+			})
+		else
+			-- This setup() function is exactly the same as lspconfig's setup function (:help lspconfig-quickstart)
+			lspconfig[server.name].setup(conf)
+		end
+
 		-- vim.cmd [[ do User LspAttachBuffers ]]
 	end
 end

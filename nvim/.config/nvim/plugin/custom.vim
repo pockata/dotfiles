@@ -201,26 +201,6 @@ function! DeleteHiddenBuffers()
 	echom "Removed hidden buffers!"
 endfunction
 
-function! SearchVisualSelectionWithRg()
-	execute 'Rg' s:getVisualSelection()
-endfunction
-
-function! SearchWordWithRg()
-	execute 'Rg' expand('<cword>')
-endfunction
-
-nnoremap <silent> H :call SearchWordWithRg()<CR>
-vnoremap <silent> H :call SearchVisualSelectionWithRg()<CR>
-
-" "wincmd p" might not work initially, although there are two windows.
-fun! MyWincmdPrevious()
-	let w = winnr()
-	wincmd p
-	if winnr() == w
-		wincmd w
-	endif
-endfun
-
 " Diff this window with the previous one.
 command! DiffThese diffthis | call clearmatches() | call MyWincmdPrevious() | diffthis | call clearmatches() | wincmd p
 
@@ -569,3 +549,25 @@ function! Tabline()
 endfunction
 set tabline=%!Tabline()
 
+if exists("g:neovide")
+	" Put anything you want to happen only in Neovide here
+	let g:neovide_cursor_animation_length = 0
+	set guifont=Fira\ Mono\ Medium\ for\ Powerline:h10
+endif
+
+" Diff the current file against n revision (instead of n commit)
+function! Diffrev(...)
+	let target = shellescape(@%)
+
+	"check argument count
+	if a:0 == 0
+		"no revision number specified
+		let revnum=0
+	else
+		"revision number specified
+		let revnum=a:1
+	endif
+
+	let hash = system('git log -1 --skip='.revnum.' --pretty=format:"%h" ' . target)
+	execute 'Gdiff ' . hash
+endfunc

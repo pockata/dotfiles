@@ -2,13 +2,13 @@ require('nvim-treesitter.configs').setup({
 	ensure_installed = {
 		'bash', 'comment', 'cpp', 'css', 'go', 'html',
 		'javascript', 'json', 'jsonc', 'lua', 'regex',
-		'typescript', 'yaml'
+		'typescript', 'yaml', 'query'
 	},
 	highlight = {
 		enable = true,
-		-- for better syntax highlighting
-		-- https://github.com/CodeGradox/onehalf-lush
-		additional_vim_regex_highlighting = false,
+		-- -- for better syntax highlighting
+		-- -- https://github.com/CodeGradox/onehalf-lush
+		-- additional_vim_regex_highlighting = false,
 	},
 	matchup = {
 		enable = true,
@@ -22,13 +22,25 @@ require('nvim-treesitter.configs').setup({
 		enable = true,
 		disable = {},
 		updatetime = 25, -- Debounced time for highlighting nodes in the playground from source code
-		persist_queries = false -- Whether the query persists across vim sessions
+		persist_queries = false, -- Whether the query persists across vim sessions
+		keybindings = {
+			toggle_query_editor = 'o',
+			toggle_hl_groups = 'i',
+			toggle_injected_languages = 't',
+			toggle_anonymous_nodes = 'a',
+			toggle_language_display = 'I',
+			focus_language = 'f',
+			unfocus_language = 'F',
+			update = 'R',
+			goto_node = '<cr>',
+			show_help = '?',
+		},
 	},
 	-- for playground
 	query_linter = {
 		enable = true,
 		use_virtual_text = true,
-		lint_events = {"BufWrite", "CursorHold"},
+		lint_events = { "BufWrite", "CursorHold" },
 	},
 	textobjects = {
 		move = {
@@ -41,8 +53,7 @@ require('nvim-treesitter.configs').setup({
 				-- jump to the next variable assignment
 				[']v'] = '@p.assign.key',
 			},
-			goto_next_end = {
-			},
+			goto_next_end = {},
 			goto_previous_start = {
 				["[f"] = "@function.outer",
 				["[["] = "@class.outer",
@@ -50,8 +61,7 @@ require('nvim-treesitter.configs').setup({
 				-- jump to the prev variable assignment
 				['[v'] = '@p.assign.key',
 			},
-			goto_previous_end = {
-			},
+			goto_previous_end = {},
 		},
 		-- swap = {
 		-- 	enable = true,
@@ -66,6 +76,7 @@ require('nvim-treesitter.configs').setup({
 			enable = true,
 			-- like in targets.vim
 			lookahead = false,
+			lookbehind = true,
 			keymaps = {
 				-- use the queries from supported languages with textobjects.scm
 				['af'] = '@function.outer',
@@ -74,6 +85,10 @@ require('nvim-treesitter.configs').setup({
 				['ik'] = '@p.assign.key',
 				['av'] = '@p.assign.value',
 				['ak'] = '@p.assign.key',
+				['as'] = '@p.scope',
+				['is'] = '@p.scope',
+				['ir'] = '@p.return.inner',
+				['ar'] = '@p.return.outer',
 				-- ['ia'] = '@parameter.inner',
 				-- ['aa'] = '@parameter.outer',
 				-- -- ['aC'] = '@class.outer',
@@ -96,15 +111,4 @@ require('nvim-treesitter.configs').setup({
 	indent = {
 		enable = true
 	},
-	incremental_selection = {
-		enable = true,
-		keymaps = {
-			-- TODO: better keybindings
-			init_selection = "gnn",
-			node_incremental = "grn",
-			scope_incremental = "grc",
-			node_decremental = "grm",
-		},
-	}
 })
-

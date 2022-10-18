@@ -185,6 +185,7 @@ return require('packer').startup({ function(use)
 	use { 'morhetz/gruvbox', config = [[require('config.gruvbox')]] }
 	use { 'ajmwagar/vim-deus' }
 	use { 'folke/tokyonight.nvim' } -- remove colors/tokyonight
+	use { "catppuccin/nvim", as = "catppuccin" }
 	use { 'matsuuu/pinkmare' }
 	use {
 		'marko-cerovac/material.nvim',
@@ -197,6 +198,14 @@ return require('packer').startup({ function(use)
 	use { 'mhartington/oceanic-next' }
 	use { 'savq/melange' }
 	use { 'haystackandroid/wonka' }
+	use { 'glepnir/oceanic-material' }
+	use {
+		'rose-pine/neovim',
+		as = 'rose-pine',
+		tag = 'v1.*',
+	}
+	use { "briones-gabriel/darcula-solid.nvim", requires = "rktjmp/lush.nvim" }
+	use { 'doums/darcula' }
 	use {
 		'famiu/feline.nvim',
 		requires = { 'kyazdani42/nvim-web-devicons' },
@@ -352,8 +361,8 @@ return require('packer').startup({ function(use)
 
 	use 'junegunn/vim-slash'
 
-	-- use 'itchyny/vim-cursorword'
-	use { 'RRethy/vim-illuminate', config = [[require('config.illuminate')]]}
+	-- -- use 'itchyny/vim-cursorword'
+	-- use { 'RRethy/vim-illuminate', config = [[require('config.illuminate')]] }
 
 	-- use 'kana/vim-smartword'
 
@@ -374,7 +383,6 @@ return require('packer').startup({ function(use)
 
 	use {
 		'jose-elias-alvarez/typescript.nvim',
-		config = function() require("typescript").setup() end
 	}
 	-- use 'evanleck/vim-svelte'
 

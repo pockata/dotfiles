@@ -11,26 +11,40 @@ require('gitsigns').setup {
 		topdelete    = {hl = 'diffDeleted', text = '-', numhl='GitSignsDeleteNr', linehl='GitSignsDeleteLn'},
 		changedelete = {hl = 'diffRemoved', text = '~_', numhl='GitSignsChangeNr', linehl='GitSignsChangeLn'},
 	},
-	keymaps = {
-		-- Default keymap options
-		noremap = true,
-		buffer = true,
+	on_attach = function(bufnr)
+		local gs = package.loaded.gitsigns
 
-		['n ]c'] = { expr = true, "&diff ? ']czz' : '<cmd>lua require\"gitsigns\".next_hunk()<CR>zz'"},
-		['n [c'] = { expr = true, "&diff ? '[czz' : '<cmd>lua require\"gitsigns\".prev_hunk()<CR>zz'"},
+		local function map(mode, l, r, opts)
+			opts = opts or {}
+			opts.buffer = bufnr
+			vim.keymap.set(mode, l, r, opts)
+		end
 
-		['n <leader>hs'] = '<cmd>lua require"gitsigns".stage_hunk()<CR>',
-		['v <leader>hs'] = '<cmd>lua require"gitsigns".stage_hunk({vim.fn.line("."), vim.fn.line("v")})<CR>',
-		['n <leader>hu'] = '<cmd>lua require"gitsigns".reset_hunk()<CR>',
-		['n <leader>hR'] = '<cmd>lua require"gitsigns".reset_buffer()<CR>',
-		['n <leader>hp'] = '<cmd>lua require"gitsigns".preview_hunk()<CR>',
-		['n <leader>hb'] = '<cmd>lua require"gitsigns".blame_line(true)<CR>',
+		-- Navigation
+		map('n', ']c', function()
+			if vim.wo.diff then return ']czz' end
+			vim.schedule(function() gs.next_hunk() end)
+			return '<Ignore>'
+		end, {expr=true})
+
+		map('n', '[c', function()
+			if vim.wo.diff then return '[czz' end
+			vim.schedule(function() gs.prev_hunk() end)
+			return '<Ignore>'
+		end, {expr=true})
+
+		map('n', '<leader>hs', '<cmd>lua require"gitsigns".stage_hunk()<CR>')
+		map('v', '<leader>hs', '<cmd>lua require"gitsigns".stage_hunk({vim.fn.line("."), vim.fn.line("v")})<CR>')
+		map('n', '<leader>hu', '<cmd>lua require"gitsigns".reset_hunk()<CR>')
+		map('n', '<leader>hR', '<cmd>lua require"gitsigns".reset_buffer()<CR>')
+		map('n', '<leader>hp', '<cmd>lua require"gitsigns".preview_hunk()<CR>')
+		map('n', '<leader>hb', '<cmd>lua require"gitsigns".blame_line(true)<CR>')
 
 		-- Text objects
-		['o ih'] = ':<C-U>lua require"gitsigns".select_hunk()<CR>',
-		['x ih'] = ':<C-U>lua require"gitsigns".select_hunk()<CR>',
-		['o ah'] = ':<C-U>lua require"gitsigns".select_hunk()<CR>',
-		['x ah'] = ':<C-U>lua require"gitsigns".select_hunk()<CR>'
-	}
+		map('o', 'ih', ':<C-U>lua require"gitsigns".select_hunk()<CR>')
+		map('x', 'ih', ':<C-U>lua require"gitsigns".select_hunk()<CR>')
+		map('o', 'ah', ':<C-U>lua require"gitsigns".select_hunk()<CR>')
+		map('x', 'ah', ':<C-U>lua require"gitsigns".select_hunk()<CR>')
+	end,
 }
 

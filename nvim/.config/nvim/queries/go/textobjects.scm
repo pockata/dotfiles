@@ -43,3 +43,6 @@
 	body: (block) @p.scope
 )
 
+(func_literal) @function.outer
+(method_declaration) @function.outer
+(function_declaration) @function.outer

@@ -18,6 +18,7 @@ create_augroup('set_iskeyword', {
 o.lazyredraw = true
 
 o.spell = true
+bo.spelloptions = "noplainbuffer,camel"
 
 -- for git status in beside the line numbers
 o.updatetime = 50
@@ -116,7 +117,7 @@ o.completeopt = "menuone,noinsert,noselect"
 
 -- Folding
 wo.foldmethod = 'manual'
--- wo.foldexpr = 'nvim_treesitter#foldexpr()'
+wo.foldexpr = 'nvim_treesitter#foldexpr()'
 wo.foldminlines = 5
 
 -- vim.wo.foldcolumn = '0' -- defines 1 col at window left, to indicate folding

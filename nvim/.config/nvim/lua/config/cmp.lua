@@ -13,6 +13,17 @@ local feedkey = function(key, mode)
 	vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(key, true, true, true), mode, true)
 end
 
+-- local source_mapping = {
+-- 	buffer = "[Buffer]",
+-- 	nvim_lsp = "[LSP]",
+-- 	nvim_lua = "[Lua]",
+-- 	path = "[Path]",
+-- 	vsnip = "[Vsnip]",
+-- 	tmux = "[tmux]",
+-- }
+--
+-- local lspkind = require("lspkind")
+
 cmp.setup({
 	formatting = {
 		format = require("lspkind").cmp_format({
@@ -26,6 +37,19 @@ cmp.setup({
 				path = "[path]"
 			})
 		}),
+
+		-- format = function(entry, vim_item)
+		-- 	vim_item.kind = require("lspkind").presets.default[vim_item.kind]
+		-- 	local menu = source_mapping[entry.source.name]
+		-- 	if entry.source.name == 'cmp_tabnine' then
+		-- 		if entry.completion_item.data ~= nil and entry.completion_item.data.detail ~= nil then
+		-- 			menu = entry.completion_item.data.detail .. ' ' .. menu
+		-- 		end
+		-- 		vim_item.kind = ''
+		-- 	end
+		-- 	vim_item.menu = menu
+		-- 	return vim_item
+		-- end
 	},
 	snippet = {
 		expand = function(args)
@@ -36,7 +60,7 @@ cmp.setup({
 		['<C-d>'] = cmp.mapping(cmp.mapping.scroll_docs(-4)),
 		['<C-f>'] = cmp.mapping(cmp.mapping.scroll_docs(4)),
 		['<C-Space>'] = cmp.mapping(cmp.mapping.complete(), { 'i', 'c' }),
-		['<CR>'] = cmp.mapping(cmp.mapping.confirm({ select = false })),
+		['<CR>'] = cmp.mapping.confirm({ select = false }),
 		['<C-e>'] = cmp.config.disable,
 
 		["<Tab>"] = cmp.mapping(cmp.mapping(function(fallback)
@@ -91,7 +115,7 @@ cmp.setup({
 			max_item_count = 10,
 			option = {
 				all_panes = true,
-				sorting= {
+				sorting = {
 					priority_weight = 5,
 				}
 			}
@@ -111,4 +135,3 @@ cmp.setup({
 vim.cmd [[
 	autocmd FileType TelescopePrompt * lua require('cmp').setup.buffer { enabled = false }
 ]]
-

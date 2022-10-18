@@ -5,6 +5,8 @@ create_augroup('GlobalColorConfig', {
 
 	'ColorScheme * highlight SignColumn guibg=bg',
 	'ColorScheme * highlight link HarpoonCurrentFile String',
+	-- make the line numbers more prominent (useful for :set rnu)
+	'ColorScheme * highlight LineNr guifg=fg',
 	-- 'ColorScheme * highlight GitSignsAdd guibg=bg',
 	-- 'ColorScheme * highlight GitSignsChange guibg=bg',
 	-- 'ColorScheme * highlight GitSignsDelete guibg=bg',

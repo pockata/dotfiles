@@ -57,7 +57,7 @@ require('telescope').setup{
 				["<c-s>"] = actions.select_horizontal,
 				-- exit with Esc from insert mode (I don't need normal mode here)
 				["<esc>"] = actions.close,
-				["<c-a>"] = actions.select_all,
+				["<c-g>"] = actions.select_all,
 
 				["<c-k>"] = actions.move_selection_next,
 				["<c-l>"] = actions.move_selection_previous,
