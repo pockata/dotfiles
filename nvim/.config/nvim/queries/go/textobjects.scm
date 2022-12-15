@@ -46,3 +46,21 @@
 (func_literal) @function.outer
 (method_declaration) @function.outer
 (function_declaration) @function.outer
+
+;; return
+;; based on https://github.com/nvim-treesitter/nvim-treesitter-textobjects/blob/master/queries/ecma/textobjects.scm#L90
+(return_statement
+  (expression_list
+	"," @_start .
+	(_) @p.return.inner
+	(#make-range! "p.return.outer" @_start @p.return.inner)
+	)
+  )
+
+(return_statement
+  (expression_list
+														   . (_) @p.return.inner
+	. ","? @_end
+	(#make-range! "p.return.outer" @p.return.inner @_end)
+  )
+)

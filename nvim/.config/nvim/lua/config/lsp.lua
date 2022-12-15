@@ -28,22 +28,6 @@ local on_attach = function(client, bufnr)
 
 	buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
 
-	-- show LSP signatures while typing function arguments
-	require('lsp_signature').on_attach({
-		-- Floating window borders
-		bind = true, -- This is mandatory, otherwise border config won't get registered.
-		hint_enable = false,
-		-- hint_prefix = "LEK > ",
-		-- sometime show signature on new line or in middle of parameter can be confusing, set it to false for #58
-		handler_opts = {
-			border = "rounded"
-		},
-		floating_window = true,
-		hi_parameter = "IncSearch",
-		always_trigger = false,
-		-- extra_trigger_chars = {"("}, -- Array of extra characters that will trigger signature completion, e.g., {"(", ","}
-	}, bufnr)
-
 	-- Mappings
 	local opts = { noremap = true, silent = true }
 
@@ -61,8 +45,10 @@ local on_attach = function(client, bufnr)
 	buf_set_keymap('n', '<leader>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
 	buf_set_keymap('n', '<leader>gn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
 	buf_set_keymap('n', '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
-	buf_set_keymap('n', 'gR', '<cmd>lua vim.lsp.buf.references({ includeDeclaration = false })<CR>', opts)
-	buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.incoming_calls()<CR>', opts)
+	-- these are handles with Telescope
+	-- buf_set_keymap('n', 'gR', '<cmd>lua vim.lsp.buf.references({ includeDeclaration = false })<CR>', opts)
+	-- buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.incoming_calls()<CR>', opts)
+
 	-- buf_set_keymap('n', '<leader>e', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
 	buf_set_keymap('n', '[e', '<cmd>lua vim.diagnostic.goto_prev({ float = { border = "rounded" }})<CR>zz', opts)
 	buf_set_keymap('n', ']e', '<cmd>lua vim.diagnostic.goto_next({ float = { border = "rounded" }})<CR>zz', opts)
@@ -81,14 +67,9 @@ local on_attach = function(client, bufnr)
 end
 
 local function setup_servers()
-	local capabilities = vim.lsp.protocol.make_client_capabilities()
-	capabilities = require('cmp_nvim_lsp').update_capabilities(capabilities)
-	-- capabilities.textDocument.completion.completionItem.snippetSupport = true
-
-	-- -- from https://github.com/ray-x/lsp_signature.nvim/blob/master/tests/init_paq.lua
-	-- capabilities.textDocument.completion.completionItem.resolveSupport = {
-	-- 	properties = { "documentation", "detail", "additionalTextEdits" },
-	-- }
+	-- local capabilities = vim.lsp.protocol.make_client_capabilities()
+	local capabilities = require('cmp_nvim_lsp').default_capabilities()
+	capabilities.textDocument.completion.completionItem.snippetSupport = true
 
 	require("nvim-lsp-installer").setup {}
 
@@ -107,6 +88,9 @@ local function setup_servers()
 
 		if server.name == "tsserver" then
 			require("typescript").setup({
+				go_to_source_definition = {
+					fallback = false, -- fall back to standard LSP definition on failure
+				},
 				server = conf,
 			})
 		else

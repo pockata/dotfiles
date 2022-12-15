@@ -17,11 +17,14 @@ create_augroup('set_iskeyword', {
 -- don't draw every frame when doing macros
 o.lazyredraw = true
 
-o.spell = true
-bo.spelloptions = "noplainbuffer,camel"
+o.spell = false
+o.spelloptions = "noplainbuffer,camel"
 
 -- for git status in beside the line numbers
 o.updatetime = 50
+vim.opt.swapfile = false
+vim.opt.backup = false
+
 wo.signcolumn = "yes"
 
 wo.breakindent = true
@@ -44,7 +47,7 @@ o.winminheight = 0
 o.winminwidth = 0
 
 -- diff options
-o.diffopt = o.diffopt .. ",vertical"
+-- o.diffopt = o.diffopt .. ",vertical,algorithm:histogram,linematch:60"
 
 create_augroup('diff_update', 'BufWritePost * if &diff == 1 | diffupdate | endif')
 
@@ -74,11 +77,11 @@ o.undofile = true
 wo.number = true
 wo.relativenumber = true
 
-wo.cursorline = true
-create_augroup('CursorLineOnlyInActiveWindow', {
-	'WinEnter,BufEnter * if &diff != 1 | setlocal cursorline | endif',
-	'WinLeave,BufLeave * setlocal nocursorline'
-})
+-- wo.cursorline = true
+-- create_augroup('CursorLineOnlyInActiveWindow', {
+-- 	'WinEnter,BufEnter * if &diff != 1 | setlocal cursorline | endif',
+-- 	'WinLeave,BufLeave * setlocal nocursorline'
+-- })
 
 o.shortmess = o.shortmess .. "Ic" -- remove intro when starting Vim
 o.hidden = true -- allow switching buffers without saving
@@ -87,8 +90,7 @@ o.termguicolors = true -- use true colors in TUI
 o.splitright = true
 o.splitbelow = true
 
--- o.guicursor = "n-v-c:block,i-ci-ve:ver25,r-cr:hor20,o:hor50"
-o.guicursor = ""
+o.guicursor = "n-v-c:block,i-ci-ve:ver25,r-cr:hor20,o:hor50"
 
 -- Editing
 o.virtualedit = "block" -- allow for cursor beyond last character

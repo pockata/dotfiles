@@ -35,6 +35,14 @@ nnoremap('>t', ':tabmove +1<CR>')
 noremap('<C-s>', '<esc>:w<CR>')
 inoremap('<C-s>', '<esc>:w<CR>')
 
+-- Jump by half a page and center the cursor vertically
+nnoremap("<c-d>", "<c-d>zz")
+nnoremap("<c-u>", "<c-u>zz")
+
+
+-- hm?
+nnoremap("J", "mzJ`z")
+
 -- Source
 nmap("<leader>S", "^vg_y:execute @@<CR>:echo 'Sourced line.'<CR>")
 vmap('<leader>S', "y:@\"<CR>:echo 'Sourced lines.'<CR>")

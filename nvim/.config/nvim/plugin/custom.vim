@@ -41,6 +41,9 @@ augroup Colors
 				\ call matchadd('ErrorMsg', '\s\+$', 100) |
 				\ call matchadd('ErrorMsg', '\%81v', 100)
 
+	" clear matches in fugitive buffers
+	autocmd User FugitiveObject call clearmatches()
+
 augroup END
 
 augroup Filetypes

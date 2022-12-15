@@ -1,5 +1,6 @@
 local cmp = require('cmp')
--- local cmp_buffer = require('cmp_buffer')
+local cmp_buffer = require('cmp_buffer')
+local luasnip = require("luasnip")
 
 local has_words_before = function()
 	if vim.api.nvim_buf_get_option(0, "buftype") == "prompt" then
@@ -32,12 +33,11 @@ cmp.setup({
 			menu = ({
 				buffer = "[Buffer]",
 				nvim_lsp = "[LSP]",
-				vsnip = "[Vsnip]",
-				tmux = "[tmux]",
-				path = "[path]"
+				luasnip = "[Snip]",
+				tmux = "[Tmux]",
+				path = "[Path]"
 			})
 		}),
-
 		-- format = function(entry, vim_item)
 		-- 	vim_item.kind = require("lspkind").presets.default[vim_item.kind]
 		-- 	local menu = source_mapping[entry.source.name]
@@ -51,83 +51,102 @@ cmp.setup({
 		-- 	return vim_item
 		-- end
 	},
+	-- window = {
+	-- 	completion = cmp.config.window.bordered(),
+	-- 	documentation = cmp.config.window.bordered(),
+	-- },
 	snippet = {
 		expand = function(args)
-			vim.fn["vsnip#anonymous"](args.body)
+			luasnip.lsp_expand(args.body)
 		end,
 	},
-	mapping = {
+	mapping = cmp.mapping.preset.insert({
 		['<C-d>'] = cmp.mapping(cmp.mapping.scroll_docs(-4)),
 		['<C-f>'] = cmp.mapping(cmp.mapping.scroll_docs(4)),
 		['<C-Space>'] = cmp.mapping(cmp.mapping.complete(), { 'i', 'c' }),
 		['<CR>'] = cmp.mapping.confirm({ select = false }),
 		['<C-e>'] = cmp.config.disable,
 
-		["<Tab>"] = cmp.mapping(cmp.mapping(function(fallback)
+		["<Tab>"] = cmp.mapping(function(fallback)
 			if cmp.visible() then
 				cmp.select_next_item()
 			elseif vim.fn.pumvisible() == 1 then
 				feedkey('<C-n>', "")
-			elseif vim.fn["vsnip#available"]() == 1 then
-				feedkey("<Plug>(vsnip-expand-or-jump)", "")
 			elseif has_words_before() then
 				cmp.complete()
 			else
 				fallback() -- The fallback function sends a already mapped key. In this case, it's probably `<Tab>`.
 			end
-		end, { "i", "s" })),
+		end, { "i", "s" }),
 
-		["<S-Tab>"] = cmp.mapping(cmp.mapping(function()
+		["<S-Tab>"] = cmp.mapping(function(fallback)
 			if cmp.visible() then
 				cmp.select_prev_item()
 			elseif vim.fn.pumvisible() == 1 then
 				feedkey('<C-p>', "")
-			elseif vim.fn["vsnip#jumpable"](-1) == 1 then
-				feedkey("<Plug>(vsnip-jump-prev)", "")
+			else
+				fallback()
 			end
-		end, { "i", "s" })),
-	},
-	sources = cmp.config.sources({
-		{
-			name = 'nvim_lsp',
-			sorting = {
-				priority_weight = 2,
-			},
-		},
-		{
-			name = 'vsnip',
-			keyword_length = 2,
-		},
-		{ name = 'path' },
-		-- { name = 'nvim_lsp_signature_help' },
-		{
-			name = 'buffer',
-			max_item_count = 10,
-			keyword_length = 4,
-			option = {
-				get_bufnrs = function()
-					return vim.api.nvim_list_bufs()
-				end
-			}
-		},
-		{
-			name = 'tmux',
-			max_item_count = 10,
-			option = {
-				all_panes = true,
-				sorting = {
-					priority_weight = 5,
-				}
-			}
-		},
+		end, { "i", "s" }),
+
+		["<c-j>"] = cmp.mapping(function()
+			if luasnip.expand_or_jumpable() then
+				luasnip.expand_or_jump()
+			end
+		end, { "i" }),
+
+		["<c-k>"] = cmp.mapping(function()
+			if luasnip.jumpable(-1) then
+				luasnip.jump(-1)
+			end
+		end, { "i" }),
+
+		["<c-l>"] = cmp.mapping(function()
+			-- This is useful for choice nodes
+			if luasnip.choice_active() then
+				luasnip.change_choice(1)
+			end
+		end)
 	}),
-	-- sorting = {
-	-- 	comparators = {
-	-- 		-- https://github.com/hrsh7th/cmp-buffer#locality-bonus-comparator-distance-based-sorting
-	-- 		function(...) return cmp_buffer:compare_locality(...) end,
-	-- 	}
-	-- },
+
+	sources = cmp.config.sources(
+		{
+			{ name = 'nvim_lsp' },
+			{ name = 'luasnip' },
+		},
+		{
+			{ name = 'path' },
+			{
+				name = 'buffer',
+				max_item_count = 10,
+				keyword_length = 3,
+				option = {
+					get_bufnrs = function()
+						return vim.api.nvim_list_bufs()
+					end
+				}
+			},
+			{
+				name = 'tmux',
+				max_item_count = 10,
+				option = {
+					all_panes = true,
+					sorting = {
+						priority_weight = 10,
+					}
+				}
+			},
+		}
+	),
+	sorting = {
+		comparators = {
+			-- https://github.com/hrsh7th/cmp-buffer#locality-bonus-comparator-distance-based-sorting
+			function(...) return cmp_buffer:compare_locality(...) end,
+		}
+	},
 })
+
+vim.keymap.set("i", "<c-u>", require "luasnip.extras.select_choice")
 
 -- Disable cmp inside Telescope prompt
 -- It's handled internally in cmp, but it doesn't seem to work for me so we do

@@ -29,3 +29,21 @@
 	(_) @p.return.inner
 ) @p.return.outer
 
+;; xml attr
+(jsx_element
+  open_tag: (jsx_opening_element
+			  attribute: (jsx_attribute
+						   (property_identifier)
+						   (_)? @p.jsxAttrVal
+						   ) @p.jsxAttr
+			  )
+  )
+
+;; xml attr
+(jsx_self_closing_element
+	attribute: (jsx_attribute
+				(property_identifier)
+				(_)? @p.jsxAttrVal
+				) @p.jsxAttr
+	)
+

@@ -297,23 +297,17 @@ table.insert(components.active[3], {
 	provider = function()
 		local ft = providers.file_type({}, {}):lower()
 		local overrides = {
-			javascript = "js"
+			javascript = "js",
+			javascriptreact = "react",
 		}
 
 		local lsp_name = providers.lsp_client_names({});
-		local lspIcon = string.len(lsp_name) > 0 and '+' or ''
+		local lspIcon = string.len(lsp_name) > 0 and '' or '!'
 		return (overrides[ft] ~= nil and overrides[ft] or ft) .. lspIcon
 	end,
 	hl = function()
 		local val = {}
-		local filename = vim.fn.expand('%:t')
-		local extension = vim.fn.expand('%:e')
-		local icon, name  = require'nvim-web-devicons'.get_icon(filename, extension)
-		if icon ~= nil then
-			val.fg = vim.fn.synIDattr(vim.fn.hlID(name), 'fg')
-		else
-			val.fg = 'white'
-		end
+		val.fg = 'white'
 		val.bg = 'bg'
 		val.style = 'bold'
 		return val

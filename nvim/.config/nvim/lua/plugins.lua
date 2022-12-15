@@ -37,6 +37,7 @@ end
 return require('packer').startup({ function(use)
 	-- Packer can manage itself
 	use 'wbthomason/packer.nvim'
+	use 'lewis6991/impatient.nvim'
 
 	-- filedetect drop-in-placement
 	use 'nathom/filetype.nvim'
@@ -48,12 +49,12 @@ return require('packer').startup({ function(use)
 		config = [[require('config.tmux-navigator')]]
 	}
 
-	-- Alternative: https://github.com/jpalardy/vim-slime
-	use {
-		'christoomey/vim-tmux-runner', config = function()
-			nnoremap("<leader>v-", ':VtrOpenRunner { "orientation": "v", "percentage": 30 }<cr>');
-		end
-	}
+	-- -- Alternative: https://github.com/jpalardy/vim-slime
+	-- use {
+	-- 	'christoomey/vim-tmux-runner', config = function()
+	-- 		nnoremap("<leader>v-", ':VtrOpenRunner { "orientation": "v", "percentage": 30 }<cr>');
+	-- 	end
+	-- }
 
 	use {
 		'nvim-treesitter/nvim-treesitter', run = ':TSUpdate',
@@ -61,7 +62,6 @@ return require('packer').startup({ function(use)
 			-- for debugging treesitter queries (for textobjects)
 			'nvim-treesitter/playground',
 			--
-			-- TODO: Define a key/value textobject
 			'nvim-treesitter/nvim-treesitter-textobjects'
 			-- Check it out
 			-- 'mfussenegger/nvim-ts-hint-textobject'
@@ -71,34 +71,17 @@ return require('packer').startup({ function(use)
 
 	use 'nvim-treesitter/nvim-treesitter-context'
 
-	-- preview hex colors
-	use {
-		'rrethy/vim-hexokinase',
-		run = 'make hexokinase',
-		cmd = 'HexokinaseToggle',
-		config = [[vim.g.Hexokinase_highlighters = {'virtual'}]],
-	}
-
 	-- Autocomplete & Linters
 	use { 'neovim/nvim-lspconfig',
 		config = [[require('config.lspconfig')]],
 	}
 
-	-- -- Better LSP diagnostics display
-	-- use {
-	-- 	"folke/lsp-trouble.nvim",
-	-- 	requires = "kyazdani42/nvim-web-devicons",
-	-- 	config = [[require('config.lsp-trouble')]]
-	-- }
-
-	-- use { 'kosayoda/nvim-lightbulb', config = [[require('config.lightbulb')]] }
-
 	-- snippets
-	use "rafamadriz/friendly-snippets"
-	use 'hrsh7th/cmp-vsnip'
-	use { 'hrsh7th/vim-vsnip', config = [[require('config.vsnip')]] }
-	use 'xabikos/vscode-javascript'
-	-- TODO: Check this one out if it's not superceded by LSP
+	use { 'L3MON4D3/LuaSnip', config = [[require("config.snippets")]] }
+	use 'saadparwaiz1/cmp_luasnip'
+	use 'rafamadriz/friendly-snippets'
+
+	-- TODO: Check this one out if it's not superceded by FriendlySnippets
 	-- use { 'xianghongai/vscode-javascript-comment',
 	-- 	config = function()
 	-- 		-- os.execute(
@@ -113,37 +96,38 @@ return require('packer').startup({ function(use)
 	-- automatch quotes and brackets
 	use {
 		'windwp/nvim-autopairs',
-		config = [[require('config.autopairs')]]
+		config = [[require('config.autopairs')]],
+		requires = "hrsh7th/nvim-cmp",
 	}
 
 	use { 'hrsh7th/nvim-cmp', config = [[require('config.cmp')]] }
 	use 'onsails/lspkind-nvim' -- for icons/types in inscompletion
 	use 'hrsh7th/cmp-nvim-lsp'
+	use 'hrsh7th/cmp-nvim-lua'
 	use 'hrsh7th/cmp-buffer'
 	use 'hrsh7th/cmp-path'
-	use { 'andersevenrud/compe-tmux' }
-	-- use 'petertriho/cmp-git'
+	use 'andersevenrud/compe-tmux'
 
-	-- Plenary.nvim doesn't seem to work ¯\_(ツ)_/¯
-	vim.api.nvim_set_keymap(
-		"i",
-		"<C-x><C-d>",
-		[[<c-r>=luaeval("require('complextras').complete_line_from_cwd()")<CR>]],
-		{ noremap = true }
-	)
-	vim.api.nvim_set_keymap(
-		"i",
-		"<C-x><C-m>",
-		[[<c-r>=luaeval("require('complextras').complete_matching_line()")<CR>]],
-		{ noremap = true }
-	)
-	use { 'tjdevries/complextras.nvim' }
-
-	use { 'ray-x/lsp_signature.nvim' }
-	-- use 'hrsh7th/cmp-nvim-lsp-signature-help'
+	-- vim.api.nvim_set_keymap(
+	-- 	"i",
+	-- 	"<C-x><C-d>",
+	-- 	[[<c-r>=luaeval("require('complextras').complete_line_from_cwd()")<CR>]],
+	-- 	{ noremap = true }
+	-- )
+	-- vim.api.nvim_set_keymap(
+	-- 	"i",
+	-- 	"<C-x><C-m>",
+	-- 	[[<c-r>=luaeval("require('complextras').complete_matching_line()")<CR>]],
+	-- 	{ noremap = true }
+	-- )
+	-- use {
+	-- 	'tjdevries/complextras.nvim',
+	-- 	requires = {
+	-- 		{ "nvim-lua/plenary.nvim" },
+	-- 	}
+	-- }
 
 	use { "folke/todo-comments.nvim", config = [[require('config.todo')]] }
-	use { "folke/zen-mode.nvim", config = [[require('config.zen-mode')]] }
 
 	-- use 'famiu/bufdelete.nvim'
 
@@ -153,19 +137,16 @@ return require('packer').startup({ function(use)
 		config = [[require('config.lsp')]],
 	}
 
-	vim.g.matchup_matchparen_offscreen = {}
-	use { "andymass/vim-matchup" }
-
-	-- use {
-	-- 	'kyazdani42/nvim-tree.lua',
-	-- 	config = [[require('config.tree')]]
-	-- }
+	use {
+		"andymass/vim-matchup",
+		setup = function()
+			vim.g.matchup_matchparen_offscreen = {}
+		end,
+	}
 
 	use { 'justinmk/vim-dirvish', config = [[require('config.dirvish')]] }
 	use 'kristijanhusak/vim-dirvish-git'
-
 	use 'roginfarrer/vim-dirvish-dovish'
-	use 'bounceme/remote-viewer'
 
 	-- -- Respect .editorconfig files
 	-- use { 'editorconfig/editorconfig-vim',
@@ -185,15 +166,8 @@ return require('packer').startup({ function(use)
 	use { 'morhetz/gruvbox', config = [[require('config.gruvbox')]] }
 	use { 'ajmwagar/vim-deus' }
 	use { 'folke/tokyonight.nvim' } -- remove colors/tokyonight
-	use { "catppuccin/nvim", as = "catppuccin" }
 	use { 'matsuuu/pinkmare' }
-	use {
-		'marko-cerovac/material.nvim',
-		config = [[require('config.theme-material')]]
-	}
-	use { 'rktjmp/lush.nvim' }
 	use { 'CodeGradox/onehalf-lush' }
-	use { 'rakr/vim-one' }
 	use { "rebelot/kanagawa.nvim" }
 	use { 'mhartington/oceanic-next' }
 	use { 'savq/melange' }
@@ -205,26 +179,24 @@ return require('packer').startup({ function(use)
 		tag = 'v1.*',
 	}
 	use { "briones-gabriel/darcula-solid.nvim", requires = "rktjmp/lush.nvim" }
+	use { 'junegunn/seoul256.vim' }
 	use { 'doums/darcula' }
 	use {
 		'famiu/feline.nvim',
-		requires = { 'kyazdani42/nvim-web-devicons' },
 		config = [[require('config.feline')]],
 	}
 	use 'folke/lsp-colors.nvim'
 
-	use {
-		"theprimeagen/refactoring.nvim",
-		config = [[require('config.refactoring')]],
-		requires = {
-			{ "nvim-lua/plenary.nvim" },
-			{ "nvim-treesitter/nvim-treesitter" }
-		}
-	}
+	-- use {
+	-- 	"theprimeagen/refactoring.nvim",
+	-- 	config = [[require('config.refactoring')]],
+	-- 	requires = {
+	-- 		{ "nvim-lua/plenary.nvim" },
+	-- 		{ "nvim-treesitter/nvim-treesitter" }
+	-- 	}
+	-- }
 
 	-- https://github.com/mkitt/tabline.vim/blob/master/plugin/tabline.vim
-
-	use 'antoinemadec/FixCursorHold.nvim' -- Needed while issue https://github.com/neovim/neovim/issues/12587 is still open
 
 	-- Make |v_b_I| and |v_b_A| available in all kinds of Visual mode
 	use { 'kana/vim-niceblock', config = [[require('config.niceblock')]] }
@@ -249,8 +221,6 @@ return require('packer').startup({ function(use)
 		end
 	}
 
-	use 'inside/vim-textobj-jsxattr'
-	-- use 'whatyouhide/vim-textobj-xmlattr'
 	use 'wellle/targets.vim'
 
 	-- or thinca/vim-textobj-comment
@@ -310,13 +280,6 @@ return require('packer').startup({ function(use)
 	use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
 	use { "smartpde/telescope-recent-files" }
 
-	use {
-		'romainl/vim-devdocs',
-		config = function()
-			nmap("<localleader>k", "<cmd>DD<CR>")
-		end
-	}
-
 	-- TODO: open issue for adjusting visual selection (gv) after surrounding
 	use { 'machakann/vim-sandwich', config = [[require('config.sandwich')]] }
 	-- use 'tpope/vim-surround'
@@ -333,7 +296,6 @@ return require('packer').startup({ function(use)
 			'nvim-lua/plenary.nvim'
 		},
 		config = [[require('config.gitsigns')]],
-		after = 'gruvbox'
 	}
 
 	-- cd to file/project
@@ -350,7 +312,7 @@ return require('packer').startup({ function(use)
 
 	-- -- Make Gbrowse open Github & Gitlab urls
 	use 'tpope/vim-rhubarb'
-	use 'shumphrey/fugitive-gitlab.vim'
+
 	-- Git
 	use { 'tpope/vim-fugitive', config = [[require('config.fugitive')]] }
 
@@ -405,7 +367,11 @@ return require('packer').startup({ function(use)
 
 	use {
 		'danymat/neogen',
-		config = function() require('neogen').setup({}) end
+		config = function() require('neogen').setup({
+			-- use luasnip for expansion
+			snippet_engine = "luasnip",
+		}) end,
+		requires = 'L3MON4D3/LuaSnip',
 	}
 
 	-- use 'pechorin/any-jump.vim' -- Document outline

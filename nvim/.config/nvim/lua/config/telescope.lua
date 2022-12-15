@@ -188,6 +188,8 @@ nnoremap("<Leader>j", "<silent>", "<cmd>Telescope live_grep<CR>");
 nnoremap("<Leader>r", "<silent>", ":lua TelescopeCurrentBuffer()<CR>");
 nnoremap("<Leader>w", "<silent>", "<cmd>Telescope builtin<CR>");
 nnoremap("<Leader>b", "<silent>", "<cmd>Telescope buffers<CR>");
+nnoremap("gR", "<silent>", "<cmd>Telescope lsp_references<CR>");
+nnoremap("gr", "<silent>", "<cmd>Telescope lsp_incoming_calls<CR>");
 -- nnoremap("<Leader>c", "<silent>", "<cmd>Telescope commands<CR>");
 nnoremap("<Leader>gf", "<silent>", "<cmd>Telescope git_status<CR>");
 

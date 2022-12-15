@@ -6,12 +6,11 @@ require('nvim-treesitter.configs').setup({
 	},
 	highlight = {
 		enable = true,
-		-- -- for better syntax highlighting
-		-- -- https://github.com/CodeGradox/onehalf-lush
-		-- additional_vim_regex_highlighting = false,
+		additional_vim_regex_highlighting = false,
 	},
 	matchup = {
 		enable = true,
+		disable_virtual_text = true,
 	},
 	context_commentstring = {
 		-- https://github.com/JoosepAlviste/nvim-ts-context-commentstring#commentnvim
@@ -48,16 +47,16 @@ require('nvim-treesitter.configs').setup({
 			set_jumps = true, -- whether to set jumps in the jumplist
 			goto_next_start = {
 				["]f"] = "@function.outer",
-				["]]"] = "@class.outer",
-				["]a"] = "@parameter.inner",
+				-- ["]]"] = "@class.outer",
+				-- ["]a"] = "@parameter.inner",
 				-- jump to the next variable assignment
 				[']v'] = '@p.assign.key',
 			},
 			goto_next_end = {},
 			goto_previous_start = {
 				["[f"] = "@function.outer",
-				["[["] = "@class.outer",
-				["[a"] = "@parameter.inner",
+				-- ["[["] = "@class.outer",
+				-- ["[a"] = "@parameter.inner",
 				-- jump to the prev variable assignment
 				['[v'] = '@p.assign.key',
 			},
@@ -89,6 +88,8 @@ require('nvim-treesitter.configs').setup({
 				['is'] = '@p.scope',
 				['ir'] = '@p.return.inner',
 				['ar'] = '@p.return.outer',
+				['ix'] = '@p.jsxAttrVal',
+				['ax'] = '@p.jsxAttr',
 				-- ['ia'] = '@parameter.inner',
 				-- ['aa'] = '@parameter.outer',
 				-- -- ['aC'] = '@class.outer',
