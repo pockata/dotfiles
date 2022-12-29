@@ -35,11 +35,6 @@ nnoremap('>t', ':tabmove +1<CR>')
 noremap('<C-s>', '<esc>:w<CR>')
 inoremap('<C-s>', '<esc>:w<CR>')
 
--- Jump by half a page and center the cursor vertically
-nnoremap("<c-d>", "<c-d>zz")
-nnoremap("<c-u>", "<c-u>zz")
-
-
 -- hm?
 nnoremap("J", "mzJ`z")
 
@@ -176,9 +171,6 @@ nnoremap("'", ";")
 -- Navigate folds
 nnoremap("]z", "<silent>", ":call NextClosedFold('j')<cr>")
 nnoremap("[z", "<silent>", ":call NextClosedFold('k')<cr>")
-
--- View highlight groups under cursor
-nnoremap("<leader>sI", "<silent>", ":TSHighlightCapturesUnderCursor<cr>")
 
 -- -- Shrug ¯\_(ツ)_/¯
 -- inoremap("#shrug", [[¯\_(ツ)_/¯]])
