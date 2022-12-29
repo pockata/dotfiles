@@ -160,32 +160,25 @@ return require('packer').startup({ function(use)
 	-- }
 
 	-- Theming
-	use { 'challenger-deep-theme/vim', as = 'challenger-deep',
-		config = [[require('config.challenger-deep')]]
+	use { "challenger-deep-theme/vim", as = "challenger-deep",
+		config = [[require("config.challenger-deep")]]
 	}
-	use { 'morhetz/gruvbox', config = [[require('config.gruvbox')]] }
-	use { 'ajmwagar/vim-deus' }
-	use { 'folke/tokyonight.nvim' } -- remove colors/tokyonight
-	use { 'matsuuu/pinkmare' }
-	use { 'CodeGradox/onehalf-lush' }
+	use { "morhetz/gruvbox", config = [[require("config.gruvbox")]] }
+	use { "ajmwagar/vim-deus" }
+	use { "folke/tokyonight.nvim" } -- remove colors/tokyonight
+	use { "matsuuu/pinkmare" }
 	use { "rebelot/kanagawa.nvim" }
-	use { 'mhartington/oceanic-next' }
-	use { 'savq/melange' }
-	use { 'haystackandroid/wonka' }
-	use { 'glepnir/oceanic-material' }
-	use {
-		'rose-pine/neovim',
-		as = 'rose-pine',
-		tag = 'v1.*',
-	}
+	use { "savq/melange" }
+	use { "haystackandroid/wonka" }
+	use { "rose-pine/neovim", as = "rose-pine" }
 	use { "briones-gabriel/darcula-solid.nvim", requires = "rktjmp/lush.nvim" }
-	use { 'junegunn/seoul256.vim' }
-	use { 'doums/darcula' }
+	use { "doums/darcula" }
+	use { "EdenEast/nightfox.nvim" }
 	use {
-		'famiu/feline.nvim',
-		config = [[require('config.feline')]],
+		"famiu/feline.nvim",
+		config = [[require("config.feline")]],
 	}
-	use 'folke/lsp-colors.nvim'
+	use "folke/lsp-colors.nvim"
 
 	-- use {
 	-- 	"theprimeagen/refactoring.nvim",
@@ -368,9 +361,10 @@ return require('packer').startup({ function(use)
 	use {
 		'danymat/neogen',
 		config = function() require('neogen').setup({
-			-- use luasnip for expansion
-			snippet_engine = "luasnip",
-		}) end,
+				-- use luasnip for expansion
+				snippet_engine = "luasnip",
+			})
+		end,
 		requires = 'L3MON4D3/LuaSnip',
 	}
 

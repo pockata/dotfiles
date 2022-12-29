@@ -47,7 +47,7 @@ o.winminheight = 0
 o.winminwidth = 0
 
 -- diff options
--- o.diffopt = o.diffopt .. ",vertical,algorithm:histogram,linematch:60"
+o.diffopt = o.diffopt .. ",vertical,algorithm:histogram,linematch:60"
 
 create_augroup('diff_update', 'BufWritePost * if &diff == 1 | diffupdate | endif')
 
@@ -83,7 +83,7 @@ wo.relativenumber = true
 -- 	'WinLeave,BufLeave * setlocal nocursorline'
 -- })
 
-o.shortmess = o.shortmess .. "Ic" -- remove intro when starting Vim
+o.shortmess = o.shortmess .. "c" -- remove intro when starting Vim
 o.hidden = true -- allow switching buffers without saving
 bo.synmaxcol = 500 -- don't highlight long lines
 o.termguicolors = true -- use true colors in TUI
