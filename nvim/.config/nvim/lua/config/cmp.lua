@@ -138,12 +138,12 @@ cmp.setup({
 			},
 		}
 	),
-	sorting = {
-		comparators = {
-			-- https://github.com/hrsh7th/cmp-buffer#locality-bonus-comparator-distance-based-sorting
-			function(...) return cmp_buffer:compare_locality(...) end,
-		}
-	},
+	-- sorting = {
+	-- 	comparators = {
+	-- 		-- https://github.com/hrsh7th/cmp-buffer#locality-bonus-comparator-distance-based-sorting
+	-- 		function(...) return cmp_buffer:compare_locality(...) end,
+	-- 	}
+	-- },
 })
 
 vim.keymap.set("i", "<c-u>", require "luasnip.extras.select_choice")
