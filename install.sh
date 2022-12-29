@@ -3,35 +3,35 @@ set -e
 
 # ASK Helper
 ask() {
-  # http://djm.me/ask
-  while true; do
+	# http://djm.me/ask
+	while true; do
 
-    if [ "${2:-}" = "Y" ]; then
-      prompt="Y/n"
-      default=Y
-    elif [ "${2:-}" = "N" ]; then
-      prompt="y/N"
-      default=N
-    else
-      prompt="y/n"
-      default=
-    fi
+		if [ "${2:-}" = "Y" ]; then
+			prompt="Y/n"
+			default=Y
+		elif [ "${2:-}" = "N" ]; then
+			prompt="y/N"
+			default=N
+		else
+			prompt="y/n"
+			default=
+		fi
 
-    # Ask the question
-    read -p "$(echo -e "$1 [$prompt] ")" REPLY
+		# Ask the question
+		read -p "$(echo -e "$1 [$prompt] ")" REPLY
 
-    # Default?
-    if [ -z "$REPLY" ]; then
-       REPLY=$default
-    fi
+		# Default?
+		if [ -z "$REPLY" ]; then
+			REPLY=$default
+		fi
 
-    # Check if the reply is valid
-    case "$REPLY" in
-      Y*|y*) return 0 ;;
-      N*|n*) return 1 ;;
-    esac
+		# Check if the reply is valid
+		case "$REPLY" in
+			Y*|y*) return 0 ;;
+			N*|n*) return 1 ;;
+		esac
 
-  done
+	done
 }
 
 # Color helpers
@@ -69,92 +69,94 @@ bakcyn='\e[46m'   # Cyan
 bakwht='\e[47m'   # White
 txtrst='\e[0m'    # Text Reset
 
-# Check for GNU Stow
-if ! hash stow 2>/dev/null; then
-    echo -e "${txtred}ERORR: GNU Stow is required!${txtrst}\nPlease install it in order to continue."
-    exit 1;
-fi
-
 # Install packages (pacman, AUR, npm etc)
 if ask "${txtylw}Install packages?${txtrst}" Y; then
-    #echo -e "${undwht}Will${txtrst} ${txtwht}install them sometime in the future${txtrst} ${txtylw}:)${txtrst}";
+	#echo -e "${undwht}Will${txtrst} ${txtwht}install them sometime in the future${txtrst} ${txtylw}:)${txtrst}";
 
-    # Install pacman packages
-    sudo pacman -Syu --noconfirm --needed $(< pacman-deps.txt)
+	# Install pacman packages
+	sudo pacman -Syu --noconfirm --needed $(< pacman-deps.txt)
 
-    # Install yay for AUR packages
-	(cd /tmp && git clone --depth 1 https://aur.archlinux.org/yay.git && cd yay && makepkg -si)
+	if ask "${txtylw}Install AUR packages?${txtrst}" Y; then
+		if ! hash yay 2>/dev/null; then
+			# Install yay for AUR packages
+			(cd /tmp && git clone --depth 1 https://aur.archlinux.org/yay.git && cd yay && makepkg -si)
+		fi
 
-    yay -Sya --noconfirm --needed $(< aur-deps.txt)
+	    yay -Sya --noconfirm --needed $(< aur-deps.txt)
+	fi
 
-    # Install VimPlug
-    curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.github.com/junegunn/vim-plug/master/plug.vim
-    echo "Don't forget to run :PlugInstall within Vim"
-
-    # Install zplug
-    curl -fLo ~/.zplug/zplug --create-dirs https://git.io/zplug
-    echo "Don't forget to run zplug update --self within ZSH"
+	# Install zplug
+	curl -sL --proto-redir -all,https https://raw.githubusercontent.com/zplug/installer/master/installer.zsh | zsh
 fi
 
 if ask "${txtylw}Symlink dotfiles?${txtrst}" Y; then
 
-    mkdir -p ~/dotfile_conflicts
-    echo -e "${undylw}Backing up conflicts to ~/dotfile_conflicts..${txtrst}"
-    IFS=$'\n'
+	# Check for GNU Stow
+	if ! hash stow 2>/dev/null; then
+		echo -e "${txtred}ERORR: GNU Stow is required!${txtrst}\nPlease install it in order to continue."
+		exit 1;
+	fi
 
-    for file in $(stow -n $(ls */ -d | grep -v "root") 2>&1 | grep -oE ":.+" | cut -c3-); do
-        if [ -f ~/$file ]; then
-            mkdir -p ~/dotfile_conflicts/$(dirname $file)
-            mv ~/$file ~/dotfile_conflicts/$file
-            echo $file
-        fi
-    done
+	mkdir -p ~/dotfile_conflicts
+	echo -e "${undylw}Backing up conflicts to ~/dotfile_conflicts..${txtrst}"
+	IFS=$'\n'
 
-    # stops systemd from using the power key
-    # so we can bind it with sxhkd
-    sudo sed -i 's/#HandlePowerKey=poweroff/HandlePowerKey=ignore/g' /etc/systemd/logind.conf
+	for file in $(stow -n $(ls */ -d | grep -v "root") 2>&1 | grep -oE ":.+" | cut -c3-); do
+		if [ -f ~/$file ]; then
+			mkdir -p ~/dotfile_conflicts/$(dirname $file)
+			mv ~/$file ~/dotfile_conflicts/$file
+			echo $file
+		fi
+	done
 
-    echo -e "${txtylw}Linking dotfiles to home dir...${txtrst}"
-    stow $(ls */ -d | grep -v "root")
+	echo -e "${txtylw}Linking dotfiles to home dir...${txtrst}"
+	stow $(ls */ -d | grep -v "root")
 
-    if ask "${txtylw}Symlink root dotfiles?${txtrst}" N; then
-        sudo stow root -t /
-    fi
+	if ask "${txtylw}Symlink root dotfiles?${txtrst}" N; then
+		sudo stow root -t /
+	fi
 fi
 
-if ask "${txtylw}Setup/update mmutils?${txtrst}" N; then
-    CURR=$(pwd)
-    cd /tmp/
-    git clone --depth 1 https://github.com/pockata/mmutils
-    cd mmutils
-    make
-    cp lsm mattr ~/bin/
-    cd ../
-    rm -rf mmutils
-    cd "$CURR"
+if ask "${txtylw}Setup Docker?${txtrst}" N; then
+	sudo usermod -aG docker $USER
+	sudo systemctl enable docker.service
+	echo -n "Added user to docker group and enabled systemd service"
+fi
+
+if ask "${txtylw}Disable global KDE keymaps?${txtrst}" N; then
+	hotkeysRC=~/.config/kglobalshortcutsrc
+
+	# Remove application launching shortcuts.
+	sed -i 's/_launch=[^,]*/_launch=none/g' "$hotkeysRC"
+
+	# Remove other global shortcuts.
+	sed -i 's/^\([^_].*\)=[^,]*/\1=none/g' "$hotkeysRC"
+
+	# Reload hotkeys.
+	kquitapp5 kglobalaccel && sleep 2s && kglobalaccel5 &
 fi
 
 if ask "${txtylw}Replace sh with dash?${txtrst}" N; then
 
-    if [[ -f /usr/bin/dash ]]; then
-        echo "Replacing /usr/bin/sh by dash. Reinstall core/bash to revert."
-        ln -sf --backup /usr/bin/dash /usr/bin/sh && rm "/usr/bin/sh~"
-    else
-        echo "Dash not installed. Skipping."
-    fi
+	if [[ -f /usr/bin/dash ]]; then
+		echo "Replacing /usr/bin/sh by dash. Reinstall core/bash to revert."
+		ln -sf --backup /usr/bin/dash /usr/bin/sh && rm "/usr/bin/sh~"
+	else
+		echo "Dash not installed. Skipping."
+	fi
 fi
 
 if ask "${txtylw}Set time/date options?${txtrst}" N; then
-    timedatectl set-timezone "Europe/Sofia"
-    timedatectl set-ntp true
-    sudo hwclock --systohc --utc
-    echo "NTP has been enabled and hardware clock will be in UTC. More information: https://wiki.archlinux.org/index.php/Time"
+	timedatectl set-timezone "Europe/Sofia"
+	timedatectl set-ntp true
+	sudo hwclock --systohc --utc
+	echo "NTP has been enabled and hardware clock will be in UTC. More information: https://wiki.archlinux.org/index.php/Time"
 fi
 
 if ask "${txtylw}Set system locale to en_US.UTF-8?${txtrst}" N; then
-    sudo localectl set-locale LANG=en_US.UTF-8
-    echo "If having weird locale problems, check https://wiki.archlinux.org/index.php/Locale"
-fi
+	sudo localectl set-locale LANG=en_US.UTF-8
+	echo "If having weird locale problems, check https://wiki.archlinux.org/index.php/Locale"
+	fi
 
-echo -e "\n${txtgrn}BYE!${txtrst}"
+	echo -e "\n${txtgrn}BYE!${txtrst}"
 

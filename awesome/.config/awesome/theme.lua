@@ -135,7 +135,13 @@ theme.layout_cornerse = themes_path.."default/layouts/cornersew.png"
 
 -- lain widget icons
 theme.lain_icons = os.getenv("HOME") .. "/.config/awesome/lain/icons/layout/zenburn/"
+local osLain = "/usr/share/awesome/lib/lain/icons/layout/zenburn/"
+if gfs.dir_readable(osLain) then
+    theme.lain_icons = osLain
+end
+-- theme.lain_icons = os.getenv("HOME") .. "/.config/awesome/lain/icons/layout/zenburn/"
 theme.layout_centerwork  = theme.lain_icons .. "centerwork.png"
+theme.layout_centerworkh  = theme.lain_icons .. "centerworkh.png"
 
 -- -- Generate Awesome icon:
 -- theme.awesome_icon = theme_assets.awesome_icon(

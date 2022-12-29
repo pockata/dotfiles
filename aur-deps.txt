@@ -1,14 +1,6 @@
-wmutils-git
-lemonbar-xft-git
-hsetroot
-xkb-switch-git
-sublime-text-dev
-redshift-gtk-git
-ttf-ms-fonts
-pup-git
-pulseaudio
+xkb-switch
 greenclip
-etcher
-betaflight-configurator-bin
-blheli-configurator-bin
+stremio-beta
+rofi-greenclip
+bob-bin
 

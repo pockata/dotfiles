@@ -1,25 +1,25 @@
-#include </home/pockata/dotfiles/x/synthwave>
-! Colors
-*background:   bg
-*foreground:   fg
-*cursorColor:  wht
+! TokyoNight colors for Xresources
 
-*color0:      blk
-*color8:      bblk
-*color1:      red
-*color9:      red
-*color2:      grn
-*color10:     grn
-*color3:      ylw
-*color11:     ylw
-*color4:      blu
-*color12:     blu
-*color5:      mag
-*color13:     mag
-*color6:      cyn
-*color14:     cyn
-*color7:      wht
-*color15:     wht
+*background: #24283b
+*foreground: #c0caf5
+
+*color0: #1d202f
+*color1: #f7768e
+*color2: #9ece6a
+*color3: #e0af68
+*color4: #7aa2f7
+*color5: #bb9af7
+*color6: #7dcfff
+*color7: #a9b1d6
+
+*color8: #414868
+*color9: #f7768e
+*color10: #9ece6a
+*color11: #e0af68
+*color12: #7aa2f7
+*color13: #bb9af7
+*color14: #7dcfff
+*color15: #c0caf5
 
 !-- Xft settings -- !
 Xft.dpi:        102

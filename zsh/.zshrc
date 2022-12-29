@@ -9,7 +9,7 @@ source ~/.zplug/init.zsh
 bindkey -e
 
 # Let zplug manage itself
-zplug "zplug/zplug"
+zplug 'zplug/zplug', hook-build:'zplug --self-manage'
 
 zplug "zsh-users/zsh-completions", as:plugin, use:"src"
 zplug "rupa/z", use:z.sh
@@ -39,6 +39,7 @@ zplug load
 zstyle :prompt:pure:git:stash show yes
 
 PATH="$HOME/bin:$PATH"
+PATH="$HOME/go/bin:$PATH"
 export NVM_DIR="$HOME/.nvm"
 
 nvm () {
@@ -87,6 +88,9 @@ HISTSIZE=100000
 SAVEHIST=100000
 HISTORY_IGNORE="(bg|fg|cd*|rm*|clear|ls|pwd|history|exit|make*|* --help)"
 
+# Don't consider certain characters part of the word
+WORDCHARS=${WORDCHARS//\/[&.;]}
+
 setopt share_history
 setopt inc_append_history
 setopt hist_ignore_all_dups
@@ -116,6 +120,16 @@ _fzf_compgen_dir() {
     rg --files "$1" | only-dir "$1"
 }
 
+# load fzf's zsh keybindings if available
+if [[ -e /usr/share/fzf/completion.zsh ]]; then
+	source /usr/share/fzf/completion.zsh
+fi
+
+# load fzf's zsh keybindings if available
+if [[ -e /usr/share/fzf/key-bindings.zsh ]]; then
+	source /usr/share/fzf/key-bindings.zsh
+fi
+
 # colorize man pages
 # http://boredzo.org/blog/archives/2016-08-15/colorized-man-pages-understood-and-customized
 export LESS_TERMCAP_mb=$(printf "\e[1;31m")
@@ -140,7 +154,8 @@ alias ga="g add \$(gf) && g st"
 alias gv='nvim +"let g:loaded_startify = 1" +GV +tabonly +"autocmd BufWipeout <buffer> qall"'
 alias t="tmux -2"
 alias e="nvim"
-alias view="eog"
+# TODO: use eog or okular based on availability
+alias view="okular"
 alias aur="yay"
 alias myip="dig +short myip.opendns.com @resolver1.opendns.com"
 alias ips="ip a | grep 'inet ' | sed -e 's/^.*inet //g' -e 's/\/.*//g' | grep -v '127.0.0.1'"
@@ -215,6 +230,7 @@ export NODE_PATH="$NPM_PACKAGES/lib/node_modules:$NODE_PATH"
 
 PATH="$NPM_PACKAGES/bin:$PATH"
 PATH="${HOME}/.gem/ruby/2.6.0/bin:$PATH"
+PATH="${HOME}/.local/share/neovim/bin:${PATH}"
 export PATH;
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
@@ -327,7 +343,7 @@ project-switcher() {
     local projects proj
 
     projects="$(realpath ~/Projects/)"
-    proj=$(find -L "$projects" -maxdepth 1 -type d -printf "%f\n" -o -type l -printf "%f\n" -o -prune \
+    proj=$(find -L "$projects" -maxdepth 2 -type d -printf "%f\n" -o -type l -printf "%f\n" -o -prune \
         2> /dev/null | \
         grep -v '^.$' | \
         sed 's|\./||g' | \
