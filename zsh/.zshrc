@@ -343,7 +343,7 @@ project-switcher() {
     local projects proj
 
     projects="$(realpath ~/Projects/)"
-    proj=$(find -L "$projects" -maxdepth 2 -type d -printf "%f\n" -o -type l -printf "%f\n" -o -prune \
+    proj=$(find -L "$projects" -mindepth 2 -maxdepth 2 -type d -printf "%P\n" -o -type l -printf "%P\n" -o -prune \
         2> /dev/null | \
         grep -v '^.$' | \
         sed 's|\./||g' | \
