@@ -53,9 +53,6 @@ nmap(',t', ":tabc<CR>")
 -- I picked 5 because it's also the '%' key.
 nmap('<Leader>5', '<silent>', ':let @+ = expand("%:p")<CR>:echom "copied: " . expand("%:p")<CR>')
 
--- Execute the last macro
-nmap('Q', "@@")
-
 -- Split vertically the alternate file
 nmap('<C-W>a', "<C-W>v<C-^>")
 -- Warn about no alternative file
@@ -165,8 +162,8 @@ noremap(';', "l")
 nmap('gk', "j")
 nmap('gl', "k")
 
--- ; is useful with f/t so remap it to '
-nnoremap("'", ";")
+-- ; is useful with f/t so remap it to h
+nnoremap("h", ";")
 
 -- Navigate folds
 nnoremap("]z", "<silent>", ":call NextClosedFold('j')<cr>")

@@ -80,8 +80,8 @@ augroup Filetypes
 				\ |   exe "normal! g`\""
 				\ | endif
 
-	" TODO: Create a blacklist and trim everything else
-	autocmd BufWrite * :call DeleteTrailingWS()
+	" " TODO: Create a blacklist and trim everything else
+	" autocmd BufWrite * :call DeleteTrailingWS()
 
 	autocmd BufNewFile,BufRead *.jsx set filetype=javascriptreact
 
@@ -148,9 +148,6 @@ cnoreabbrev <expr> %% expand('%:h')
 
 " Enable replacement in visual mode
 cnoreabbrev vis s/\%V
-
-" Execute the last macro
-nnoremap Q @@
 
 " Merge a tab into a split in the previous window
 function! MergeTabs()

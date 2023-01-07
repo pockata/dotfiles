@@ -18,7 +18,14 @@ create_augroup('set_iskeyword', {
 o.lazyredraw = true
 
 o.spell = false
-o.spelloptions = "noplainbuffer,camel"
+-- spellopts doesn't work if set via opt directly
+-- o.spelloptions = "noplainbuffer,camel"
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = "*",
+	callback = function ()
+		vim.opt_local.spelloptions = "noplainbuffer,camel"
+	end
+})
 
 -- for git status in beside the line numbers
 o.updatetime = 50
@@ -84,7 +91,7 @@ wo.relativenumber = true
 -- })
 
 o.shortmess = o.shortmess .. "c" -- remove intro when starting Vim
-o.hidden = true -- allow switching buffers without saving
+-- o.hidden = true -- allow switching buffers without saving
 bo.synmaxcol = 500 -- don't highlight long lines
 o.termguicolors = true -- use true colors in TUI
 o.splitright = true
@@ -94,11 +101,11 @@ o.guicursor = "n-v-c:block,i-ci-ve:ver25,r-cr:hor20,o:hor50"
 
 -- Editing
 o.virtualedit = "block" -- allow for cursor beyond last character
-o.joinspaces = false -- one space after J or gq
-o.switchbuf = "uselast"
+-- o.joinspaces = false -- one space after J or gq
+-- o.switchbuf = "uselast"
 o.confirm = true -- show confirmation for actions that abort immediately
 o.mouse = "a" -- always allow mouse usage
-o.display = o.display .. ",uhex"
+-- o.display = o.display .. ",uhex"
 
 -- https://github.com/tjdevries/config_manager/blob/master/xdg_config/nvim/lua/tj/options.lua#L71
 -- insert comment leader after hitting <Enter>
@@ -130,7 +137,7 @@ wo.foldminlines = 5
 -- MISC
 o.timeoutlen = 500
 o.ttimeoutlen = 0
-bo.bomb = false -- don't write a BOM mark at the start of the file
+-- bo.bomb = false -- don't write a BOM mark at the start of the file
 
 vim.g.mapleader = " "
 vim.g.maplocalleader = ","

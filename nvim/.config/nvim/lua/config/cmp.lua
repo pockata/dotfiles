@@ -146,7 +146,7 @@ cmp.setup({
 	-- },
 })
 
-vim.keymap.set("i", "<c-u>", require "luasnip.extras.select_choice")
+vim.keymap.set("i", "<c-m>", require "luasnip.extras.select_choice")
 
 -- Disable cmp inside Telescope prompt
 -- It's handled internally in cmp, but it doesn't seem to work for me so we do
