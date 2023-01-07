@@ -1,5 +1,4 @@
 local lspconfig = require("lspconfig")
-local lsp_installer = require("nvim-lsp-installer")
 
 -- Checkout handlers from here
 -- https://github.com/tjdevries/config_manager/blob/master/xdg_config/nvim/lua/tj/lsp/handlers.lua
@@ -67,39 +66,39 @@ local on_attach = function(client, bufnr)
 end
 
 local function setup_servers()
-	-- local capabilities = vim.lsp.protocol.make_client_capabilities()
-	local capabilities = require('cmp_nvim_lsp').default_capabilities()
-	capabilities.textDocument.completion.completionItem.snippetSupport = true
+	local capabilities = vim.lsp.protocol.make_client_capabilities()
+	capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 
-	require("nvim-lsp-installer").setup {}
+	require("mason").setup()
 
-	local servers = lsp_installer.get_installed_servers()
-	for _, server in ipairs(servers) do
-		local conf = {
-			on_attach = on_attach,
-			capabilities = capabilities,
-		}
+	require("mason-lspconfig").setup_handlers({
+		function(server)
+			local conf = {
+				on_attach = on_attach,
+				capabilities = capabilities,
+			}
 
-		-- TODO: Check out json/yaml schema configs
-		-- https://github.com/Allaman/nvim/blob/main/lua/config/lsp.lua
+			-- TODO: Check out json/yaml schema configs
+			-- https://github.com/Allaman/nvim/blob/main/lua/config/lsp.lua
 
-		-- load config/lsp/{server}.lua and pass the default config file
-		pcall(function() conf = require('config.lsp.' .. server.name)(conf) end)
+			-- load config/lsp/{server}.lua and pass the default config file
+			pcall(function() conf = require('config.lsp.' .. server)(conf) end)
 
-		if server.name == "tsserver" then
-			require("typescript").setup({
-				go_to_source_definition = {
-					fallback = false, -- fall back to standard LSP definition on failure
-				},
-				server = conf,
-			})
-		else
-			-- This setup() function is exactly the same as lspconfig's setup function (:help lspconfig-quickstart)
-			lspconfig[server.name].setup(conf)
+			if server == "tsserver" then
+				require("typescript").setup({
+					go_to_source_definition = {
+						fallback = false, -- fall back to standard LSP definition on failure
+					},
+					server = conf,
+				})
+			else
+				-- This setup() function is exactly the same as lspconfig's setup function (:help lspconfig-quickstart)
+				lspconfig[server].setup(conf)
+			end
+
+			-- vim.cmd [[ do User LspAttachBuffers ]]
 		end
-
-		-- vim.cmd [[ do User LspAttachBuffers ]]
-	end
+	})
 end
 
 setup_servers()

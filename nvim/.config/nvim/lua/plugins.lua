@@ -142,11 +142,27 @@ require('lazy').setup({
 	-- use "famiu/bufdelete.nvim"
 
 	{
-		"williamboman/nvim-lsp-installer",
+		"williamboman/mason.nvim",
 		config = function()
 			require("config.lsp")
 		end,
 		dependencies = {
+			{
+				"williamboman/mason-lspconfig.nvim",
+				config = function()
+					require("mason-lspconfig").setup({
+						ensure_installed = {
+							"gopls",
+							"tsserver",
+							"sumneko_lua",
+							-- "cssls",
+							"cssmodules_ls",
+							"jsonls",
+							"yamlls",
+						}
+					})
+				end,
+			},
 			"nvim-lspconfig",
 		},
 	},
