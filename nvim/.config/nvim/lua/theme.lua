@@ -1,19 +1,16 @@
 -- vim.cmd [[colorscheme gruvbox]]
+vim.cmd([[
+	augroup GlobalScheme
+		autocmd!
+		autocmd ColorScheme * highlight EndOfBuffer guifg=bg
+		autocmd ColorScheme * highlight SignColumn guibg=bg
+		autocmd ColorScheme * highlight link HarpoonCurrentFile String
+		" make the line numbers more prominent (useful for :set rnu)
+		autocmd ColorScheme * highlight LineNr guifg=fg
 
-create_augroup('GlobalColorConfig', {
-	'ColorScheme * highlight EndOfBuffer guifg=bg',
-
-	'ColorScheme * highlight SignColumn guibg=bg',
-	'ColorScheme * highlight link HarpoonCurrentFile String',
-	-- make the line numbers more prominent (useful for :set rnu)
-	'ColorScheme * highlight LineNr guifg=fg',
-	-- 'ColorScheme * highlight GitSignsAdd guibg=bg',
-	-- 'ColorScheme * highlight GitSignsChange guibg=bg',
-	-- 'ColorScheme * highlight GitSignsDelete guibg=bg',
-	-- 'ColorScheme * highlight GitSignsChangeDelete guibg=bg',
-})
-
--- TODO: Make a PR to packer.nvim for a new user autocommand for loading things
--- after all plugins load
-vim.cmd [[colorscheme deus]]
-
+		" autocmd ColorScheme * highlight GitSignsAdd guibg=bg,
+		" autocmd ColorScheme * highlight GitSignsChange guibg=bg,
+		" autocmd ColorScheme * highlight GitSignsDelete guibg=bg,
+		" autocmd ColorScheme * highlight GitSignsChangeDelete guibg=bg,
+	augroup END
+]])

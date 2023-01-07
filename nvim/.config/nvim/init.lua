@@ -14,6 +14,6 @@ require('utils')
 require('functions')
 require('settings')
 require('keymaps')
-require('plugins')
 require('theme')
+require('plugins')
 

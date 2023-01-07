@@ -90,12 +90,14 @@ cmp.setup({
 		end, { "i", "s" }),
 
 		["<c-j>"] = cmp.mapping(function()
+			print "c-j"
 			if luasnip.expand_or_jumpable() then
 				luasnip.expand_or_jump()
 			end
 		end, { "i" }),
 
 		["<c-k>"] = cmp.mapping(function()
+			print "c-k"
 			if luasnip.jumpable(-1) then
 				luasnip.jump(-1)
 			end
@@ -146,7 +148,7 @@ cmp.setup({
 	-- },
 })
 
-vim.keymap.set("i", "<c-m>", require "luasnip.extras.select_choice")
+vim.keymap.set("i", "<c-i>", require "luasnip.extras.select_choice")
 
 -- Disable cmp inside Telescope prompt
 -- It's handled internally in cmp, but it doesn't seem to work for me so we do

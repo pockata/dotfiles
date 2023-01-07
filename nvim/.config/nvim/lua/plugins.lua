@@ -1,189 +1,230 @@
--- Only required if you have packer in your `opt` pack
-local packer_exists = pcall(vim.cmd, [[packadd packer.nvim]])
-
-vim.cmd [[cabbrev ps PackerSync]]
-vim.cmd [[cabbrev pc PackerCompile]]
-vim.cmd [[cabbrev pi PackerInstall]]
-
-if not packer_exists then
-	-- TODO: Maybe handle windows better?
-	if vim.fn.input("Download Packer? (y for yes): ") ~= "y" then
-		return
-	end
-
-	local directory = string.format(
-		'%s/site/pack/packer/opt/',
-		vim.fn.stdpath('data')
-	)
-
-	vim.fn.mkdir(directory, 'p')
-
-	local out = vim.fn.system(string.format(
-		'git clone --depth 1 %s %s',
-		'https://github.com/wbthomason/packer.nvim',
-		directory .. '/packer.nvim'
-	))
-
-	print(out)
-	print("Downloading packer.nvim...")
-
-	-- Compile the updates
-	-- vim.cmd(":PackerSync")
-	require('packer').sync()
-
-	return
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+	vim.fn.system({
+		"git",
+		"clone",
+		"--filter=blob:none",
+		"https://github.com/folke/lazy.nvim.git",
+		"--branch=stable", -- latest stable release
+		lazypath,
+	})
 end
 
-return require('packer').startup({ function(use)
-	-- Packer can manage itself
-	use 'wbthomason/packer.nvim'
-	use 'lewis6991/impatient.nvim'
+vim.opt.rtp:prepend(lazypath)
 
-	-- filedetect drop-in-placement
-	use 'nathom/filetype.nvim'
+vim.cmd [[cabbrev ps Lazy]]
+vim.cmd [[cabbrev pi Lazy]]
+
+require('lazy').setup({
+	-- -- filedetect drop-in-placement
+	-- "nathom/filetype.nvim",
 
 	-- TODO: Test lua rewrite - numToStr/Navigator.nvim
 	-- TODO: Test lua rewrite - nathom/tmux.nvim
-	use {
-		'christoomey/vim-tmux-navigator',
-		config = [[require('config.tmux-navigator')]]
-	}
+	{
+		"christoomey/vim-tmux-navigator",
+		config = function()
+			require("config.tmux-navigator")
+		end
+	},
 
 	-- -- Alternative: https://github.com/jpalardy/vim-slime
 	-- use {
-	-- 	'christoomey/vim-tmux-runner', config = function()
-	-- 		nnoremap("<leader>v-", ':VtrOpenRunner { "orientation": "v", "percentage": 30 }<cr>');
+	-- 	"christoomey/vim-tmux-runner", config = function()
+	-- 		nnoremap("<leader>v-", ":VtrOpenRunner { "orientation": "v", "percentage": 30 }<cr>");
 	-- 	end
 	-- }
 
-	use {
-		'nvim-treesitter/nvim-treesitter', run = ':TSUpdate',
-		requires = {
+	{
+		"nvim-treesitter/nvim-treesitter",
+		build = ":TSUpdate",
+		config = function()
+			require("config.treesitter")
+		end,
+		dependencies = {
 			-- for debugging treesitter queries (for textobjects)
-			'nvim-treesitter/playground',
+			"nvim-treesitter/playground",
 			--
-			'nvim-treesitter/nvim-treesitter-textobjects'
+			"nvim-treesitter/nvim-treesitter-textobjects"
 			-- Check it out
-			-- 'mfussenegger/nvim-ts-hint-textobject'
+			-- "mfussenegger/nvim-ts-hint-textobject"
 		},
-		config = [[require('config.treesitter')]]
-	}
+	},
 
-	use 'nvim-treesitter/nvim-treesitter-context'
+	"nvim-treesitter/nvim-treesitter-context",
 
 	-- Autocomplete & Linters
-	use { 'neovim/nvim-lspconfig',
-		config = [[require('config.lspconfig')]],
-	}
+	{
+		"neovim/nvim-lspconfig",
+		config = function()
+			require("config.lspconfig")
+		end,
+	},
 
-	-- snippets
-	use { 'L3MON4D3/LuaSnip', config = [[require("config.snippets")]] }
-	use 'saadparwaiz1/cmp_luasnip'
-	use 'rafamadriz/friendly-snippets'
-
-	-- TODO: Check this one out if it's not superceded by FriendlySnippets
-	-- use { 'xianghongai/vscode-javascript-comment',
+	-- TODO: Check this one out if it"s not superceded by FriendlySnippets
+	-- use { "xianghongai/vscode-javascript-comment",
 	-- 	config = function()
 	-- 		-- os.execute(
 	-- 		-- 	string.format(
-	-- 		-- 		'cd %s/site/pack/packer/start/vscode-javascript-comment/ && npm install && node ./merge.js',
-	-- 		-- 		vim.fn.stdpath('data')
+	-- 		-- 		"cd %s/site/pack/packer/start/vscode-javascript-comment/ && npm install && node ./merge.js",
+	-- 		-- 		vim.fn.stdpath("data")
 	-- 		-- 	)
 	-- 		-- )
 	-- 	end
 	-- }
 
-	-- automatch quotes and brackets
-	use {
-		'windwp/nvim-autopairs',
-		config = [[require('config.autopairs')]],
-		requires = "hrsh7th/nvim-cmp",
-	}
+	{
+		"hrsh7th/nvim-cmp",
+		event = { "InsertEnter", --[[ "CmdlineEnter" ]] },
+		config = function()
+			require("config.cmp")
+		end,
+		dependencies = {
+			-- for icons/types in inscompletion
+			"onsails/lspkind-nvim",
 
-	use { 'hrsh7th/nvim-cmp', config = [[require('config.cmp')]] }
-	use 'onsails/lspkind-nvim' -- for icons/types in inscompletion
-	use 'hrsh7th/cmp-nvim-lsp'
-	use 'hrsh7th/cmp-nvim-lua'
-	use 'hrsh7th/cmp-buffer'
-	use 'hrsh7th/cmp-path'
-	use 'andersevenrud/compe-tmux'
+			-- cmp completion sources
+			"hrsh7th/cmp-nvim-lsp",
+			"hrsh7th/cmp-nvim-lua",
+			"hrsh7th/cmp-buffer",
+			"hrsh7th/cmp-path",
+			"andersevenrud/compe-tmux",
+
+			-- automatch quotes and brackets
+			{
+				"windwp/nvim-autopairs",
+				config = function()
+					require("config.autopairs")
+				end,
+				dependencies = "hrsh7th/nvim-cmp",
+			},
+
+			-- snippets
+			{
+				"L3MON4D3/LuaSnip",
+				config = function()
+					require("config.snippets")
+				end,
+				dependencies = {
+					"saadparwaiz1/cmp_luasnip",
+					"rafamadriz/friendly-snippets",
+				}
+			},
+		}
+	},
 
 	-- vim.api.nvim_set_keymap(
 	-- 	"i",
 	-- 	"<C-x><C-d>",
-	-- 	[[<c-r>=luaeval("require('complextras').complete_line_from_cwd()")<CR>]],
+	-- 	[[<c-r>=luaeval("require("complextras").complete_line_from_cwd()")<CR>]],
 	-- 	{ noremap = true }
 	-- )
 	-- vim.api.nvim_set_keymap(
 	-- 	"i",
 	-- 	"<C-x><C-m>",
-	-- 	[[<c-r>=luaeval("require('complextras').complete_matching_line()")<CR>]],
+	-- 	[[<c-r>=luaeval("require("complextras").complete_matching_line()")<CR>]],
 	-- 	{ noremap = true }
 	-- )
 	-- use {
-	-- 	'tjdevries/complextras.nvim',
-	-- 	requires = {
+	-- 	"tjdevries/complextras.nvim",
+	-- 	dependencies ={
 	-- 		{ "nvim-lua/plenary.nvim" },
 	-- 	}
 	-- }
 
-	use { "folke/todo-comments.nvim", config = [[require('config.todo')]] }
+	{
+		"folke/todo-comments.nvim",
+		config = function()
+			require("config.todo")
+		end,
+	},
 
-	-- use 'famiu/bufdelete.nvim'
+	-- use "famiu/bufdelete.nvim"
 
-	use {
-		'williamboman/nvim-lsp-installer',
-		after = 'nvim-lspconfig',
-		config = [[require('config.lsp')]],
-	}
+	{
+		"williamboman/nvim-lsp-installer",
+		config = function()
+			require("config.lsp")
+		end,
+		dependencies = {
+			"nvim-lspconfig",
+		},
+	},
 
-	use {
+	{
 		"andymass/vim-matchup",
 		setup = function()
 			vim.g.matchup_matchparen_offscreen = {}
 		end,
-	}
+	},
 
-	use { 'justinmk/vim-dirvish', config = [[require('config.dirvish')]] }
-	use 'kristijanhusak/vim-dirvish-git'
-	use 'roginfarrer/vim-dirvish-dovish'
+	{
+		"justinmk/vim-dirvish",
+		config = function()
+			require("config.dirvish")
+		end,
+		dependencies = {
+			"kristijanhusak/vim-dirvish-git",
+			"roginfarrer/vim-dirvish-dovish",
+		}
+	},
 
 	-- -- Respect .editorconfig files
-	-- use { 'editorconfig/editorconfig-vim',
+	-- use { "editorconfig/editorconfig-vim",
 	-- 	config = function()
-	-- 		vim.g.EditorConfig_exclude_patterns = {'fugitive://.*'}
+	-- 		vim.g.EditorConfig_exclude_patterns = {"fugitive://.*"}
 	-- 		create_augroup(
-	-- 			'DisableEditorConfig',
-	-- 			'FileType gitcommit let b:EditorConfig_disable = 1'
+	-- 			"DisableEditorConfig",
+	-- 			"FileType gitcommit let b:EditorConfig_disable = 1"
 	-- 		)
 	-- 	end
 	-- }
 
 	-- Theming
-	use { "challenger-deep-theme/vim", as = "challenger-deep",
-		config = [[require("config.challenger-deep")]]
-	}
-	use { "morhetz/gruvbox", config = [[require("config.gruvbox")]] }
-	use { "ajmwagar/vim-deus" }
-	use { "folke/tokyonight.nvim" } -- remove colors/tokyonight
-	use { "matsuuu/pinkmare" }
-	use { "rebelot/kanagawa.nvim" }
-	use { "savq/melange" }
-	use { "haystackandroid/wonka" }
-	use { "rose-pine/neovim", as = "rose-pine" }
-	use { "briones-gabriel/darcula-solid.nvim", requires = "rktjmp/lush.nvim" }
-	use { "doums/darcula" }
-	use { "EdenEast/nightfox.nvim" }
-	use {
+	{
+		"challenger-deep-theme/vim",
+		name = "challenger-deep",
+		config = function()
+			require("config.challenger-deep")
+		end,
+	},
+	{
+		"morhetz/gruvbox",
+		config = function()
+			require("config.gruvbox")
+		end,
+	},
+	{
+		"ajmwagar/vim-deus",
+		lazy = false,
+		priority = 1000,
+		config = function()
+			vim.cmd [[colorscheme deus]]
+		end
+	},
+	{ "folke/tokyonight.nvim" }, -- remove colors/tokyonight
+	{ "matsuuu/pinkmare" },
+	{ "rebelot/kanagawa.nvim" },
+	{ "savq/melange" },
+	-- { "haystackandroid/wonka" },
+	{ "rose-pine/neovim", name = "rose-pine" },
+	{ "briones-gabriel/darcula-solid.nvim", dependencies = "rktjmp/lush.nvim" },
+	{ "doums/darcula" },
+	{ "EdenEast/nightfox.nvim" },
+	{
 		"famiu/feline.nvim",
-		config = [[require("config.feline")]],
-	}
-	use "folke/lsp-colors.nvim"
+		config = function()
+			require("config.feline")
+		end,
+	},
+	"folke/lsp-colors.nvim",
 
 	-- use {
 	-- 	"theprimeagen/refactoring.nvim",
-	-- 	config = [[require('config.refactoring')]],
-	-- 	requires = {
+	-- 	config = function()
+	-- 	require("config.refactoring")
+	-- 	end,
+	-- 	dependencies ={
 	-- 		{ "nvim-lua/plenary.nvim" },
 	-- 		{ "nvim-treesitter/nvim-treesitter" }
 	-- 	}
@@ -192,187 +233,295 @@ return require('packer').startup({ function(use)
 	-- https://github.com/mkitt/tabline.vim/blob/master/plugin/tabline.vim
 
 	-- Make |v_b_I| and |v_b_A| available in all kinds of Visual mode
-	use { 'kana/vim-niceblock', config = [[require('config.niceblock')]] }
+	{
+		"kana/vim-niceblock",
+		config = function()
+			xmap("I", "<Plug>(niceblock-I)")
+			xmap("gI", "<Plug>(niceblock-gI)")
+			xmap("A", "<Plug>(niceblock-A)")
+		end,
+	},
 
 	-- Textobjects
-	use 'kana/vim-textobj-user'
-	use 'kana/vim-textobj-indent'
-	use 'kana/vim-textobj-line'
+	{
+		"kana/vim-textobj-user",
+		dependencies = {
+			"kana/vim-textobj-indent",
+			"kana/vim-textobj-line",
+			{
+				"kana/vim-textobj-entire",
+				init = function()
+					vim.g.textobj_entire_no_default_key_mappings = 1
+				end,
+				config = function()
+					vim.cmd [[
+						call textobj#user#map("entire", {
+						\   "-": {
+						\     "select-a": "aE",
+						\     "select-i": "iE",
+						\   }
+						\ })
+					]]
+				end
+			},
+			-- or thinca/vim-textobj-comment
+			"glts/vim-textobj-comment",
+			{
+				"tkhren/vim-textobj-numeral",
+				init = function()
+					vim.g.textobj_numeral_no_default_key_mappings = 1
+				end,
+				config = function()
+					vmap("an", "<Plug>(textobj-numeral-float-a)")
+					omap("an", "<Plug>(textobj-numeral-float-a)")
+					vmap("in", "<Plug>(textobj-numeral-float-i)")
+					omap("in", "<Plug>(textobj-numeral-float-i)")
+				end
+			},
+		},
+	},
 
-	vim.g.textobj_entire_no_default_key_mappings = 1
-	use {
-		'kana/vim-textobj-entire',
+	"wellle/targets.vim",
+
+	{
+		"phaazon/hop.nvim",
+		branch = "v2",
 		config = function()
-			vim.cmd [[
-				call textobj#user#map('entire', {
-				\   '-': {
-				\     'select-a': 'aE',
-				\     'select-i': 'iE',
-				\   }
-				\ })
-			]]
+			require("config.hop")
 		end
-	}
-
-	use 'wellle/targets.vim'
-
-	-- or thinca/vim-textobj-comment
-	use 'glts/vim-textobj-comment'
-
-	vim.g.textobj_numeral_no_default_key_mappings = 1
-	use {
-		'tkhren/vim-textobj-numeral',
-		config = function()
-			vmap("an", "<Plug>(textobj-numeral-float-a)")
-			omap("an", "<Plug>(textobj-numeral-float-a)")
-			vmap("in", "<Plug>(textobj-numeral-float-i)")
-			omap("in", "<Plug>(textobj-numeral-float-i)")
-		end
-	}
-
-	use {
-		'phaazon/hop.nvim',
-		branch = 'v2',
-		config = [[require('config.hop')]]
-	}
+	},
 
 	-- Make WORD motions support camelCase & friends
-	vim.g.wordmotion_prefix = ','
-	use { 'chaoren/vim-wordmotion' }
+	{
+		"chaoren/vim-wordmotion",
+		init = function()
+			vim.g.wordmotion_prefix = ","
+		end
+	},
 
-	use 'tpope/vim-repeat'
+	"tpope/vim-repeat",
 
 	-- replace with treesitter-textobjects once I start playing with TS queries
-	vim.g.argumentative_no_mappings = 1
-	use {
-		'PeterRincker/vim-argumentative',
-		config = [[require('config.argumentative')]]
-	}
+	{
+		"PeterRincker/vim-argumentative",
+		config = function()
+			require("config.argumentative")
+		end,
+		init = function()
+			vim.g.argumentative_no_mappings = 1
+		end
+	},
 
-	vim.g.argwrap_tail_comma = 1
-	vim.g.argwrap_padded_braces = 1
-	use { 'FooSoft/vim-argwrap', --cmd = 'ArgWrap',
+	{
+		"FooSoft/vim-argwrap", --cmd = "ArgWrap",
+		init = function()
+			vim.g.argwrap_tail_comma = 1
+			vim.g.argwrap_padded_braces = 1
+		end,
 		config = function()
 			nnoremap("<leader>aw", "<silent>", "<cmd>ArgWrap<CR>")
 		end
-	}
+	},
 
-	use { 'AndrewRadev/switch.vim', config = [[require('config.switch')]] }
+	{
+		"AndrewRadev/switch.vim",
+		config = function()
+			require("config.switch")
+		end,
+	},
 
-	use { 'numToStr/Comment.nvim', config = [[require('config.comment')]] }
-	-- syntax-aware commentstring (via treesitter)
-	use 'JoosepAlviste/nvim-ts-context-commentstring'
+	{
+		"numToStr/Comment.nvim",
+		config = function()
+			require("config.comment")
+		end,
+		dependencies = {
+			-- syntax-aware commentstring (via treesitter)
+			"JoosepAlviste/nvim-ts-context-commentstring",
+		},
+	},
 
 	-- set up path variable for different filetypes
-	use 'tpope/vim-apathy'
+	"tpope/vim-apathy",
 
-	use {
-		'nvim-telescope/telescope.nvim', config = [[require('config.telescope')]],
-		requires = { { 'nvim-lua/popup.nvim' }, { 'nvim-lua/plenary.nvim' } }
-	}
-	use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
-	use { "smartpde/telescope-recent-files" }
+	{
+		"nvim-telescope/telescope.nvim", config = function()
+			require("config.telescope")
+		end,
+		dependencies = {
+			"nvim-lua/popup.nvim",
+			"nvim-lua/plenary.nvim",
+			{ "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
+			"smartpde/telescope-recent-files",
+		}
+	},
 
 	-- TODO: open issue for adjusting visual selection (gv) after surrounding
-	use { 'machakann/vim-sandwich', config = [[require('config.sandwich')]] }
-	-- use 'tpope/vim-surround'
+	{
+		"machakann/vim-sandwich",
+		config = function()
+			require("config.sandwich")
+		end,
+	},
+	-- use "tpope/vim-surround"
 
 	-- TODO: Configure
-	use 'AndrewRadev/splitjoin.vim'
+	"AndrewRadev/splitjoin.vim",
 
 	-- Better Git conflicts resolution
-	use 'whiteinge/diffconflicts'
+	"whiteinge/diffconflicts",
 
-	use {
-		'lewis6991/gitsigns.nvim',
-		requires = {
-			'nvim-lua/plenary.nvim'
+	{
+		"lewis6991/gitsigns.nvim",
+		dependencies = {
+			"nvim-lua/plenary.nvim"
 		},
-		config = [[require('config.gitsigns')]],
-	}
+		config = function()
+			require("config.gitsigns")
+		end,
+	},
 
 	-- cd to file/project
-	use { 'dbakker/vim-projectroot', config = [[require('config.projectroot')]] }
+	{
+		"dbakker/vim-projectroot",
+		config = function()
+			nnoremap("<Leader>cd", "<silent>", "<cmd>lcd %:h<CR>")
+			nnoremap("<Leader>cp", "<silent>", "<cmd>ProjectRootLCD<CR>")
+		end,
+	},
 
-	use {
-		'ThePrimeagen/harpoon',
-		requires = { 'nvim-lua/plenary.nvim' },
-		config = [[require('config.harpoon')]],
-	}
+	{
+		"ThePrimeagen/harpoon",
+		dependencies = { "nvim-lua/plenary.nvim" },
+		config = function()
+			require("config.harpoon")
+		end,
+	},
 
 	-- Quickfix
-	use { 'yssl/QFEnter', config = [[require('config.qfenter')]] }
-
-	-- -- Make Gbrowse open Github & Gitlab urls
-	use 'tpope/vim-rhubarb'
+	{
+		"yssl/QFEnter",
+		config = function()
+			-- http://vi.stackexchange.com/questions/8534/make-cnext-and-cprevious-loop-back-to-the-begining
+			vim.g.qfenter_keymap = {
+				open = { '<CR>', '<2-LeftMouse>' },
+				vopen = { '<C-v>' },
+				hopen = { '<C-s>' },
+				topen = { '<C-t>' }
+			}
+		end,
+	},
 
 	-- Git
-	use { 'tpope/vim-fugitive', config = [[require('config.fugitive')]] }
+	{
+		"tpope/vim-fugitive",
+		config = function()
+			require("config.fugitive")
+		end,
+		dependencies = {
+			-- Make Gbrowse open Github & Gitlab urls
+			"tpope/vim-rhubarb",
+		},
+	},
 
-	use { 'junegunn/gv.vim', cmd = 'GV', config = [[require('config.gv')]] }
-	nnoremap('<leader>gv', '<cmd>GV<CR>')
+	{
+		"junegunn/gv.vim",
+		cmd = "GV",
+		config = function()
+			require("config.gv")
+		end,
+	},
 
-	use 'rhysd/conflict-marker.vim'
+	"rhysd/conflict-marker.vim",
 
-	use 'junegunn/vim-slash'
+	"junegunn/vim-slash",
 
-	-- -- use 'itchyny/vim-cursorword'
-	-- use { 'RRethy/vim-illuminate', config = [[require('config.illuminate')]] }
+	-- -- use "itchyny/vim-cursorword"
+	-- use { "RRethy/vim-illuminate", config = function()
+	-- require("config.illuminate")
+	-- end}
 
-	-- use 'kana/vim-smartword'
+	-- use "kana/vim-smartword"
 
-	use { 'talek/obvious-resize', config = [[require('config.obvious-resize')]] }
+	{
+		"talek/obvious-resize",
+		config = function()
+			require("config.obvious-resize")
+		end,
+	},
 
 	-- improve the "{" and "}" motion in normal / visual mode
-	use 'justinmk/vim-ipmotion'
+	"justinmk/vim-ipmotion",
 
 	-- extra language support
 	-- Check out https://github.com/ray-x/go.nvim
-	use { 'fatih/vim-go', config = [[require('config.go')]] }
-	use 'tbastos/vim-lua'
-	use 'pantharshit00/vim-prisma'
-	use {
-		'iamcco/markdown-preview.nvim', run = 'cd app && yarn install',
-		cmd = 'MarkdownPreview'
-	}
+	{
+		"fatih/vim-go",
+		ft = "go",
+		config = function()
+			-- disable vim-go :GoDef short cut (gd)
+			-- this is handled by LanguageClient [LC]
+			vim.g.go_def_mapping_enabled = 0
+			vim.g.go_doc_keywordprg_enabled = 0
+		end,
+	},
+	{
+		"tbastos/vim-lua",
+		ft = "lua",
+	},
+	{
+		"pantharshit00/vim-prisma",
+		ft = "prisma",
+	},
+	{
+		"iamcco/markdown-preview.nvim",
+		build = "cd app && yarn install",
+		cmd = "MarkdownPreview",
+	},
 
-	use {
-		'jose-elias-alvarez/typescript.nvim',
-	}
-	-- use 'evanleck/vim-svelte'
+	{
+		"jose-elias-alvarez/typescript.nvim",
+	},
+	-- use "evanleck/vim-svelte"
 
-	use {
-		'mbbill/undotree', cmd = 'UndotreeToggle',
-		config = [[require('config.undotree')]]
-	}
-	nnoremap("<Leader>u", '<silent>', "<cmd>UndotreeToggle<CR>")
+	{
+		"mbbill/undotree", cmd = "UndotreeToggle",
+		config = function()
+			-- If undotree is opened, it is likely one wants to interact with it.
+			vim.g.undotree_SetFocusWhenToggle = 1
+			vim.g.undotree_WindowLayout = 2
 
+			nnoremap("<Leader>u", "<silent>", "<cmd>UndotreeToggle<CR>")
+		end
+	},
 
-	use { 'wesQ3/vim-windowswap', config = [[require('config.windowswap')]] }
+	{
+		"wesQ3/vim-windowswap",
+		init = function()
+			vim.g.windowswap_map_keys = 0
+		end,
+		config = function()
+			nnoremap('<C-W><C-W>', '<silent>', "<cmd>call WindowSwap#EasyWindowSwap()<CR>")
+		end,
+	},
 
 	-- -- Post-install/update hook with call of vimscript function with argument
-	-- use { 'glacambre/firenvim', run = function() vim.fn['firenvim#install'](0) end }
+	-- use { "glacambre/firenvim", build = function() vim.fn["firenvim#install"](0) end }
 
-	use {
-		'NMAC427/guess-indent.nvim',
-		config = function() require('guess-indent').setup({}) end,
-	}
+	{
+		"NMAC427/guess-indent.nvim",
+		config = function() require("guess-indent").setup({}) end,
+	},
 
-	use {
-		'danymat/neogen',
-		config = function() require('neogen').setup({
+	{
+		"danymat/neogen",
+		config = function() require("neogen").setup({
 				-- use luasnip for expansion
 				snippet_engine = "luasnip",
 			})
 		end,
-		requires = 'L3MON4D3/LuaSnip',
-	}
+		dependencies = "L3MON4D3/LuaSnip",
+	},
 
-	-- use 'pechorin/any-jump.vim' -- Document outline
-end, config = {
-	display = {
-		keybindings = {
-			diff = 'o',
-		}
-	}
-} })
+	-- use "pechorin/any-jump.vim" -- Document outline
+})
