@@ -151,9 +151,10 @@ z() {
 # Aliases
 alias g="git"
 alias ga="g add \$(gf) && g st"
-alias gv='nvim +"let g:loaded_startify = 1" +GV +tabonly +"autocmd BufWipeout <buffer> qall"'
+alias gv='f() { nvim +"let g:loaded_startify = 1" +"GV $1" +"autocmd BufWipeout <buffer> qall" +tabonly }; f'
 alias t="tmux -2"
 alias e="nvim"
+alias today="g today | gshow"
 # TODO: use eog or okular based on availability
 alias view="okular"
 alias aur="yay"
