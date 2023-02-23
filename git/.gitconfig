@@ -13,7 +13,7 @@
     rbm = rebase master
 
     # helper
-    log-format = log --color=always --decorate  --pretty=oneline --abbrev-commit --pretty=format:'%C(yellow)%h %Cred%d %Creset%s %C(green)(%cr) %C(blue)<%an>' --date=format:'%d-%m-%Y'
+    log-format = log --color=always --decorate --pretty=oneline --abbrev-commit --pretty=format:'%C(green)%cd %C(yellow)%h%Cred%d %Creset%s %C(blue)<%an>' --date=short
     l = log-format --graph
     la = log-format --graph --all
     today = log-format --since=7am
