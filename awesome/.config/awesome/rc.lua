@@ -533,38 +533,21 @@ local globalkeys = gears.table.join(
 	awful.key(
 		{}, "XF86AudioRaiseVolume",
 		function()
-			local cmd = [=[SINKS=$(pactl list sinks) && echo "${SINKS#*RUNNING}" \
-				| grep '^[[:space:]]Volume:' \
-				| sed -e 's,.* \([0-9][0-9]*\)%.*,\1,']=]
-
-			awful.spawn.easy_async_with_shell(cmd, function(stdout)
-				local volume = stdout + 0;
-				local step = 5;
-
-				if volume > (100 - step) then
-					return
-				end
-
-				local setVolume = string.format(
-					"pactl set-sink-volume @DEFAULT_SINK@ +%d%%",
-					step
-				)
-				awful.util.spawn(setVolume, false)
-			end)
+			awful.util.spawn("pulseaudio-ctl up", false)
 		end
 	),
 
 	awful.key(
 		{}, "XF86AudioLowerVolume",
 		function()
-			awful.util.spawn("pactl set-sink-volume @DEFAULT_SINK@ -5%", false)
+			awful.util.spawn("pulseaudio-ctl down", false)
 		end
 	),
 
 	awful.key(
 		{}, "XF86AudioMute",
 		function()
-			awful.util.spawn("pactl set-sink-mute @DEFAULT_SINK@ toggle", false)
+			awful.util.spawn("pulseaudio-ctl mute", false)
 		end
 	)
 )
