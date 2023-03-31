@@ -41,6 +41,15 @@ require('nvim-treesitter.configs').setup({
 		use_virtual_text = true,
 		lint_events = { "BufWrite", "CursorHold" },
 	},
+	incremental_selection = {
+		enable = true,
+		keymaps = {
+			init_selection = "<CR>", -- set to `false` to disable one of the mappings
+			node_incremental = "<CR>",
+			scope_incremental = "<S-CR>",
+			node_decremental = "<BS>",
+		},
+	},
 	textobjects = {
 		move = {
 			enable = true,
@@ -50,17 +59,34 @@ require('nvim-treesitter.configs').setup({
 				-- ["]]"] = "@class.outer",
 				-- ["]a"] = "@parameter.inner",
 				-- jump to the next variable assignment
-				[']v'] = '@p.assign.key',
+				[']k'] = '@assignment.lhs',
+				[']v'] = '@assignment.rhs',
 			},
-			goto_next_end = {},
+			goto_next_end = {
+				["]F"] = "@function.outer",
+				["]["] = "@class.outer",
+			},
 			goto_previous_start = {
 				["[f"] = "@function.outer",
 				-- ["[["] = "@class.outer",
 				-- ["[a"] = "@parameter.inner",
 				-- jump to the prev variable assignment
-				['[v'] = '@p.assign.key',
+				['[k'] = '@assignment.lhs',
+				['[v'] = '@assignment.rhs',
 			},
-			goto_previous_end = {},
+			goto_previous_end = {
+				["[F"] = "@function.outer",
+				["[]"] = "@class.outer",
+			},
+			-- Below will go to either the start or the end, whichever is closer.
+			-- Use if you want more granular movements
+			-- Make it even more gradual by adding multiple queries and regex.
+			goto_next = {
+				["]d"] = "@conditional.outer",
+			},
+			goto_previous = {
+				["[d"] = "@conditional.outer",
+			}
 		},
 		-- swap = {
 		-- 	enable = true,
@@ -84,12 +110,22 @@ require('nvim-treesitter.configs').setup({
 				['ik'] = '@p.assign.key',
 				['av'] = '@p.assign.value',
 				['ak'] = '@p.assign.key',
+				-- ['iv'] = '@assignment.rhs',
+				-- ['ik'] = '@assignment.lhs',
+				-- ['av'] = '@assignment.rhs',
+				-- ['ak'] = '@assignment.lhs',
 				['as'] = '@p.scope',
 				['is'] = '@p.scope',
 				['ir'] = '@p.return.inner',
 				['ar'] = '@p.return.outer',
 				['ix'] = '@p.jsxAttrVal',
 				['ax'] = '@p.jsxAttr',
+				['at'] = '@p.htmltag.outer',
+				['it'] = '@p.htmltag.inner',
+				['ad'] = '@conditional.outer',
+				['id'] = '@conditional.inner',
+				-- ['it'] = '@p.htmltag.inner',
+
 				-- ['ia'] = '@parameter.inner',
 				-- ['aa'] = '@parameter.outer',
 				-- -- ['aC'] = '@class.outer',

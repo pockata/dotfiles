@@ -1,1 +1,5 @@
 @theme "/usr/share/rofi/themes/Arc-Dark.rasi"
+
+window {
+  width: calc(40% min 1000);
+}

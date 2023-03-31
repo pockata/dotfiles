@@ -35,9 +35,6 @@ nnoremap('>t', ':tabmove +1<CR>')
 noremap('<C-s>', '<esc>:w<CR>')
 inoremap('<C-s>', '<esc>:w<CR>')
 
--- hm?
-nnoremap("J", "mzJ`z")
-
 -- Source
 nmap("<leader>S", "^vg_y:execute @@<CR>:echo 'Sourced line.'<CR>")
 vmap('<leader>S', "y:@\"<CR>:echo 'Sourced lines.'<CR>")
@@ -163,7 +160,7 @@ nmap('gk', "j")
 nmap('gl', "k")
 
 -- ; is useful with f/t so remap it to h
-nnoremap("h", ";")
+noremap("h", ";")
 
 -- Navigate folds
 nnoremap("]z", "<silent>", ":call NextClosedFold('j')<cr>")

@@ -15,6 +15,12 @@ vim.opt.rtp:prepend(lazypath)
 vim.cmd [[cabbrev ps Lazy]]
 vim.cmd [[cabbrev pi Lazy]]
 
+local opts = {
+	dev = {
+		path = "~/Projects/Personal",
+	}
+}
+
 require('lazy').setup({
 	-- -- filedetect drop-in-placement
 	-- "nathom/filetype.nvim",
@@ -152,13 +158,21 @@ require('lazy').setup({
 				config = function()
 					require("mason-lspconfig").setup({
 						ensure_installed = {
-							"gopls",
-							"tsserver",
-							"sumneko_lua",
-							-- "cssls",
-							"cssmodules_ls",
-							"jsonls",
-							"yamlls",
+							-- "gopls",
+							-- "tsserver",
+							-- "sumneko_lua",
+							-- -- "cssls",
+							-- "cssmodules_ls",
+							-- "jsonls",
+							-- "yamlls",
+
+							-- "css-lsp",
+							-- "eslint_d",
+							-- "gopls",
+							-- "json-lsp",
+							-- "lua-language-server",
+							-- "typescript-language-server",
+							-- "yaml-language-server",
 						}
 					})
 				end,
@@ -168,9 +182,25 @@ require('lazy').setup({
 	},
 
 	{
+		"jose-elias-alvarez/null-ls.nvim",
+		config = function()
+			local null_ls = require("null-ls")
+
+			null_ls.setup({
+				sources = {
+					-- null_ls.builtins.formatting.stylua,
+					null_ls.builtins.diagnostics.eslint_d,
+					-- null_ls.builtins.completion.spell,
+				},
+			})
+		end
+	},
+
+	{
 		"andymass/vim-matchup",
-		setup = function()
+		config = function()
 			vim.g.matchup_matchparen_offscreen = {}
+			vim.g.matchup_matchparen_enabled = 0
 		end,
 	},
 
@@ -205,25 +235,28 @@ require('lazy').setup({
 		end,
 	},
 	{
+		"uloco/bluloco.nvim",
+	},
+	{
 		"morhetz/gruvbox",
 		config = function()
 			require("config.gruvbox")
 		end,
 	},
+	{ "ajmwagar/vim-deus" },
 	{
-		"ajmwagar/vim-deus",
+		"folke/tokyonight.nvim",
 		lazy = false,
 		priority = 1000,
 		config = function()
-			vim.cmd [[colorscheme deus]]
+			vim.cmd [[colorscheme tokyonight-moon]]
 		end
 	},
-	{ "folke/tokyonight.nvim" }, -- remove colors/tokyonight
 	{ "matsuuu/pinkmare" },
 	{ "rebelot/kanagawa.nvim" },
 	{ "savq/melange" },
 	-- { "haystackandroid/wonka" },
-	{ "rose-pine/neovim", name = "rose-pine" },
+	{ "rose-pine/neovim",                   name = "rose-pine" },
 	{ "briones-gabriel/darcula-solid.nvim", dependencies = "rktjmp/lush.nvim" },
 	{ "doums/darcula" },
 	{ "EdenEast/nightfox.nvim" },
@@ -235,16 +268,16 @@ require('lazy').setup({
 	},
 	"folke/lsp-colors.nvim",
 
-	-- use {
-	-- 	"theprimeagen/refactoring.nvim",
-	-- 	config = function()
-	-- 	require("config.refactoring")
-	-- 	end,
-	-- 	dependencies ={
-	-- 		{ "nvim-lua/plenary.nvim" },
-	-- 		{ "nvim-treesitter/nvim-treesitter" }
-	-- 	}
-	-- }
+	{
+		"theprimeagen/refactoring.nvim",
+		config = function()
+			require("config.refactoring")
+		end,
+		dependencies = {
+			{ "nvim-lua/plenary.nvim" },
+			{ "nvim-treesitter/nvim-treesitter" }
+		}
+	},
 
 	-- https://github.com/mkitt/tabline.vim/blob/master/plugin/tabline.vim
 
@@ -346,6 +379,16 @@ require('lazy').setup({
 		end,
 	},
 
+	-- {
+	-- 	'ckolkey/ts-node-action',
+	-- 	dependencies = { 'nvim-treesitter' },
+	-- 	-- opts = {},
+	-- 	config = function()
+	-- 		require("ts-node-action")
+	-- 		nnoremap("gs", "<cmd>NodeAction<CR>")
+	-- 	end
+	-- },
+
 	{
 		"numToStr/Comment.nvim",
 		config = function()
@@ -361,7 +404,8 @@ require('lazy').setup({
 	"tpope/vim-apathy",
 
 	{
-		"nvim-telescope/telescope.nvim", config = function()
+		"nvim-telescope/telescope.nvim",
+		config = function()
 			require("config.telescope")
 		end,
 		dependencies = {
@@ -375,14 +419,31 @@ require('lazy').setup({
 	-- TODO: open issue for adjusting visual selection (gv) after surrounding
 	{
 		"machakann/vim-sandwich",
+		init = function()
+			vim.g.sandwich_no_default_key_mappings = 1
+			vim.g.operator_sandwich_no_default_key_mappings = 1
+			vim.g.textobj_sandwich_no_default_key_mappings = 1
+			vim.g.sandwich_no_tex_ftplugin = 1
+		end,
 		config = function()
 			require("config.sandwich")
 		end,
 	},
 	-- use "tpope/vim-surround"
 
-	-- TODO: Configure
-	"AndrewRadev/splitjoin.vim",
+	{
+		"Wansmer/treesj",
+		keys = { "gS" },
+		dependencies = { "nvim-treesitter/nvim-treesitter" },
+		config = function()
+			require("treesj").setup({
+				use_default_keymaps = false,
+				max_join_length = 200,
+			})
+
+			nmap("gS", "<cmd>TSJToggle<CR>")
+		end,
+	},
 
 	-- Better Git conflicts resolution
 	"whiteinge/diffconflicts",
@@ -412,6 +473,7 @@ require('lazy').setup({
 		config = function()
 			require("config.harpoon")
 		end,
+		dev = true,
 	},
 
 	-- Quickfix
@@ -443,6 +505,9 @@ require('lazy').setup({
 	{
 		"junegunn/gv.vim",
 		cmd = "GV",
+		init = function()
+			nnoremap("<leader>gv", "<cmd>GV<CR>")
+		end,
 		config = function()
 			require("config.gv")
 		end,
@@ -498,16 +563,18 @@ require('lazy').setup({
 	{
 		"jose-elias-alvarez/typescript.nvim",
 	},
-	-- use "evanleck/vim-svelte"
+	{ "evanleck/vim-svelte" },
 
 	{
-		"mbbill/undotree", cmd = "UndotreeToggle",
+		"mbbill/undotree",
+		cmd = "UndotreeToggle",
+		init = function()
+			nnoremap("<Leader>u", "<silent>", "<cmd>UndotreeToggle<CR>")
+		end,
 		config = function()
 			-- If undotree is opened, it is likely one wants to interact with it.
 			vim.g.undotree_SetFocusWhenToggle = 1
 			vim.g.undotree_WindowLayout = 2
-
-			nnoremap("<Leader>u", "<silent>", "<cmd>UndotreeToggle<CR>")
 		end
 	},
 
@@ -531,7 +598,8 @@ require('lazy').setup({
 
 	{
 		"danymat/neogen",
-		config = function() require("neogen").setup({
+		config = function()
+			require("neogen").setup({
 				-- use luasnip for expansion
 				snippet_engine = "luasnip",
 			})
@@ -540,4 +608,4 @@ require('lazy').setup({
 	},
 
 	-- use "pechorin/any-jump.vim" -- Document outline
-})
+}, opts)

@@ -91,6 +91,8 @@
     # Undo your last commit, but don't throw away your changes
     undo = reset --soft HEAD^
 
+    ; undo = !echo -n 'Confirm (y/N): ' && read 'x' && [ $x = 'y' ] && echo "woo"
+
     # Shows commits not pushed to origin
     unpushed = "!git l --no-merges ${1:-'@{u}'}.."
 

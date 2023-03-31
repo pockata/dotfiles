@@ -155,7 +155,7 @@ end
 function _G.EditInstalledPlugins()
 	tele.find_files {
 		prompt_title = "~ nvim plugins ~",
-		cwd = vim.fn.stdpath('data') .. '/site/pack/packer/'
+		cwd = vim.fn.stdpath('data') .. '/lazy'
 	}
 end
 
@@ -190,6 +190,7 @@ nnoremap("<Leader>w", "<silent>", "<cmd>Telescope builtin<CR>");
 nnoremap("<Leader>b", "<silent>", "<cmd>Telescope buffers<CR>");
 nnoremap("gR", "<silent>", "<cmd>Telescope lsp_references<CR>");
 nnoremap("gr", "<silent>", "<cmd>Telescope lsp_incoming_calls<CR>");
+nnoremap("<Leader>e", "<silent>", "<cmd>Telescope lsp_dynamic_workspace_symbols<CR>");
 -- nnoremap("<Leader>c", "<silent>", "<cmd>Telescope commands<CR>");
 nnoremap("<Leader>gf", "<silent>", "<cmd>Telescope git_status<CR>");
 
@@ -202,6 +203,9 @@ nmap('<leader>ep', '<silent>', "<cmd>lua OpenProjects()<CR>")
 -- Project navigation
 noremap("<c-p>", "<silent>", "<cmd>lua SmartProjectFiles()<CR>");
 noremap("<c-t>", "<silent>", "<cmd>Telescope find_files<CR>");
+
+-- remap the default <c-t> mapping because it's useful with LSP
+nnoremap("<c-b>", "<silent>", "<c-t>")
 
 -- search project-wide for the word under the cursor
 -- TODO: Send a PR for using a visual selection

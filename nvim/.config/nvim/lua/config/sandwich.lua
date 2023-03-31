@@ -1,8 +1,3 @@
-vim.g.sandwich_no_default_key_mappings = 1
-vim.g.operator_sandwich_no_default_key_mappings = 1
-vim.g.textobj_sandwich_no_default_key_mappings = 1
-vim.g.sandwich_no_tex_ftplugin = 1
-
 -- select a text surrounded by braket or same characters user input
 xmap("is", "<Plug>(textobj-sandwich-query-i)")
 xmap("as", "<Plug>(textobj-sandwich-query-a)")

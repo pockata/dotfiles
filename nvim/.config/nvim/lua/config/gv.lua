@@ -8,7 +8,6 @@ function! GVexpand()
 endfunction
 ]]
 
-nnoremap("<leader>gv", "<cmd>GV<CR>")
 create_augroup('GVConfig', {
 	'FileType GV nnoremap <buffer> <silent> + <cmd>call GVexpand()<cr>',
 	'FileType GV unmap <buffer> <c-p>',

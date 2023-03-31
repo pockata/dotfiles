@@ -84,11 +84,11 @@ o.undofile = true
 wo.number = true
 wo.relativenumber = true
 
--- wo.cursorline = true
--- create_augroup('CursorLineOnlyInActiveWindow', {
--- 	'WinEnter,BufEnter * if &diff != 1 | setlocal cursorline | endif',
--- 	'WinLeave,BufLeave * setlocal nocursorline'
--- })
+wo.cursorline = true
+create_augroup('CursorLineOnlyInActiveWindow', {
+	'WinEnter,BufEnter * if &diff != 1 | setlocal cursorline | endif',
+	'WinLeave,BufLeave * setlocal nocursorline'
+})
 
 o.shortmess = o.shortmess .. "c" -- remove intro when starting Vim
 -- o.hidden = true -- allow switching buffers without saving

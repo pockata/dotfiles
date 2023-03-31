@@ -4,7 +4,6 @@ vim.cmd([[
 		autocmd!
 		autocmd ColorScheme * highlight EndOfBuffer guifg=bg
 		autocmd ColorScheme * highlight SignColumn guibg=bg
-		autocmd ColorScheme * highlight link HarpoonCurrentFile String
 		" make the line numbers more prominent (useful for :set rnu)
 		autocmd ColorScheme * highlight LineNr guifg=fg
 

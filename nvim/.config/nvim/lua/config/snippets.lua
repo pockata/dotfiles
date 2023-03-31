@@ -25,7 +25,7 @@ local types = require("luasnip.util.types")
 
 -- Every unspecified option will be set to the default.
 ls.setup({
-	history = true,
+	history = false,
 	-- -- Update more often, :h events for more info.
 	-- update_events = "TextChanged,TextChangedI",
 
@@ -84,3 +84,19 @@ ls.add_snippets("javascriptreact", {
 		})
 	),
 }, { key = "javascriptreact" })
+
+
+ls.add_snippets("go", {
+	s(
+		"pf",
+		fmt(
+			"log.Printf(\"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\")\n" ..
+			"log.Printf(\"{}\", {})\n" ..
+			"log.Printf(\"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\")\n",
+			{
+				i(1, "statement"),
+				i(2, "vars"),
+			}
+		)
+	),
+}, { key = "go" })

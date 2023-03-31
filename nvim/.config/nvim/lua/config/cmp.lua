@@ -1,11 +1,8 @@
 local cmp = require('cmp')
-local cmp_buffer = require('cmp_buffer')
+-- local cmp_buffer = require('cmp_buffer')
 local luasnip = require("luasnip")
 
 local has_words_before = function()
-	if vim.api.nvim_buf_get_option(0, "buftype") == "prompt" then
-		return false
-	end
 	local line, col = unpack(vim.api.nvim_win_get_cursor(0))
 	return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
 end
@@ -38,18 +35,6 @@ cmp.setup({
 				path = "[Path]"
 			})
 		}),
-		-- format = function(entry, vim_item)
-		-- 	vim_item.kind = require("lspkind").presets.default[vim_item.kind]
-		-- 	local menu = source_mapping[entry.source.name]
-		-- 	if entry.source.name == 'cmp_tabnine' then
-		-- 		if entry.completion_item.data ~= nil and entry.completion_item.data.detail ~= nil then
-		-- 			menu = entry.completion_item.data.detail .. ' ' .. menu
-		-- 		end
-		-- 		vim_item.kind = ''
-		-- 	end
-		-- 	vim_item.menu = menu
-		-- 	return vim_item
-		-- end
 	},
 	-- window = {
 	-- 	completion = cmp.config.window.bordered(),

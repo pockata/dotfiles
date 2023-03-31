@@ -6,14 +6,9 @@
 ;;
 ;; var build = "develop"
 
-(variable_declarator
-	name:(_) @p.assign.key
-	value:(_) @p.assign.value
-)
-
 (assignment_expression
-	left: (_) @p.assign.key
-	right: (_) @p.assign.value
+	left: (_) @assignment.lhs
+	right: (_) @assignment.rhs
 )
 
 ;; { Handler: apiMux }
@@ -35,9 +30,9 @@
 			  attribute: (jsx_attribute
 						   (property_identifier)
 						   (_)? @p.jsxAttrVal
-						   ) @p.jsxAttr
+						   )? @p.jsxAttr
 			  )
-  )
+  ) @p.htmltag.outer
 
 ;; xml attr
 (jsx_self_closing_element
@@ -45,5 +40,7 @@
 				(property_identifier)
 				(_)? @p.jsxAttrVal
 				) @p.jsxAttr
-	)
+	) @p.htmltag.outer
 
+; (jsx_fragment (_) @p.htmltag.inner) @p.htmltag.outer
+(jsx_fragment) @p.htmltag.outer
