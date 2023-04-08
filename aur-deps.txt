@@ -1,5 +1,4 @@
 xkb-switch
-greenclip
 stremio-beta
 rofi-greenclip
 bob-bin

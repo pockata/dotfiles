@@ -201,8 +201,17 @@ function! DeleteHiddenBuffers()
 	echom "Removed hidden buffers!"
 endfunction
 
+" "wincmd p" might not work initially, although there are two windows.
+fun! MyWincmdPrevious()
+    let w = winnr()
+    wincmd p
+    if winnr() == w
+        wincmd w
+    endif
+endfun
 " Diff this window with the previous one.
 command! DiffThese diffthis | call clearmatches() | call MyWincmdPrevious() | diffthis | call clearmatches() | wincmd p
+command! DiffOff   Windo diffoff
 
 " Convenient command to see the difference between the current buffer and the
 " file it was loaded from, thus the changes you made.

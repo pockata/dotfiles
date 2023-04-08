@@ -38,10 +38,19 @@ zplug load
 # Show git stash status
 zstyle :prompt:pure:git:stash show yes
 
+# personal scripts
 PATH="$HOME/bin:$PATH"
+# go binaries
 PATH="$HOME/go/bin:$PATH"
-export NVM_DIR="$HOME/.nvm"
+# neovim version manager
+PATH="$HOME/.local/share/bob/nvim-bin:$PATH"
+# fly.io
+export FLYCTL_INSTALL="/home/pockata/.fly"
+PATH="$FLYCTL_INSTALL/bin:$PATH"
+# rust
+PATH="$HOME/.cargo/bin:$PATH"
 
+export NVM_DIR="$HOME/.nvm"
 nvm () {
     echo "Lazy loading nvm..."
     [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm

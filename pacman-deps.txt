@@ -35,3 +35,6 @@ nodejs
 npm
 yarn
 go
+make
+stow
+spotify-launcher

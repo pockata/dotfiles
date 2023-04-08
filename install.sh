@@ -82,11 +82,23 @@ if ask "${txtylw}Install packages?${txtrst}" Y; then
 			(cd /tmp && git clone --depth 1 https://aur.archlinux.org/yay.git && cd yay && makepkg -si)
 		fi
 
-	    yay -Sya --noconfirm --needed $(< aur-deps.txt)
+		yay -Sya --noconfirm --needed $(< aur-deps.txt)
 	fi
 
 	# Install zplug
 	curl -sL --proto-redir -all,https https://raw.githubusercontent.com/zplug/installer/master/installer.zsh | zsh
+fi
+
+
+if ask "${txtylw}Setup awesomewm?${txtrst}" Y; then
+	# TODO: Use --local and without sudo
+	sudo luarocks install --lua-version=5.3 lain
+
+	# grab layout-machi
+	git clone --depth 1 git@github.com:xinhaoyuan/layout-machi.git ~/.config/awesome/layout-machi
+
+	# TODO: Copy the icons needed for theme.lua
+	# cd "$(dirname "$(luarocks which lain --lua-version=5.3 | head -1)")"
 fi
 
 if ask "${txtylw}Symlink dotfiles?${txtrst}" Y; then
@@ -158,5 +170,12 @@ if ask "${txtylw}Set system locale to en_US.UTF-8?${txtrst}" N; then
 	echo "If having weird locale problems, check https://wiki.archlinux.org/index.php/Locale"
 	fi
 
+	if ask "${txtylw}Change shell to zsh?${txtrst}" N; then
+		chsh -s $(which zsh)
+	fi
+
 	echo -e "\n${txtgrn}BYE!${txtrst}"
 
+
+#TODO: Run TPM (prefix + I) on first load of tmux
+#

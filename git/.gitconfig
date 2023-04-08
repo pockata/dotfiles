@@ -150,8 +150,13 @@
     keepBackup = false
 [mergetool "vimdiff"]
     cmd = vim -d $BASE $LOCAL $REMOTE $MERGED -c '$wincmd w' -c 'wincmd J'
-[url "git@github.com:"]
-    insteadOf = https://github.com/
+
+# causes problems when setting up the pc for the first time. starting up neovim
+# (and automatically downloading plugins) doesn't work because there's no ssh
+# key yet.
+#[url "git@github.com:"]
+#    insteadOf = https://github.com/
+
 [commit]
     gpgsign = true
 

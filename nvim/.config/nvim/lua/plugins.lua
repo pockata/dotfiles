@@ -17,7 +17,7 @@ vim.cmd [[cabbrev pi Lazy]]
 
 local opts = {
 	dev = {
-		path = "~/Projects/Personal",
+		path = "~/Projects/personal",
 	}
 }
 
@@ -158,13 +158,13 @@ require('lazy').setup({
 				config = function()
 					require("mason-lspconfig").setup({
 						ensure_installed = {
-							-- "gopls",
-							-- "tsserver",
-							-- "sumneko_lua",
-							-- -- "cssls",
-							-- "cssmodules_ls",
-							-- "jsonls",
-							-- "yamlls",
+							"gopls",
+							"tsserver",
+							"lua_ls",
+							-- "cssls",
+							"cssmodules_ls",
+							"jsonls",
+							"yamlls",
 
 							-- "css-lsp",
 							-- "eslint_d",
