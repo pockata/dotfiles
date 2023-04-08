@@ -69,6 +69,11 @@ bakcyn='\e[46m'   # Cyan
 bakwht='\e[47m'   # White
 txtrst='\e[0m'    # Text Reset
 
+if ask "${txtylw}Did you copy/generate SSH/GPG keys?${txtrst}" N; then
+	echo -n "Weel, set them up first and then run the install script again"
+	exit 1
+fi
+
 # Install packages (pacman, AUR, npm etc)
 if ask "${txtylw}Install packages?${txtrst}" Y; then
 	#echo -e "${undwht}Will${txtrst} ${txtwht}install them sometime in the future${txtrst} ${txtylw}:)${txtrst}";
