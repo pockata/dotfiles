@@ -74,7 +74,7 @@ alacritty -e zsh -c 'tmux has-session && tmux attach -d || tmux new -s main' &
 greenclip daemon &
 
 # a successor to compton
-picom &
+picom --config ~/.picom.conf &
 
 session=${1:-awesome}
 export WM_NAME="$session"
