@@ -2,6 +2,8 @@
 -- found (e.g. lgi). If LuaRocks is not installed, do nothing.
 pcall(require, "luarocks.loader")
 
+local machi = require("layout-machi")
+
 function VLOG(text)
 	naughty.notify({ title = "lek", text = text })
 end
@@ -111,6 +113,7 @@ end
 -- {{{ Variable definitions
 -- Themes define colours, icons, font and wallpapers.
 beautiful.init(gears.filesystem.get_configuration_dir() .. "theme.lua")
+beautiful.layout_machi = machi.get_icon()
 
 -- This is used later as the default terminal and editor to run.
 local terminal = "alacritty -e 'zsh' -c 'tmux new-session'"
@@ -126,6 +129,7 @@ local modkey = "Mod4"
 
 -- Table of layouts to cover with awful.layout.inc, order matters.
 awful.layout.layouts = {
+	machi.default_layout,
 	awful.layout.suit.floating,
 	awful.layout.suit.tile,
 	awful.layout.suit.tile.bottom,
@@ -436,6 +440,12 @@ local globalkeys = gears.table.join(
 		{ description = "reload awesome", group = "awesome" }),
 	awful.key({ modkey, "Shift" }, "Escape", awesome.quit,
 		{ description = "quit awesome", group = "awesome" }),
+
+	-- layout machi
+    awful.key({ modkey,           }, ".",    function () machi.default_editor.start_interactive() end,
+              {description = "edit the current layout if it is a machi layout", group = "layout"}),
+    awful.key({ modkey,           }, "/",    function () machi.switcher.start(client.focus) end,
+              {description = "switch between windows for a machi layout", group = "layout"}),
 
 	awful.key(
 		{ modkey, "Shift" }, ".",
