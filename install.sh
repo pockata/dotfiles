@@ -69,8 +69,8 @@ bakcyn='\e[46m'   # Cyan
 bakwht='\e[47m'   # White
 txtrst='\e[0m'    # Text Reset
 
-if ask "${txtylw}Did you copy/generate SSH/GPG keys?${txtrst}" N; then
-	echo -n "Weel, set them up first and then run the install script again"
+if ! ask "${txtylw}Did you copy/generate SSH/GPG keys?${txtrst}" N; then
+	echo "Well, set them up first and then run the install script again"
 	exit 1
 fi
 
