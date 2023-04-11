@@ -171,7 +171,7 @@ if ask "${txtylw}Set time/date options?${txtrst}" N; then
 fi
 
 if ask "${txtylw}Set system locale to en_US.UTF-8?${txtrst}" N; then
-	sudo localectl set-locale LANG=en_US.UTF-8
+	sudo localectl set-locale LANG=en_GB.UTF-8
 	echo "If having weird locale problems, check https://wiki.archlinux.org/index.php/Locale"
 	fi
 
