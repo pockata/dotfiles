@@ -89,7 +89,7 @@
 
     unstage = reset HEAD
     # Undo your last commit, but don't throw away your changes
-    undo = reset --soft HEAD^
+    undo = "!f() { if [[ $(git log -1 --pretty=%B) != WIP* ]]; then echo -n \"commit is not a WIP commit. Are you sure you want to undo it? (y/N): \"; read -r ans; if [ \"$ans\" = \"y\" -o \"$ans\" = \"Y\" ]; then echo \"Undoing...\"; else echo \"Aborted.\"; return; fi; fi; git reset --soft HEAD^; }; f"
 
     ; undo = !echo -n 'Confirm (y/N): ' && read 'x' && [ $x = 'y' ] && echo "woo"
 
