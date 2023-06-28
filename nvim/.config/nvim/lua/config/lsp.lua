@@ -33,7 +33,12 @@ local on_attach = function(client, bufnr)
 	-- TODO: These are attached on a per-buffer basis. Offer an alternative for
 	-- non-lsp buffers like a built-in fallback (K, gd) or show a warning that
 	-- the feature requires an active LSP server
-	buf_set_keymap('n', 'gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>', opts)
+	if client.name == "tsserver" then
+		buf_set_keymap('n', 'gD', '<cmd>TypescriptGoToSourceDefinition<CR>', opts)
+	else
+		buf_set_keymap('n', 'gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>', opts)
+	end
+
 	buf_set_keymap('n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
 	buf_set_keymap('n', 'K', '<Cmd>lua vim.lsp.buf.hover()<CR>', opts)
 	buf_set_keymap('n', 'gI', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
@@ -70,7 +75,25 @@ local function setup_servers()
 	capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 
 	require("mason").setup()
+	require("mason-lspconfig").setup({
+		ensure_installed = {
+			"gopls",
+			"tsserver",
+			"lua_ls",
+			-- "cssls",
+			"cssmodules_ls",
+			"jsonls",
+			"yamlls",
 
+			-- "css-lsp",
+			-- "eslint_d",
+			-- "gopls",
+			-- "json-lsp",
+			-- "lua-language-server",
+			-- "typescript-language-server",
+			-- "yaml-language-server",
+		}
+	})
 	require("mason-lspconfig").setup_handlers({
 		function(server)
 			local conf = {

@@ -81,7 +81,7 @@ require('lazy').setup({
 
 	{
 		"hrsh7th/nvim-cmp",
-		event = { "InsertEnter", --[[ "CmdlineEnter" ]] },
+		-- event = { "InsertEnter", "CmdlineEnter" },
 		config = function()
 			require("config.cmp")
 		end,
@@ -94,7 +94,7 @@ require('lazy').setup({
 			"hrsh7th/cmp-nvim-lua",
 			"hrsh7th/cmp-buffer",
 			"hrsh7th/cmp-path",
-			"andersevenrud/compe-tmux",
+			"andersevenrud/cmp-tmux",
 
 			-- automatch quotes and brackets
 			{
@@ -119,24 +119,27 @@ require('lazy').setup({
 		}
 	},
 
-	-- vim.api.nvim_set_keymap(
-	-- 	"i",
-	-- 	"<C-x><C-d>",
-	-- 	[[<c-r>=luaeval("require("complextras").complete_line_from_cwd()")<CR>]],
-	-- 	{ noremap = true }
-	-- )
-	-- vim.api.nvim_set_keymap(
-	-- 	"i",
-	-- 	"<C-x><C-m>",
-	-- 	[[<c-r>=luaeval("require("complextras").complete_matching_line()")<CR>]],
-	-- 	{ noremap = true }
-	-- )
-	-- use {
-	-- 	"tjdevries/complextras.nvim",
-	-- 	dependencies ={
-	-- 		{ "nvim-lua/plenary.nvim" },
-	-- 	}
-	-- }
+	{
+		"tjdevries/complextras.nvim",
+		dependencies = {
+			{ "nvim-lua/plenary.nvim" },
+		},
+		config = function()
+			vim.api.nvim_set_keymap(
+				"i",
+				"<C-x><C-m>",
+				[[<c-r>=luaeval("require('complextras').complete_matching_line()")<CR>]],
+				{ noremap = true }
+			)
+
+			vim.api.nvim_set_keymap(
+				"i",
+				"<C-x><C-d>",
+				[[<c-r>=luaeval("require('complextras').complete_line_from_cwd()")<CR>]],
+				{ noremap = true }
+			)
+		end
+	},
 
 	{
 		"folke/todo-comments.nvim",
@@ -153,31 +156,12 @@ require('lazy').setup({
 			require("config.lsp")
 		end,
 		dependencies = {
+			"nvim-lspconfig",
 			{
 				"williamboman/mason-lspconfig.nvim",
 				config = function()
-					require("mason-lspconfig").setup({
-						ensure_installed = {
-							"gopls",
-							"tsserver",
-							"lua_ls",
-							-- "cssls",
-							"cssmodules_ls",
-							"jsonls",
-							"yamlls",
-
-							-- "css-lsp",
-							-- "eslint_d",
-							-- "gopls",
-							-- "json-lsp",
-							-- "lua-language-server",
-							-- "typescript-language-server",
-							-- "yaml-language-server",
-						}
-					})
 				end,
 			},
-			"nvim-lspconfig",
 		},
 	},
 
@@ -473,7 +457,7 @@ require('lazy').setup({
 		config = function()
 			require("config.harpoon")
 		end,
-		dev = true,
+		dev = false,
 	},
 
 	-- Quickfix

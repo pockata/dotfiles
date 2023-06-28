@@ -60,7 +60,14 @@ augroup Filetypes
 	autocmd FileType markdown,gitcommit setlocal spell
 
 	" Jump to first file
-	autocmd User FugitiveIndex :call feedkeys("gU")
+	" TODO: https://github.com/tpope/vim-fugitive/issues/2161 breaks
+	" FugitiveIndex and it's called even when opening a diff with dp
+	" autocmd! User FugitiveIndex
+	" 			\ echom "who " .. get(b:, 'fugitive_type', 'brat') |
+	" 			\    if get(b:, 'fugitive_type', 'brat') != "brat" |
+	" 			\        :call feedkeys("gU")  |
+	" 			\    endif
+
 	autocmd BufEnter COMMIT_EDITMSG call setpos('.', [0, 1, 1, 0])
 
 	"https://www.reddit.com/r/vim/comments/3er2az/how_to_suppress_vims_warning_editing_a_read_only/

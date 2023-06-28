@@ -96,48 +96,58 @@ cmp.setup({
 		end)
 	}),
 
-	sources = cmp.config.sources(
+	sources = cmp.config.sources({
+		{ name = 'nvim_lsp' },
+		{ name = 'luasnip' },
+		{ name = 'path' },
 		{
-			{ name = 'nvim_lsp' },
-			{ name = 'luasnip' },
+			name = 'buffer',
+			-- max_item_count = 10,
+			-- keyword_length = 3,
+			option = {
+				get_bufnrs = function()
+					return vim.api.nvim_list_bufs()
+				end
+			}
 		},
 		{
-			{ name = 'path' },
-			{
-				name = 'buffer',
-				max_item_count = 10,
-				keyword_length = 3,
-				option = {
-					get_bufnrs = function()
-						return vim.api.nvim_list_bufs()
-					end
+			name = 'tmux',
+			-- max_item_count = 10,
+			option = {
+				all_panes = true,
+				sorting = {
+					priority_weight = 10,
 				}
-			},
-			{
-				name = 'tmux',
-				max_item_count = 10,
-				option = {
-					all_panes = true,
-					sorting = {
-						priority_weight = 10,
-					}
-				}
-			},
-		}
-	),
-	-- sorting = {
-	-- 	comparators = {
-	-- 		-- https://github.com/hrsh7th/cmp-buffer#locality-bonus-comparator-distance-based-sorting
-	-- 		function(...) return cmp_buffer:compare_locality(...) end,
-	-- 	}
-	-- },
+			}
+		},
+	}),
+
+	sorting = {
+		comparators = {
+			cmp.config.compare.offset,
+			cmp.config.compare.exact,
+			cmp.config.compare.score,
+
+			-- copied from cmp-under, but I don't think I need the plugin for this.
+			-- I might add some more of my own.
+			function(entry1, entry2)
+				local _, entry1_under = entry1.completion_item.label:find "^_+"
+				local _, entry2_under = entry2.completion_item.label:find "^_+"
+				entry1_under = entry1_under or 0
+				entry2_under = entry2_under or 0
+				if entry1_under > entry2_under then
+					return false
+				elseif entry1_under < entry2_under then
+					return true
+				end
+			end,
+
+			cmp.config.compare.kind,
+			cmp.config.compare.sort_text,
+			cmp.config.compare.length,
+			cmp.config.compare.order,
+		},
+	},
 })
 
 vim.keymap.set("i", "<c-i>", require "luasnip.extras.select_choice")
-
--- Disable cmp inside Telescope prompt
--- It's handled internally in cmp, but it doesn't seem to work for me so we do
--- it explicitly
-vim.cmd [[
-	autocmd FileType TelescopePrompt * lua require('cmp').setup.buffer { enabled = false }
-]]

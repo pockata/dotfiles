@@ -112,9 +112,6 @@ vnoremap('L', ":m '<-2<CR>gv=gv")
 xnoremap("<", "<silent>", "<gv")
 xnoremap(">", "<silent>", ">gv")
 
--- paste without yanking in visual mode with `P`
-xnoremap("P", '<expr>', "'\"_d\"'.v:register.'P'")
-
 -- select inserted text
 -- https://vimrcfu.com/snippet/145
 nnoremap('gi', "`[v`]")
