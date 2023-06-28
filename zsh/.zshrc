@@ -166,7 +166,9 @@ alias e="nvim"
 alias today="g today | gshow"
 # TODO: use eog or okular based on availability
 alias view="okular"
-alias aur="yay"
+
+# https://github.com/Jguer/yay/issues/750
+alias aur="yay --editmenu"
 alias myip="dig +short myip.opendns.com @resolver1.opendns.com"
 alias ips="ip a | grep 'inet ' | sed -e 's/^.*inet //g' -e 's/\/.*//g' | grep -v '127.0.0.1'"
 alias ls='LC_COLLATE=C ls -A --color -h --group-directories-first'
