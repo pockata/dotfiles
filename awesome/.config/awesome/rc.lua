@@ -59,6 +59,7 @@ local beautiful = require("beautiful")
 -- Notification library
 local naughty = require("naughty")
 local hotkeys_popup = require("awful.hotkeys_popup")
+local retain = require("retain")
 
 -- -- Enable hotkeys help widget for VIM and other apps
 -- -- when client with a matching name is opened:
@@ -85,13 +86,19 @@ local navigation_keys = {
 	{ ";", "right" },
 }
 
+-- Variables (placed outside of globalkeys = gears.table.join)
+local externalGapTable = { 5, 36, 60, 0 }
+local externalGapIndex = 1
+
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
 -- another config (This code will only ever execute for the fallback config)
 if awesome.startup_errors then
-	naughty.notify({ preset = naughty.config.presets.critical,
+	naughty.notify({
+		preset = naughty.config.presets.critical,
 		title = "Oops, there were errors during startup!",
-		text = awesome.startup_errors })
+		text = awesome.startup_errors
+	})
 end
 
 -- Handle runtime errors after startup
@@ -102,9 +109,11 @@ do
 		if in_error then return end
 		in_error = true
 
-		naughty.notify({ preset = naughty.config.presets.critical,
+		naughty.notify({
+			preset = naughty.config.presets.critical,
 			title = "Oops, an error happened!",
-			text = tostring(err) })
+			text = tostring(err)
+		})
 		in_error = false
 	end)
 end
@@ -129,7 +138,8 @@ local modkey = "Mod4"
 
 -- Table of layouts to cover with awful.layout.inc, order matters.
 awful.layout.layouts = {
-	machi.default_layout,
+	-- machi.default_layout,
+	machi.layout.create { new_placement_cb = machi.layout.placement.empty_then_fair },
 	awful.layout.suit.floating,
 	awful.layout.suit.tile,
 	awful.layout.suit.tile.bottom,
@@ -149,6 +159,7 @@ awful.layout.layouts = {
 	-- awful.layout.suit.corner.sw,
 	-- awful.layout.suit.corner.se,
 }
+retain.tags.load()
 -- }}}
 
 -- Keyboard map indicator and switcher
@@ -221,7 +232,11 @@ set_wallpaper()
 
 awful.screen.connect_for_each_screen(function(s)
 	-- Each screen has its own tag table.
-	awful.tag({ "1", "2", "3", "4", "5" }, s, awful.layout.layouts[1])
+	-- awful.tag({ "1", "2", "3", "4", "5" }, s, awful.layout.layouts[1])
+	awful.tag({ "1", "2", "3", "4", "5" }, s, retain.tags.getlayouts(s))
+
+	-- awful.tag(retain.tags.getnames(s), s, retain.tags.getlayouts(s))
+
 	-- Create a promptbox for each screen
 	s.mypromptbox = awful.widget.prompt()
 	-- Create an imagebox widget which will contain an icon indicating which layout we're using.
@@ -259,14 +274,16 @@ awful.screen.connect_for_each_screen(function(s)
 	-- Add widgets to the wibox
 	s.mywibox:setup {
 		layout = wibox.layout.align.horizontal,
-		{ -- Left widgets
+		{
+			-- Left widgets
 			layout = wibox.layout.fixed.horizontal,
 			s.mytaglist,
 			s.mypromptbox,
 		},
 		-- s.mytasklist, -- Middle widget
 		nil,
-		{ -- Right widgets
+		{
+			-- Right widgets
 			layout = wibox.layout.fixed.horizontal,
 			mykeyboardlayout,
 			-- lain.widget.bat({
@@ -334,7 +351,21 @@ end)
 
 -- {{{ Key bindings
 local globalkeys = gears.table.join(
-
+-- NOTE: it doesn't work with layout machi
+	awful.key({ modkey, "Shift" }, "0",
+		function()
+			awful.screen.focused().padding = externalGapTable[externalGapIndex]
+			if externalGapIndex < 4 then
+				externalGapIndex = externalGapIndex + 1
+			else
+				externalGapIndex = 1
+			end
+			-- Update the layout for all monitors
+			awful.screen.connect_for_each_screen(function(s)
+				awful.layout.arrange(s)
+			end)
+		end,
+		{ description = "Cycle through external gap sizes", group = "layout" }),
 	awful.key({ modkey }, "o", function() awful.client.movetoscreen() end,
 		{ description = "Change screen", group = "client" }),
 	-- awful.key({ modkey, }, "z", function () quake:toggle() end),
@@ -359,7 +390,8 @@ local globalkeys = gears.table.join(
 
 	awful.key({}, "XF86AudioPlay",
 		function()
-			awful.spawn("dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlayPause"
+			awful.spawn(
+				"dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlayPause"
 				, false)
 		end,
 		{ description = "document this", group = "hotkeys" }
@@ -367,7 +399,8 @@ local globalkeys = gears.table.join(
 
 	awful.key({}, "XF86AudioNext",
 		function()
-			awful.spawn("dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Next"
+			awful.spawn(
+				"dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Next"
 				, false)
 		end,
 		{ description = "document this", group = "hotkeys" }
@@ -375,7 +408,8 @@ local globalkeys = gears.table.join(
 
 	awful.key({}, "XF86AudioPrev",
 		function()
-			awful.spawn("dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Prev"
+			awful.spawn(
+				"dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Prev"
 				, false)
 		end,
 		{ description = "document this", group = "hotkeys" }
@@ -442,10 +476,10 @@ local globalkeys = gears.table.join(
 		{ description = "quit awesome", group = "awesome" }),
 
 	-- layout machi
-    awful.key({ modkey,           }, ".",    function () machi.default_editor.start_interactive() end,
-              {description = "edit the current layout if it is a machi layout", group = "layout"}),
-    awful.key({ modkey,           }, "/",    function () machi.switcher.start(client.focus) end,
-              {description = "switch between windows for a machi layout", group = "layout"}),
+	awful.key({ modkey, }, ".", function() machi.default_editor.start_interactive() end,
+		{ description = "edit the current layout if it is a machi layout", group = "layout" }),
+	awful.key({ modkey, }, "/", function() machi.switcher.start(client.focus) end,
+		{ description = "switch between windows for a machi layout", group = "layout" }),
 
 	awful.key(
 		{ modkey, "Shift" }, ".",
@@ -562,30 +596,6 @@ local globalkeys = gears.table.join(
 	)
 )
 
-for i, _ in ipairs(navigation_keys) do
-	local key = navigation_keys[i][1]
-	local dir = navigation_keys[i][2]
-
-	globalkeys = gears.table.join(globalkeys,
-		awful.key(
-			{ modkey }, key,
-			function()
-				awful.client.focus.global_bydirection(dir)
-				if client.focus then client.focus:raise() end
-			end,
-			{ description = "focus client " .. dir, group = "client" }
-		),
-
-		awful.key(
-			{ modkey, "Shift" }, key,
-			function()
-				awful.client.swap.global_bydirection(dir)
-			end,
-			{ description = "swap client " .. dir, group = "client" }
-		)
-	)
-end
-
 local clientkeys = gears.table.join(
 	awful.key(
 		{ modkey, "Shift" }, "f",
@@ -608,7 +618,6 @@ local clientkeys = gears.table.join(
 	),
 	awful.key({ modkey, "Shift" }, "Return", function(c) c:swap(awful.client.getmaster()) end,
 		{ description = "move to master", group = "client" }),
-
 	awful.key({ modkey, }, "s", function(c) c.sticky = not c.sticky end),
 	awful.key({ modkey, }, "t", function(c) c.ontop = not c.ontop end,
 		{ description = "toggle keep on top", group = "client" }),
@@ -643,7 +652,6 @@ local clientkeys = gears.table.join(
 			awful.placement.centered(c.focus)
 		end,
 		{ description = "move to the center of the screen", group = "corner movements" }),
-
 	awful.key({ modkey, "Shift" }, "u",
 		function(c)
 			awful.placement.top_left(c.focus, {
@@ -652,7 +660,6 @@ local clientkeys = gears.table.join(
 			})
 		end,
 		{ description = "move to the top left corner of the screen", group = "corner movements" }),
-
 	awful.key({ modkey, "Shift" }, "p",
 		function(c)
 			awful.placement.top_right(c.focus, {
@@ -661,7 +668,6 @@ local clientkeys = gears.table.join(
 			})
 		end,
 		{ description = "move to the top right corner of the screen", group = "corner movements" }),
-
 	awful.key({ modkey, "Shift" }, "i",
 		function(c)
 			awful.placement.bottom_left(c.focus, {
@@ -670,7 +676,6 @@ local clientkeys = gears.table.join(
 			})
 		end,
 		{ description = "move to the bottom left corner of the screen", group = "corner movements" }),
-
 	awful.key({ modkey, "Shift" }, "o",
 		function(c)
 			awful.placement.bottom_right(c.focus, {
@@ -702,6 +707,36 @@ for i, _ in ipairs(navigation_keys) do
 				end
 			end,
 			{ description = "move to " .. dir .. " screen", group = "client" }
+		)
+	)
+end
+
+for i, _ in ipairs(navigation_keys) do
+	local key = navigation_keys[i][1]
+	local dir = navigation_keys[i][2]
+
+	globalkeys = gears.table.join(globalkeys,
+		awful.key(
+			{ modkey }, key,
+			function()
+				awful.client.focus.global_bydirection(dir)
+				local c = client.focus
+				if c then
+					c:raise()
+					mouse.coords({
+						x = c.x + c.width / 2,
+						y = c.y + c.height / 2,
+					})
+				end
+			end,
+			{ description = "focus client " .. dir, group = "client" }
+		),
+		awful.key(
+			{ modkey, "Shift" }, key,
+			function()
+				awful.client.swap.global_bydirection(dir)
+			end,
+			{ description = "swap client " .. dir, group = "client" }
 		)
 	)
 end
@@ -778,7 +813,8 @@ root.keys(globalkeys)
 -- Rules to apply to new clients (through the "manage" signal).
 awful.rules.rules = {
 	-- All clients will match this rule.
-	{ rule = {},
+	{
+		rule = {},
 		properties = {
 			border_width = beautiful.border_width,
 			border_color = beautiful.border_normal,
@@ -792,8 +828,8 @@ awful.rules.rules = {
 		except_any = {
 			name = {
 				"Plasma",
+				"plasmawindowed",
 			},
-
 			type = {
 				"notification",
 			},
@@ -802,35 +838,38 @@ awful.rules.rules = {
 
 	-- Make systray/main menu windows appear on all screens (by default they show only on
 	-- tag 1)
-	{
-		rule_any = {
-			name = {
-				"Plasma",
-			},
-		},
-		properties = {
-			sticky = true,
-			focusable = true,
-		},
-	},
+	-- {
+	-- 	rule_any = {
+	-- 		name = {
+	-- 			"Plasma",
+	-- 		},
+	-- 	},
+	-- 	properties = {
+	-- 		sticky = true,
+	-- 		focusable = true,
+	-- 	},
+	-- },
 
 	-- plasmashell notification
-	{ rule_any = {
-		type = {
-			"notification",
+	{
+		rule_any = {
+			type = {
+				"notification",
+			},
+			-- name = {
+			-- 	"Plasma",
+			-- },
+			-- class = {
+			-- 	"plasmashell",
+			-- },
 		},
-		-- name = {
-		-- 	"Plasma",
-		-- },
-		-- class = {
-		-- 	"plasmashell",
-		-- },
-	}, properties = {
-		floating = true,
-		-- border_width = 0,
-		-- placement = nil,
-		focusable = false,
-	} },
+		properties = {
+			floating = true,
+			-- border_width = 0,
+			-- placement = nil,
+			focusable = false,
+		}
+	},
 	-- -- Floating with no borders
 	-- { rule_any = {
 	-- 	role = {
@@ -853,42 +892,44 @@ awful.rules.rules = {
 	-- 		border_width = 0
 	-- }},
 	-- Floating clients.
-	{ rule_any = {
-		instance = {
-			"DTA", -- Firefox addon DownThemAll.
-			"copyq", -- Includes session name in class.
-			"pinentry",
-			"Devtools", -- Firefox devtools
+	{
+		rule_any = {
+			instance = {
+				"DTA", -- Firefox addon DownThemAll.
+				"copyq", -- Includes session name in class.
+				"pinentry",
+				"Devtools", -- Firefox devtools
+			},
+			class = {
+				"Arandr",
+				"Alacritty",
+				"Blueman-manager",
+				"Gpick",
+				"Galculator",
+				"Kruler",
+				"MessageWin", -- kalarm.
+				"Sxiv",
+				"Tor Browser", -- Needs a fixed window size to avoid fingerprinting by screen size.
+				"Wpa_gui",
+				"veromix",
+				"xtightvncviewer",
+				"dolphin",
+				"kcalc"
+			},
+			-- Note that the name property shown in xprop might be set slightly after creation of the client
+			-- and the name shown there might not match defined rules here.
+			name = {
+				"Event Tester", -- xev.
+				"Bluetooth",
+			},
+			role = {
+				"AlarmWindow", -- Thunderbird's calendar.
+				"ConfigManager", -- Thunderbird's about:config.
+				-- "pop-up",		  -- e.g. Google Chrome's (detached) Developer Tools.
+			}
 		},
-		class = {
-			"Arandr",
-			"Alacritty",
-			"Blueman-manager",
-			"Gpick",
-			"Galculator",
-			"Kruler",
-			"MessageWin", -- kalarm.
-			"Sxiv",
-			"Tor Browser", -- Needs a fixed window size to avoid fingerprinting by screen size.
-			"Wpa_gui",
-			"veromix",
-			"xtightvncviewer",
-			"dolphin",
-			"kcalc"
-		},
-
-		-- Note that the name property shown in xprop might be set slightly after creation of the client
-		-- and the name shown there might not match defined rules here.
-		name = {
-			"Event Tester", -- xev.
-			"Bluetooth",
-		},
-		role = {
-			"AlarmWindow", -- Thunderbird's calendar.
-			"ConfigManager", -- Thunderbird's about:config.
-			-- "pop-up",		  -- e.g. Google Chrome's (detached) Developer Tools.
-		}
-	}, properties = { floating = true } },
+		properties = { floating = true }
+	},
 
 	-- Add titlebars to normal clients and dialogs
 	{
@@ -947,6 +988,28 @@ awful.rules.rules = {
 		}
 	},
 
+	{
+		rule_any = {
+			class = {
+				"plasmawindowed",
+			},
+			-- name = {
+			-- 	"Сила на звука",
+			-- },
+		},
+		properties = {
+			floating = true,
+			width = 656,
+			height = 386,
+			border_width = 0,
+			modal = true,
+			placement = awful.placement.top_right,
+			sticky = true,
+			-- focus = true,
+			ontop = true,
+		}
+	},
+
 	-- Pavucontrol & Bluetooth Devices
 	{
 		rule_any = {
@@ -994,22 +1057,18 @@ client.connect_signal('manage', function(c)
 	if awful.layout.get(mouse.screen) == awful.layout.suit.floating then
 		awful.client.property.set(c, 'floating_geometry', c:geometry())
 	end
-
-	if c.name == "Desktop — Plasma" then
-		c:kill()
-	end
 end)
 
--- Set mouse in the middle of the window when switching with Rofi
--- TODO: Compare mouse/window coords to fix same-screen switching
-client.connect_signal('focus', function(c)
-	if not (mouse.screen.index == c.screen.index) then
-		mouse.coords({
-			x = c.x + c.width / 2,
-			y = c.y + c.height / 2,
-		})
-	end
-end)
+-- -- Set mouse in the middle of the window when switching with Rofi
+-- -- TODO: Compare mouse/window coords to fix same-screen switching
+-- client.connect_signal('focus', function(c)
+-- 	if not (mouse.screen.index == c.screen.index) then
+-- 		mouse.coords({
+-- 			x = c.x + c.width / 2,
+-- 			y = c.y + c.height / 2,
+-- 		})
+-- 	end
+-- end)
 
 client.connect_signal('property::geometry', function(c)
 	if awful.layout.get(mouse.screen) == awful.layout.suit.floating then
