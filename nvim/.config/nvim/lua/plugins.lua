@@ -165,6 +165,7 @@ require('lazy').setup({
 		},
 	},
 
+	-- TODO: replace with https://github.com/olimorris/dotfiles/commit/bac18fb2338d8a97418787acfeac346246f515be
 	{
 		"jose-elias-alvarez/null-ls.nvim",
 		config = function()
@@ -186,6 +187,7 @@ require('lazy').setup({
 			vim.g.matchup_matchparen_offscreen = {}
 			vim.g.matchup_matchparen_enabled = 0
 		end,
+		dev = true,
 	},
 
 	{
@@ -544,9 +546,11 @@ require('lazy').setup({
 		cmd = "MarkdownPreview",
 	},
 
+	-- TODO: Replace with https://github.com/pmizio/typescript-tools.nvim
 	{
 		"jose-elias-alvarez/typescript.nvim",
 	},
+
 	{ "evanleck/vim-svelte" },
 
 	{
