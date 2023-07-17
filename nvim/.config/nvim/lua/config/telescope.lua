@@ -57,7 +57,6 @@ require('telescope').setup{
 				["<c-s>"] = actions.select_horizontal,
 				-- exit with Esc from insert mode (I don't need normal mode here)
 				["<esc>"] = actions.close,
-				["<c-g>"] = actions.select_all,
 
 				["<c-k>"] = actions.move_selection_next,
 				["<c-l>"] = actions.move_selection_previous,
@@ -65,7 +64,9 @@ require('telescope').setup{
 				["<s-up>"] = actions.preview_scrolling_up,
 				["<s-down>"] = actions.preview_scrolling_down,
 
+				["<a-q>"] = actions.smart_send_to_qflist,
 				["<a-p>"] = layout.toggle_preview,
+
 				-- use native <c-u> mapping
 				["<C-u>"] = false,
 			}
