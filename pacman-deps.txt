@@ -38,3 +38,4 @@ go
 make
 stow
 spotify-launcher
+patch
