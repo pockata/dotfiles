@@ -43,4 +43,4 @@
 	) @p.htmltag.outer
 
 ; (jsx_fragment (_) @p.htmltag.inner) @p.htmltag.outer
-(jsx_fragment) @p.htmltag.outer
+; (jsx_fragment) @p.htmltag.outer

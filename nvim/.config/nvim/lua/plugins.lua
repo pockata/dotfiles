@@ -187,7 +187,6 @@ require('lazy').setup({
 			vim.g.matchup_matchparen_offscreen = {}
 			vim.g.matchup_matchparen_enabled = 0
 		end,
-		dev = true,
 	},
 
 	{
@@ -244,7 +243,7 @@ require('lazy').setup({
 	-- { "haystackandroid/wonka" },
 	{ "rose-pine/neovim",                   name = "rose-pine" },
 	{ "briones-gabriel/darcula-solid.nvim", dependencies = "rktjmp/lush.nvim" },
-	{ "doums/darcula" },
+	-- { "doums/darcula" },
 	{ "EdenEast/nightfox.nvim" },
 	{
 		"famiu/feline.nvim",
