@@ -139,6 +139,7 @@ nnoremap('<Leader>l', '<silent>', ":nohlsearch<BAR><C-R>=&diff?'<Bar>diffupdate'
 
 nmap('goT', ":call system('alacritty --working-directory '.getcwd().' &')<CR>")
 nmap('got', ":call system('alacritty --working-directory '.expand(\"%:p:h\").' &')<CR>")
+nmap('gof', ":call system('thunar '.expand(\"%\").' &')<CR>")
 
 -- Disable buffer maps set in man.vim
 vim.g.no_man_maps=1
