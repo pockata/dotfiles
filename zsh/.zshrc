@@ -165,7 +165,7 @@ alias t="tmux -2"
 alias e="nvim"
 alias today="g today | gshow"
 # TODO: use eog or okular based on availability
-alias view="okular"
+alias view="viewnior"
 
 # https://github.com/Jguer/yay/issues/750
 alias aur="yay --editmenu"
