@@ -51,7 +51,10 @@ require('lazy').setup({
 			-- for debugging treesitter queries (for textobjects)
 			"nvim-treesitter/playground",
 			--
-			"nvim-treesitter/nvim-treesitter-textobjects"
+			{
+				"nvim-treesitter/nvim-treesitter-textobjects",
+				dev = true,
+			}
 			-- Check it out
 			-- "mfussenegger/nvim-ts-hint-textobject"
 		},
@@ -181,13 +184,14 @@ require('lazy').setup({
 		end
 	},
 
-	{
-		"andymass/vim-matchup",
-		config = function()
-			vim.g.matchup_matchparen_offscreen = {}
-			vim.g.matchup_matchparen_enabled = 0
-		end,
-	},
+	-- {
+	-- 	"andymass/vim-matchup",
+	-- 	config = function()
+	-- 		vim.g.matchup_matchparen_offscreen = {}
+	-- 		vim.g.matchup_matchparen_enabled = 0
+	-- 		vim.g.matchup_surround_enabled = 0
+	-- 	end,
+	-- },
 
 	{
 		"justinmk/vim-dirvish",
@@ -195,7 +199,20 @@ require('lazy').setup({
 			require("config.dirvish")
 		end,
 		dependencies = {
-			"kristijanhusak/vim-dirvish-git",
+			{
+				"kristijanhusak/vim-dirvish-git",
+				config = function()
+					vim.g.dirvish_git_indicators = {
+						Modified = '!',
+						Staged = '+',
+						Untracked = 'u',
+						Renamed = '>',
+						Unmerged = '=',
+						Ignored = 'i',
+						Unknown = '?'
+					}
+				end
+			},
 			"roginfarrer/vim-dirvish-dovish",
 		}
 	},
@@ -229,14 +246,7 @@ require('lazy').setup({
 		end,
 	},
 	{ "ajmwagar/vim-deus" },
-	{
-		"folke/tokyonight.nvim",
-		lazy = false,
-		priority = 1000,
-		config = function()
-			vim.cmd [[colorscheme tokyonight-moon]]
-		end
-	},
+	{ "folke/tokyonight.nvim" },
 	{ "matsuuu/pinkmare" },
 	{ "rebelot/kanagawa.nvim" },
 	{ "savq/melange" },
@@ -244,7 +254,14 @@ require('lazy').setup({
 	{ "rose-pine/neovim",                   name = "rose-pine" },
 	{ "briones-gabriel/darcula-solid.nvim", dependencies = "rktjmp/lush.nvim" },
 	-- { "doums/darcula" },
-	{ "EdenEast/nightfox.nvim" },
+	{
+		"EdenEast/nightfox.nvim",
+		lazy = false,
+		priority = 1000,
+		config = function()
+			vim.cmd [[colorscheme nordfox]]
+		end
+	},
 	{
 		"famiu/feline.nvim",
 		config = function()
@@ -289,13 +306,13 @@ require('lazy').setup({
 				end,
 				config = function()
 					vim.cmd [[
-						call textobj#user#map("entire", {
+					call textobj#user#map("entire", {
 						\   "-": {
-						\     "select-a": "aE",
-						\     "select-i": "iE",
-						\   }
-						\ })
-					]]
+							\     "select-a": "aE",
+							\     "select-i": "iE",
+							\   }
+							\ })
+							]]
 				end
 			},
 			-- or thinca/vim-textobj-comment
@@ -315,7 +332,13 @@ require('lazy').setup({
 		},
 	},
 
-	"wellle/targets.vim",
+	{
+		"wellle/targets.vim",
+		config = function()
+			vim.g.targets_jumpRanges =
+			"cc cr cb cB lc ac Ac lr rr ll lb ar ab lB Ar aB Ab AB rb al rB Al bb aa bB Aa BB AA"
+		end,
+	},
 
 	{
 		"phaazon/hop.nvim",
@@ -381,7 +404,15 @@ require('lazy').setup({
 		end,
 		dependencies = {
 			-- syntax-aware commentstring (via treesitter)
-			"JoosepAlviste/nvim-ts-context-commentstring",
+			{
+				"JoosepAlviste/nvim-ts-context-commentstring",
+				config = function()
+					vim.g.skip_ts_context_commentstring_module = true
+					require("ts_context_commentstring").setup({
+						enable_autocmd = false,
+					})
+				end,
+			}
 		},
 	},
 
@@ -555,10 +586,15 @@ require('lazy').setup({
 		"pantharshit00/vim-prisma",
 		ft = "prisma",
 	},
+
 	{
 		"iamcco/markdown-preview.nvim",
+		cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
 		build = "cd app && yarn install",
-		cmd = "MarkdownPreview",
+		init = function()
+			vim.g.mkdp_filetypes = { "markdown" }
+		end,
+		ft = { "markdown" },
 	},
 
 	-- TODO: Replace with https://github.com/pmizio/typescript-tools.nvim
@@ -566,7 +602,46 @@ require('lazy').setup({
 		"jose-elias-alvarez/typescript.nvim",
 	},
 
+	-- better TS errors
+	{
+		"davidosomething/format-ts-errors.nvim",
+	},
+	{
+		"dmmulroy/tsc.nvim",
+		cmd = { "TSC" },
+		config = function()
+			require("tsc").setup({
+				flags = {
+					maxNodeModuleJsDepth = "0",
+					project = function()
+						local files = { "jsconfig.json", "tsconfig.json" }
+						local paths = { ".", "packages/ui" }
+						for i = 0, #paths do
+							local path = paths[i]
+							for k = 0, #files do
+								local file = files[k]
+								local conf = vim.fn.findfile(file, path)
+
+								if conf ~= "" then
+									return conf
+								end
+							end
+						end
+
+						return nil
+					end
+				}
+			})
+		end,
+	},
+
 	{ "evanleck/vim-svelte" },
+	{
+		"wuelnerdotexe/vim-astro",
+		config = function()
+			vim.g.astro_typescript = "enable"
+		end
+	},
 
 	{
 		"mbbill/undotree",

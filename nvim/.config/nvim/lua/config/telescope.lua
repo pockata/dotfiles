@@ -1,9 +1,10 @@
-local actions = require('telescope.actions')
-local layout = require('telescope.actions.layout')
-local action_set = require "telescope.actions.set"
-local tele = require('telescope.builtin')
+local actions = require("telescope.actions")
+local layout = require("telescope.actions.layout")
+local action_set = require("telescope.actions.set")
+local action_state = require("telescope.actions.state")
+local tele = require("telescope.builtin")
 
-require('telescope').setup{
+require('telescope').setup {
 	defaults = {
 		vimgrep_arguments = {
 			'rg',
@@ -13,6 +14,7 @@ require('telescope').setup{
 			'--line-number',
 			'--column',
 			'--smart-case',
+			'--trim',
 			'--hidden', -- include hidden files, but respect .gitignore
 			--hidden includes .git folders. providing --ignore-vcs does nothing
 			'--glob',
@@ -64,7 +66,7 @@ require('telescope').setup{
 				["<s-up>"] = actions.preview_scrolling_up,
 				["<s-down>"] = actions.preview_scrolling_down,
 
-				["<a-q>"] = actions.smart_send_to_qflist,
+				["<a-q>"] = actions.smart_send_to_qflist + actions.open_qflist,
 				["<a-p>"] = layout.toggle_preview,
 
 				-- use native <c-u> mapping
@@ -96,6 +98,30 @@ function _G.EditNvim()
 	}
 end
 
+local function is_image(filepath)
+	local image_extensions = { "png", "jpg", "jpeg", "gif" } -- Supported image formats
+	local split_path = vim.split(filepath:lower(), '.', { plain = true })
+	local extension = split_path[#split_path]
+	return vim.tbl_contains(image_extensions, extension)
+end
+
+local function custom_default(prompt_bufnr--[[ , map ]])
+	actions.select_default:replace(function()
+		actions.close(prompt_bufnr)
+		local selection = action_state.get_selected_entry()
+
+		if is_image(selection[1]) then
+			local dir = vim.fn.fnamemodify(selection.path, ":p:h")
+			-- open dirvish and move the cursor to the selected file
+			vim.cmd(string.format("Dirvish %s", vim.fn.fnameescape(dir)))
+			vim.fn.search(selection[1])
+		else
+			actions.select_default()
+		end
+	end)
+	return true
+end
+
 function _G.EditDotfiles()
 	tele.find_files {
 		prompt_title = "~ dotfiles ~",
@@ -119,9 +145,14 @@ function _G.SmartProjectFiles()
 	local dir = require("lspconfig.util").root_pattern(".git")(vim.fn.getcwd())
 
 	if dir ~= nil then
-		tele.git_files()
+		tele.git_files({
+			-- attach_mappings = custom_default,
+		})
 	else
-		tele.find_files({ hidden = true })
+		tele.find_files({
+			hidden = true,
+			-- attach_mappings = custom_default,
+		})
 	end
 end
 
@@ -161,7 +192,7 @@ nnoremap("<Leader>j", "<silent>", "<cmd>Telescope live_grep<CR>");
 nnoremap("<Leader>r", "<silent>", ":lua TelescopeCurrentBuffer()<CR>");
 nnoremap("<Leader>w", "<silent>", "<cmd>Telescope builtin<CR>");
 nnoremap("<Leader>b", "<silent>", "<cmd>Telescope buffers<CR>");
-nnoremap("gR", "<silent>", "<cmd>Telescope lsp_references<CR>");
+nnoremap("gR", "<silent>", "<cmd>lua require('telescope.builtin').lsp_references({ jump_type = 'never' })<CR>");
 nnoremap("gr", "<silent>", "<cmd>Telescope lsp_incoming_calls<CR>");
 nnoremap("<Leader>e", "<silent>", "<cmd>Telescope lsp_dynamic_workspace_symbols<CR>");
 -- nnoremap("<Leader>c", "<silent>", "<cmd>Telescope commands<CR>");
@@ -185,8 +216,8 @@ noremap("H", "<silent>", "<cmd>Telescope grep_string<CR>");
 
 -- Emulate FZF's commands which I use rarely and don't have them bound to a key
 function _G.SelectColorScheme() tele.colorscheme(FZFDropdown) end
+
 function _G.SelectFiletype() tele.filetypes(FZFDropdown) end
 
 vim.cmd [[ command! -bar Filetypes :lua SelectFiletype() ]]
 vim.cmd [[ command! -bar Colors :lua SelectColorScheme() ]]
-

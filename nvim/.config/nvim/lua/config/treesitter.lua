@@ -1,22 +1,20 @@
 require('nvim-treesitter.configs').setup({
 	ensure_installed = {
-		'bash', 'comment', 'cpp', 'css', 'go', 'html',
+		'bash', 'comment', 'cpp', 'scss', 'css', 'go', 'html',
 		'javascript', 'json', 'jsonc', 'lua', 'regex',
 		'typescript', 'yaml', 'query'
 	},
+
 	highlight = {
 		enable = true,
 		additional_vim_regex_highlighting = false,
 	},
+
 	matchup = {
 		enable = true,
 		disable_virtual_text = true,
 	},
-	context_commentstring = {
-		-- https://github.com/JoosepAlviste/nvim-ts-context-commentstring#commentnvim
-		enable = true,
-		enable_autocmd = false,
-	},
+
 	playground = {
 		enable = true,
 		disable = {},
@@ -35,12 +33,14 @@ require('nvim-treesitter.configs').setup({
 			show_help = '?',
 		},
 	},
+
 	-- for playground
 	query_linter = {
 		enable = true,
 		use_virtual_text = true,
 		lint_events = { "BufWrite", "CursorHold" },
 	},
+
 	incremental_selection = {
 		enable = true,
 		keymaps = {
@@ -49,43 +49,46 @@ require('nvim-treesitter.configs').setup({
 			scope_incremental = "<S-CR>",
 			node_decremental = "<BS>",
 		},
+		is_supported = function()
+			-- ignore the command line q:
+			local mode = vim.api.nvim_get_mode().mode
+			if mode == "c" then
+				return false
+			end
+			return true
+		end
 	},
+
 	textobjects = {
 		move = {
 			enable = true,
 			set_jumps = true, -- whether to set jumps in the jumplist
 			goto_next_start = {
 				["]f"] = "@function.outer",
-				-- ["]]"] = "@class.outer",
-				-- ["]a"] = "@parameter.inner",
-				-- jump to the next variable assignment
 				[']k'] = '@assignment.lhs',
 				[']v'] = '@assignment.rhs',
+				["]d"] = "@conditional.outer",
+				["]r"] = "@return.outer"
 			},
 			goto_next_end = {
 				["]F"] = "@function.outer",
-				["]["] = "@class.outer",
 			},
 			goto_previous_start = {
 				["[f"] = "@function.outer",
-				-- ["[["] = "@class.outer",
-				-- ["[a"] = "@parameter.inner",
-				-- jump to the prev variable assignment
 				['[k'] = '@assignment.lhs',
 				['[v'] = '@assignment.rhs',
+				["[d"] = "@conditional.outer",
+				["[r"] = "@return.outer"
 			},
 			goto_previous_end = {
 				["[F"] = "@function.outer",
-				["[]"] = "@class.outer",
 			},
 			-- Below will go to either the start or the end, whichever is closer.
-			-- Use if you want more granular movements
-			-- Make it even more gradual by adding multiple queries and regex.
 			goto_next = {
-				["]d"] = "@conditional.outer",
+				["]r"] = "@return.outer",
 			},
 			goto_previous = {
-				["[d"] = "@conditional.outer",
+				["[r"] = "@return.outer",
 			}
 		},
 		-- swap = {
@@ -106,18 +109,13 @@ require('nvim-treesitter.configs').setup({
 				-- use the queries from supported languages with textobjects.scm
 				['af'] = '@function.outer',
 				['if'] = '@function.inner',
-				['iv'] = '@p.assign.value',
-				['ik'] = '@p.assign.key',
-				['av'] = '@p.assign.value',
-				['ak'] = '@p.assign.key',
-				-- ['iv'] = '@assignment.rhs',
-				-- ['ik'] = '@assignment.lhs',
-				-- ['av'] = '@assignment.rhs',
-				-- ['ak'] = '@assignment.lhs',
-				['as'] = '@p.scope',
-				['is'] = '@p.scope',
-				['ir'] = '@p.return.inner',
-				['ar'] = '@p.return.outer',
+				['ik'] = '@assignment.lhs',
+				['ak'] = '@assignment.outer',
+				['iv'] = '@assignment.inner',
+				['av'] = '@assignment.rhs',
+				["as"] = { query = "@scope", desc = "Select language scope" },
+				['ir'] = '@return.inner',
+				['ar'] = '@return.outer',
 				['ix'] = '@p.jsxAttrVal',
 				['ax'] = '@p.jsxAttr',
 				['at'] = '@p.htmltag.outer',
@@ -144,7 +142,18 @@ require('nvim-treesitter.configs').setup({
 				-- ['im'] = '@call.inner',
 			}
 		},
+
+		lsp_interop = {
+			enable = true,
+			border = "rounded",
+			floating_preview_opts = {},
+			peek_definition_code = {
+				-- ["<leader>df"] = "@function.outer",
+				["<leader>dj"] = "@block.outer",
+			},
+		},
 	},
+
 	indent = {
 		enable = true
 	},

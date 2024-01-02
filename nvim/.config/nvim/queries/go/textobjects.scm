@@ -1,3 +1,4 @@
+;; extends
 ;; vim: ft=query
 ;; Reference
 ;; http://tree-sitter.github.io/tree-sitter/using-parsers#pattern-matching-with-queries
@@ -8,39 +9,39 @@
 ;; { Handler: apiMux }
 
 (short_var_declaration
-	left:(expression_list) @p.assign.key
-	right:(expression_list) @p.assign.value
+	left:(expression_list) @assignment.lhs
+	right:(expression_list) @assignment.rhs
 )
 (var_declaration
 	(var_spec
-		name:(_) @p.assign.key
-		value:(expression_list) @p.assign.value
+		name:(_) @assignment.lhs
+		value:(expression_list) @assignment.rhs
 ))
 
 (keyed_element
 	.
-	(literal_element) @p.assign.key
-	(_) @p.assign.value
+	(literal_element) @assignment.lhs
+	(_) @assignment.rhs
 )
 
 (assignment_statement
-	left: (expression_list) @p.assign.key
-	right: (_) @p.assign.value
+	left: (expression_list) @assignment.lhs
+	right: (_) @assignment.rhs
 )
 
 ;; Block scopes if/else, for
 (if_statement
-	consequence: (block) @p.scope
+	consequence: (block) @scope
 	alternative: (
 		(if_statement
-		  consequence: (block) @p.scope
+		  consequence: (block) @scope
 		  )?
-		(block)? @p.scope
+		(block)? @scope
 	)
 )
 
 (for_statement
-	body: (block) @p.scope
+	body: (block) @scope
 )
 
 (func_literal) @function.outer
@@ -49,18 +50,19 @@
 
 ;; return
 ;; based on https://github.com/nvim-treesitter/nvim-treesitter-textobjects/blob/master/queries/ecma/textobjects.scm#L90
+
 (return_statement
   (expression_list
 	"," @_start .
-	(_) @p.return.inner
-	(#make-range! "p.return.outer" @_start @p.return.inner)
+	(_) @return.inner
+	(#make-range! "return.outer" @_start @return.inner)
 	)
   )
 
 (return_statement
   (expression_list
-														   . (_) @p.return.inner
+	. (_) @return.inner
 	. ","? @_end
-	(#make-range! "p.return.outer" @p.return.inner @_end)
+	(#make-range! "return.outer" @return.inner @_end)
+	)
   )
-)

@@ -135,10 +135,9 @@ nmap('<leader>eo', '<silent>', ":execute 'vsplit ' . resolve('~/dotfiles/vim/vim
 -- nmap('<leader>sv', '<silent>', ':so ~/.vimrc<CR>:AirlineRefresh<CR>')
 
 -- Use <C-L> to clear the highlighting of :set hlsearch.
-nnoremap('<Leader>l', '<silent>', ":nohlsearch<BAR><C-R>=&diff?'<Bar>diffupdate':''<CR><CR><C-L>")
+nnoremap('<Leader>l', '<silent>', ":Gitsigns refresh<CR><BAR>:nohlsearch<BAR><C-R>=&diff?'<Bar>diffupdate':''<CR><CR><C-L>")
 
-nmap('goT', ":call system('alacritty --working-directory '.getcwd().' &')<CR>")
-nmap('got', ":call system('alacritty --working-directory '.expand(\"%:p:h\").' &')<CR>")
+nmap('got', ":call system('tmux split-window -vb -l 15 -c \"'.expand(\"%:p:h\").'\" &')<CR>")
 nmap('gof', ":call system('thunar '.expand(\"%\").' &')<CR>")
 
 vim.keymap.set("n", "<C-f>", "<cmd>silent !tmux neww tmux-sessionizer<CR>")

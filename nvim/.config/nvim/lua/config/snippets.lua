@@ -1,5 +1,12 @@
 local ls = require("luasnip")
 
+local function merge(first_table, second_table)
+	local result = {}
+	for _, v in pairs(first_table) do table.insert(result, v) end
+	for _, v in pairs(second_table) do table.insert(result, v) end
+	return result
+end
+
 -- some shorthands...
 local s = ls.snippet
 -- local sn = ls.snippet_node
@@ -71,27 +78,52 @@ ls.add_snippets("all", {
 
 }, { key = "all" })
 
-ls.add_snippets("javascriptreact", {
+local global_js_snippets = {
 	s(
-		"us",
-		fmt("const [{}, set{}] = useState({});", {
-			i(1, "value"),
-			f(function(args)
-				local name = args[1][1]
-				return name:sub(1, 1):upper() .. name:sub(2, -1)
-			end, { 1 }),
-			i(2, "initialValue"),
+		"comm",
+		{
+			t({ "/**", "" }),
+			t({ " * " }), i(1, "value"), t({ "", "" }),
+			t({ " */" }),
+		}
+	),
+	s(
+		"type",
+		fmt("/** @type {<>} */", {
+			i(1, "type"),
+		}, {
+			delimiters = "<>",
 		})
 	),
-}, { key = "javascriptreact" })
+}
 
+ls.add_snippets("javascript",
+	merge(global_js_snippets, {}),
+	{ key = "javascript" }
+)
+
+ls.add_snippets("javascriptreact",
+	merge(global_js_snippets, {
+		s(
+			"us",
+			fmt("const [{}, set{}] = useState({});", {
+				i(1, "value"),
+				f(function(args)
+					local name = args[1][1]
+					return name:sub(1, 1):upper() .. name:sub(2, -1)
+				end, { 1 }),
+				i(2, "initialValue"),
+			})
+		),
+	}), { key = "javascriptreact" }
+)
 
 ls.add_snippets("go", {
 	s(
 		"pf",
 		fmt(
 			"log.Printf(\"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\")\n" ..
-			"log.Printf(\"{}\", {})\n" ..
+			"log.Printf(\"{} %+v\", {})\n" ..
 			"log.Printf(\"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\")\n",
 			{
 				i(1, "statement"),

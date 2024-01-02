@@ -31,15 +31,32 @@ M.refactors = function()
 	}):find()
 end
 
--- Remaps for the refactoring operations currently offered by the plugin
-vim.api.nvim_set_keymap("v", "<localleader>re", [[ <Esc><Cmd>lua require('refactoring').refactor('Extract Function')<CR>]], {noremap = true, silent = true, expr = false})
-vim.api.nvim_set_keymap("v", "<localleader>rf", [[ <Esc><Cmd>lua require('refactoring').refactor('Extract Function To File')<CR>]], {noremap = true, silent = true, expr = false})
-vim.api.nvim_set_keymap("v", "<localleader>rv", [[ <Esc><Cmd>lua require('refactoring').refactor('Extract Variable')<CR>]], {noremap = true, silent = true, expr = false})
-vim.api.nvim_set_keymap("v", "<localleader>ri", [[ <Esc><Cmd>lua require('refactoring').refactor('Inline Variable')<CR>]], {noremap = true, silent = true, expr = false})
+vim.keymap.set("x", "<localleader>rf", function() require('refactoring').refactor('Extract Function') end)
+-- Extract function supports only visual mode
+-- vim.keymap.set("x", "<localleader>rf", function() require('refactoring').refactor('Extract Function To File') end)
+-- Extract variable supports only visual mode
+vim.keymap.set("x", "<localleader>re", function() require('refactoring').refactor('Extract Variable') end)
+-- Inline func supports only normal
+vim.keymap.set("n", "<localleader>rI", function() require('refactoring').refactor('Inline Function') end)
+-- Inline var supports both normal and visual mode
+vim.keymap.set({ "n", "x" }, "<localleader>ri", function() require('refactoring').refactor('Inline Variable') end)
 
--- Extract block doesn't need visual mode
-vim.api.nvim_set_keymap("n", "<localleader>rb", [[ <Cmd>lua require('refactoring').refactor('Extract Block')<CR>]], {noremap = true, silent = true, expr = false})
-vim.api.nvim_set_keymap("n", "<localleader>rbf", [[ <Cmd>lua require('refactoring').refactor('Extract Block To File')<CR>]], {noremap = true, silent = true, expr = false})
+vim.keymap.set("n", "<localleader>rb", function() require('refactoring').refactor('Extract Block') end)
+-- Extract block supports only normal mode
+vim.keymap.set("n", "<localleader>rbf", function() require('refactoring').refactor('Extract Block To File') end)
 
--- Inline variable can also pick up the identifier currently under the cursor without visual mode
-vim.api.nvim_set_keymap("n", "<localleader>ri", [[ <Cmd>lua require('refactoring').refactor('Inline Variable')<CR>]], {noremap = true, silent = true, expr = false})
+-- You can also use below = true here to to change the position of the printf
+-- statement (or set two remaps for either one). This remap must be made in normal mode.
+vim.keymap.set(
+	"n",
+	"<localleader>rp",
+	function() require('refactoring').debug.printf({below = false}) end
+)
+
+-- Print var
+
+-- Supports both visual and normal mode
+vim.keymap.set({"x", "n"}, "<localleader>rv", function() require('refactoring').debug.print_var() end)
+
+-- Supports only normal mode
+vim.keymap.set("n", "<localleader>rc", function() require('refactoring').debug.cleanup({}) end)
