@@ -141,6 +141,8 @@ nmap('goT', ":call system('alacritty --working-directory '.getcwd().' &')<CR>")
 nmap('got', ":call system('alacritty --working-directory '.expand(\"%:p:h\").' &')<CR>")
 nmap('gof', ":call system('thunar '.expand(\"%\").' &')<CR>")
 
+vim.keymap.set("n", "<C-f>", "<cmd>silent !tmux neww tmux-sessionizer<CR>")
+
 -- Disable buffer maps set in man.vim
 vim.g.no_man_maps=1
 

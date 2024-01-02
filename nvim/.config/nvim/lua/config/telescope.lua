@@ -111,34 +111,6 @@ function _G.EditDotfiles()
 	}
 end
 
-function _G.OpenProjects()
-	tele.find_files(require('telescope.themes').get_dropdown({
-		prompt_title = "~ Projects ~",
-		cwd = '~/Projects',
-		find_command = {
-			'find',
-			'-maxdepth', '2',
-			'-mindepth', '2',
-			'-type', 'd',
-			'-printf', '%P\n',
-		},
-		previewer = false,
-		layout_config = {
-			height = 30,
-		},
-		attach_mappings = function()
-			action_set.select:enhance {
-				post = function()
-					-- lcd to the project folder
-					vim.cmd [[ ProjectRootLCD ]]
-				end,
-			}
-
-			return true
-		end
-	}))
-end
-
 -- Show git_files if in a git repo, find_files otherwise
 function _G.SmartProjectFiles()
 	-- the recipe from https://github.com/nvim-telescope/telescope.nvim/wiki/Configuration-Recipes
@@ -199,7 +171,6 @@ nnoremap("<Leader>gf", "<silent>", "<cmd>Telescope git_status<CR>");
 nmap('<leader>fi', '<silent>', "<cmd>lua EditInstalledPlugins()<CR>")
 nmap('<leader>ev', '<silent>', "<cmd>lua EditNvim()<CR>")
 nmap('<leader>ed', '<silent>', "<cmd>lua EditDotfiles()<CR>")
-nmap('<leader>ep', '<silent>', "<cmd>lua OpenProjects()<CR>")
 
 -- Project navigation
 noremap("<c-p>", "<silent>", "<cmd>lua SmartProjectFiles()<CR>");

@@ -455,10 +455,26 @@ require('lazy').setup({
 	{
 		"ThePrimeagen/harpoon",
 		dependencies = { "nvim-lua/plenary.nvim" },
+		branch = "harpoon2",
 		config = function()
-			require("config.harpoon")
+			require("config.harpoon2")
 		end,
-		dev = false,
+	},
+
+	{
+		"pockata/harpoon-highlight-current-file",
+		dependencies = { "ThePrimeagen/harpoon" },
+		config = function()
+			require("harpoon-highlight-current-file").setup()
+		end,
+	},
+
+	{
+		"pockata/harpoon-mark-git-branch",
+		dependencies = { "ThePrimeagen/harpoon" },
+		config = function()
+			require("harpoon-mark-git-branch").setup()
+		end,
 	},
 
 	-- Quickfix

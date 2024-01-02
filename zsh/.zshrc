@@ -351,22 +351,6 @@ listdirectories() {
             --preview 'tree -C {} | head -$LINES'
 }
 
-project-switcher() {
-    local projects proj
-
-    projects="$(realpath ~/Projects/)"
-    proj=$(find -L "$projects" -mindepth 2 -maxdepth 2 -type d -printf "%P\n" -o -type l -printf "%P\n" -o -prune \
-        2> /dev/null | \
-        grep -v '^.$' | \
-        sed 's|\./||g' | \
-        fzf-tmux --ansi --multi --tac --preview-window right:50%:noborder \
-            --preview "echo 'Branches\n' && git -C $projects/{} rev-parse HEAD > /dev/null 2>&1 &&
-                git -C $projects/{} branch -vv --color=always &&
-                echo '\n\nCommits\n' && git -C $projects/{} l -10 | head -$LINES") || return
-
-    cd $projects/$proj
-}
-
 # Call from a local repo to open the repository on github/bitbucket in browser
 # Modified version of https://github.com/zeke/ghwd
 repo() {
@@ -486,12 +470,6 @@ listdirectories-widget() {
     widget-helper
 }
 
-project-switcher-widget() {
-    project-switcher
-    widget-helper
-    zle accept-line
-}
-
 autoload -U edit-command-line
 
 zle -N edit-command-line
@@ -500,7 +478,6 @@ zle -N git-changedfiles-widget
 zle -N git-prevCommit-widget
 zle -N git-commitfinder-widget
 zle -N listdirectories-widget
-zle -N project-switcher-widget
 
 bindkey -r '^G'
 bindkey '^G^F' git-changedfiles-widget
@@ -508,13 +485,13 @@ bindkey '^G^P' git-prevCommit-widget
 bindkey '^G^R' git-commitfinder-widget
 bindkey '^G^B' git-branches-widget
 bindkey '^X^E' edit-command-line
-bindkey '^F' listdirectories-widget
-bindkey -r '^E'
-bindkey '^E^P' project-switcher-widget
+# bindkey '^F' listdirectories-widget
 
 # Complete word from history with menu
 # https://github.com/mika/zsh-pony
 zle -C hist-complete complete-word _generic
 zstyle ':completion:hist-complete:*' completer _history
 bindkey "^X^X" hist-complete
+
+bindkey -s '^f' "tmux-sessionizer\n"
 
