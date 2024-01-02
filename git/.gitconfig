@@ -23,7 +23,7 @@
     activity = "!f() { git for-each-ref --sort=committerdate --format='%(refname:short) * %(authorname) * %(committerdate:relative)' refs/remotes/ | column -t -s '*'; }; f"
 
     # fetch pull requests from github so you can 'git checkout pull/123' and test them locally
-    fetch-pull-requests = fetch origin '+refs/pull/*/head:refs/remotes/origin/pull/*'
+    fetch-pull-requests = "!f() { local br=\"${1-origin}\"; git fetch \"${br}\" \"+refs/pull/*/head:refs/remotes/${br}/pull/*\"; }; f"
 
     # reset branch to it's tracking branch
     # https://stackoverflow.com/a/33244119
