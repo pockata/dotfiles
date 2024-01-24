@@ -11,13 +11,19 @@ return function(conf)
 			importModuleSpecifierPreference = "non-relative",
 			includeCompletionsForImportStatements = true,
 			importModuleSpecifierEnding = "minimal",
+			includeInlayParameterNameHints = "all",
+			includeInlayParameterNameHintsWhenArgumentMatchesName = true,
+			includeInlayFunctionParameterTypeHints = true,
+			includeInlayVariableTypeHints = true,
+			includeInlayPropertyDeclarationTypeHints = true,
+			includeInlayFunctionLikeReturnTypeHints = true,
+			includeInlayEnumMemberValueHints = true,
 		},
 		codeActionsOnSave = {
 			source = {
 				addMissingImports = true,
 			}
-
-		}
+		},
 	}
 
 	conf.handlers = {

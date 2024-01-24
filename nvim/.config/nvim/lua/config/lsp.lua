@@ -68,6 +68,18 @@ local on_attach = function(client, bufnr)
 	if client.server_capabilities.documentRangeFormattingProvider then
 		buf_set_keymap("v", "g=", "<cmd>lua vim.lsp.buf.range_formatting()<CR>", opts)
 	end
+
+	-- if client.server_capabilities.inlayHintProvider then
+	-- 	vim.lsp.inlay_hint(bufnr, true)
+	-- end
+
+	-- toggle inlay hints
+	vim.keymap.set("n", "<leader>i", function()
+		local inlay_hint = vim.lsp.inlay_hint
+		if type(inlay_hint) == "table" and inlay_hint.enable then
+			inlay_hint.enable(nil, not inlay_hint.is_enabled())
+		end
+	end)
 end
 
 local function setup_servers()
