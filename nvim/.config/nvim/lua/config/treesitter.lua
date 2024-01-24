@@ -111,7 +111,7 @@ require('nvim-treesitter.configs').setup({
 				['if'] = '@function.inner',
 				['ik'] = '@assignment.lhs',
 				['ak'] = '@assignment.outer',
-				['iv'] = '@assignment.inner',
+				['iv'] = '@assignment.rhs',
 				['av'] = '@assignment.rhs',
 				["as"] = { query = "@scope", desc = "Select language scope" },
 				['ir'] = '@return.inner',
