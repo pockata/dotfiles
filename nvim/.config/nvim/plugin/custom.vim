@@ -73,11 +73,6 @@ augroup Filetypes
 	"https://www.reddit.com/r/vim/comments/3er2az/how_to_suppress_vims_warning_editing_a_read_only/
 	autocmd BufEnter /etc/hosts set noro
 
-	autocmd Filetype *
-				\    if &omnifunc == "" |
-				\        setlocal omnifunc=syntaxcomplete#Complete |
-				\    endif
-
 	" When editing a file, always jump to the last known cursor position.
 	" Don't do it when the position is invalid, when inside an event handler
 	" (happens when dropping a file on gvim) and for a commit message (it's
