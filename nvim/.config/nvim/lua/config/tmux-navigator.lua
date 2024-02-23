@@ -1,4 +1,5 @@
 vim.g.tmux_navigator_no_mappings = 1
+vim.g.tmux_navigator_no_wrap = 1
 
 nnoremap('<C-j>', "<cmd>TmuxNavigateLeft<CR>")
 nnoremap('<C-k>', "<cmd>TmuxNavigateDown<CR>")
