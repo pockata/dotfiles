@@ -230,37 +230,34 @@ require('lazy').setup({
 
 	-- Theming
 	{
-		"challenger-deep-theme/vim",
-		name = "challenger-deep",
-		config = function()
-			require("config.challenger-deep")
-		end,
-	},
-	{
-		"uloco/bluloco.nvim",
-	},
-	{
 		"morhetz/gruvbox",
 		config = function()
 			require("config.gruvbox")
 		end,
 	},
+	{
+		"xiantang/darcula-dark.nvim",
+		dependencies = {
+			"nvim-treesitter/nvim-treesitter",
+		},
+	},
 	{ "ajmwagar/vim-deus" },
-	{ "folke/tokyonight.nvim" },
-	{ "matsuuu/pinkmare" },
 	{ "rebelot/kanagawa.nvim" },
 	{ "savq/melange" },
 	-- { "haystackandroid/wonka" },
-	{ "rose-pine/neovim",                   name = "rose-pine" },
 	{ "briones-gabriel/darcula-solid.nvim", dependencies = "rktjmp/lush.nvim" },
 	-- { "doums/darcula" },
 	{
-		"EdenEast/nightfox.nvim",
+		"phha/zenburn.nvim",
 		lazy = false,
 		priority = 1000,
 		config = function()
-			vim.cmd [[colorscheme nordfox]]
+			vim.cmd [[colorscheme zenburn]]
 		end
+	},
+	{ "mellow-theme/mellow.nvim" },
+	{
+		"EdenEast/nightfox.nvim",
 	},
 	{
 		"famiu/feline.nvim",
