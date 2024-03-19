@@ -19,7 +19,7 @@ local g = vim.g
 -- Disable some built-in plugins we don't want
 local disabled_built_ins = {
 	'gzip', 'rrhelper', 'getscript', 'getscriptPlugin', 'vimball',
-	'vimballPlugin', '2html', --[[ 'matchit', ]] 'matchparen', 'tarPlugin', 'tar',
+	'vimballPlugin', '2html', 'matchit', 'matchparen', 'tarPlugin', 'tar',
 	'zipPlugin', 'zip', --[[ 'netrw', 'netrwPlugin', 'netrwSettings',--]]
 	'rplugin', 'logiPat'
 }

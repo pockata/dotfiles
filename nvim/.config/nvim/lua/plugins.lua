@@ -184,14 +184,14 @@ require('lazy').setup({
 		end
 	},
 
-	-- {
-	-- 	"andymass/vim-matchup",
-	-- 	config = function()
-	-- 		vim.g.matchup_matchparen_offscreen = {}
-	-- 		vim.g.matchup_matchparen_enabled = 0
-	-- 		vim.g.matchup_surround_enabled = 0
-	-- 	end,
-	-- },
+	{
+		"andymass/vim-matchup",
+		config = function()
+			vim.g.matchup_matchparen_offscreen = {}
+			vim.g.matchup_matchparen_enabled = 0
+			vim.g.matchup_surround_enabled = 0
+		end,
+	},
 
 	{
 		"justinmk/vim-dirvish",
