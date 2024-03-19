@@ -673,12 +673,7 @@ require('lazy').setup({
 
 	{
 		"danymat/neogen",
-		config = function()
-			require("neogen").setup({
-				-- use luasnip for expansion
-				snippet_engine = "luasnip",
-			})
-		end,
+		config = function() require("config.neogen") end,
 		dependencies = "L3MON4D3/LuaSnip",
 	},
 
