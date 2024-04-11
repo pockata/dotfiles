@@ -1,3 +1,4 @@
+local opt = vim.opt
 local o = vim.o
 local wo = vim.wo
 local bo = vim.bo
@@ -107,19 +108,17 @@ o.confirm = true -- show confirmation for actions that abort immediately
 o.mouse = "a" -- always allow mouse usage
 -- o.display = o.display .. ",uhex"
 
--- https://github.com/tjdevries/config_manager/blob/master/xdg_config/nvim/lua/tj/options.lua#L71
--- insert comment leader after hitting <Enter>
-bo.formatoptions = bo.formatoptions .. "r"
--- insert comment leader after hitting o or O in normal mode
-bo.formatoptions = bo.formatoptions .. "o"
--- auto-wrap text using textwidth
-bo.formatoptions = bo.formatoptions .. "t"
--- autowrap comments using textwidth
-bo.formatoptions = bo.formatoptions .. "c"
--- delete comment character when joining commented lines
-bo.formatoptions = bo.formatoptions .. "j"
--- break long lines in insert mode
-bo.formatoptions = bo.formatoptions .. "l"
+-- https://github.com/tjdevries/config_manager/blob/eb8c846bdd480e6ed8fb87574eac09d31d39befa/xdg_config/nvim/plugin/options.lua#L84
+opt.formatoptions = opt.formatoptions
++ "r" -- insert comment leader after hitting <Enter>
++ "o" -- insert comment leader after hitting o or O in normal mode
++ "/" -- do not insert the comment leader for a // comment after a statement, only when // is at the start of the line.
++ "t" -- auto-wrap text using textwidth
++ "c" -- autowrap comments using textwidth
++ "j" -- delete comment character when joining commented lines
++ "l" -- break long lines in insert mode
++ "q" -- allow formatting comments w/ gq
++ "n" -- respect numbered lists when formatting text
 
 o.completeopt = "menuone,noinsert,noselect"
 -- o.completeopt = "menuone,noselect"
