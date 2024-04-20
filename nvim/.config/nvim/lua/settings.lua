@@ -111,7 +111,7 @@ o.mouse = "a" -- always allow mouse usage
 -- https://github.com/tjdevries/config_manager/blob/eb8c846bdd480e6ed8fb87574eac09d31d39befa/xdg_config/nvim/plugin/options.lua#L84
 opt.formatoptions = opt.formatoptions
 + "r" -- insert comment leader after hitting <Enter>
-+ "o" -- insert comment leader after hitting o or O in normal mode
+- "o" -- insert comment leader after hitting o or O in normal mode
 + "/" -- do not insert the comment leader for a // comment after a statement, only when // is at the start of the line.
 + "t" -- auto-wrap text using textwidth
 + "c" -- autowrap comments using textwidth
