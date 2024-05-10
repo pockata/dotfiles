@@ -5,6 +5,9 @@ require('nvim-treesitter.configs').setup({
 		'typescript', 'yaml', 'query'
 	},
 
+	-- auto install new filetypes
+	auto_install = true,
+
 	highlight = {
 		enable = true,
 		additional_vim_regex_highlighting = false,
