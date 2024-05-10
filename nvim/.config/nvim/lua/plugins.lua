@@ -53,7 +53,6 @@ require('lazy').setup({
 			--
 			{
 				"nvim-treesitter/nvim-treesitter-textobjects",
-				dev = true,
 			}
 			-- Check it out
 			-- "mfussenegger/nvim-ts-hint-textobject"
@@ -152,6 +151,9 @@ require('lazy').setup({
 	},
 
 	-- use "famiu/bufdelete.nvim"
+	{ "j-hui/fidget.nvim", opts = {} },
+
+	-- { "stevearc/conform.nvim" },
 
 	{
 		"williamboman/mason.nvim",
@@ -198,35 +200,34 @@ require('lazy').setup({
 		config = function()
 			require("config.dirvish")
 		end,
+	},
+
+	-- Gets overridden. call vim.cmd(":call dirvish_git#init()") twice
+	{
+		"kristijanhusak/vim-dirvish-git",
+		init = function()
+			vim.g.dirvish_git_indicators = {
+				Modified = '!',
+				Staged = '+',
+				Untracked = 'u',
+				Renamed = '>',
+				Unmerged = '=',
+				Ignored = 'i',
+				Unknown = '?'
+			}
+		end,
+
 		dependencies = {
-			{
-				"kristijanhusak/vim-dirvish-git",
-				config = function()
-					vim.g.dirvish_git_indicators = {
-						Modified = '!',
-						Staged = '+',
-						Untracked = 'u',
-						Renamed = '>',
-						Unmerged = '=',
-						Ignored = 'i',
-						Unknown = '?'
-					}
-				end
-			},
-			"roginfarrer/vim-dirvish-dovish",
+			"justinmk/vim-dirvish",
 		}
 	},
 
-	-- -- Respect .editorconfig files
-	-- use { "editorconfig/editorconfig-vim",
-	-- 	config = function()
-	-- 		vim.g.EditorConfig_exclude_patterns = {"fugitive://.*"}
-	-- 		create_augroup(
-	-- 			"DisableEditorConfig",
-	-- 			"FileType gitcommit let b:EditorConfig_disable = 1"
-	-- 		)
-	-- 	end
-	-- }
+	{
+		"roginfarrer/vim-dirvish-dovish",
+		dependencies = {
+			"justinmk/vim-dirvish",
+		},
+	},
 
 	-- Theming
 	{
@@ -243,6 +244,16 @@ require('lazy').setup({
 		dependencies = {
 			"nvim-treesitter/nvim-treesitter",
 		},
+	},
+	{ "cpea2506/one_monokai.nvim" },
+	{ "sainnhe/everforest" },
+	-- { "shaunsingh/seoul256.nvim" },
+	{
+		"junegunn/seoul256.vim",
+		init = function()
+			vim.g.seoul256_srgb = 1
+			vim.g.seoul256_background = 236
+		end
 	},
 	{ "ajmwagar/vim-deus" },
 	{ "rebelot/kanagawa.nvim" },
@@ -429,6 +440,7 @@ require('lazy').setup({
 			"nvim-lua/plenary.nvim",
 			{ "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
 			"smartpde/telescope-recent-files",
+			"nvim-telescope/telescope-ui-select.nvim",
 		}
 	},
 

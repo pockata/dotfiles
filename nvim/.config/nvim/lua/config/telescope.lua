@@ -1,6 +1,5 @@
 local actions = require("telescope.actions")
 local layout = require("telescope.actions.layout")
-local action_set = require("telescope.actions.set")
 local action_state = require("telescope.actions.state")
 local tele = require("telescope.builtin")
 
@@ -80,12 +79,17 @@ require('telescope').setup {
 			override_generic_sorter = true,
 			override_file_sorter = true,
 			case_mode = "smart_case",
-		}
+		},
+
+		['ui-select'] = {
+			require('telescope.themes').get_dropdown(),
+		},
 	}
 }
 
 require('telescope').load_extension('fzf')
 require("telescope").load_extension("recent_files")
+require("telescope").load_extension("ui-select")
 
 create_augroup('TelescopeConfig',
 	'User TelescopePreviewerLoaded setlocal shiftwidth=2 tabstop=2 expandtab'
@@ -105,7 +109,7 @@ local function is_image(filepath)
 	return vim.tbl_contains(image_extensions, extension)
 end
 
-local function custom_default(prompt_bufnr--[[ , map ]])
+local function custom_default(prompt_bufnr --[[ , map ]])
 	actions.select_default:replace(function()
 		actions.close(prompt_bufnr)
 		local selection = action_state.get_selected_entry()

@@ -33,7 +33,7 @@ require('gitsigns').setup {
 		map('n', '<leader>hu', '<cmd>lua require"gitsigns".reset_hunk()<CR>')
 		map('n', '<leader>hR', '<cmd>lua require"gitsigns".reset_buffer()<CR>')
 		map('n', '<leader>hp', '<cmd>lua require"gitsigns".preview_hunk()<CR>')
-		map('n', '<leader>hb', '<cmd>lua require"gitsigns".blame_line(true)<CR>')
+		map('n', '<leader>hb', '<cmd>lua require"gitsigns".blame_line()<CR>')
 
 		-- Text objects
 		map('o', 'ih', ':<C-U>lua require"gitsigns".select_hunk()<CR>')
