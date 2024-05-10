@@ -12,16 +12,16 @@ end
 
 vim.opt.rtp:prepend(lazypath)
 
-vim.cmd [[cabbrev ps Lazy]]
-vim.cmd [[cabbrev pi Lazy]]
+vim.cmd([[cabbrev ps Lazy]])
+vim.cmd([[cabbrev pi Lazy]])
 
 local opts = {
 	dev = {
 		path = "~/Projects/personal",
-	}
+	},
 }
 
-require('lazy').setup({
+require("lazy").setup({
 	-- -- filedetect drop-in-placement
 	-- "nathom/filetype.nvim",
 
@@ -31,7 +31,7 @@ require('lazy').setup({
 		"christoomey/vim-tmux-navigator",
 		config = function()
 			require("config.tmux-navigator")
-		end
+		end,
 	},
 
 	-- -- Alternative: https://github.com/jpalardy/vim-slime
@@ -53,7 +53,7 @@ require('lazy').setup({
 			--
 			{
 				"nvim-treesitter/nvim-treesitter-textobjects",
-			}
+			},
 			-- Check it out
 			-- "mfussenegger/nvim-ts-hint-textobject"
 		},
@@ -61,12 +61,25 @@ require('lazy').setup({
 
 	"nvim-treesitter/nvim-treesitter-context",
 
-	-- Autocomplete & Linters
 	{
 		"neovim/nvim-lspconfig",
 		config = function()
-			require("config.lspconfig")
+			require("config.lsp")
 		end,
+		dependencies = {
+			{
+				"williamboman/mason.nvim",
+				config = true,
+			},
+			"williamboman/mason-lspconfig.nvim",
+			"WhoIsSethDaniel/mason-tool-installer.nvim",
+
+			{ "j-hui/fidget.nvim", opts = {} },
+
+			-- `neodev` configures Lua LSP for your Neovim config, runtime and plugins
+			-- used for completion, annotations and signatures of Neovim apis
+			{ "folke/neodev.nvim", opts = {} },
+		},
 	},
 
 	-- TODO: Check this one out if it"s not superceded by FriendlySnippets
@@ -116,9 +129,9 @@ require('lazy').setup({
 				dependencies = {
 					"saadparwaiz1/cmp_luasnip",
 					"rafamadriz/friendly-snippets",
-				}
+				},
 			},
-		}
+		},
 	},
 
 	{
@@ -140,7 +153,7 @@ require('lazy').setup({
 				[[<c-r>=luaeval("require('complextras').complete_line_from_cwd()")<CR>]],
 				{ noremap = true }
 			)
-		end
+		end,
 	},
 
 	{
@@ -150,40 +163,74 @@ require('lazy').setup({
 		end,
 	},
 
-	-- use "famiu/bufdelete.nvim"
-	{ "j-hui/fidget.nvim", opts = {} },
-
-	-- { "stevearc/conform.nvim" },
-
 	{
-		"williamboman/mason.nvim",
+		"mfussenegger/nvim-lint",
+		event = { "BufReadPre", "BufNewFile" },
 		config = function()
-			require("config.lsp")
-		end,
-		dependencies = {
-			"nvim-lspconfig",
-			{
-				"williamboman/mason-lspconfig.nvim",
-				config = function()
+			local lint = require("lint")
+			lint.linters_by_ft = lint.linters_by_ft or {}
+			local js = { "eslint_d" }
+			lint.linters_by_ft["javascript"] = js
+			lint.linters_by_ft["javascriptreact"] = js
+			lint.linters_by_ft["typescriptreact"] = js
+
+			-- Create autocommand which carries out the actual linting
+			-- on the specified events.
+			local lint_augroup = vim.api.nvim_create_augroup("lint", { clear = true })
+			vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
+				group = lint_augroup,
+				callback = function()
+					require("lint").try_lint()
 				end,
-			},
-		},
+			})
+		end,
 	},
 
-	-- TODO: replace with https://github.com/olimorris/dotfiles/commit/bac18fb2338d8a97418787acfeac346246f515be
 	{
-		"jose-elias-alvarez/null-ls.nvim",
-		config = function()
-			local null_ls = require("null-ls")
+		"stevearc/conform.nvim",
+		lazy = false,
+		keys = {
+			{
+				"g=",
+				function()
+					require("conform").format({
+						async = true,
+						lsp_fallback = true,
+					})
+				end,
+				mode = "",
+				desc = "[F]ormat buffer",
+			},
+		},
+		opts = {
+			notify_on_error = false,
+			format_on_save = function(bufnr)
+				-- Disable "format_on_save lsp_fallback" for languages that don"t
+				-- have a well standardized coding style. You can add additional
+				-- languages here or re-enable it for the disabled ones.
+				local disable_filetypes = { c = true, cpp = true }
+				return {
+					timeout_ms = 500,
+					lsp_fallback = not disable_filetypes[vim.bo[bufnr].filetype],
+				}
+			end,
+			formatters_by_ft = {
+				lua = { "stylua" },
+				-- Conform can also run multiple formatters sequentially
+				-- python = { "isort", "black" },
+				--
+				-- You can use a sub-list to tell conform to run *until* a formatter
+				-- is found.
 
-			null_ls.setup({
-				sources = {
-					-- null_ls.builtins.formatting.stylua,
-					null_ls.builtins.diagnostics.eslint_d,
-					-- null_ls.builtins.completion.spell,
-				},
-			})
-		end
+				typescript = { "prettierd" },
+				typescriptreact = { "prettierd" },
+				javascript = { "prettierd" },
+				javascriptreact = { "prettierd" },
+
+				css = { "prettierd" },
+				scss = { "prettierd" },
+			},
+		},
 	},
 
 	{
@@ -207,19 +254,19 @@ require('lazy').setup({
 		"kristijanhusak/vim-dirvish-git",
 		init = function()
 			vim.g.dirvish_git_indicators = {
-				Modified = '!',
-				Staged = '+',
-				Untracked = 'u',
-				Renamed = '>',
-				Unmerged = '=',
-				Ignored = 'i',
-				Unknown = '?'
+				Modified = "!",
+				Staged = "+",
+				Untracked = "u",
+				Renamed = ">",
+				Unmerged = "=",
+				Ignored = "i",
+				Unknown = "?",
 			}
 		end,
 
 		dependencies = {
 			"justinmk/vim-dirvish",
-		}
+		},
 	},
 
 	{
@@ -253,7 +300,7 @@ require('lazy').setup({
 		init = function()
 			vim.g.seoul256_srgb = 1
 			vim.g.seoul256_background = 236
-		end
+		end,
 	},
 	{ "ajmwagar/vim-deus" },
 	{ "rebelot/kanagawa.nvim" },
@@ -266,8 +313,8 @@ require('lazy').setup({
 		lazy = false,
 		priority = 1000,
 		config = function()
-			vim.cmd [[colorscheme zenburn]]
-		end
+			vim.cmd([[colorscheme zenburn]])
+		end,
 	},
 	{ "mellow-theme/mellow.nvim" },
 	{
@@ -288,8 +335,8 @@ require('lazy').setup({
 		end,
 		dependencies = {
 			{ "nvim-lua/plenary.nvim" },
-			{ "nvim-treesitter/nvim-treesitter" }
-		}
+			{ "nvim-treesitter/nvim-treesitter" },
+		},
 	},
 
 	-- https://github.com/mkitt/tabline.vim/blob/master/plugin/tabline.vim
@@ -316,15 +363,15 @@ require('lazy').setup({
 					vim.g.textobj_entire_no_default_key_mappings = 1
 				end,
 				config = function()
-					vim.cmd [[
+					vim.cmd([[
 					call textobj#user#map("entire", {
 						\   "-": {
 							\     "select-a": "aE",
 							\     "select-i": "iE",
 							\   }
 							\ })
-							]]
-				end
+							]])
+				end,
 			},
 			-- or thinca/vim-textobj-comment
 			"glts/vim-textobj-comment",
@@ -338,7 +385,7 @@ require('lazy').setup({
 					omap("an", "<Plug>(textobj-numeral-float-a)")
 					vmap("in", "<Plug>(textobj-numeral-float-i)")
 					omap("in", "<Plug>(textobj-numeral-float-i)")
-				end
+				end,
 			},
 		},
 	},
@@ -347,7 +394,7 @@ require('lazy').setup({
 		"wellle/targets.vim",
 		config = function()
 			vim.g.targets_jumpRanges =
-			"cc cr cb cB lc ac Ac lr rr ll lb ar ab lB Ar aB Ab AB rb al rB Al bb aa bB Aa BB AA"
+				"cc cr cb cB lc ac Ac lr rr ll lb ar ab lB Ar aB Ab AB rb al rB Al bb aa bB Aa BB AA"
 		end,
 	},
 
@@ -356,7 +403,7 @@ require('lazy').setup({
 		branch = "v2",
 		config = function()
 			require("config.hop")
-		end
+		end,
 	},
 
 	-- Make WORD motions support camelCase & friends
@@ -364,7 +411,7 @@ require('lazy').setup({
 		"chaoren/vim-wordmotion",
 		init = function()
 			vim.g.wordmotion_prefix = ","
-		end
+		end,
 	},
 
 	"tpope/vim-repeat",
@@ -377,7 +424,7 @@ require('lazy').setup({
 		end,
 		init = function()
 			vim.g.argumentative_no_mappings = 1
-		end
+		end,
 	},
 
 	{
@@ -388,7 +435,7 @@ require('lazy').setup({
 		end,
 		config = function()
 			nnoremap("<leader>aw", "<silent>", "<cmd>ArgWrap<CR>")
-		end
+		end,
 	},
 
 	{
@@ -423,7 +470,7 @@ require('lazy').setup({
 						enable_autocmd = false,
 					})
 				end,
-			}
+			},
 		},
 	},
 
@@ -441,7 +488,7 @@ require('lazy').setup({
 			{ "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
 			"smartpde/telescope-recent-files",
 			"nvim-telescope/telescope-ui-select.nvim",
-		}
+		},
 	},
 
 	-- TODO: open issue for adjusting visual selection (gv) after surrounding
@@ -479,7 +526,7 @@ require('lazy').setup({
 	{
 		"lewis6991/gitsigns.nvim",
 		dependencies = {
-			"nvim-lua/plenary.nvim"
+			"nvim-lua/plenary.nvim",
 		},
 		config = function()
 			require("config.gitsigns")
@@ -526,10 +573,10 @@ require('lazy').setup({
 		config = function()
 			-- http://vi.stackexchange.com/questions/8534/make-cnext-and-cprevious-loop-back-to-the-begining
 			vim.g.qfenter_keymap = {
-				open = { '<CR>', '<2-LeftMouse>' },
-				vopen = { '<C-v>' },
-				hopen = { '<C-s>' },
-				topen = { '<C-t>' }
+				open = { "<CR>", "<2-LeftMouse>" },
+				vopen = { "<C-v>" },
+				hopen = { "<C-s>" },
+				topen = { "<C-t>" },
 			}
 		end,
 	},
@@ -641,8 +688,8 @@ require('lazy').setup({
 						end
 
 						return nil
-					end
-				}
+					end,
+				},
 			})
 		end,
 	},
@@ -652,7 +699,7 @@ require('lazy').setup({
 		"wuelnerdotexe/vim-astro",
 		config = function()
 			vim.g.astro_typescript = "enable"
-		end
+		end,
 	},
 
 	{
@@ -665,7 +712,7 @@ require('lazy').setup({
 			-- If undotree is opened, it is likely one wants to interact with it.
 			vim.g.undotree_SetFocusWhenToggle = 1
 			vim.g.undotree_WindowLayout = 2
-		end
+		end,
 	},
 
 	{
@@ -674,7 +721,7 @@ require('lazy').setup({
 			vim.g.windowswap_map_keys = 0
 		end,
 		config = function()
-			nnoremap('<C-W><C-W>', '<silent>', "<cmd>call WindowSwap#EasyWindowSwap()<CR>")
+			nnoremap("<C-W><C-W>", "<silent>", "<cmd>call WindowSwap#EasyWindowSwap()<CR>")
 		end,
 	},
 
@@ -683,12 +730,16 @@ require('lazy').setup({
 
 	{
 		"NMAC427/guess-indent.nvim",
-		config = function() require("guess-indent").setup({}) end,
+		config = function()
+			require("guess-indent").setup({})
+		end,
 	},
 
 	{
 		"danymat/neogen",
-		config = function() require("config.neogen") end,
+		config = function()
+			require("config.neogen")
+		end,
 		dependencies = "L3MON4D3/LuaSnip",
 	},
 
