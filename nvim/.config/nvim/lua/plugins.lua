@@ -230,6 +230,9 @@ require('lazy').setup({
 
 	-- Theming
 	{
+		"theJian/nvim-moonwalk",
+	},
+	{
 		"morhetz/gruvbox",
 		config = function()
 			require("config.gruvbox")
