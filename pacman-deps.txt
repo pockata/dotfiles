@@ -1,3 +1,4 @@
+neovim
 xclip
 tmux
 arandr
@@ -6,7 +7,6 @@ p7zip
 xsel
 nmap
 filezilla
-youtube-dl
 rofi
 firefox
 chromium
