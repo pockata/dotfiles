@@ -42,6 +42,8 @@ zstyle :prompt:pure:git:stash show yes
 PATH="$HOME/bin:$PATH"
 # go binaries
 PATH="$HOME/go/bin:$PATH"
+# npm
+PATH="$HOME/.npm-packages:$PATH"
 # neovim version manager
 PATH="$HOME/.local/share/bob/nvim-bin:$PATH"
 # fly.io
