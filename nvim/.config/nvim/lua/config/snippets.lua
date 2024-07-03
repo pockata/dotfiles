@@ -1,9 +1,32 @@
 local ls = require("luasnip")
 
+-- vim.keymap.set({ "i", "s" }, "<c-k>", function()
+-- 	if ls.expand_or_locally_jumpable() then
+-- 		ls.expand_or_jump()
+-- 	end
+-- end, { silent = true })
+--
+-- vim.keymap.set({ "i", "s" }, "<c-l>", function()
+-- 	if ls.locally_jumpable(-1) then
+-- 		ls.jump(-1)
+-- 	end
+-- end, { silent = true })
+--
+-- vim.keymap.set({ "i", "s" }, "<c-e>", function()
+-- 	-- This is useful for choice nodes
+-- 	if ls.choice_active() then
+-- 		ls.change_choice(1)
+-- 	end
+-- end, { silent = true })
+
 local function merge(first_table, second_table)
 	local result = {}
-	for _, v in pairs(first_table) do table.insert(result, v) end
-	for _, v in pairs(second_table) do table.insert(result, v) end
+	for _, v in pairs(first_table) do
+		table.insert(result, v)
+	end
+	for _, v in pairs(second_table) do
+		table.insert(result, v)
+	end
 	return result
 end
 
@@ -32,15 +55,15 @@ local types = require("luasnip.util.types")
 
 -- Every unspecified option will be set to the default.
 ls.setup({
-	history = false,
-	-- -- Update more often, :h events for more info.
-	-- update_events = "TextChanged,TextChangedI",
+	history = true,
+	-- Update more often, :h events for more info.
+	update_events = "TextChanged,TextChangedI",
 
-	-- -- Snippets aren't automatically removed if their text is deleted.
-	-- -- `delete_check_events` determines on which events (:h events) a check for
-	-- -- deleted snippets is performed.
-	-- -- This can be especially useful when `history` is enabled.
-	-- delete_check_events = "TextChanged",
+	-- Snippets aren't automatically removed if their text is deleted.
+	-- `delete_check_events` determines on which events (:h events) a check for
+	-- deleted snippets is performed.
+	-- This can be especially useful when `history` is enabled.
+	delete_check_events = "TextChanged",
 
 	ext_opts = {
 		[types.choiceNode] = {
@@ -71,22 +94,26 @@ ls.add_snippets("all", {
 	-- currently only working for lua
 	-- TODO: Use nvim-ts-context-commentstring
 	s("header 1", {
-		t("----------"), l(l._1:gsub(".", "-"), 1), t({ "----------", "" }),
-		t("---       "), i(1, "title"), t({ "       ---", "" }),
-		t("----------"), l(l._1:gsub(".", "-"), 1), t({ "----------", "" }),
+		t("----------"),
+		l(l._1:gsub(".", "-"), 1),
+		t({ "----------", "" }),
+		t("---       "),
+		i(1, "title"),
+		t({ "       ---", "" }),
+		t("----------"),
+		l(l._1:gsub(".", "-"), 1),
+		t({ "----------", "" }),
 	}),
-
 }, { key = "all" })
 
 local global_js_snippets = {
-	s(
-		"comm",
-		{
-			t({ "/**", "" }),
-			t({ " * " }), i(1, "value"), t({ "", "" }),
-			t({ " */" }),
-		}
-	),
+	s("comm", {
+		t({ "/**", "" }),
+		t({ " * " }),
+		i(1, "value"),
+		t({ "", "" }),
+		t({ " */" }),
+	}),
 	s(
 		"type",
 		fmt("/** @type {<>} */", {
@@ -97,12 +124,10 @@ local global_js_snippets = {
 	),
 }
 
-ls.add_snippets("javascript",
-	merge(global_js_snippets, {}),
-	{ key = "javascript" }
-)
+ls.add_snippets("javascript", merge(global_js_snippets, {}), { key = "javascript" })
 
-ls.add_snippets("javascriptreact",
+ls.add_snippets(
+	"javascriptreact",
 	merge(global_js_snippets, {
 		s(
 			"us",
@@ -115,20 +140,30 @@ ls.add_snippets("javascriptreact",
 				i(2, "initialValue"),
 			})
 		),
-	}), { key = "javascriptreact" }
+	}),
+	{ key = "javascriptreact" }
 )
 
 ls.add_snippets("go", {
 	s(
 		"pf",
 		fmt(
-			"log.Printf(\"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\")\n" ..
-			"log.Printf(\"{} %+v\", {})\n" ..
-			"log.Printf(\"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\")\n",
+			'log.Printf("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")\n'
+				.. 'log.Printf("{} %+v", {})\n'
+				.. 'log.Printf("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")\n',
 			{
 				i(1, "statement"),
 				i(2, "vars"),
 			}
 		)
+	),
+
+	s(
+		"ie",
+		fmt("if err != nil {\n" .. "\treturn <>\n" .. "}", {
+			i(1, "err"),
+		}, {
+			delimiters = "<>",
+		})
 	),
 }, { key = "go" })

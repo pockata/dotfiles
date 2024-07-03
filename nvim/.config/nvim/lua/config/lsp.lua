@@ -52,16 +52,16 @@ local on_attach = function(client, bufnr)
 	-- buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.incoming_calls()<CR>', opts)
 
 	-- buf_set_keymap('n', '<leader>e', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
-	buf_set_keymap("n", "[e", '<cmd>lua vim.diagnostic.goto_prev({ float = { border = "rounded" }})<CR>zz', opts)
-	buf_set_keymap("n", "]e", '<cmd>lua vim.diagnostic.goto_next({ float = { border = "rounded" }})<CR>zz', opts)
+	-- buf_set_keymap("n", "[e", '<cmd>lua vim.diagnostic.goto_prev({ float = { border = "rounded" }})<CR>zz', opts)
+	-- buf_set_keymap("n", "]e", '<cmd>lua vim.diagnostic.goto_next({ float = { border = "rounded" }})<CR>zz', opts)
 	buf_set_keymap("i", "<c-h>", "<cmd>lua vim.lsp.buf.signature_help()<CR>", opts)
 	-- buf_set_keymap('n', '<leader>q', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
 
-	-- -- Set some keybinds conditional on server capabilities
-	-- if client.server_capabilities.documentFormattingProvider then
-	-- 	buf_set_keymap("n", "g=", "<cmd>lua vim.lsp.buf.format({async = true})<CR>", opts)
-	-- 	-- vim.cmd("autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_sync()")
-	-- end
+	-- Set some keybinds conditional on server capabilities
+	if client.server_capabilities.documentFormattingProvider then
+		-- buf_set_keymap("n", "g=", "<cmd>lua vim.lsp.buf.format({async = true})<CR>", opts)
+		-- vim.cmd("autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_sync()")
+	end
 
 	if client.server_capabilities.documentRangeFormattingProvider then
 		buf_set_keymap("v", "g=", "<cmd>lua vim.lsp.buf.range_formatting()<CR>", opts)
@@ -98,6 +98,7 @@ local ensure_installed = {
 	"jsonls",
 	"jsonlint",
 	"yamlls",
+	"proselint",
 
 	-- "css-lsp",
 	"eslint_d",

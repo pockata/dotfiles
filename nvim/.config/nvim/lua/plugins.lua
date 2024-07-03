@@ -159,6 +159,8 @@ require("lazy").setup({
 			lint.linters_by_ft["javascript"] = js
 			lint.linters_by_ft["javascriptreact"] = js
 			lint.linters_by_ft["typescriptreact"] = js
+			lint.linters_by_ft["text"] = { "vale" }
+			lint.linters_by_ft["markdown"] = { "markdownlint", "vale" }
 
 			-- Create autocommand which carries out the actual linting
 			-- on the specified events.
@@ -181,7 +183,7 @@ require("lazy").setup({
 				function()
 					require("conform").format({
 						async = true,
-						lsp_fallback = true,
+						lsp_fallback = false,
 					})
 				end,
 				mode = "",
@@ -212,6 +214,7 @@ require("lazy").setup({
 				typescriptreact = { "prettierd" },
 				javascript = { "prettierd" },
 				javascriptreact = { "prettierd" },
+				svelte = { "prettierd" },
 
 				css = { "prettierd" },
 				scss = { "prettierd" },
@@ -609,7 +612,12 @@ require("lazy").setup({
 	},
 
 	-- improve the "{" and "}" motion in normal / visual mode
-	"justinmk/vim-ipmotion",
+	{
+		"justinmk/vim-ipmotion",
+		config = function()
+			vim.g.ip_skipfold = 1
+		end,
+	},
 
 	-- extra language support
 	-- Check out https://github.com/ray-x/go.nvim
@@ -681,12 +689,6 @@ require("lazy").setup({
 	},
 
 	{ "evanleck/vim-svelte" },
-	{
-		"wuelnerdotexe/vim-astro",
-		config = function()
-			vim.g.astro_typescript = "enable"
-		end,
-	},
 
 	{
 		"mbbill/undotree",

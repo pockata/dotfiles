@@ -3,27 +3,27 @@ local layout = require("telescope.actions.layout")
 local action_state = require("telescope.actions.state")
 local tele = require("telescope.builtin")
 
-require('telescope').setup {
+require("telescope").setup({
 	defaults = {
 		vimgrep_arguments = {
-			'rg',
-			'--color=never',
-			'--no-heading',
-			'--with-filename',
-			'--line-number',
-			'--column',
-			'--smart-case',
-			'--trim',
-			'--hidden', -- include hidden files, but respect .gitignore
+			"rg",
+			"--color=never",
+			"--no-heading",
+			"--with-filename",
+			"--line-number",
+			"--column",
+			"--smart-case",
+			"--trim",
+			"--hidden", -- include hidden files, but respect .gitignore
 			--hidden includes .git folders. providing --ignore-vcs does nothing
-			'--glob',
-			'!{node_modules/*,.git/*}',
+			"--glob",
+			"!{node_modules/*,.git/*}",
 		},
-		layout_strategy = 'flex',
+		layout_strategy = "flex",
 		prompt_prefix = "❯ ",
 		layout_config = {
 			flex = {
-				flip_columns = 150
+				flip_columns = 150,
 			},
 			vertical = {
 				prompt_position = "bottom",
@@ -33,7 +33,7 @@ require('telescope').setup {
 			},
 			horizontal = {
 				prompt_position = "top",
-			}
+			},
 		},
 		selection_caret = "❯ ",
 		sorting_strategy = "ascending",
@@ -70,8 +70,8 @@ require('telescope').setup {
 
 				-- use native <c-u> mapping
 				["<C-u>"] = false,
-			}
-		}
+			},
+		},
 	},
 	extensions = {
 		-- use a port of fzf's file sorter
@@ -81,35 +81,35 @@ require('telescope').setup {
 			case_mode = "smart_case",
 		},
 
-		['ui-select'] = {
-			require('telescope.themes').get_dropdown(),
+		["ui-select"] = {
+			require("telescope.themes").get_dropdown(),
 		},
-	}
-}
+	},
+})
 
-require('telescope').load_extension('fzf')
+require("telescope").load_extension("fzf")
 require("telescope").load_extension("recent_files")
 require("telescope").load_extension("ui-select")
 
-create_augroup('TelescopeConfig',
-	'User TelescopePreviewerLoaded setlocal shiftwidth=2 tabstop=2 expandtab'
-)
+create_augroup("TelescopeConfig", "User TelescopePreviewerLoaded setlocal shiftwidth=2 tabstop=2 expandtab")
 
 function _G.EditNvim()
-	tele.find_files {
+	tele.find_files({
 		prompt_title = "~ nvim config ~",
-		cwd = '~/dotfiles/nvim/.config/nvim',
-	}
+		cwd = "~/dotfiles/nvim/.config/nvim",
+	})
 end
 
 local function is_image(filepath)
 	local image_extensions = { "png", "jpg", "jpeg", "gif" } -- Supported image formats
-	local split_path = vim.split(filepath:lower(), '.', { plain = true })
+	local split_path = vim.split(filepath:lower(), ".", { plain = true })
 	local extension = split_path[#split_path]
 	return vim.tbl_contains(image_extensions, extension)
 end
 
-local function custom_default(prompt_bufnr --[[ , map ]])
+local function custom_default(
+	prompt_bufnr --[[ , map ]]
+)
 	actions.select_default:replace(function()
 		actions.close(prompt_bufnr)
 		local selection = action_state.get_selected_entry()
@@ -127,18 +127,18 @@ local function custom_default(prompt_bufnr --[[ , map ]])
 end
 
 function _G.EditDotfiles()
-	tele.find_files {
+	tele.find_files({
 		prompt_title = "~ dotfiles ~",
-		cwd = '~/dotfiles/',
+		cwd = "~/dotfiles/",
 		find_command = {
-			'rg',
-			'--files',
-			'--hidden',
+			"rg",
+			"--files",
+			"--hidden",
 			--hidden includes .git folders. providing --ignore-vcs does nothing
-			'--glob',
-			'!{node_modules/*,.git/*}',
-		}
-	}
+			"--glob",
+			"!{node_modules/*,.git/*}",
+		},
+	})
 end
 
 -- Show git_files if in a git repo, find_files otherwise
@@ -161,67 +161,72 @@ function _G.SmartProjectFiles()
 end
 
 function _G.EditInstalledPlugins()
-	tele.find_files {
+	tele.find_files({
 		prompt_title = "~ nvim plugins ~",
-		cwd = vim.fn.stdpath('data') .. '/lazy'
-	}
+		cwd = vim.fn.stdpath("data") .. "/lazy",
+	})
 end
 
 function _G.TelescopeCurrentBuffer()
-	local opts = require('telescope.themes').get_dropdown {
+	local opts = require("telescope.themes").get_dropdown({
 		winblend = 10,
 		border = true,
 		previewer = false,
 		shorten_path = false,
 		layout_config = {
 			height = 25,
-		}
-	}
+		},
+	})
 	tele.current_buffer_fuzzy_find(opts)
 end
 
-local FZFDropdown = require('telescope.themes').get_dropdown {
+local FZFDropdown = require("telescope.themes").get_dropdown({
 	winblend = 10,
 	border = true,
 	previewer = false,
 	shorten_path = false,
 	layout_config = {
 		height = 25,
-	}
-}
+	},
+})
 
 -- General keybindings
-nnoremap("<Leader>fo", "<silent>", "<cmd>lua require('telescope').extensions.recent_files.pick()<CR>");
-nnoremap("<Leader>j", "<silent>", "<cmd>Telescope live_grep<CR>");
-nnoremap("<Leader>r", "<silent>", ":lua TelescopeCurrentBuffer()<CR>");
-nnoremap("<Leader>w", "<silent>", "<cmd>Telescope builtin<CR>");
-nnoremap("<Leader>b", "<silent>", "<cmd>Telescope buffers<CR>");
-nnoremap("gR", "<silent>", "<cmd>lua require('telescope.builtin').lsp_references({ jump_type = 'never' })<CR>");
-nnoremap("gr", "<silent>", "<cmd>Telescope lsp_incoming_calls<CR>");
-nnoremap("<Leader>e", "<silent>", "<cmd>Telescope lsp_dynamic_workspace_symbols<CR>");
+nnoremap("<Leader>fo", "<silent>", "<cmd>lua require('telescope').extensions.recent_files.pick()<CR>")
+nnoremap("<Leader>j", "<silent>", "<cmd>Telescope live_grep<CR>")
+nnoremap("<Leader>r", "<silent>", ":lua TelescopeCurrentBuffer()<CR>")
+nnoremap("<Leader>w", "<silent>", "<cmd>Telescope builtin<CR>")
+nnoremap("<Leader>b", "<silent>", "<cmd>Telescope buffers<CR>")
+nnoremap("gR", "<silent>", "<cmd>lua require('telescope.builtin').lsp_references({ jump_type = 'never' })<CR>")
+nnoremap("gr", "<silent>", "<cmd>Telescope lsp_incoming_calls<CR>")
+nnoremap("<Leader>e", "<silent>", "<cmd>Telescope lsp_dynamic_workspace_symbols<CR>")
 -- nnoremap("<Leader>c", "<silent>", "<cmd>Telescope commands<CR>");
-nnoremap("<Leader>gf", "<silent>", "<cmd>Telescope git_status<CR>");
+nnoremap("<Leader>gf", "<silent>", "<cmd>Telescope git_status<CR>")
+noremap("<leader>fh", "<silent>", "<cmd>Telescope help_tags<CR>")
 
 -- Special files
-nmap('<leader>fi', '<silent>', "<cmd>lua EditInstalledPlugins()<CR>")
-nmap('<leader>ev', '<silent>', "<cmd>lua EditNvim()<CR>")
-nmap('<leader>ed', '<silent>', "<cmd>lua EditDotfiles()<CR>")
+nmap("<leader>fi", "<silent>", "<cmd>lua EditInstalledPlugins()<CR>")
+nmap("<leader>ev", "<silent>", "<cmd>lua EditNvim()<CR>")
+nmap("<leader>ed", "<silent>", "<cmd>lua EditDotfiles()<CR>")
 
 -- Project navigation
-noremap("<c-p>", "<silent>", "<cmd>lua SmartProjectFiles()<CR>");
-noremap("<c-t>", "<silent>", "<cmd>Telescope find_files<CR>");
+noremap("<c-p>", "<silent>", "<cmd>lua SmartProjectFiles()<CR>")
+noremap("<c-t>", "<silent>", "<cmd>Telescope find_files<CR>")
 
 -- remap the default <c-t> mapping because it's useful with LSP
 nnoremap("<c-b>", "<silent>", "<c-t>")
 
 -- search project-wide for the word under the cursor
 -- TODO: Send a PR for using a visual selection
-noremap("H", "<silent>", "<cmd>Telescope grep_string<CR>");
+noremap("H", "<silent>", "<cmd>Telescope grep_string<CR>")
 
 -- Emulate FZF's commands which I use rarely and don't have them bound to a key
-function _G.SelectColorScheme() tele.colorscheme(FZFDropdown) end
+function _G.SelectColorScheme()
+	tele.colorscheme(FZFDropdown)
+end
 
-function _G.SelectFiletype() tele.filetypes(FZFDropdown) end
+function _G.SelectFiletype()
+	tele.filetypes(FZFDropdown)
+end
 
-vim.cmd [[ command! -bar Filetypes :lua SelectFiletype() ]]
-vim.cmd [[ command! -bar Colors :lua SelectColorScheme() ]]
+vim.cmd([[ command! -bar Filetypes :lua SelectFiletype() ]])
+vim.cmd([[ command! -bar Colors :lua SelectColorScheme() ]])
