@@ -7,11 +7,13 @@ source "${HOME}/bin/helpers.sh"
 
 projects="${HOME}/Projects"
 
-if ask "${txtylw}Is this a personal project (work otherwise)?${txtrst}" Y; then
-	dir="${projects}/personal"
-else
-	dir="${projects}/work"
-fi
+# Always create projects in the personal dir
+# if ask "${txtylw}Is this a personal project (work otherwise)?${txtrst}" Y; then
+# 	dir="${projects}/personal"
+# else
+# 	dir="${projects}/work"
+# fi
+dir="${projects}/personal"
 
 project="${dir}/${1}"
 
