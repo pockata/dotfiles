@@ -1,6 +1,6 @@
 {
 	"editorconfig": true,
 	"useTabs": true,
-	"singleQuote": true,
+	"singleQuote": false,
 	"printWidth": 100
 }
