@@ -1,32 +1,30 @@
-create_augroup(
-	'SwitchConfig',
-	{
-		"FileType gitrebase let b:switch_custom_definitions = [[ 'pick', 'reword', 'edit', 'squash', 'fixup', 'exec' ], [ 'TODO', 'DONE', 'XXX', 'FIXME' ],[ '[ ]', '[✔]', '[✘]', '[✔✘]', '[?]' ],['let ', 'const '],]",
-		[[FileType javascript let b:switch_custom_definitions =
-						\ [
-						\   {
-						\     'function(\([^)]\{-}\))': '(\1) =>',
-						\     '(\([^)]\{-}\)) =>': 'function(\1)'
-						\   },
-						\   ['var', 'let', 'const'],
-						\   {
-						\     '\(\k\+\)\[''\(\k\+\)''\]': '\1.\2',
-						\     '\(\k\+\)\.\(\k\+\)\>': '\1[''\2'']'
-						\   },
-						\ 	{
-						\ 	 	'const\s\(\k\+\)\s=\s(\(\k\+\))\s=>': 'function \1(\2)',
-						\ 		'(\(\k\+\))': '(!\1)',
-						\ 		'(!\(\k\+\))': '(\1)',
-						\ 		'{\(\k\+\)}': '{ \1 }',
-						\ 	}
-						\ ]
-		]],
+create_augroup("SwitchConfig", {
+	"FileType gitrebase let b:switch_custom_definitions = [[ 'pick', 'reword', 'edit', 'squash', 'fixup', 'exec' ], [ 'TODO', 'DONE', 'XXX', 'FIXME' ],[ '[ ]', '[✔]', '[✘]', '[✔✘]', '[?]' ],['let ', 'const '],]",
+	-- [[FileType javascript let b:switch_custom_definitions =
+	-- 					\ [
+	-- 					\   {
+	-- 					\     'function(\([^)]\{-}\))': '(\1) =>',
+	-- 					\     '(\([^)]\{-}\)) =>': 'function(\1)'
+	-- 					\   },
+	-- 					\   ['var', 'let', 'const'],
+	-- 					\   {
+	-- 					\     '\(\k\+\)\[''\(\k\+\)''\]': '\1.\2',
+	-- 					\     '\(\k\+\)\.\(\k\+\)\>': '\1[''\2'']'
+	-- 					\   },
+	-- 					\ 	{
+	-- 					\ 	 	'const\s\(\k\+\)\s=\s(\(\k\+\))\s=>': 'function \1(\2)',
+	-- 					\ 		'(\(\k\+\))': '(!\1)',
+	-- 					\ 		'(!\(\k\+\))': '(\1)',
+	-- 					\ 		'{\(\k\+\)}': '{ \1 }',
+	-- 					\ 	}
+	-- 					\ ]
+	-- 	]],
 
-		-- " - [ ] → - [x] → - [-] → loops back to - [ ]
-		-- " + [ ] → + [x] → + [-] → loops back to + [ ]
-		-- " * [ ] → * [x] → * [-] → loops back to * [ ]
-		-- " 1. [ ] → 1. [x] → 1. [-] → loops back to 1. [ ]
-		[[FileType markdown let b:switch_custom_definitions =
+	-- " - [ ] → - [x] → - [-] → loops back to - [ ]
+	-- " + [ ] → + [x] → + [-] → loops back to + [ ]
+	-- " * [ ] → * [x] → * [-] → loops back to * [ ]
+	-- " 1. [ ] → 1. [x] → 1. [-] → loops back to 1. [ ]
+	[[FileType markdown let b:switch_custom_definitions =
 			\ [
 			\   { '\v^(\s*[*+-] )?\[ \]': '\1[x]',
 			\     '\v^(\s*[*+-] )?\[x\]': '\1[-]',
@@ -39,7 +37,8 @@ create_augroup(
 			\ ]
 		]],
 
-		[[FileType css,scss let b:switch_custom_definitions =
+	"FileType typescript,typescriptreact let b:switch_custom_definitions = [['public ', 'private ', 'protected '],]",
+	[[FileType css,scss let b:switch_custom_definitions =
 			\ [
 			\   ['border-top', 'border-bottom'],
 			\   ['border-left', 'border-right'],
@@ -67,11 +66,10 @@ create_augroup(
 			\   ['bold', 'normal'],
 			\   ['hover', 'active']
 			\ ]
-		]]
-	}
-)
+		]],
+})
 
-vim.cmd [[
+vim.cmd([[
 let g:switch_camelcase = [{
   \ '\<\(\l\)\(\l\+\(\u\l\+\)\+\)\>': '\=toupper(submatch(1)) . submatch(2)',
   \ '\<\(\u\l\+\)\(\u\l\+\)\+\>':     "\\=tolower(substitute(submatch(0), '\\(\\l\\)\\(\\u\\)', '\\1_\\2', 'g'))",
@@ -79,7 +77,7 @@ let g:switch_camelcase = [{
   \ '\<\(\u\+\)\(_\u\+\)\+\>':        "\\=tolower(substitute(submatch(0), '_', '-', 'g'))",
   \ '\<\(\l\+\)\(-\l\+\)\+\>':        "\\=substitute(submatch(0), '-\\(\\l\\)', '\\u\\1', 'g')"
   \ }]
-]]
+]])
 
 nnoremap("!", "<silent>", ":<C-u>call switch#Switch({'definitions': g:switch_camelcase, 'reverse': 1})<CR>")
 
