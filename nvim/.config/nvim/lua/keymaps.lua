@@ -171,13 +171,19 @@ vnoremap("<Leader>c", '"_c')
 
 -- diagnostics
 vim.keymap.set("n", "]e", function()
-	vim.diagnostic.goto_next({ float = { border = "rounded" } })
+	vim.diagnostic.jump({
+		float = { border = "rounded" },
+		count = 1,
+	})
 end, {
 	desc = "Jump to the next diagnostic with the highest severity",
 })
 
 vim.keymap.set("n", "[e", function()
-	vim.diagnostic.goto_prev({ float = { border = "rounded" } })
+	vim.diagnostic.jump({
+		float = { border = "rounded" },
+		count = -1,
+	})
 end, {
 	desc = "Jump to the previous diagnostic with the highest severity",
 })
