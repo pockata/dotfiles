@@ -98,7 +98,6 @@ local ensure_installed = {
 	"jsonls",
 	"jsonlint",
 	"yamlls",
-	"proselint",
 	"prettierd",
 
 	-- "css-lsp",
