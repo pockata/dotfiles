@@ -249,7 +249,7 @@ nmap("<leader>ed", "<silent>", "<cmd>lua EditDotfiles()<CR>")
 
 -- Project navigation
 noremap("<c-p>", "<silent>", "<cmd>lua SmartProjectFiles()<CR>")
-noremap("<c-t>", "<silent>", "<cmd>Telescope find_files<CR>")
+noremap("<c-t>", "<silent>", "<cmd>lua require('telescope.builtin').find_files({ hidden = true })<CR>")
 
 -- remap the default <c-t> mapping because it's useful with LSP
 nnoremap("<c-b>", "<silent>", "<c-t>")
