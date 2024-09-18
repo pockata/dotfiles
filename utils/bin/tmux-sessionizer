@@ -4,11 +4,15 @@
 if [[ $# -eq 1 ]]; then
     selected=$1
 else
+    # add some common folders
     staticPaths=(
         /tmp
         ~/dotfiles
     )
-    selected=$(find ~/Projects -mindepth 1 -maxdepth 1 -type d | (printf '%s\n' "${staticPaths[@]}" && cat) | fzf)
+    # support adding a list of folders. useful for monorepos
+    # NOTE: paths in the file must be absolute
+    localFolders=$(cat ~/.local-folders)
+    selected=$(find ~/Projects $localFolders -mindepth 1 -maxdepth 1 -type d | (printf '%s\n' "${staticPaths[@]}" && cat) | fzf)
 fi
 
 if [[ -z $selected ]]; then
