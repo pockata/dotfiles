@@ -4,7 +4,11 @@
 if [[ $# -eq 1 ]]; then
     selected=$1
 else
-    selected=$(find ~/ ~/.local/share ~/Projects -mindepth 1 -maxdepth 1 -type d | fzf)
+    staticPaths=(
+        /tmp
+        ~/dotfiles
+    )
+    selected=$(find ~/Projects -mindepth 1 -maxdepth 1 -type d | (printf '%s\n' "${staticPaths[@]}" && cat) | fzf)
 fi
 
 if [[ -z $selected ]]; then
