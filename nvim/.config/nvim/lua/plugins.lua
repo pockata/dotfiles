@@ -162,8 +162,8 @@ require("lazy").setup({
 			lint.linters_by_ft["typescript"] = js
 			lint.linters_by_ft["javascriptreact"] = js
 			lint.linters_by_ft["typescriptreact"] = js
-			lint.linters_by_ft["text"] = { "vale" }
-			lint.linters_by_ft["markdown"] = { "markdownlint", "vale" }
+			lint.linters_by_ft["text"] = {}
+			lint.linters_by_ft["markdown"] = {}
 
 			-- Create autocommand which carries out the actual linting
 			-- on the specified events.
