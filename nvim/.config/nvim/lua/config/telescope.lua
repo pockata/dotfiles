@@ -190,6 +190,45 @@ local FZFDropdown = require("telescope.themes").get_dropdown({
 	},
 })
 
+-- https://www.petergundel.de/git/neovim/telescope/2023/03/22/git-jump-in-neovim-with-telescope.html
+local git_hunks = function()
+	require("telescope.pickers")
+		.new({
+			finder = require("telescope.finders").new_oneshot_job({ "git", "jump", "--stdout", "diff" }, {
+				entry_maker = function(line)
+					local filename, lnum_string = line:match("([^:]+):(%d+).*")
+
+					-- I couldn't find a way to use grep in new_oneshot_job so we have to filter here.
+					-- return nil if filename is /dev/null because this means the file was deleted.
+					if filename:match("^/dev/null") then
+						return nil
+					end
+
+					return {
+						value = filename,
+						display = line,
+						ordinal = line,
+						filename = filename,
+						lnum = tonumber(lnum_string),
+					}
+				end,
+			}),
+			sorter = require("telescope.sorters").get_generic_fuzzy_sorter(),
+			previewer = require("telescope.config").values.grep_previewer({}),
+			attach_mappings = function(_, map)
+				map("i", "<c-space>", actions.to_fuzzy_refine)
+				return true
+			end,
+			push_cursor_on_edit = true,
+			results_title = "Git hunks",
+			prompt_title = "Git hunks",
+			layout_strategy = "flex",
+		}, {})
+		:find()
+end
+
+vim.keymap.set("n", "<Leader>gh", git_hunks, {})
+
 -- General keybindings
 nnoremap("<Leader>fo", "<silent>", "<cmd>lua require('telescope').extensions.recent_files.pick()<CR>")
 nnoremap("<Leader>j", "<silent>", "<cmd>Telescope live_grep<CR>")

@@ -12,6 +12,8 @@
     rhh = reset HEAD --hard
     rbm = rebase master
 
+	jump = "!/usr/share/git/git-jump/git-jump"
+
     # helper
     log-format = log --color=always --decorate --pretty=oneline --abbrev-commit --pretty=format:'%C(green)%cd %C(yellow)%h%Cred%d %Creset%s %C(blue)<%an>' --date=short
     l = log-format --graph
