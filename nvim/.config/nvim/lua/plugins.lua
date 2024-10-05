@@ -3,7 +3,7 @@ vim.cmd([[cabbrev pi Lazy]])
 
 local opts = {
 	dev = {
-		path = "~/Projects/personal",
+		path = "~/Projects",
 	},
 }
 
