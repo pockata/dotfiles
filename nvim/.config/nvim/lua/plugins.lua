@@ -218,6 +218,7 @@ require("lazy").setup({
 				javascript = { "prettierd" },
 				javascriptreact = { "prettierd" },
 				svelte = { "prettierd" },
+				yaml = { "prettierd" },
 
 				css = { "prettierd" },
 				scss = { "prettierd" },
