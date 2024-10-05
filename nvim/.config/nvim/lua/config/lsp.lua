@@ -31,7 +31,7 @@ local on_attach = function(client, bufnr)
 	-- TODO: These are attached on a per-buffer basis. Offer an alternative for
 	-- non-lsp buffers like a built-in fallback (K, gd) or show a warning that
 	-- the feature requires an active LSP server
-	if client.name == "tsserver" then
+	if client.name == "ts_ls" then
 		buf_set_keymap("n", "gD", "<cmd>TypescriptGoToSourceDefinition<CR>", opts)
 	else
 		buf_set_keymap("n", "gD", "<Cmd>lua vim.lsp.buf.declaration()<CR>", opts)
@@ -91,7 +91,7 @@ require("mason").setup()
 -- })
 local ensure_installed = {
 	"gopls",
-	"tsserver",
+	"ts_ls",
 	"lua_ls",
 	-- "cssls",
 	"cssmodules_ls",
@@ -130,7 +130,7 @@ require("mason-lspconfig").setup_handlers({
 
 		conf.capabilities = vim.tbl_deep_extend("force", {}, capabilities, conf.capabilities or {})
 
-		if server_name == "tsserver" then
+		if server_name == "ts_ls" then
 			require("typescript").setup({
 				go_to_source_definition = {
 					fallback = false, -- fall back to standard LSP definition on failure
