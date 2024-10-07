@@ -41,7 +41,7 @@
 
     # make a WIP commit
     # TODO: Check if prev commit is a WIP and ammend it
-    wip = "!git add -A && git cm \"WIP [skip ci]\""
+    wip = "!git add -A && git cm \"chore: WIP [skip ci]\""
 
     # Delete branches that have been merged into branch [master]
     bclean = "!f() { git branch --merged ${1-master} | grep -v " ${1-master}$" | xargs -r git branch -D; }; f"
@@ -91,7 +91,7 @@
 
     unstage = reset HEAD
     # Undo your last commit, but don't throw away your changes
-    undo = "!f() { if [[ $(git log -1 --pretty=%B) != WIP* ]]; then echo -n \"commit is not a WIP commit. Are you sure you want to undo it? (y/N): \"; read -r ans; if [ \"$ans\" = \"y\" -o \"$ans\" = \"Y\" ]; then echo \"Undoing...\"; else echo \"Aborted.\"; return; fi; fi; git reset --soft HEAD^; }; f"
+    undo = !"bash -c 'f() { local msg=\"$(git log -1 --pretty=%B)\"; if [[ $msg != \"WIP\"* && $msg != \"chore: WIP\"* ]]; then echo -n \"commit is not a WIP commit. Are you sure you want to undo it? (y/N): \"; read -r ans; if [ \"$ans\" = \"y\" -o \"$ans\" = \"Y\" ]; then echo \"Undoing...\"; else echo \"Aborted.\"; return; fi; fi; git reset --soft HEAD^; }; f'"
 
     ; undo = !echo -n 'Confirm (y/N): ' && read 'x' && [ $x = 'y' ] && echo "woo"
 
@@ -132,6 +132,7 @@
     default = current
 [pull]
     rebase = true
+    ff = only
 [diff]
     mnemonicprefix = true
     identheuristic = true
@@ -144,7 +145,7 @@
     prompt = true
     conflictstyle = diff3
 [mergetool "diffconflicts"]
-    cmd = nvim -c DiffConflictsWithHistory \"$MERGED\" \"$BASE\" \"$LOCAL\" \"$REMOTE\"
+    cmd = "nvim -c DiffConflictsWithHistory \"$MERGED\" \"$BASE\" \"$LOCAL\" \"$REMOTE\""
     trustExitCode = true
     # Don't create .orig files
     keepBackup = false
@@ -170,3 +171,6 @@
     ; side-by-side = true
 [branch]
 	sort = -committerdate
+
+[include]
+    path = ~/.gitconfig.local
