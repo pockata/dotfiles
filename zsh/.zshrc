@@ -432,13 +432,20 @@ fkill() {
 #
 # https://github.com/mika/zsh-pony#smart-cd
 cd () {
-    if [[ -f ${1} ]]
+    # handle "cd -- folder" calls from fzf's ALT-C
+    local arg="${1}"
+    if [[ $arg == "--" ]]
     then
-        [[ ! -e ${1:h} ]] && return 1
-        print "Correcting ${1} to ${1:h}"
-        builtin cd ${1:h}
+        arg="${2}"
+    fi
+
+    if [[ -f ${arg} ]]
+    then
+        [[ ! -e ${arg:h} ]] && return 1
+        print "Correcting ${arg} to ${arg:h}"
+        builtin cd ${arg:h}
     else
-        builtin cd ${1}
+        builtin cd ${arg}
     fi
 }
 
