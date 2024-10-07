@@ -99,6 +99,12 @@ HISTSIZE=100000
 SAVEHIST=100000
 HISTORY_IGNORE="(bg|fg|cd*|rm*|clear|ls|pwd|history|exit|make*|* --help)"
 
+# use a shared history but separate it by tmux session
+if [[ $TMUX_PANE ]]; then
+    session_name="$(tmux display-message -p '#S')"
+    HISTFILE=$HOME/.history_tmux_${session_name}
+fi
+
 # Don't consider certain characters part of the word
 WORDCHARS=${WORDCHARS//\/[&.;]}
 
