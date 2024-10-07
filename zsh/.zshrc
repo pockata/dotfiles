@@ -120,7 +120,7 @@ export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_CTRL_T_OPTS="$FZF_DEFAULT_OPTS"
 export FZF_CTRL_R_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_CTRL_R_OPTS="$FZF_DEFAULT_OPTS --preview 'echo {}' --preview-window down:3:hidden:wrap:noborder --bind '?:toggle-preview' --bind 'ctrl-y:execute-silent(echo -n {2..} | xsel --clipboard --input)+abort' --header 'Press CTRL-Y to copy command into clipboard' --border"
-#export FZF_ALT_C_COMMAND="$FZF_DEFAULT_COMMAND"
+export FZF_ALT_C_COMMAND="fdfind --follow --strip-cwd-prefix --type d 2> /dev/null"
 #export FZF_ALT_C_OPTS="$FZF_DEFAULT_OPTS"
 command -v tree > /dev/null && export FZF_ALT_C_OPTS="$FZF_DEFAULT_OPTS --preview 'tree -C {} | head -$LINES' --preview-window 'noborder'"
 
