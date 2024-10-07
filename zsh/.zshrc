@@ -498,3 +498,6 @@ bindkey "^X^X" hist-complete
 
 bindkey -s '^f' "tmux-sessionizer\n"
 
+if [ -f ~/.zshrc.local ]; then
+    source ~/.zshrc.local
+fi
