@@ -387,7 +387,7 @@ require("lazy").setup({
 		"wellle/targets.vim",
 		config = function()
 			vim.g.targets_jumpRanges =
-				"cc cr cb cB lc ac Ac lr rr ll lb ar ab lB Ar aB Ab AB rb al rB Al bb aa bB Aa BB AA"
+			"cc cr cb cB lc ac Ac lr rr ll lb ar ab lB Ar aB Ab AB rb al rB Al bb aa bB Aa BB AA"
 		end,
 	},
 
