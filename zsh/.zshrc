@@ -142,9 +142,13 @@ if [[ -e /usr/share/fzf/completion.zsh ]]; then
 	source /usr/share/fzf/completion.zsh
 fi
 
+if [[ -e /usr/share/doc/fzf/examples/completion.zsh ]]; then
+	source /usr/share/doc/fzf/examples/completion.zsh
+fi
+
 # load fzf's zsh keybindings if available
-if [[ -e /usr/share/fzf/key-bindings.zsh ]]; then
-	source /usr/share/fzf/key-bindings.zsh
+if [[ -e /usr/share/doc/fzf/examples/key-bindings.zsh ]]; then
+	source /usr/share/doc/fzf/examples/key-bindings.zsh
 fi
 
 # colorize man pages
