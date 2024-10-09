@@ -7,7 +7,11 @@ if ! tmux has-session -t "${new_session_name}" 2> /dev/null; then
 	tmux new -d -s "${new_session_name}"
 	tmux move-window -t "${new_session_name}" -s "${cur_win}"
 
-	alacritty -e zsh -c "tmux attach -t '${new_session_name}'" &
+	alacritty \
+		--option 'window.dimensions.lines=55' \
+		--option 'window.dimensions.columns=95' \
+		-e zsh -c "tmux attach -t '${new_session_name}'" &
+
 	# is this needed?
 	disown
 else
