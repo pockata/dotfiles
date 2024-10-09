@@ -115,7 +115,7 @@ setopt extended_history
 setopt hist_ignore_space
 
 export FZF_DEFAULT_COMMAND="(git ls-files --others --exclude-standard --cached 2> /dev/null || rg --files --no-ignore --hidden --follow --glob '!.git/*' --glob '!node_modules/*' 2>&1)"
-export FZF_DEFAULT_OPTS='--multi --bind=ctrl-k:down,ctrl-l:up'
+export FZF_DEFAULT_OPTS='--multi --bind=ctrl-k:down,ctrl-l:up --bind=alt-p:toggle-preview'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_CTRL_T_OPTS="$FZF_DEFAULT_OPTS"
 export FZF_CTRL_R_COMMAND="$FZF_DEFAULT_COMMAND"
