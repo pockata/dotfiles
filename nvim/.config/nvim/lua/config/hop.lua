@@ -1,7 +1,7 @@
-require('hop').setup({})
+require("hop").setup({})
 
-nmap('S', '<silent>', '<cmd>HopChar2<CR>')
-nmap('s', '<silent>', '<cmd>HopWord<CR>')
+nmap("S", "<silent>", "<cmd>HopChar2<CR>")
+nmap("s", "<silent>", "<cmd>HopWord<CR>")
 
 -- noremap('f', '<silent>', '<cmd>call WrapHop("f")<CR>')
 -- noremap('t', '<silent>', '<cmd>call WrapHop("t")<CR>')
@@ -10,8 +10,8 @@ nmap('s', '<silent>', '<cmd>HopWord<CR>')
 -- noremap('t', '<silent>', '<cmd>HopChar1<CR>')
 
 -- remove the underline from highlighted characters
-create_augroup('HopConfig', {
-	'VimEnter,ColorScheme * highlight HopNextKey gui=bold'
+create_augroup("HopConfig", {
+	"VimEnter,ColorScheme * highlight HopNextKey gui=bold",
 })
 
 -- Wrap HopChar1 to use t/f if used with a count
@@ -28,4 +28,3 @@ function! WrapHop(key)
 	endif
 endfunction
 ]])
-

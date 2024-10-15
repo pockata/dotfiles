@@ -1,4 +1,4 @@
-require("todo-comments").setup {
+require("todo-comments").setup({
 	signs = false,
 	-- highlight only the keyword
 	highlight = {
@@ -15,9 +15,8 @@ require("todo-comments").setup {
 			"--column",
 			"--hidden",
 		},
-	}
-}
+	},
+})
 
 -- add a little alias
-vim.cmd [[command! Todo TodoTelescope]]
-
+vim.cmd([[command! Todo TodoTelescope]])

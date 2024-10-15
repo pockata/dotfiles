@@ -4,36 +4,36 @@ refactoring.setup({
 })
 
 vim.keymap.set("x", "<localleader>rf", function()
-	refactoring.refactor('Extract Function')
+	refactoring.refactor("Extract Function")
 end)
 
 -- Extract function supports only visual mode
 vim.keymap.set("x", "<localleader>rF", function()
-	refactoring.refactor('Extract Function To File')
+	refactoring.refactor("Extract Function To File")
 end)
 
 -- Extract variable supports only visual mode
 vim.keymap.set("x", "<localleader>re", function()
-	refactoring.refactor('Extract Variable')
+	refactoring.refactor("Extract Variable")
 end)
 
 -- Inline func supports only normal
 vim.keymap.set("n", "<localleader>rI", function()
-	refactoring.refactor('Inline Function')
+	refactoring.refactor("Inline Function")
 end)
 
 -- Inline var supports both normal and visual mode
 vim.keymap.set({ "n", "x" }, "<localleader>ri", function()
-	refactoring.refactor('Inline Variable')
+	refactoring.refactor("Inline Variable")
 end)
 
 vim.keymap.set("n", "<localleader>rb", function()
-	refactoring.refactor('Extract Block')
+	refactoring.refactor("Extract Block")
 end)
 
 -- Extract block supports only normal mode
 vim.keymap.set("n", "<localleader>rbf", function()
-	refactoring.refactor('Extract Block To File')
+	refactoring.refactor("Extract Block To File")
 end)
 
 -- You can also use below = true here to to change the position of the printf

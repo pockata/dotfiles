@@ -1,5 +1,6 @@
 -- Navigate folds
-vim.api.nvim_exec([[
+vim.api.nvim_exec(
+	[[
 	function! NextClosedFold(dir)
 		let cmd = 'norm!z' . a:dir
 		let view = winsaveview()
@@ -13,5 +14,6 @@ vim.api.nvim_exec([[
 			call winrestview(view)
 		endif
 	endfunction
-]], true)
-
+]],
+	true
+)

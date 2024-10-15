@@ -1,8 +1,8 @@
-nnoremap("<leader>gs", "<cmd>-tabedit %<CR>:Git<CR>:only<CR>");
-nnoremap("<leader>gw", "<cmd>Gwrite<CR>");
-nnoremap("<leader>gc", "<cmd>Git commit --verbose<CR>");
-nnoremap("<leader>gd", "<cmd>-tabedit %<CR>:Gdiff<CR>");
-nnoremap("<leader>ga", ":Git commit --amend --reuse-message=HEAD");
+nnoremap("<leader>gs", "<cmd>-tabedit %<CR>:Git<CR>:only<CR>")
+nnoremap("<leader>gw", "<cmd>Gwrite<CR>")
+nnoremap("<leader>gc", "<cmd>Git commit --verbose<CR>")
+nnoremap("<leader>gd", "<cmd>-tabedit %<CR>:Gdiff<CR>")
+nnoremap("<leader>ga", ":Git commit --amend --reuse-message=HEAD")
 
 -- Open current line in the browser
 nnoremap("<leader>gb", "<cmd>.GBrowse<CR>")
@@ -10,9 +10,9 @@ nnoremap("<leader>gb", "<cmd>.GBrowse<CR>")
 vnoremap("<leader>gb", "<cmd>GBrowse<CR>")
 nnoremap("<leader>do", "<cmd>diffoff | windo if &diff | hide | endif<cr>")
 
-create_augroup('FugitiveConfig', {
+create_augroup("FugitiveConfig", {
 	"BufReadPost fugitive://* set bufhidden=delete",
-	"BufRead fugitive://* xnoremap <buffer> dp :diffput<CR>|xnoremap <buffer> do :diffget<CR>"
+	"BufRead fugitive://* xnoremap <buffer> dp :diffput<CR>|xnoremap <buffer> do :diffget<CR>",
 })
 
 -- -- TODO: Rewrite this to go to each hunk in a diff (+/-). Fugitive
@@ -34,4 +34,3 @@ create_augroup('FugitiveConfig', {
 --			   \   nnoremap <silent> <buffer> [c :call <SID>fug_hunk(0)<CR>|
 --			   \   nnoremap <silent> <buffer> ]c :call <SID>fug_hunk(1)<CR>|
 --			   \ endif
-

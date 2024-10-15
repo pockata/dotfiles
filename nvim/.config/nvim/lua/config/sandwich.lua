@@ -19,7 +19,7 @@ omap("asb", "<Plug>(textobj-sandwich-auto-a)")
 
 -- by default dsf works on func(arg) and not on obj.method(arg)
 -- see :h sandwich-miscellaneous
-vim.cmd [[
+vim.cmd([[
 	let g:sandwich#magicchar#f#patterns = [
 	\   {
 	\     'header' : '\<\%(\h\k*\.\)*\h\k*',
@@ -28,13 +28,13 @@ vim.cmd [[
 	\     'footer' : '',
 	\   },
 	\ ]
-]]
+]])
 
 -- Running ysiwf (surrounding the current word with a function) should trigger
 -- insert mode and leverage completion instead of the default input mode in the
 -- vim command line
 -- https://github.com/machakann/vim-sandwich/wiki/Magic-characters#function-surroundings
-vim.cmd [[
+vim.cmd([[
 	function! SetCustomRecipes()
 		" the docs state we should extend g:sandwich#default_recipes, but when
 		" using surround.vim keymaps (see below), we have to extend
@@ -51,15 +51,14 @@ vim.cmd [[
 		\   },
 		\ ]
 	endfunc
-]]
+]])
 
-create_augroup('SANDWICHConfig', {
+create_augroup("SANDWICHConfig", {
 	"VimEnter * :runtime! macros/sandwich/keymap/surround.vim",
 	-- see :h *g:operator#sandwich#options*
 	-- move the cursor at the start of the surrounded object
 	"VimEnter * :call operator#sandwich#set('all', 'all', 'cursor', 'inner_head')",
 	-- keep the same indent level on operator actions
 	"VimEnter * :call operator#sandwich#set('all', 'all', 'autoindent', 4)",
-	"VimEnter * :call SetCustomRecipes()"
+	"VimEnter * :call SetCustomRecipes()",
 })
-

@@ -1,7 +1,7 @@
 return function(conf)
 	conf.settings = {
 		completions = {
-			completeFunctionCalls = true
+			completeFunctionCalls = true,
 		},
 	}
 
@@ -22,17 +22,12 @@ return function(conf)
 		codeActionsOnSave = {
 			source = {
 				addMissingImports = true,
-			}
+			},
 		},
 	}
 
 	conf.handlers = {
-		["textDocument/publishDiagnostics"] = function(
-			_,
-			result,
-			ctx,
-			config
-		)
+		["textDocument/publishDiagnostics"] = function(_, result, ctx, config)
 			if result.diagnostics == nil then
 				return
 			end
@@ -42,7 +37,7 @@ return function(conf)
 			while idx <= #result.diagnostics do
 				local entry = result.diagnostics[idx]
 
-				local formatter = require('format-ts-errors')[entry.code]
+				local formatter = require("format-ts-errors")[entry.code]
 				entry.message = formatter and formatter(entry.message) or entry.message
 
 				-- codes: https://github.com/microsoft/TypeScript/blob/main/src/compiler/diagnosticMessages.json
@@ -54,12 +49,7 @@ return function(conf)
 				end
 			end
 
-			vim.lsp.diagnostic.on_publish_diagnostics(
-				_,
-				result,
-				ctx,
-				config
-			)
+			vim.lsp.diagnostic.on_publish_diagnostics(_, result, ctx, config)
 		end,
 	}
 

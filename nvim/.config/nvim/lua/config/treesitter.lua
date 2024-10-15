@@ -1,8 +1,20 @@
-require('nvim-treesitter.configs').setup({
+require("nvim-treesitter.configs").setup({
 	ensure_installed = {
-		'bash', 'comment', 'cpp', 'scss', 'css', 'go', 'html',
-		'javascript', 'json', 'jsonc', 'lua', 'regex',
-		'typescript', 'yaml', 'query'
+		"bash",
+		"comment",
+		"cpp",
+		"scss",
+		"css",
+		"go",
+		"html",
+		"javascript",
+		"json",
+		"jsonc",
+		"lua",
+		"regex",
+		"typescript",
+		"yaml",
+		"query",
 	},
 
 	-- auto install new filetypes
@@ -13,10 +25,12 @@ require('nvim-treesitter.configs').setup({
 		additional_vim_regex_highlighting = false,
 	},
 
-	matchup = {
-		enable = true,
-		disable_virtual_text = true,
-	},
+	-- disabling the treesitter integration seems to fix the annoying issue
+	-- with paren jumping on class methods
+	-- matchup = {
+	-- 	enable = true,
+	-- 	disable_virtual_text = true,
+	-- },
 
 	playground = {
 		enable = true,
@@ -24,16 +38,16 @@ require('nvim-treesitter.configs').setup({
 		updatetime = 25, -- Debounced time for highlighting nodes in the playground from source code
 		persist_queries = false, -- Whether the query persists across vim sessions
 		keybindings = {
-			toggle_query_editor = 'o',
-			toggle_hl_groups = 'i',
-			toggle_injected_languages = 't',
-			toggle_anonymous_nodes = 'a',
-			toggle_language_display = 'I',
-			focus_language = 'f',
-			unfocus_language = 'F',
-			update = 'R',
-			goto_node = '<cr>',
-			show_help = '?',
+			toggle_query_editor = "o",
+			toggle_hl_groups = "i",
+			toggle_injected_languages = "t",
+			toggle_anonymous_nodes = "a",
+			toggle_language_display = "I",
+			focus_language = "f",
+			unfocus_language = "F",
+			update = "R",
+			goto_node = "<cr>",
+			show_help = "?",
 		},
 	},
 
@@ -59,7 +73,7 @@ require('nvim-treesitter.configs').setup({
 				return false
 			end
 			return true
-		end
+		end,
 	},
 
 	textobjects = {
@@ -68,20 +82,20 @@ require('nvim-treesitter.configs').setup({
 			set_jumps = true, -- whether to set jumps in the jumplist
 			goto_next_start = {
 				["]f"] = "@function.outer",
-				[']k'] = '@assignment.lhs',
-				[']v'] = '@assignment.rhs',
+				["]k"] = "@assignment.lhs",
+				["]v"] = "@assignment.rhs",
 				["]d"] = "@conditional.outer",
-				["]r"] = "@return.outer"
+				["]r"] = "@return.outer",
 			},
 			goto_next_end = {
 				["]F"] = "@function.outer",
 			},
 			goto_previous_start = {
 				["[f"] = "@function.outer",
-				['[k'] = '@assignment.lhs',
-				['[v'] = '@assignment.rhs',
+				["[k"] = "@assignment.lhs",
+				["[v"] = "@assignment.rhs",
 				["[d"] = "@conditional.outer",
-				["[r"] = "@return.outer"
+				["[r"] = "@return.outer",
 			},
 			goto_previous_end = {
 				["[F"] = "@function.outer",
@@ -92,7 +106,7 @@ require('nvim-treesitter.configs').setup({
 			},
 			goto_previous = {
 				["[r"] = "@return.outer",
-			}
+			},
 		},
 		-- swap = {
 		-- 	enable = true,
@@ -110,21 +124,21 @@ require('nvim-treesitter.configs').setup({
 			lookbehind = true,
 			keymaps = {
 				-- use the queries from supported languages with textobjects.scm
-				['af'] = '@function.outer',
-				['if'] = '@function.inner',
-				['ik'] = '@assignment.lhs',
-				['ak'] = '@assignment.outer',
-				['iv'] = '@assignment.rhs',
-				['av'] = '@assignment.rhs',
+				["af"] = "@function.outer",
+				["if"] = "@function.inner",
+				["ik"] = "@assignment.lhs",
+				["ak"] = "@assignment.outer",
+				["iv"] = "@assignment.rhs",
+				["av"] = "@assignment.rhs",
 				["as"] = { query = "@scope", desc = "Select language scope" },
-				['ir'] = '@return.inner',
-				['ar'] = '@return.outer',
-				['ix'] = '@p.jsxAttrVal',
-				['ax'] = '@p.jsxAttr',
-				['at'] = '@p.htmltag.outer',
-				['it'] = '@p.htmltag.inner',
-				['ad'] = '@conditional.outer',
-				['id'] = '@conditional.inner',
+				["ir"] = "@return.inner",
+				["ar"] = "@return.outer",
+				["ix"] = "@p.jsxAttrVal",
+				["ax"] = "@p.jsxAttr",
+				["at"] = "@p.htmltag.outer",
+				["it"] = "@p.htmltag.inner",
+				["ad"] = "@conditional.outer",
+				["id"] = "@conditional.inner",
 				-- ['it'] = '@p.htmltag.inner',
 
 				-- ['ia'] = '@parameter.inner',
@@ -143,7 +157,7 @@ require('nvim-treesitter.configs').setup({
 				-- ['ic'] = '@comment.inner',
 				-- ['am'] = '@call.outer',
 				-- ['im'] = '@call.inner',
-			}
+			},
 		},
 
 		lsp_interop = {
@@ -158,6 +172,6 @@ require('nvim-treesitter.configs').setup({
 	},
 
 	indent = {
-		enable = true
+		enable = true,
 	},
 })
