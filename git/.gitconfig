@@ -10,7 +10,7 @@
     diff = diff --word-diff
     mt = mergetool --tool=diffconflicts
     rhh = reset HEAD --hard
-    rbm = rebase master
+    rbm = rebase main
 
 	jump = "!/usr/share/git/git-jump/git-jump"
 
@@ -43,13 +43,13 @@
     # TODO: Check if prev commit is a WIP and ammend it
     wip = "!git add -A && git commit --no-verify -m \"chore: WIP [skip ci]\""
 
-    # Delete branches that have been merged into branch [master]
-    bclean = "!f() { git branch --merged ${1-master} | grep -v " ${1-master}$" | xargs -r git branch -D; }; f"
-    whatdidipull = "!f() { git diff --patch-with-stat ${1-master}@{1} ${1-master}; }; f"
+    # Delete branches that have been merged into branch [main]
+    bclean = "!f() { git branch --merged ${1-main} | grep -v " ${1-main}$" | xargs -r git branch -D; }; f"
+    whatdidipull = "!f() { git diff --patch-with-stat ${1-main}@{1} ${1-main}; }; f"
     undelete = "!f() { git checkout $(git rev-list -n 1 HEAD -- \"$1\")~1 -- \"$1\"; }; f"
 
-    # Remove remote branches already merged into master
-    cleanremote = "!f() { git branch -r --merged | grep -v master | sed 's/origin\\///' | xargs -n 1 git push --delete origin; }; f"
+    # Remove remote branches already merged into main
+    cleanremote = "!f() { git branch -r --merged | grep -v main | sed 's/origin\\///' | xargs -n 1 git push --delete origin; }; f"
 
     # Show the diff between the latest commit and the current state
     d = !"git diff-index --quiet HEAD -- || clear; git diff --patch-with-stat"
@@ -103,10 +103,10 @@
     unpulled = "!git fetch && git l --no-merges ..${1:-'@{u}'}"
 
     # https://github.com/git-tips/tips
-    # changes made to the branch since forked from master
-    since-forked = "!git log-format --no-merges ${1:-master}.."
-    # changes made to the master since forked
-    after-forked = "!git log-format --no-merges ..${1:-master}"
+    # changes made to the branch since forked from main
+    since-forked = "!git log-format --no-merges ${1:-main}.."
+    # changes made to the main since forked
+    after-forked = "!git log-format --no-merges ..${1:-main}"
 [user]
     name = Rosen Stoyanov
     email = me@pockata.org
