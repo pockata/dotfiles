@@ -41,7 +41,7 @@
 
     # make a WIP commit
     # TODO: Check if prev commit is a WIP and ammend it
-    wip = "!git add -A && git cm \"chore: WIP [skip ci]\""
+    wip = "!git add -A && git commit --no-verify -m \"chore: WIP [skip ci]\""
 
     # Delete branches that have been merged into branch [master]
     bclean = "!f() { git branch --merged ${1-master} | grep -v " ${1-master}$" | xargs -r git branch -D; }; f"
