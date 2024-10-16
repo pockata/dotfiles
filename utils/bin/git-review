@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+# vim:ft=sh
+
+set -e
+
+pr="${1}"
+if [ -z $pr ]; then
+	echo "missing PR number"
+	exit
+fi
+
+base="${2}"
+
+if [ -z $base ]; then
+	base="main"
+fi
+
+# grab a pr from github
+gh pr checkout $pr
+
+# open nvim with a populated quickfix list with the changes and a gitsigns base
+# set so the sign column highlights are accurate
+# TODO: figure out why vim.defer_fn hack is needed
+git jump --stdout diff $base | nvim -c "copen" -c "lua vim.defer_fn(function() require('gitsigns').change_base('${base}', true) end, 1000)" -q -
