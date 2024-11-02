@@ -210,35 +210,18 @@ require("lazy").setup({
 	{
 		"justinmk/vim-dirvish",
 		config = function()
-			require("config.dirvish")
+			vim.g.dirvish_mode = ":sort ,^.*[\\/],"
 		end,
-	},
-
-	-- Gets overridden. call vim.cmd(":call dirvish_git#init()") twice
-	{
-		"kristijanhusak/vim-dirvish-git",
-		init = function()
-			vim.g.dirvish_git_indicators = {
-				Modified = "!",
-				Staged = "+",
-				Untracked = "u",
-				Renamed = ">",
-				Unmerged = "=",
-				Ignored = "i",
-				Unknown = "?",
-			}
-		end,
-
 		dependencies = {
-			"justinmk/vim-dirvish",
-		},
-	},
-
-	{
-		"roginfarrer/vim-dirvish-dovish",
-		dependencies = {
-			"justinmk/vim-dirvish",
-		},
+			"roginfarrer/vim-dirvish-dovish",
+			{
+				"kristijanhusak/vim-dirvish-git",
+				init = function()
+					vim.g.dirvish_git_show_icons = 0
+					vim.g.dirvish_git_show_ignored = 1
+				end,
+			},
+		}
 	},
 
 	-- Theming
