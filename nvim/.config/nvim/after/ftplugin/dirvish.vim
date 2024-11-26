@@ -17,6 +17,6 @@ hi link DirvishGitRenamed DiffChange
 hi link DirvishGitUntracked GitSignsUntracked
 hi link DirvishGitUntrackedDir GitSignsUntracked
 hi link DirvishGitUnmerged DiffChange
-hi link DirvishGitIgnored GitSignsIgnore
+hi link DirvishGitIgnored DiffDelete
 
 call FugitiveDetect(expand("%"))
