@@ -5,8 +5,17 @@ set -e
 
 pr="${1}"
 if [ -z $pr ]; then
-	echo "missing PR number"
+	echo "missing PR number / command"
+	echo ""
+	echo "Usage:"
+	echo "g pr view"
+	echo "g pr {pr-number}"
 	exit
+fi
+
+if [ "$pr" = "view" ]; then
+	gh pr view --web
+	exit 0
 fi
 
 base="${2}"
