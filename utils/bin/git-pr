@@ -8,14 +8,22 @@ if [ -z $pr ]; then
 	echo "missing PR number / command"
 	echo ""
 	echo "Usage:"
-	echo "g pr view"
-	echo "g pr {pr-number}"
+	echo "g pr view - view PR for current branch"
+	echo "g pr {commit-id} - view PRs containing commit"
+	echo "g pr {pr-number} - checkout PR locally"
 	exit
 fi
 
+# view PR for current branch
 if [ "$pr" = "view" ]; then
 	gh pr view --web
 	exit 0
+fi
+
+# view PRs containing commit
+if [[ "$pr" =~ ^[0-9a-f]{5,40}$ ]]; then
+	gh pr list --search "$pr" --state merged --web
+	exit 0;
 fi
 
 base="${2}"
