@@ -128,7 +128,7 @@ nnoremap("<leader>s", ":%s/\\<<C-r><C-w>\\>/<C-r><C-w>/I<Left><Left>")
 nnoremap(
 	"<Leader>l",
 	"<silent>",
-	":Gitsigns refresh<CR><BAR>:nohlsearch<BAR><C-R>=&diff?'<Bar>diffupdate':''<CR><CR><C-L>"
+	":Gitsigns refresh<CR>:nohlsearch<BAR><C-R>=&diff?'<Bar>diffupdate':''<CR><CR><C-L>"
 )
 
 nmap("got", ":call system('tmux split-window -vb -l 15 -c \"'.expand(\"%:p:h\").'\" &')<CR>")
