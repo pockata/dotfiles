@@ -241,7 +241,14 @@ require("lazy").setup({
 		},
 	},
 	{ "cpea2506/one_monokai.nvim" },
-	{ "sainnhe/everforest" },
+	{
+		"sainnhe/everforest",
+		lazy = false,
+		priority = 1000,
+		config = function()
+			vim.cmd([[colorscheme everforest]])
+		end,
+	},
 	-- { "shaunsingh/seoul256.nvim" },
 	{
 		"junegunn/seoul256.vim",
@@ -258,11 +265,6 @@ require("lazy").setup({
 	-- { "doums/darcula" },
 	{
 		"phha/zenburn.nvim",
-		lazy = false,
-		priority = 1000,
-		config = function()
-			vim.cmd([[colorscheme zenburn]])
-		end,
 	},
 	{ "mellow-theme/mellow.nvim" },
 	{
