@@ -15,7 +15,7 @@ create_augroup("set_iskeyword", {
 -- don't draw every frame when doing macros
 o.lazyredraw = true
 
-o.spell = false
+o.spell = true
 -- spellopts doesn't work if set via opt directly
 -- o.spelloptions = "noplainbuffer,camel"
 vim.api.nvim_create_autocmd("FileType", {
