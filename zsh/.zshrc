@@ -359,7 +359,7 @@ gco() {
 }
 
 listdirectories() {
-    rg --files . | only-dir . |\
+    rg --hidden --sort-files --files --null 2> /dev/null | xargs -0 dirname | sort -u |\
         2> /dev/null | \
         grep -v '^.$' | \
         sed 's|\./||g' | \
@@ -508,7 +508,7 @@ bindkey '^G^P' git-prevCommit-widget
 bindkey '^G^R' git-commitfinder-widget
 bindkey '^G^B' git-branches-widget
 bindkey '^X^E' edit-command-line
-# bindkey '^F' listdirectories-widget
+bindkey '^X^F' listdirectories-widget
 
 # Complete word from history with menu
 # https://github.com/mika/zsh-pony
