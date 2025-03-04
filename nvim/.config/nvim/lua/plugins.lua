@@ -472,6 +472,38 @@ require("lazy").setup({
 
 	-- Better Git conflicts resolution
 	"whiteinge/diffconflicts",
+	{
+		"sindrets/diffview.nvim",
+		cmd = { "DiffviewOpen", "DiffviewFileHistory" },
+		init = function()
+			vim.cmd [[cabbrev diff DiffviewOpen]]
+			vim.cmd [[cabbrev fihi DiffviewFileHistory]]
+		end,
+		config = function()
+			local actions = require("diffview.actions")
+			require("diffview").setup({
+				use_icons = false,
+				keymaps = {
+					view = {
+						{ "n", "]q", actions.select_next_entry },
+						{ "n", "[q", actions.select_prev_entry },
+					},
+					file_panel = {
+						{ "n", "k",  actions.next_entry },
+						{ "n", "l",  actions.prev_entry },
+						{ "n", "]q", actions.select_next_entry },
+						{ "n", "[q", actions.select_prev_entry },
+					},
+					file_history_panel = {
+						{ "n", "k",  actions.next_entry },
+						{ "n", "l",  actions.prev_entry },
+						{ "n", "]q", actions.select_next_entry },
+						{ "n", "[q", actions.select_prev_entry },
+					},
+				}
+			})
+		end
+	},
 
 	{
 		"lewis6991/gitsigns.nvim",
