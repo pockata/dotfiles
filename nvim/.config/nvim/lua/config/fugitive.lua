@@ -15,6 +15,16 @@ create_augroup("FugitiveConfig", {
 	"BufRead fugitive://* xnoremap <buffer> dp :diffput<CR>|xnoremap <buffer> do :diffget<CR>",
 })
 
+-- get the changed files against main inside of the quickfix list
+vim.cmd([[
+	cabbrev <expr> main (getcmdline() == 'G main') ? "<LEFT>! difftool --name-only main \| Gitsigns change_base main true" : "main"
+]])
+
+-- get the files from the last commit inside of the quickfix list
+vim.cmd([[
+	cabbrev <expr> last (getcmdline() == 'G last') ? "<LEFT>! difftool --name-only HEAD^ \| Gitsigns change_base HEAD^ true" : "last"
+]])
+
 -- -- TODO: Rewrite this to go to each hunk in a diff (+/-). Fugitive
 -- -- already offers [c / ]c
 --
