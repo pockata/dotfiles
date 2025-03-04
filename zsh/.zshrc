@@ -518,6 +518,30 @@ bindkey "^X^X" hist-complete
 
 bindkey -s '^f' "tmux-sessionizer\n"
 
+# based on /usr/share/doc/fzf/examples/key-bindings.zsh
+fzf-full-history-widget() {
+  local selected num
+  setopt localoptions noglobsubst noposixbuiltins pipefail no_aliases 2> /dev/null
+  selected=( $(cat ~/.history* | sed 's/^.*;\(.*\)$/\1/' | awk '{ print NR  "  " $s }' | tac |
+    FZF_DEFAULT_OPTS="--height ${FZF_TMUX_HEIGHT:-40%} $FZF_DEFAULT_OPTS -n2..,.. --tiebreak=index --bind=ctrl-r:toggle-sort,ctrl-z:ignore $FZF_CTRL_R_OPTS --query=${(qqq)LBUFFER} +m" $(__fzfcmd)) )
+  local ret=$?
+
+  if [[ -z "$selected" ]]; then
+    zle redisplay
+    return 0
+  fi
+
+  buf="$(echo "$selected" | sed 's/^[0-9]\+ \(.*\)$/\1/')"
+  BUFFER="$buf"
+  CURSOR=$((CURSOR + $#buf + 1))
+
+  zle reset-prompt
+  return $ret
+}
+zle     -N   fzf-full-history-widget
+# ctrl + alt + r for full history
+bindkey '\e^R' fzf-full-history-widget
+
 if [ -f ~/.zshrc.local ]; then
     source ~/.zshrc.local
 fi
