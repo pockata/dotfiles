@@ -49,6 +49,11 @@ vim.cmd([[
 		\     'action': ['add'],
 		\     'input': ['f']
 		\   },
+		\   {
+		\     'buns': ['<', '>'],
+		\     'expand_range': 0,
+		\     'input': ['>', '<']
+		\   },
 		\ ]
 	endfunc
 ]])
