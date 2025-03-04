@@ -19,6 +19,8 @@
     l = log-format --graph
     la = log-format --graph --all
     today = log-format --since=7am
+    # list commits inside a merge commit
+    list-merge="!f() { git log-format \"$1^..$1^2\"; }; f"
 
     # show repo activity (branch, last commiter name + date)
     # https://www.alexkras.com/19-git-tips-for-everyday-use/#find-old-branches
