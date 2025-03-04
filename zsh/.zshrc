@@ -102,7 +102,10 @@ HISTORY_IGNORE="(bg|fg|cd*|rm*|clear|ls|pwd|history|exit|make*|* --help)"
 # use a shared history but separate it by tmux session
 if [[ $TMUX_PANE ]]; then
     session_name="$(tmux display-message -p '#S')"
-    HISTFILE=$HOME/.history_tmux_${session_name}
+    # if session name is not a number (the default), use a custom history file
+    if ! [[ $session_name =~ ^[0-9]+$ ]]; then
+        HISTFILE=$HOME/.history_tmux_${session_name}
+    fi
 fi
 
 # Don't consider certain characters part of the word
