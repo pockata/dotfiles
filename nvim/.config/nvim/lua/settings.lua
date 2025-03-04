@@ -121,9 +121,11 @@ o.completeopt = "menuone,noinsert,noselect"
 -- o.completeopt = "menuone,noselect"
 
 -- Folding
-wo.foldmethod = "manual"
+wo.foldmethod = "indent"
 wo.foldexpr = "nvim_treesitter#foldexpr()"
-wo.foldminlines = 5
+-- wo.foldtext = "v:lua.vim.treesitter.foldtext()"
+wo.foldminlines = 3
+o.foldlevelstart = 99 -- start file with all folds opened
 
 -- vim.wo.foldcolumn = '0' -- defines 1 col at window left, to indicate folding
 -- vim.o.foldlevelstart = 99 -- start file with all folds opened
