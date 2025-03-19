@@ -643,9 +643,10 @@ require("lazy").setup({
 		ft = { "markdown" },
 	},
 
-	-- TODO: Replace with https://github.com/pmizio/typescript-tools.nvim
 	{
-		"jose-elias-alvarez/typescript.nvim",
+		"pmizio/typescript-tools.nvim",
+		dependencies = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
+		opts = {},
 	},
 
 	-- better TS errors

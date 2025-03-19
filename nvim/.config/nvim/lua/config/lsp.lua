@@ -28,18 +28,10 @@ local on_attach = function(client, bufnr)
 	-- Mappings
 	local opts = { noremap = true, silent = true }
 
-	-- TODO: These are attached on a per-buffer basis. Offer an alternative for
-	-- non-lsp buffers like a built-in fallback (K, gd) or show a warning that
-	-- the feature requires an active LSP server
-	if client.name == "ts_ls" then
-		buf_set_keymap("n", "gD", "<cmd>TypescriptGoToSourceDefinition<CR>", opts)
-	else
-		-- buf_set_keymap("n", "gD", "<Cmd>lua vim.lsp.buf.declaration()<CR>", opts)
-	end
-
-	buf_set_keymap("n", "gd", "<Cmd>lua vim.lsp.buf.definition()<CR>", opts)
+	-- buf_set_keymap("n", "gd", "<Cmd>lua vim.lsp.buf.definition()<CR>", opts)
 	-- TODO: figure how to make this cleaner?
 	buf_set_keymap("n", "gd", "<cmd>Telescope lsp_definitions<CR>", opts)
+	buf_set_keymap("n", "gD", "<Cmd>lua vim.lsp.buf.declaration()<CR>", opts)
 
 	buf_set_keymap("n", "K", "<Cmd>lua vim.lsp.buf.hover()<CR>", opts)
 	-- buf_set_keymap("n", "gI", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts)
@@ -50,7 +42,7 @@ local on_attach = function(client, bufnr)
 	buf_set_keymap("n", "<leader>D", "<cmd>lua vim.lsp.buf.type_definition()<CR>", opts)
 	buf_set_keymap("n", "<leader>gn", "<cmd>lua vim.lsp.buf.rename()<CR>", opts)
 	buf_set_keymap("n", "<leader>ca", "<cmd>lua vim.lsp.buf.code_action()<CR>", opts)
-	-- these are handles with Telescope
+	-- these are handled with Telescope
 	-- buf_set_keymap('n', 'gR', '<cmd>lua vim.lsp.buf.references({ includeDeclaration = false })<CR>', opts)
 	-- buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.incoming_calls()<CR>', opts)
 
@@ -94,7 +86,7 @@ require("mason").setup()
 -- })
 local ensure_installed = {
 	"gopls",
-	"ts_ls",
+	-- "ts_ls",
 	"lua_ls",
 	-- "cssls",
 	"cssmodules_ls",
@@ -132,17 +124,8 @@ require("mason-lspconfig").setup_handlers({
 
 		conf.capabilities = vim.tbl_deep_extend("force", {}, capabilities, conf.capabilities or {})
 
-		if server_name == "ts_ls" then
-			require("typescript").setup({
-				go_to_source_definition = {
-					fallback = false, -- fall back to standard LSP definition on failure
-				},
-				server = conf,
-			})
-		else
-			-- This setup() function is exactly the same as lspconfig's setup function (:help lspconfig-quickstart)
-			lspconfig[server_name].setup(conf)
-		end
+		-- This setup() function is exactly the same as lspconfig's setup function (:help lspconfig-quickstart)
+		lspconfig[server_name].setup(conf)
 
 		-- vim.cmd [[ do User LspAttachBuffers ]]
 	end,
