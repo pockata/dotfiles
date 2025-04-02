@@ -529,8 +529,6 @@ augroup vimrc-auto-mkdir
 	endfunction
 augroup END
 
-command! -nargs=1 OpenBrowser :silent !xdg-open <args> > /dev/null 2>&1
-
 " https://github.com/mkitt/tabline.vim/blob/master/plugin/tabline.vim
 function! Tabline()
 	let s = ''
