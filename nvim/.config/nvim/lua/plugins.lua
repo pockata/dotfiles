@@ -157,11 +157,6 @@ require("lazy").setup({
 		config = function()
 			local lint = require("lint")
 			lint.linters_by_ft = lint.linters_by_ft or {}
-			local js = { "eslint_d" }
-			lint.linters_by_ft["javascript"] = js
-			lint.linters_by_ft["typescript"] = js
-			lint.linters_by_ft["javascriptreact"] = js
-			lint.linters_by_ft["typescriptreact"] = js
 			lint.linters_by_ft["text"] = {}
 			lint.linters_by_ft["markdown"] = {}
 

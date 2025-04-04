@@ -86,22 +86,15 @@ require("mason").setup()
 -- })
 local ensure_installed = {
 	"gopls",
+	-- handled by typescript-tools
 	-- "ts_ls",
 	"lua_ls",
-	-- "cssls",
-	"cssmodules_ls",
+	"css-lsp",
 	"jsonls",
 	"jsonlint",
 	"yamlls",
 	"prettierd",
-
-	-- "css-lsp",
-	"eslint_d",
-	-- "gopls",
-	-- "json-lsp",
-	-- "lua-language-server",
-	-- "typescript-language-server",
-	-- "yaml-language-server",
+	"eslint-lsp",
 }
 
 require("mason-tool-installer").setup({
