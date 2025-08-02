@@ -315,8 +315,8 @@ gshow() {
 
 gb() {
     is_in_git_repo || return
-    git branch -a --color=always | grep -v '/HEAD\s' | sort | sed 's#remotes/##' |
-    fzf-tmux --ansi --multi --tac --preview-window right:60%:noborder \
+    git branch -a --color=always | grep -v '/HEAD\s' | sed 's#remotes/##' |
+    fzf-tmux --ansi --multi --preview-window right:60%:noborder \
         --preview 'git log-format --graph $(sed s/^..// <<< {} | cut -d" " -f1) -- | head -'$LINES |
     tr -d ' *'
 }
