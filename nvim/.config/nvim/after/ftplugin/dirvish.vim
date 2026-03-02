@@ -2,6 +2,13 @@
 silent! unmap <buffer> <c-p>
 silent! unmap <buffer> p
 
+
+" Remove lsp mappings
+silent! unmap <buffer> gr
+silent! unmap <buffer> grr
+silent! unmap <buffer> gra
+silent! unmap <buffer> grn
+
 " Go to project root
 nnoremap <silent><buffer> gr :execute 'edit ' . projectroot#guess()<CR>
 noremap <silent> <buffer> <C-v> :call dirvish#open('vsplit', 0)<CR>
