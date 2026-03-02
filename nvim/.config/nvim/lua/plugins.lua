@@ -199,6 +199,8 @@ require("lazy").setup({
 			vim.g.matchup_matchparen_offscreen = {}
 			vim.g.matchup_matchparen_enabled = 0
 			vim.g.matchup_surround_enabled = 0
+			vim.g.matchup_delim_nomids = 1
+			vim.g.matchup_matchparen_deferred = 1
 		end,
 	},
 
