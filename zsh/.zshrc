@@ -25,6 +25,8 @@ zplug "sindresorhus/pure", use:"pure.zsh", from:github, as:theme
 # defer:3 needed to load after compinit
 zplug "zsh-users/zsh-syntax-highlighting", defer:3
 
+# zplug "jeffreytse/zsh-vi-mode"
+
 # # Install plugins if there are plugins that have not been installed
 # if ! zplug check --verbose; then
 #     printf "Install? [y/N]: "
