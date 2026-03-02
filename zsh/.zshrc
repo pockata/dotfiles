@@ -554,3 +554,9 @@ bindkey '\e^R' fzf-full-history-widget
 if [ -f ~/.zshrc.local ]; then
     source ~/.zshrc.local
 fi
+
+export LANG=en_GB
+export LANGUAGE=en_GB:en
+export LC_COLLATE=C
+export LC_CTYPE=en_GB.UTF-8
+export LC_ALL=en_GB.UTF-8
