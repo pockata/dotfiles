@@ -260,10 +260,12 @@ require("lazy").setup({
 	-- { "haystackandroid/wonka" },
 	{ "briones-gabriel/darcula-solid.nvim", dependencies = "rktjmp/lush.nvim" },
 	-- { "doums/darcula" },
+	{ "folke/tokyonight.nvim" },
 	{
 		"phha/zenburn.nvim",
 	},
 	{ "mellow-theme/mellow.nvim" },
+	{ "webhooked/kanso.nvim" },
 	{
 		"EdenEast/nightfox.nvim",
 	},
