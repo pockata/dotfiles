@@ -49,10 +49,17 @@ PATH="$HOME/.npm-packages:$PATH"
 # neovim version manager
 PATH="$HOME/.local/share/bob/nvim-bin:$PATH"
 # fly.io
-export FLYCTL_INSTALL="/home/pockata/.fly"
+export FLYCTL_INSTALL="$HOME/.fly"
 PATH="$FLYCTL_INSTALL/bin:$PATH"
 # rust
 PATH="$HOME/.cargo/bin:$PATH"
+# ruby gems
+# export GEM_HOME="$HOME/gems"
+# PATH="$GEM_HOME/bin:$PATH"
+PATH="$HOME/.local/share/gem/ruby/2.7.0/bin:$PATH"
+# for NPM
+export NPM_PACKAGES="$HOME/.npm-packages"
+PATH="$NPM_PACKAGES/bin:$PATH"
 
 export NVM_DIR="$HOME/.nvm"
 nvm () {
@@ -60,6 +67,8 @@ nvm () {
     [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
     nvm "$@"
 }
+
+export PATH;
 
 export EDITOR='nvim'
 
@@ -254,17 +263,6 @@ bindkey -a l up-history
 export LOLCOMMITS_DIR="${HOME}/Pictures/lolcommits/"
 export LOLCOMMITS_FORK=true
 export LOLCOMMITS_STEALTH=true
-
-# for NPM
-export NPM_PACKAGES="${HOME}/.npm-packages"
-
-# for NODE
-export NODE_PATH="$NPM_PACKAGES/lib/node_modules:$NODE_PATH"
-
-PATH="$NPM_PACKAGES/bin:$PATH"
-PATH="${HOME}/.gem/ruby/2.6.0/bin:$PATH"
-PATH="${HOME}/.local/share/neovim/bin:${PATH}"
-export PATH;
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
