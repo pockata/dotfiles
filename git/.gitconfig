@@ -109,6 +109,10 @@
     since-forked = "!git log-format --no-merges ${1:-main}.."
     # changes made to the main since forked
     after-forked = "!git log-format --no-merges ..${1:-main}"
+
+    # marks your commit as a fix of a previous commit.
+    fixup = "!git commit --fixup ${1}"
+
 [user]
     name = Rosen Stoyanov
     email = me@pockata.org
